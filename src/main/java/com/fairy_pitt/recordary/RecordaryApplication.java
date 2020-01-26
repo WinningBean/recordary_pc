@@ -1,4 +1,4 @@
-package com.example.recordary;
+package com.fairy_pitt.recordary;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
