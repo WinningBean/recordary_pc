@@ -5,6 +5,9 @@
     <title>Title</title>
 </head>
 <body>
-    Hello World!
+    <p th:if="${session.loginUser!=null}"><strong th:text="${session.loginUser.getUserNm()}"/>님 환영</p>
+    <a href="/joinPage" th:if="${session.loginUser==null}">회원가입</a><br>
+    <a href="/loginPage" th:if="${session.loginUser==null}">로그인</a><br>
+    <a href="/logout" th:if="${session.loginUser!=null}">로그아웃</a>
 </body>
 </html>
