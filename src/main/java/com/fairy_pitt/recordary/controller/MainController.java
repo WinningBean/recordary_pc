@@ -17,4 +17,10 @@ public class MainController {
     public String Index(){
         return "index";
     }
+
+    /* User */
+    @RequestMapping(value = "/joinPage")
+    public String joinPage(){
+        return "join";
+    }
 }
