@@ -23,4 +23,15 @@ public class MainController {
     public String joinPage(){
         return "join";
     }
+
+    @RequestMapping(value = "/loginPage")
+    public String loginPage(){
+        return "login";
+    }
+
+    @GetMapping("/logout")
+    public String logout(){
+        session.invalidate();
+        return "index";
+    }
 }
