@@ -1,6 +1,6 @@
 package com.fairy_pitt.recordary.service.User;
 
-import com.fairy_pitt.recordary.model.User;
+import com.fairy_pitt.recordary.model.Users;
 import com.fairy_pitt.recordary.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class JoinService {
 
         if (userId.equals("") || userPw.equals("") || userNm.equals("")) return "join";
 
-        User user = new User();
+        Users user = new Users();
         user.setUserId(userId);
         user.setUserPw(userPasswordHashService.getSHA256(userPw));
         user.setUserNm(userNm);
