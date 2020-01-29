@@ -3,12 +3,6 @@ spring:
   profiles:
     active: local
 
-  mvc:
-    throw-exception-if-no-handler-found: true
-
-  thymeleaf:
-    enabled: false
-
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/recordary?serverTimezone=UTC
