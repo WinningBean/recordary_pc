@@ -21,12 +21,12 @@ public class MainController {
     /* User */
     @RequestMapping(value = "/joinPage")
     public String joinPage(){
-        return "join";
+        return "User/join";
     }
 
     @RequestMapping(value = "/loginPage")
     public String loginPage(){
-        return "login";
+        return "User/login";
     }
 
     @GetMapping("/logout")
