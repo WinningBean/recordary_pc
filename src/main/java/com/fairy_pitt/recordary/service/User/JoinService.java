@@ -1,14 +1,14 @@
 package com.fairy_pitt.recordary.service.User;
 
 import com.fairy_pitt.recordary.model.Users;
-import com.fairy_pitt.recordary.repository.UserRepository;
+import com.fairy_pitt.recordary.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class JoinService {
     @Autowired
-    private UserRepository usersRepository;
+    private UsersRepository usersRepository;
 
     @Autowired
     private UserPasswordHashService userPasswordHashService;

@@ -1,7 +1,7 @@
 package com.fairy_pitt.recordary.service.User;
 
 import com.fairy_pitt.recordary.model.Users;
-import com.fairy_pitt.recordary.repository.UserRepository;
+import com.fairy_pitt.recordary.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ public class LoginService {
     private UserPasswordHashService userPasswordHashService;
 
     @Autowired
-    private UserRepository usersRepository;
+    private UsersRepository usersRepository;
 
     @Autowired
     HttpSession session;

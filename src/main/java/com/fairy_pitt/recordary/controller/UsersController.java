@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Map;
 
 @Controller
-public class UserController {
+public class UsersController {
     @Autowired
     private JoinService joinService;
 
