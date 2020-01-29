@@ -19,17 +19,17 @@ public class UserController {
 
     @PostMapping(value = "/joinRequest")
     public String joinRequest(@RequestParam Map<String, String> paramMap){
-        String userId = paramMap.get("USER_ID");
-        String userPw = paramMap.get("USER_PW");
-        String userNm = paramMap.get("USER_NM");
+        String userId = paramMap.get("user_id");
+        String userPw = paramMap.get("user_pw");
+        String userNm = paramMap.get("user_nm");
 
         return joinService.joinUser(userId, userPw, userNm);
     }
 
     @PostMapping(value = "/loginRequest")
     public String loginRequest(@RequestParam Map<String, String> paramMap){
-        String userId = paramMap.get("USER_ID");
-        String userPw = paramMap.get("USER_PW");
+        String userId = paramMap.get("user_id");
+        String userPw = paramMap.get("user_pw");
 
         return loginService.login(userId, userPw);
     }
