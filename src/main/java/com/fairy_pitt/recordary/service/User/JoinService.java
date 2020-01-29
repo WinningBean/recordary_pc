@@ -15,7 +15,7 @@ public class JoinService {
 
     public String joinUser(String userId, String userPw, String userNm){
 
-        if (userId.equals("") || userPw.equals("") || userNm.equals("")) return "join";
+        if (userId.equals("") || userPw.equals("") || userNm.equals("")) return "User/join";
 
         Users user = new Users();
         user.setUserId(userId);
