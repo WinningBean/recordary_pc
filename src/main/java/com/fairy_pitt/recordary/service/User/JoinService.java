@@ -13,9 +13,9 @@ public class JoinService {
     @Autowired
     private UserPasswordHashService userPasswordHashService;
 
-    public String joinUser(String userId, String userPw, String userNm){
+    public Boolean joinUser(String userId, String userPw, String userNm){
 
-        if (userId.equals("") || userPw.equals("") || userNm.equals("")) return "User/join";
+        if (userId.equals("") || userPw.equals("") || userNm.equals("")) return false;
 
         Users user = new Users();
         user.setUserId(userId);
@@ -23,6 +23,6 @@ public class JoinService {
         user.setUserNm(userNm);
 
         usersRepository.save(user);
-        return "index";
+        return true;
     }
 }

@@ -2,11 +2,15 @@ package com.fairy_pitt.recordary.controller;
 
 import com.fairy_pitt.recordary.service.User.JoinService;
 import com.fairy_pitt.recordary.service.User.LoginService;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Controller
@@ -17,20 +21,34 @@ public class UsersController {
     @Autowired
     private LoginService loginService;
 
+//    @CrossOrigin
+    @ResponseBody
     @PostMapping(value = "/joinRequest")
-    public String joinRequest(@RequestParam Map<String, String> paramMap){
+    public Map<String, Boolean> joinRequest(@RequestParam Map<String, String> paramMap){
         String userId = paramMap.get("user_id");
         String userPw = paramMap.get("user_pw");
         String userNm = paramMap.get("user_nm");
 
-        return joinService.joinUser(userId, userPw, userNm);
+        Boolean joinState = joinService.joinUser(userId, userPw, userNm);
+
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("isJoin", joinState);
+
+        return map;
     }
 
+//    @CrossOrigin
+    @ResponseBody
     @PostMapping(value = "/loginRequest")
-    public String loginRequest(@RequestParam Map<String, String> paramMap){
+    public Map<String, Boolean> loginRequest(@RequestParam Map<String, String> paramMap){
         String userId = paramMap.get("user_id");
         String userPw = paramMap.get("user_pw");
 
-        return loginService.login(userId, userPw);
+        loginService.login(userId, userPw);
+
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("isLogin", true);
+
+        return map;
     }
 }

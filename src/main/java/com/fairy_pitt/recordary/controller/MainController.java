@@ -1,13 +1,16 @@
 package com.fairy_pitt.recordary.controller;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
+import java.util.HashMap;
+import java.util.Map;
 
-@Controller
+@RestController
 public class MainController {
 
     @Autowired
@@ -33,5 +36,21 @@ public class MainController {
     public String logout(){
         session.invalidate();
         return "index";
+    }
+
+//    @CrossOrigin
+    @GetMapping(value = "/test")
+    public Map<String, String> Test() {
+        Map<String, String> map = new HashMap<>();
+        map.put("Test", "test");
+
+        return map;
+    }
+
+//    @CrossOrigin
+    @PostMapping(value = "/testResult")
+    public String TestResult(@RequestBody Map<String, Object> param){
+        String str = (String)((Map)param.get("cc")).get("cc1");
+        return str;
     }
 }
