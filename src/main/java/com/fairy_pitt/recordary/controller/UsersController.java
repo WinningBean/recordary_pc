@@ -3,17 +3,16 @@ package com.fairy_pitt.recordary.controller;
 import com.fairy_pitt.recordary.service.User.JoinService;
 import com.fairy_pitt.recordary.service.User.LoginService;
 import com.sun.org.apache.xpath.internal.operations.Bool;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
-@Controller
+@RestController
 public class UsersController {
     @Autowired
     private JoinService joinService;
@@ -22,7 +21,6 @@ public class UsersController {
     private LoginService loginService;
 
 //    @CrossOrigin
-    @ResponseBody
     @PostMapping(value = "/joinRequest")
     public Map<String, Boolean> joinRequest(@RequestParam Map<String, String> paramMap){
         String userId = paramMap.get("user_id");
@@ -38,16 +36,15 @@ public class UsersController {
     }
 
 //    @CrossOrigin
-    @ResponseBody
     @PostMapping(value = "/loginRequest")
     public Map<String, Boolean> loginRequest(@RequestParam Map<String, String> paramMap){
         String userId = paramMap.get("user_id");
         String userPw = paramMap.get("user_pw");
 
-        loginService.login(userId, userPw);
+        Boolean loginState = loginService.login(userId, userPw);
 
         Map<String, Boolean> map = new HashMap<>();
-        map.put("isLogin", true);
+        map.put("isLogin", loginState);
 
         return map;
     }
