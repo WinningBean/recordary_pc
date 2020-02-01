@@ -1,6 +1,8 @@
 package com.fairy_pitt.recordary.controller;
 
 
+import com.fairy_pitt.recordary.group.domain.entity.GroupEntity;
+import com.fairy_pitt.recordary.group.service.GroupService;
 import com.fairy_pitt.recordary.model.Users;
 import com.fairy_pitt.recordary.service.User.UsersInfoService;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -11,10 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Controller
@@ -52,6 +51,7 @@ public class MainController {
     }
 
     @Autowired private UsersInfoService usersInfoService;
+    @Autowired private GroupService groupService;
 
     @GetMapping(value = "/userInfo")
     public String userInfo(){
@@ -72,6 +72,16 @@ public class MainController {
         Map<String, Object> map = new HashMap<>();
 
         Users currentUser = (Users)session.getAttribute("loginUser");
+
+        List<GroupEntity> result = groupService.GroupRead(currentUser);
+        Map<String, Object> groupMap = new HashMap<>();
+
+        for (GroupEntity groupEntity:result) {
+
+            groupMap.put(" userEx",groupEntity.getGEx());
+        }
+
+
         if (currentUser == null) map.put("currentUser","none");
         else{
             Map<String, Object> userMap = new HashMap<>();
@@ -80,20 +90,16 @@ public class MainController {
             userMap.put("userNm", currentUser.getUserNm());
             userMap.put("userEx", currentUser.getUserEx());
 
-            Map<String, Object> groupMap = new HashMap<>();
-            List groupList = new ArrayList();
-            groupList.add("그룹1");
-            groupList.add("그룹2");
-            groupList.add("그룹3");
 
-            map.put("userGroup", groupMap);
-            groupMap.put("groupCount", 3);
-            for (int i = 0; i < groupList.size(); i++){
-                Map<String, Object> groupDetailMap = new HashMap<>();
-                groupMap.put("group" + (i+1), groupDetailMap);
-                groupDetailMap.put("groupPic", "none");
-                groupDetailMap.put("groupNm", (String)groupList.get(i));
-            }
+
+//            map.put("userGroup", groupMap);
+//            groupMap.put("groupCount", 3);
+//            for (int i = 0; i < groupList.size(); i++){
+//                Map<String, Object> groupDetailMap = new HashMap<>();
+//                groupMap.put("group" + (i+1), groupDetailMap);
+//                groupDetailMap.put("groupPic", "none");
+//                groupDetailMap.put("groupNm", (String)groupList.get(i));
+//            }
         }
         return map;
     }

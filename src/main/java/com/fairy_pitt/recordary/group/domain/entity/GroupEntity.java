@@ -18,7 +18,7 @@ public class GroupEntity {
     @Column(name = "GROUP_CD" )
     private Long groupCd;
 
-    @ManyToOne(fetch = FetchType.LAZY) // ManyToOne 에서는 @Column 을 지원하지 않음
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_CD")
     private Users gMstUserFK;
 

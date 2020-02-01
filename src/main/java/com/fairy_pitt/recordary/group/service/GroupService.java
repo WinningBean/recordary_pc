@@ -2,6 +2,7 @@ package com.fairy_pitt.recordary.group.service;
 
 import com.fairy_pitt.recordary.group.domain.entity.GroupEntity;
 import com.fairy_pitt.recordary.group.repository.GroupRepository;
+import com.fairy_pitt.recordary.model.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,14 +25,15 @@ public class GroupService {
         }
     }
 
-//   public void GroupDelete(long cd){
-//
+//   public void GroupDelete(GroupEntity groupEntity){
+//       groupRepository.delete(groupEntity);
 //    }
 //
-//    public Optional<GroupEntity> groupFindById(long id){
-//        return groupRepository.findByGroupCd(id);
-//    }
-//
+    public List<GroupEntity> GroupRead(Users user){
+
+        return groupRepository.findByGMstUserFK(user);
+    }
+
 //    public List<GroupEntity> groupSearch(String groupName){
 //    return groupRepository.findByGNameLike("%"+groupName+"%");
 //    }
