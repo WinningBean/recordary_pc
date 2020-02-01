@@ -17,7 +17,9 @@ class App extends React.Component {
 
     async componentDidMount(){
         // 유저에 대한 정보를 가져오고 그 결과값을 state 에 저장
-        const {data} = await axios.get("http://192.168.0.148:8888/mainPage");
+
+        const {data} = await axios.get("http://localhost:8888/mainPage");
+        console.log(data);
         this.setState({data, isLoading : false});
         console.log(data);
     }
