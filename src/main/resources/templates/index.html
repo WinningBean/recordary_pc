@@ -5,10 +5,28 @@
     <title>Title</title>
 </head>
 <body>
-    <p th:if="${session.loginUser!=null}"><strong th:text="${session.loginUser.getUserNm()}"/>님 환영</p>
-    <a href="/joinPage" th:if="${session.loginUser==null}">회원가입</a><br>
-    <a href="/loginPage" th:if="${session.loginUser==null}">로그인</a><br>
-    <a href="/logout" th:if="${session.loginUser!=null}">로그아웃</a>
-    <a href="/groupCreatePage" th:if="${session.loginUser!=null}">그룹만들기</a>
+    
+    <ul>
+        <p>
+            <strong th:if="${session.loginUser!=null}" th:text="${session.loginUser.getUserNm()}"/>
+            <span th:if="${session.loginUser==null}">고객</span>님 환영합니다!
+        </p>
+        <th:block th:if="${session.loginUser==null}">
+            <li><a href="/joinPage">회원가입</a><br></li>
+            <li><a href="/loginPage">로그인</a><br></li>
+        </th:block>
+        <th:block th:if="${session.loginUser!=null}">
+            <li><a href="/profile">프로필</a></li>
+            <li><a href="/userInfo">회원정보</a></li>
+            <li><a href="/logout">로그아웃</a></li>
+            <li><a href="/groupCreatePage">그룹만들기</a></li>
+        </th:block>
+
+        <form action="/userSearch">
+            <input type="text" name="userSearch">
+            <button>유저검색</button>
+        </form>
+    </ul>
+
 </body>
 </html>
