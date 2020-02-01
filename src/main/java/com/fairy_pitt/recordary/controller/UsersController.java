@@ -1,5 +1,7 @@
 package com.fairy_pitt.recordary.controller;
 
+import com.fairy_pitt.recordary.model.Users;
+import com.fairy_pitt.recordary.repository.UsersRepository;
 import com.fairy_pitt.recordary.service.User.JoinService;
 import com.fairy_pitt.recordary.service.User.LoginService;
 import com.sun.org.apache.xpath.internal.operations.Bool;
@@ -46,6 +48,21 @@ public class UsersController {
         Map<String, Boolean> map = new HashMap<>();
         map.put("isLogin", loginState);
 
+        return map;
+    }
+
+    @Autowired
+    private UsersRepository usersRepository;
+
+    // 임시 중복확인
+    @PostMapping(value = "/checkUserId")
+    public Map<String, Boolean> TestResult(@RequestBody Map<String, String> paramMap){
+        String chkUserId = paramMap.get("user_id");
+
+        Map<String, Boolean> map = new HashMap<>();
+        Boolean checkState = false;
+        if (usersRepository.findByUserId(chkUserId) == null) checkState = true;
+        map.put("isPossible", checkState);
         return map;
     }
 }
