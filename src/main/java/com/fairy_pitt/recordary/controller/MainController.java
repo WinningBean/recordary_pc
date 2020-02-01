@@ -1,11 +1,14 @@
 package com.fairy_pitt.recordary.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+
 import javax.servlet.http.HttpSession;
+
 
 @Controller
 public class MainController {
@@ -29,9 +32,17 @@ public class MainController {
         return "User/login";
     }
 
+    @GetMapping("/groupCreatePage")
+    public String createGroup(){
+        return "group/create";
+    }
+
     @GetMapping("/logout")
     public String logout(){
         session.invalidate();
         return "index";
     }
+
+
+
 }

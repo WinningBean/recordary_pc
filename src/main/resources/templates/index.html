@@ -9,5 +9,6 @@
     <a href="/joinPage" th:if="${session.loginUser==null}">회원가입</a><br>
     <a href="/loginPage" th:if="${session.loginUser==null}">로그인</a><br>
     <a href="/logout" th:if="${session.loginUser!=null}">로그아웃</a>
+    <a href="/groupCreatePage" th:if="${session.loginUser!=null}">그룹만들기</a>
 </body>
 </html>
