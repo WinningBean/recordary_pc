@@ -23,6 +23,12 @@ public class UsersInfoService {
         user.setUserEx(userEx);
         usersRepository.save(user);
     }
+
+    public void delete(Users user) {
+//        if (user == null) return;
+        usersRepository.delete(user);
+    }
+
     public Users search(String userSearch){
         Users user = usersRepository.findByUserNm(userSearch);
         return user;

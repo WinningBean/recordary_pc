@@ -1,6 +1,7 @@
 package com.fairy_pitt.recordary.controller;
 
 import com.fairy_pitt.recordary.model.Users;
+import com.fairy_pitt.recordary.service.User.UsersInfoService;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -47,6 +48,14 @@ public class MainController {
     @GetMapping(value = "/userInfo")
     public String userInfo(){
         return "User/userInfo";
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/userDelete")
+    public String userDelete(){
+        Users currentUser = (Users)session.getAttribute("loginUser");
+        usersInfoService.delete(currentUser);
+        return "complete";
     }
 
     @ResponseBody
