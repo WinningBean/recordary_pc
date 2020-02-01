@@ -36,7 +36,7 @@ class Header extends React.Component {
             editorClick: false,
             groupOpen: false,
             friendOpen: false,
-            data: {},
+            data: this.props.data,
             // userComponents: {
             //     userId: 'abcd',
             //     userName: '위성호',
@@ -93,10 +93,6 @@ class Header extends React.Component {
             friendOpen: true
         });
     };
-
-    componentDidMount(){
-        this.setState({data : this.props.data});
-    }
 
     render() {
         const GroupList = (() => {
@@ -158,8 +154,8 @@ class Header extends React.Component {
                             <div className="menu-wrap">
                                 <div className="menu-profile"
                                     onClick={() => console.log('click')}>
-                                        <img alt="user img" src={this.state.userComponents.userImage} />
-                                    <span>{this.state.userComponents.userName}</span>
+                                        {/*<img alt="user img" src={this.state.data.currentUser.userPic} />*/}
+                                    <span>{this.state.currentUser.userNm}</span>
                                     <IconButton onClick={() => this.setState({ editorClick: true })}><EditIcon /></IconButton>
                                     {Editor()}
                                 </div>

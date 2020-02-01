@@ -30,7 +30,7 @@ class Login extends React.Component {
             const Form = new FormData();
             Form.append('user_id', this.state.user_id);
             Form.append('user_pw', this.state.user_pw);
-            const { data } = await axios.post("http://192.168.0.148:8888/loginRequest", Form);
+            const { data } = await axios.post("http://localhost:8888/loginRequest", Form);
             console.log(data);
             
             if(data.isLogin === false){
