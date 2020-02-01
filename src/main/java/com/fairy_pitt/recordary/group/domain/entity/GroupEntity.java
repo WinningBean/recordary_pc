@@ -19,7 +19,6 @@ public class GroupEntity {
     private Long groupCd;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_CD")
     private Users gMstUserFK;
 
     @Column(name = "GROUP_NM")
