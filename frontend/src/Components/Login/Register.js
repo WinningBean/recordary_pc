@@ -33,7 +33,7 @@ class Register extends React.Component {
                         form.append('user_nm', this.state.user_nm);
                         form.append('user_id', this.state.user_id);
                         form.append('user_pw', this.state.user_pw);
-                        const { data } = await axios.post("http://localhost:8888/joinRequest", form);
+                        const { data } = await axios.post("http://192.168.0.148:8888/joinRequest", form);
                         if(data.isPossibleId === false){
                             this.setState({alert : () => {
                                 return (<Alert severity="error">

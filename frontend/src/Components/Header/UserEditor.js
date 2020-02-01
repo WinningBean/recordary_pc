@@ -12,8 +12,18 @@ class UserEditor extends React.Component {
             userImage: "http://placehold.it/250x250",
             userName: '홍길동',
             userId: 'hong-gildong',
+            user_nm: '',
+            user_id: '',
+            user_pw: '',
         }
     }
+
+    changeHandel = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value
+        });
+    }
+
     render() {
         return (
             <Dialog open style={{ backgroundColor: 'RGB(255, 223, 75, 0.5)' }}>
@@ -23,10 +33,10 @@ class UserEditor extends React.Component {
                     </div>
                     <div className="editor-info">
                         <div className="editor-info-text">
-                            <TextField disabled label="이름" defaultValue={this.state.userName} />
-                            <TextField disabled label="아이디" defaultValue={this.state.userId} />
-                            <TextField required label="패스워드" />
-                            <TextField required label="패스워드 확인" />
+                            <TextField name="user_nm" disabled label="이름" defaultValue={this.state.userName} />
+                            <TextField name="user_id" disabled label="아이디" defaultValue={this.state.userId} />
+                            <TextField name="user_pw" type="password" required label="패스워드" />
+                            <TextField name="pw_check" type="password" required label="패스워드 확인" />
                         </div>
                         <div className="editor-info-buttons">
                                 <EditorButton color="secondary">회원정보 삭제</EditorButton>
