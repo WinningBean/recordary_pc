@@ -1,24 +1,40 @@
-spring:
-
-  profiles:
-    active: local
-
-  datasource:
-    driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/recordary?serverTimezone=UTC
-    username: recordary-admin
-    password: recordary
-
-  jpa:
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    open-in-view: false
-    hibernate:
-      ddl-auto: create
-      use-new-id-generator-mappings: false
-
 server:
+  port: 8080
+
   error:
     whitelabel:
       enabled: false
 
-  port: 8888
+spring:
+  profiles:
+    active: local
+
+---
+spring:
+  profiles: local
+
+#  database -> 파일로 이동
+
+#  datasource:
+#    driverClassName: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/recordary?serverTimezone=UTC
+#    username: recordary-admin
+#    password: recordary
+#
+#  jpa:
+#    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+#    open-in-view: false
+#    hibernate:
+#      ddl-auto: create
+#      use-new-id-generator-mappings: false
+
+  h2:
+    console:
+      enabled: true
+      path: /console
+
+  jpa:
+    database-platform: H2
+    show-sql: false
+    hibernate:
+      ddl-auto: create-drop

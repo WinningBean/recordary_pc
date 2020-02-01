@@ -1,4 +1,4 @@
-package com.fairy_pitt.recordary.model;
+package com.fairy_pitt.recordary.common.entity;
 
 import lombok.Data;
 import javax.persistence.*;

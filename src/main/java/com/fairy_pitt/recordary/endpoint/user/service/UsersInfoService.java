@@ -1,12 +1,9 @@
-package com.fairy_pitt.recordary.service.User;
+package com.fairy_pitt.recordary.endpoint.user.service;
 
-import com.fairy_pitt.recordary.model.Users;
-import com.fairy_pitt.recordary.repository.UsersRepository;
+import com.fairy_pitt.recordary.common.entity.Users;
+import com.fairy_pitt.recordary.common.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class UsersInfoService {
