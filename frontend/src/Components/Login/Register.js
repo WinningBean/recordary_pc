@@ -33,7 +33,7 @@ class Register extends React.Component {
                         form.append('user_nm', this.state.user_nm);
                         form.append('user_id', this.state.user_id);
                         form.append('user_pw', this.state.user_pw);
-                        const { data } = await axios.post("http://192.168.0.148:8888/joinRequest", form);
+                        const { data } = await axios.post("http://localhost:8888/joinRequest", form);
                         if(data.isPossibleId === false){
                             this.setState({alert : () => {
                                 return (<Alert severity="error">
@@ -79,7 +79,7 @@ class Register extends React.Component {
                             {/* 지워하야 하는 부분 */}
                             <Button
                             onClick={async ()=>{
-                                const value = await axios.post("http://172.26.102.133:8888/testresult", { 
+                                const value = await axios.post("http://localhost:8888/testresult", { 
                                     aa : "abcdgg 안녕",
                                     bb : ['하나', '둘', '셋'],
                                     cc : {
