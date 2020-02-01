@@ -55,6 +55,7 @@ public class UsersController {
         return map;
     }
 
+
     @Autowired
     private UsersRepository usersRepository;
 
@@ -69,6 +70,22 @@ public class UsersController {
         map.put("isPossible", checkState);
         return map;
     }
+
+    @PostMapping(value = "/userUpdate")
+    public Map<String, Boolean> userUpdate(@RequestParam Map<String, String> paramMap){
+        Long userCd = Long.parseLong(paramMap.get("user_cd"));
+        String userNm = paramMap.get("user_nm");
+        String userPw = paramMap.get("user_pw");
+        String userEx = paramMap.get("user_ex");
+
+        Map<String, Boolean> map = new HashMap<>();
+        Boolean updateState = true;
+        if(userNm.equals("") || userPw.equals("")) updateState =  false;
+        else usersInfoService.update(userCd, userNm, userPw, userEx);
+        map.put("updateState", updateState);
+        return map;
+    }
+
     @GetMapping(value = "/userSearch")
     public Map<String, String> userSearch(@RequestParam(value = "userSearch")String userSearch){
         Users searchedUser = usersInfoService.search(userSearch);
