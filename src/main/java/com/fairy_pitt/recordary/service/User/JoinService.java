@@ -4,6 +4,11 @@ import com.fairy_pitt.recordary.model.Users;
 import com.fairy_pitt.recordary.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class JoinService {
@@ -24,5 +29,10 @@ public class JoinService {
 
         usersRepository.save(user);
         return true;
+    }
+
+    public Boolean possibleId(String input_id){
+        if (usersRepository.findByUserId(input_id) == null) return true;
+        return false;
     }
 }
