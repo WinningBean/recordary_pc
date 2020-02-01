@@ -34,85 +34,79 @@ class Header extends React.Component {
         this.state = {
             menuClick: false,
             editorClick: false,
-            userComponents: {
-                userId: 'abcd',
-                userName: '위성호',
-                userImage: 'http://placehold.it/30x30'
-            },
-            menuComponents: {
-                groupOpen: false,
-                friendOpen: false,
-                groupList: [
-                    {
-                        gruopCode: '100249',
-                        groupImage: 'http://placehold.it/30x30',
-                        groupName: '참조',
-                    },
-                    {
-                        gruopCode: '100250',
-                        groupImage: 'http://placehold.it/30x30',
-                        groupName: '팔색조',
-                    },
-                    {
-                        gruopCode: '100251',
-                        groupImage: 'http://placehold.it/30x30',
-                        groupName: '조조',
-                    },
-                ],
-                friendList: [
-                    {
-                        friendCode: '100001',
-                        friendImage: 'http://placehold.it/30x30',
-                        friendName: "위승빈"
-                    }
-                ],
-            }
+            groupOpen: false,
+            friendOpen: false,
+            data: {},
+            // userComponents: {
+            //     userId: 'abcd',
+            //     userName: '위성호',
+            //     userImage: 'http://placehold.it/30x30'
+            // },
+            // menuComponents: {
+            //     
+            //     groupList: [
+            //         {
+            //             gruopCode: '100249',
+            //             groupImage: 'http://placehold.it/30x30',
+            //             groupName: '참조',
+            //         },
+            //         {
+            //             gruopCode: '100250',
+            //             groupImage: 'http://placehold.it/30x30',
+            //             groupName: '팔색조',
+            //         },
+            //         {
+            //             gruopCode: '100251',
+            //             groupImage: 'http://placehold.it/30x30',
+            //             groupName: '조조',
+            //         },
+            //     ],
+            //     friendList: [
+            //         {
+            //             friendCode: '100001',
+            //             friendImage: 'http://placehold.it/30x30',
+            //             friendName: "위승빈"
+            //         }
+            //     ],
+            // }
         }
     }
 
     setGroupMenuOpen = () => {
-        if (this.state.menuComponents.groupOpen === true) {
+        if (this.state.groupOpen === true) {
             return this.setState({
-                menuComponents: {
-                    ...this.state.menuComponents,
-                    groupOpen: false
-                }
+                groupOpen: false
             });
         }
         return this.setState({
-            menuComponents: {
-                ...this.state.menuComponents,
-                groupOpen: true
-            }
+            groupOpen: true
         });
     };
 
     setFriendMenuOpen = () => {
-        if (this.state.menuComponents.friendOpen === true) {
+        if (this.state.friendOpen === true) {
             return this.setState({
-                menuComponents: {
-                    ...this.state.menuComponents,
-                    friendOpen: false
-                }
+                friendOpen: false
             });
         }
         return this.setState({
-            menuComponents: {
-                ...this.state.menuComponents,
-                friendOpen: true
-            }
+            friendOpen: true
         });
     };
 
+    componentDidMount(){
+        this.setState({data : this.props.data});
+    }
+
     render() {
         const GroupList = (() => {
-            if (this.state.menuComponents.groupOpen === true) {
-                const gruops = this.state.menuComponents.groupList.map(
+            if (this.state.groupOpen === true) {
+                const gruops = this.state.data.userGroup.map(
                     (value) => { return (
-                    <li key={value.gruopCode}>
+                    <li key={value.groupCd}>
                         <GroupButton>
-                            <img src={value.groupImage} />
-                            {value.groupName}
+                            <img src={value.groupPic} />
+                            {value.groupNm}
                         </GroupButton>
                         </li>) }
                 );
@@ -126,13 +120,13 @@ class Header extends React.Component {
             return <GroupButton onClick={this.setGroupMenuOpen}>그룹▼</GroupButton>;
         })();
         const friendList = (() => {
-            if (this.state.menuComponents.friendOpen === true) {
-                const friends = this.state.menuComponents.friendList.map(
+            if (this.state.friendOpen === true) {
+                const friends = this.state.data.userFriend.map(
                     (value) => { return (
-                    <li key={value.friendCode}>
+                    <li key={value.friendCd}>
                         <GroupButton>
-                            <img src={value.friendImage} />
-                            {value.friendName}
+                            <img src={value.friendPic} />
+                            {value.friendNm}
                         </GroupButton>
                         </li>) }
                 );
