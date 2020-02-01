@@ -1,6 +1,6 @@
-package com.fairy_pitt.recordary.repository;
+package com.fairy_pitt.recordary.common.repository;
 
-import com.fairy_pitt.recordary.model.Users;
+import com.fairy_pitt.recordary.common.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

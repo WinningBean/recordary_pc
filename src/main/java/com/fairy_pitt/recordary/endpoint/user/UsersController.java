@@ -1,17 +1,13 @@
-package com.fairy_pitt.recordary.controller;
+package com.fairy_pitt.recordary.endpoint.user;
 
-import com.fairy_pitt.recordary.model.Users;
-import com.fairy_pitt.recordary.repository.UsersRepository;
-import com.fairy_pitt.recordary.service.User.JoinService;
-import com.fairy_pitt.recordary.service.User.LoginService;
-import com.fairy_pitt.recordary.service.User.UsersInfoService;
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import com.fairy_pitt.recordary.common.entity.Users;
+import com.fairy_pitt.recordary.common.repository.UsersRepository;
+import com.fairy_pitt.recordary.endpoint.user.service.JoinService;
+import com.fairy_pitt.recordary.endpoint.user.service.LoginService;
+import com.fairy_pitt.recordary.endpoint.user.service.UsersInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 

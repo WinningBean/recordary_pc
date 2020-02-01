@@ -1,14 +1,12 @@
-package com.fairy_pitt.recordary.controller;
+package com.fairy_pitt.recordary.endpoint.main;
 
-import com.fairy_pitt.recordary.model.Users;
-import com.fairy_pitt.recordary.service.User.UsersInfoService;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fairy_pitt.recordary.common.entity.Users;
+import com.fairy_pitt.recordary.endpoint.user.service.UsersInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

@@ -1,14 +1,9 @@
-package com.fairy_pitt.recordary.service.User;
+package com.fairy_pitt.recordary.endpoint.user.service;
 
-import com.fairy_pitt.recordary.model.Users;
-import com.fairy_pitt.recordary.repository.UsersRepository;
+import com.fairy_pitt.recordary.common.entity.Users;
+import com.fairy_pitt.recordary.common.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class JoinService {
