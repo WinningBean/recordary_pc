@@ -18,15 +18,15 @@ public class LoginService {
     @Autowired
     HttpSession session;
 
-    public String login(String userId, String userPw){
-        if (userId.equals("") || userPw.equals("")) return "login";
+    public Boolean login(String userId, String userPw){
+        if (userId.equals("") || userPw.equals("")) return false;
 
         String hashedPassword = userPasswordHashService.getSHA256(userPw);
         Users user = usersRepository.findByUserIdAndUserPw(userId, hashedPassword);
-        if (user == null) return "login";
+        if (user == null) return false;
 
         session.setAttribute("loginUser", user);
 
-        return "index";
+        return true;
     }
 }
