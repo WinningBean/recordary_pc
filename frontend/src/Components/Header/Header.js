@@ -27,6 +27,40 @@ import { makeStyles } from '@material-ui/core/styles';
 //     },
 // });
 
+const defaultProps = {
+    data : {
+            userId: 'abcd',
+            userName: '위성호',
+            userImage: 'http://placehold.it/30x30'
+        },
+        menuComponents: {
+            
+            groupList: [
+                {
+                    gruopCode: '100249',
+                    groupImage: 'http://placehold.it/30x30',
+                    groupName: '참조',
+                },
+                {
+                    gruopCode: '100250',
+                    groupImage: 'http://placehold.it/30x30',
+                    groupName: '팔색조',
+                },
+                {
+                    gruopCode: '100251',
+                    groupImage: 'http://placehold.it/30x30',
+                    groupName: '조조',
+                },
+            ],
+            friendList: [
+                {
+                    friendCode: '100001',
+                    friendImage: 'http://placehold.it/30x30',
+                    friendName: "위승빈"
+                }
+            ],
+        }
+}
 
 class Header extends React.Component {
     constructor(props) {
@@ -36,39 +70,7 @@ class Header extends React.Component {
             editorClick: false,
             groupOpen: false,
             friendOpen: false,
-            data: {},
-            // userComponents: {
-            //     userId: 'abcd',
-            //     userName: '위성호',
-            //     userImage: 'http://placehold.it/30x30'
-            // },
-            // menuComponents: {
-            //     
-            //     groupList: [
-            //         {
-            //             gruopCode: '100249',
-            //             groupImage: 'http://placehold.it/30x30',
-            //             groupName: '참조',
-            //         },
-            //         {
-            //             gruopCode: '100250',
-            //             groupImage: 'http://placehold.it/30x30',
-            //             groupName: '팔색조',
-            //         },
-            //         {
-            //             gruopCode: '100251',
-            //             groupImage: 'http://placehold.it/30x30',
-            //             groupName: '조조',
-            //         },
-            //     ],
-            //     friendList: [
-            //         {
-            //             friendCode: '100001',
-            //             friendImage: 'http://placehold.it/30x30',
-            //             friendName: "위승빈"
-            //         }
-            //     ],
-            // }
+            data: this.props.data,
         }
     }
 
@@ -105,7 +107,7 @@ class Header extends React.Component {
                     (value) => { return (
                     <li key={value.groupCd}>
                         <GroupButton>
-                            <img src={value.groupPic} />
+                            {/* <img src={value.groupPic} /> */}
                             {value.groupNm}
                         </GroupButton>
                         </li>) }
@@ -158,8 +160,8 @@ class Header extends React.Component {
                             <div className="menu-wrap">
                                 <div className="menu-profile"
                                     onClick={() => console.log('click')}>
-                                        <img alt="user img" src={this.state.userComponents.userImage} />
-                                    <span>{this.state.userComponents.userName}</span>
+                                        {/* <img alt="user img" src={this.state.userComponents.userImage} /> */}
+                                    <span>{this.state.data.currentUser.userNm}</span>
                                     <IconButton onClick={() => this.setState({ editorClick: true })}><EditIcon /></IconButton>
                                     {Editor()}
                                 </div>
