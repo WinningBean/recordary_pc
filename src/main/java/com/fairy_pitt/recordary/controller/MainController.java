@@ -46,11 +46,6 @@ public class MainController {
 
     @Autowired private UsersInfoService usersInfoService;
 
-    @GetMapping(value = "/userInfo")
-    public String userInfo(){
-        return "User/userInfo";
-    }
-
     @ResponseBody
     @GetMapping(value = "/userDelete")
     public String userDelete(){
@@ -60,7 +55,7 @@ public class MainController {
     }
 
     @ResponseBody
-    @GetMapping(value = "/profile")
+    @GetMapping(value = "/mainPage")
     public Map<String, Object> profileRequest(){
         Map<String, Object> map = new HashMap<>();
 
@@ -73,20 +68,35 @@ public class MainController {
             userMap.put("userNm", currentUser.getUserNm());
             userMap.put("userEx", currentUser.getUserEx());
 
-            Map<String, Object> groupMap = new HashMap<>();
             List groupList = new ArrayList();
             groupList.add("그룹1");
             groupList.add("그룹2");
             groupList.add("그룹3");
 
-            map.put("userGroup", groupMap);
-            groupMap.put("groupCount", 3);
+            List groupMapList = new ArrayList();
             for (int i = 0; i < groupList.size(); i++){
                 Map<String, Object> groupDetailMap = new HashMap<>();
-                groupMap.put("group" + (i+1), groupDetailMap);
+                groupDetailMap.put("groupCd", i+1);
                 groupDetailMap.put("groupPic", "none");
                 groupDetailMap.put("groupNm", (String)groupList.get(i));
+                groupMapList.add(groupDetailMap);
             }
+            map.put("userGroup", groupMapList);
+
+            List friendList = new ArrayList();
+            friendList.add("일깅동");
+            friendList.add("이길동");
+            friendList.add("삼길동");
+
+            List friendMapList = new ArrayList();
+            for (int i = 0; i < friendList.size(); i++){
+                Map<String, Object> friendDetailMap = new HashMap<>();
+                friendDetailMap.put("friendCd", i+1);
+                friendDetailMap.put("friendPic", "none");
+                friendDetailMap.put("friendNm", (String)friendList.get(i));
+                friendMapList.add(friendDetailMap);
+            }
+            map.put("userFriend", friendMapList);
         }
         return map;
     }
