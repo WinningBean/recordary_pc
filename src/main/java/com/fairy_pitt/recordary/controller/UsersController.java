@@ -4,6 +4,7 @@ import com.fairy_pitt.recordary.model.Users;
 import com.fairy_pitt.recordary.repository.UsersRepository;
 import com.fairy_pitt.recordary.service.User.JoinService;
 import com.fairy_pitt.recordary.service.User.LoginService;
+import com.fairy_pitt.recordary.service.User.UsersInfoService;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class UsersController {
 
     @Autowired
     private LoginService loginService;
+
+    @Autowired
+    private UsersInfoService usersInfoService;
 
 //    @CrossOrigin
     @PostMapping(value = "/joinRequest")
@@ -63,6 +67,13 @@ public class UsersController {
         Boolean checkState = false;
         if (usersRepository.findByUserId(chkUserId) == null) checkState = true;
         map.put("isPossible", checkState);
+        return map;
+    }
+    @GetMapping(value = "/userSearch")
+    public Map<String, String> userSearch(@RequestParam(value = "userSearch")String userSearch){
+        Users searchedUser = usersInfoService.search(userSearch);
+        Map<String, String> map = new HashMap<>();
+        map.put("searched_user", searchedUser.getUserId());
         return map;
     }
 }
