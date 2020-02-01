@@ -53,6 +53,7 @@ class Login extends React.Component {
                 })
                 return;
             }
+            // 주석 풀어야함
             this.props.onChangePage();
             return;
             
