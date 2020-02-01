@@ -42,6 +42,13 @@ public class MainController {
         return "index";
     }
 
+    @Autowired private UsersInfoService usersInfoService;
+
+    @GetMapping(value = "/userInfo")
+    public String userInfo(){
+        return "User/userInfo";
+    }
+
     @ResponseBody
     @GetMapping(value = "/profile")
     public Map<String, Object> profileRequest(){
