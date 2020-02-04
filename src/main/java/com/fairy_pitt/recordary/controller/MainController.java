@@ -3,9 +3,10 @@ package com.fairy_pitt.recordary.controller;
 
 import com.fairy_pitt.recordary.group.domain.entity.GroupEntity;
 import com.fairy_pitt.recordary.group.service.GroupService;
+import com.fairy_pitt.recordary.group_member.domain.entity.MemberEntity;
+import com.fairy_pitt.recordary.group_member.service.MemberService;
 import com.fairy_pitt.recordary.model.Users;
 import com.fairy_pitt.recordary.service.User.UsersInfoService;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.*;
 
-
+@Transactional
 @Controller
 public class MainController {
 
@@ -52,6 +53,7 @@ public class MainController {
 
     @Autowired private UsersInfoService usersInfoService;
     @Autowired private GroupService groupService;
+    @Autowired private MemberService memberService;
 
     @GetMapping(value = "/userInfo")
     public String userInfo(){
@@ -67,18 +69,24 @@ public class MainController {
     }
 
     @ResponseBody
-    @GetMapping(value = "/profile")
+    @GetMapping(value = "profile")
     public Map<String, Object> profileRequest(){
         Map<String, Object> map = new HashMap<>();
 
         Users currentUser = (Users)session.getAttribute("loginUser");
 
-        List<GroupEntity> result = groupService.GroupRead(currentUser);
+        List<MemberEntity> result = memberService.readUserGroup(currentUser);
+        List<Optional<GroupEntity>> userGroup = new ArrayList<>();
+        for (MemberEntity memberEntity:result) {
+            Optional<GroupEntity> findResult = groupService.findGroup(memberEntity.getGroupCodeFK());
+           userGroup.add(findResult);
+        }
+
         Map<String, Object> groupMap = new HashMap<>();
+        for (Optional<GroupEntity> groupEntity :userGroup) {
 
-        for (GroupEntity groupEntity:result) {
-
-            groupMap.put(" userEx",groupEntity.getGEx());
+            GroupEntity groupEntityResult = groupEntity.get();
+            groupMap.put(" groupEx",groupEntityResult.getGEx());
         }
 
 
@@ -92,7 +100,7 @@ public class MainController {
 
 
 
-//            map.put("userGroup", groupMap);
+            map.put("userGroup", groupMap);
 //            groupMap.put("groupCount", 3);
 //            for (int i = 0; i < groupList.size(); i++){
 //                Map<String, Object> groupDetailMap = new HashMap<>();
