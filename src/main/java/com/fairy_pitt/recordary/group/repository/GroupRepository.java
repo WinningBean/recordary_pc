@@ -13,8 +13,6 @@ import java.util.Optional;
 @Repository
 public interface GroupRepository extends JpaRepository<GroupEntity, Long> {
 
-    List<GroupEntity> findByGMstUserFK(Users GMstUserFK);
+     List<GroupEntity> findBygNameLike(String gName);//findByContentLike
 
-    // List<GroupEntity> findByGNameLike(String s);
-    //<GroupEntity> findByGroupCd(long id);
 }
