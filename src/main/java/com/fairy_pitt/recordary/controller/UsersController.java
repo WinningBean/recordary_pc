@@ -12,9 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
-
+@Transactional
 @RestController
 public class UsersController {
     @Autowired
@@ -93,4 +94,5 @@ public class UsersController {
         map.put("searched_user", searchedUser.getUserId());
         return map;
     }
+
 }
