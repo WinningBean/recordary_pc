@@ -1,8 +1,10 @@
 package com.fairy_pitt.recordary.group.domain.entity;
+import com.fairy_pitt.recordary.group_member.domain.entity.MemberEntity;
+import com.fairy_pitt.recordary.group_member.domain.entity.MemberPK;
 import com.fairy_pitt.recordary.model.Users;
 import lombok.*;
-import javax.persistence.Id;
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,7 +21,6 @@ public class GroupEntity {
     private Long groupCd;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_CD")
     private Users gMstUserFK;
 
     @Column(name = "GROUP_NM")
@@ -33,6 +34,9 @@ public class GroupEntity {
 
     @Column(name = "GROUP_EX")
     private String  gEx;
+
+   @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupCodeFK")
+    private List<MemberEntity> members;
 
 
 }
