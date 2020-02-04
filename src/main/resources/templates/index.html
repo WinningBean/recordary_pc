@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-    
+
     <ul>
         <p>
             <strong th:if="${session.loginUser!=null}" th:text="${session.loginUser.getUserNm()}"/>
@@ -22,10 +22,17 @@
             <li><a href="/groupCreatePage">그룹만들기</a></li>
         </th:block>
 
-        <form action="/userSearch">
-            <input type="text" name="userSearch">
-            <button>유저검색</button>
+<!--        <form action="/userSearch">-->
+<!--            <input type="text" name="userSearch">-->
+<!--            <button>유저검색</button>-->
+<!--        </form>-->
+
+
+        <form action="/group/search"   method="post">
+            그룹검색<input type="text" name="groupSearch">
+            <input type="submit" value="검색">
         </form>
+
     </ul>
 
 </body>
