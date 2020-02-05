@@ -14,8 +14,8 @@ import java.io.Serializable;
 @Table(name="GROUP_MEMBER_TB")
 @NoArgsConstructor
 @AllArgsConstructor
-@IdClass(MemberPK.class)
-public class MemberEntity implements Serializable {
+@IdClass(GroupMemberPK.class)
+public class GroupMemberEntity implements Serializable {
 
     @Id
     @ManyToOne

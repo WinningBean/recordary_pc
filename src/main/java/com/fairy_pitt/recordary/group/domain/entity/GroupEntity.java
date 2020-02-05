@@ -1,6 +1,5 @@
 package com.fairy_pitt.recordary.group.domain.entity;
-import com.fairy_pitt.recordary.group_member.domain.entity.MemberEntity;
-import com.fairy_pitt.recordary.group_member.domain.entity.MemberPK;
+import com.fairy_pitt.recordary.group_member.domain.entity.GroupMemberEntity;
 import com.fairy_pitt.recordary.model.Users;
 import lombok.*;
 import javax.persistence.*;
@@ -36,7 +35,7 @@ public class GroupEntity {
     private String  gEx;
 
    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupCodeFK")
-    private List<MemberEntity> members;
+    private List<GroupMemberEntity> members;
 
 
 }

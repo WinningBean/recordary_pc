@@ -45,6 +45,8 @@ public class GroupService {
         return groupRepository.findById(groupEntity.getGroupCd());
     }
 
+
+
     //Check groupMaster
     //Check groupMember
 

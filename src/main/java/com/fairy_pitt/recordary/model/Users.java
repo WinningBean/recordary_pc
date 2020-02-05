@@ -1,8 +1,7 @@
 package com.fairy_pitt.recordary.model;
 
 import com.fairy_pitt.recordary.group.domain.entity.GroupEntity;
-import com.fairy_pitt.recordary.group_member.domain.entity.MemberEntity;
-import com.fairy_pitt.recordary.group_member.domain.entity.MemberPK;
+import com.fairy_pitt.recordary.group_member.domain.entity.GroupMemberEntity;
 import lombok.Data;
 import javax.persistence.*;
 import java.util.List;
@@ -32,5 +31,5 @@ public class Users {
     private List<GroupEntity> masters;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userCodeFK")
-    private List<MemberEntity> groups;
+    private List<GroupMemberEntity> groups;
 }

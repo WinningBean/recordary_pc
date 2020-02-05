@@ -2,8 +2,8 @@ package com.fairy_pitt.recordary.group.controller;
 
 import com.fairy_pitt.recordary.group.domain.entity.GroupEntity;
 import com.fairy_pitt.recordary.group.service.GroupService;
-import com.fairy_pitt.recordary.group_member.domain.entity.MemberEntity;
-import com.fairy_pitt.recordary.group_member.service.MemberService;
+import com.fairy_pitt.recordary.group_member.domain.entity.GroupMemberEntity;
+import com.fairy_pitt.recordary.group_member.service.GroupMemberService;
 import com.fairy_pitt.recordary.model.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,7 +25,7 @@ public class GroupController {
     private GroupService groupService ;
 
     @Autowired
-    private MemberService memberService ;
+    private GroupMemberService groupMemberService ;
 
     @ResponseBody
     @PostMapping("create") // 그룹 생성
@@ -33,16 +33,16 @@ public class GroupController {
         Users currUser = (Users) session.getAttribute("loginUser");
 
         GroupEntity groupEntity = new GroupEntity();
-        MemberEntity memberEntity = new MemberEntity();
+        GroupMemberEntity groupMemberEntity = new GroupMemberEntity();
 
         groupEntity.setGName(groupInfo.get("group_name"));
         groupEntity.setGEx(groupInfo.get("group_ex"));
         groupEntity.setGMstUserFK(currUser);
         GroupEntity groupCreate = groupService.groupCreate(groupEntity);
 
-        memberEntity.setUserCodeFK(currUser);
-        memberEntity.setGroupCodeFK(groupCreate);
-        boolean groupCreateComplete = memberService.insertMember(memberEntity);
+        groupMemberEntity.setUserCodeFK(currUser);
+        groupMemberEntity.setGroupCodeFK(groupCreate);
+        boolean groupCreateComplete = groupMemberService.insertMember(groupMemberEntity);
 
         Map<String, Boolean> result = new HashMap<>();
         result.put("isCreate", groupCreateComplete );

@@ -1,13 +1,11 @@
 package com.fairy_pitt.recordary.group_member.service;
 
-import com.fairy_pitt.recordary.group.domain.entity.GroupEntity;
 import com.fairy_pitt.recordary.group.repository.GroupRepository;
-import com.fairy_pitt.recordary.group_member.domain.entity.MemberEntity;
-import com.fairy_pitt.recordary.group_member.repository.MemberRepository;
+import com.fairy_pitt.recordary.group_member.domain.entity.GroupMemberEntity;
+import com.fairy_pitt.recordary.group_member.repository.GroupMemberRepository;
 import com.fairy_pitt.recordary.model.Users;
 import com.fairy_pitt.recordary.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,26 +14,26 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class MemberService {
+public class GroupMemberService {
 
     @Autowired
     private final GroupRepository groupRepository;
     @Autowired
     private final UsersRepository usersRepository;
     @Autowired
-    private final MemberRepository memberRepository;
+    private final GroupMemberRepository groupMemberRepository;
 
 
-    public List<MemberEntity> readUserGroup(Users user)
+    public List<GroupMemberEntity> readUserGroup(Users user)
     {
         return usersRepository.findByUserId(user.getUserId())
                 .getGroups();
     }
 
 
-    public Boolean insertMember(MemberEntity memberEntity)
+    public Boolean insertMember(GroupMemberEntity groupMemberEntity)
     {
-        Optional<MemberEntity> resultMemberEntity = Optional.of(memberRepository.save(memberEntity));
+        Optional<GroupMemberEntity> resultMemberEntity = Optional.of(groupMemberRepository.save(groupMemberEntity));
         if (resultMemberEntity.isPresent()) {
             return true;
         } else {

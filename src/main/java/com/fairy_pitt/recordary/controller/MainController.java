@@ -3,8 +3,8 @@ package com.fairy_pitt.recordary.controller;
 
 import com.fairy_pitt.recordary.group.domain.entity.GroupEntity;
 import com.fairy_pitt.recordary.group.service.GroupService;
-import com.fairy_pitt.recordary.group_member.domain.entity.MemberEntity;
-import com.fairy_pitt.recordary.group_member.service.MemberService;
+import com.fairy_pitt.recordary.group_member.domain.entity.GroupMemberEntity;
+import com.fairy_pitt.recordary.group_member.service.GroupMemberService;
 import com.fairy_pitt.recordary.model.Users;
 import com.fairy_pitt.recordary.service.User.UsersInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +53,7 @@ public class MainController {
 
     @Autowired private UsersInfoService usersInfoService;
     @Autowired private GroupService groupService;
-    @Autowired private MemberService memberService;
+    @Autowired private GroupMemberService groupmemberService;
 
     @GetMapping(value = "/userInfo")
     public String userInfo(){
@@ -75,10 +75,10 @@ public class MainController {
 
         Users currentUser = (Users)session.getAttribute("loginUser");
 
-        List<MemberEntity> result = memberService.readUserGroup(currentUser);
+        List<GroupMemberEntity> result = groupmemberService.readUserGroup(currentUser);
         List<Optional<GroupEntity>> userGroup = new ArrayList<>();
-        for (MemberEntity memberEntity:result) {
-            Optional<GroupEntity> findResult = groupService.findGroup(memberEntity.getGroupCodeFK());
+        for (GroupMemberEntity groupMemberEntity :result) {
+            Optional<GroupEntity> findResult = groupService.findGroup(groupMemberEntity.getGroupCodeFK());
            userGroup.add(findResult);
         }
 
