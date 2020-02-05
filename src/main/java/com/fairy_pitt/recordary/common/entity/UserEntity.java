@@ -1,4 +1,4 @@
-package com.fairy_pitt.recordary.model;
+package com.fairy_pitt.recordary.common.entity;
 
 import lombok.Data;
 import javax.persistence.*;
@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "USER_TB")
-public class Users {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "USER_CD")

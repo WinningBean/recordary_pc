@@ -1,14 +1,12 @@
-package com.fairy_pitt.recordary.controller;
+package com.fairy_pitt.recordary.endpoint.main;
 
-import com.fairy_pitt.recordary.model.Users;
-import com.fairy_pitt.recordary.service.User.UsersInfoService;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.endpoint.user.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,13 +42,13 @@ public class MainController {
         return "index";
     }
 
-    @Autowired private UsersInfoService usersInfoService;
+    @Autowired private UserInfoService userInfoService;
 
     @ResponseBody
     @GetMapping(value = "/userDelete")
     public String userDelete(){
-        Users currentUser = (Users)session.getAttribute("loginUser");
-        usersInfoService.delete(currentUser);
+        UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
+        userInfoService.delete(currentUser);
         return "complete";
     }
 
@@ -59,7 +57,7 @@ public class MainController {
     public Map<String, Object> profileRequest(){
         Map<String, Object> map = new HashMap<>();
 
-        Users currentUser = (Users)session.getAttribute("loginUser");
+        UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
         if (currentUser == null) map.put("currentUser","none");
         else{
             Map<String, Object> userMap = new HashMap<>();

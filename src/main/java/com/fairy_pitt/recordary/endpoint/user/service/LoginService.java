@@ -1,7 +1,7 @@
-package com.fairy_pitt.recordary.service.User;
+package com.fairy_pitt.recordary.endpoint.user.service;
 
-import com.fairy_pitt.recordary.model.Users;
-import com.fairy_pitt.recordary.repository.UsersRepository;
+import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ public class LoginService {
     private UserPasswordHashService userPasswordHashService;
 
     @Autowired
-    private UsersRepository usersRepository;
+    private UserRepository userRepository;
 
     @Autowired
     HttpSession session;
@@ -22,7 +22,7 @@ public class LoginService {
         if (userId.equals("") || userPw.equals("")) return false;
 
         String hashedPassword = userPasswordHashService.getSHA256(userPw);
-        Users user = usersRepository.findByUserIdAndUserPw(userId, hashedPassword);
+        UserEntity user = userRepository.findByUserIdAndUserPw(userId, hashedPassword);
         if (user == null) return false;
 
         session.setAttribute("loginUser", user);

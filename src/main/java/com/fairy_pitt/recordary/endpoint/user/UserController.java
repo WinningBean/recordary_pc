@@ -1,23 +1,21 @@
-package com.fairy_pitt.recordary.controller;
+package com.fairy_pitt.recordary.endpoint.user;
 
-import com.fairy_pitt.recordary.model.Users;
-import com.fairy_pitt.recordary.repository.UsersRepository;
-import com.fairy_pitt.recordary.service.User.JoinService;
-import com.fairy_pitt.recordary.service.User.LoginService;
-import com.fairy_pitt.recordary.service.User.UsersInfoService;
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.repository.UserRepository;
+import com.fairy_pitt.recordary.endpoint.user.service.JoinService;
+import com.fairy_pitt.recordary.endpoint.user.service.LoginService;
+import com.fairy_pitt.recordary.endpoint.user.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin
 @RestController
-public class UsersController {
+public class UserController {
     @Autowired
     private JoinService joinService;
 
@@ -25,7 +23,7 @@ public class UsersController {
     private LoginService loginService;
 
     @Autowired
-    private UsersInfoService usersInfoService;
+    private UserInfoService userInfoService;
 
 //    @CrossOrigin
     @PostMapping(value = "/joinRequest")
@@ -61,7 +59,7 @@ public class UsersController {
     }
 
     @Autowired
-    private UsersRepository usersRepository;
+    private UserRepository userRepository;
 
     @PostMapping(value = "/userUpdate")
     public Map<String, Boolean> userUpdate(@RequestParam Map<String, String> paramMap){
@@ -73,16 +71,27 @@ public class UsersController {
         Map<String, Boolean> map = new HashMap<>();
         Boolean updateState = true;
         if(userNm.equals("") || userPw.equals("")) updateState =  false;
-        else usersInfoService.update(userCd, userNm, userPw, userEx);
+        else userInfoService.update(userCd, userNm, userPw, userEx);
         map.put("updateState", updateState);
         return map;
     }
 
     @GetMapping(value = "/userSearch")
-    public Map<String, String> userSearch(@RequestParam(value = "userSearch")String userSearch){
-        Users searchedUser = usersInfoService.search(userSearch);
-        Map<String, String> map = new HashMap<>();
-        map.put("searched_user", searchedUser.getUserId());
+    public Map<String, Object> userSearch(@RequestParam(value = "userSearch")String userSearch){
+        List<UserEntity> searchedUser = userInfoService.search(userSearch);
+        Map<String, Object> map = new HashMap<>();
+        map.put("searchedUserCount", searchedUser.size());
+
+        List UserMapList = new ArrayList();
+        for (int i = 0; i < searchedUser.size(); i++){
+            Map<String, Object> userDetailMap = new HashMap<>();
+            userDetailMap.put("groupCd", searchedUser.get(i).getUserCd());
+            userDetailMap.put("groupPic", "none");
+            userDetailMap.put("groupNm", searchedUser.get(i).getUserNm());
+            UserMapList.add(userDetailMap);
+        }
+        map.put("searedUser", UserMapList);
+
         return map;
     }
 }
