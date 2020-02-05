@@ -1,0 +1,134 @@
+#main-profile{
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    padding-top: 10px;
+    width: 900px;
+}
+
+#main-profile .search-user{
+    align-self: flex-end;
+    padding-bottom: 10px;
+    padding-right: 20px;
+}
+
+#main-profile-info{
+    display: flex;
+    height: 500px;
+    margin-left: 20px;
+    margin-right: 20px;
+    box-shadow: 0px 1px 5px rgb(161, 159, 159);
+    border-radius: 20px; 
+}
+
+#userinfo{
+    width: 240px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#user-image{
+    height: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+#user-image >img{
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+}
+
+#userinfo #userinfo-text{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid lightgray;
+    border-radius: 10px; 
+}
+
+.info ul li{
+    font-size: 20px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.follower, .follow{
+    padding-left: 30px;
+}
+
+.status-content{
+    height: 100px;
+    width: 200px;
+    margin-top: 10px;
+    padding: 2px 10px;
+    border: 1px solid lightgray;
+}
+
+#calender-area{
+    height: 100%;
+    width: 70%;
+}
+
+#calender-area .search-schedule{
+    height: 50px;
+    position: relative;
+}
+
+#calender-area .search-schedule>input{
+    position: absolute;
+    right: 0;
+    top: 10px;
+    font-size: 15px;
+}
+
+#calender-area .calender{
+    height: 450px;
+}
+
+nav{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+nav>div{
+    margin-left: 20px;
+    margin-right: 20px;
+    padding: 10px 20px;
+    box-shadow: 0px 1px 5px rgb(161, 159, 159);
+    border-radius: 10px; 
+}
+
+.media-area{
+    display: flex;
+    height: 250px;
+}
+
+.media-area .media-item{
+    margin: 10px 20px;
+    height: 230px;
+    width: 230px;
+}
+
+.media-area .media-item>img{
+    height: 230px;
+    width: 230px;
+    object-fit: cover;
+}
+
+.calender{
+    margin-top: 10px;
+}
+.react-calendar{
+    height: 480px;
+    box-shadow: 0px 1px 2px rgb(161, 159, 159);
+    border-radius: 10px;
+}

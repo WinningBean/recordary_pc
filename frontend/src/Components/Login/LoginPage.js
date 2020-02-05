@@ -127,7 +127,7 @@ class Login extends React.Component {
                             e.preventDefault();
                             this.props.onChangePage();
                         }}>
-                            <img alt="Recordary icon" src="https://www.google.co.kr/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" />
+                            <img className="title-image" alt="Recordary icon" src="http://localhost:8888/Recodary.png"/>
                         </a>
                     </div>
                     {this.state.successRegister()}
