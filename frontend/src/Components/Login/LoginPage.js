@@ -30,7 +30,8 @@ class Login extends React.Component {
             const Form = new FormData();
             Form.append('user_id', this.state.user_id);
             Form.append('user_pw', this.state.user_pw);
-            const { data } = await axios.post("http://192.168.0.148:8888/loginRequest", Form);
+            const { data } = await axios.post("http://localhost:8888/loginRequest", Form);
+            // .catch();
             console.log(data);
             
             if(data.isLogin === false){
@@ -59,6 +60,23 @@ class Login extends React.Component {
             
         } catch (error) {
             console.error(error);
+            this.setState({
+                failedLogin: () => {
+                    return (
+                        <Dialog open>
+                            <div>
+                                <Alert severity="error">
+                                    <AlertTitle>Error</AlertTitle>
+                                    서버 오류로인해 로그인에 실패하였습니다.
+                                                <Button style={{ marginTop: '10px' }} onClick={() => {
+                                        this.setState({ failedLogin: () => { } });
+                                    }}>닫기</Button>
+                                </Alert>
+                            </div>
+                        </Dialog>
+                    )
+                }
+            })
         } finally {
             return false;
         }
