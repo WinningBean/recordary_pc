@@ -1,6 +1,5 @@
-package com.fairy_pitt.recordary.group.domain.entity;
-import com.fairy_pitt.recordary.group_member.domain.entity.GroupMemberEntity;
-import com.fairy_pitt.recordary.model.Users;
+package com.fairy_pitt.recordary.common.entity;
+
 import lombok.*;
 import javax.persistence.*;
 import java.util.List;
@@ -20,7 +19,7 @@ public class GroupEntity {
     private Long groupCd;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Users gMstUserFK;
+    private UserEntity gMstUserFK;
 
     @Column(name = "GROUP_NM")
     private String gName;

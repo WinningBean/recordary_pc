@@ -1,7 +1,5 @@
 package com.fairy_pitt.recordary.common.entity;
 
-import com.fairy_pitt.recordary.group.domain.entity.GroupEntity;
-import com.fairy_pitt.recordary.group_member.domain.entity.GroupMemberEntity;
 import lombok.Data;
 import javax.persistence.*;
 import java.util.List;

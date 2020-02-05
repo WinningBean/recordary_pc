@@ -1,7 +1,7 @@
-package com.fairy_pitt.recordary.group_member.repository;
+package com.fairy_pitt.recordary.common.repository;
 
-import com.fairy_pitt.recordary.group_member.domain.entity.GroupMemberEntity;
-import com.fairy_pitt.recordary.group_member.domain.entity.GroupMemberPK;
+import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
+import com.fairy_pitt.recordary.common.id.GroupMemberPK;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

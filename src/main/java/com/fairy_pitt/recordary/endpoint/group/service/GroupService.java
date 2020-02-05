@@ -1,10 +1,10 @@
-package com.fairy_pitt.recordary.group.service;
+package com.fairy_pitt.recordary.endpoint.group.service;
 
-import com.fairy_pitt.recordary.group.domain.entity.GroupEntity;
-import com.fairy_pitt.recordary.group.repository.GroupRepository;
-import com.fairy_pitt.recordary.model.Users;
-import com.fairy_pitt.recordary.repository.UsersRepository;
-import javafx.scene.Group;
+import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.repository.UserRepository;
+import com.fairy_pitt.recordary.common.entity.GroupEntity;
+import com.fairy_pitt.recordary.common.repository.GroupRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ public class GroupService {
 
     @Autowired
     private final GroupRepository  groupRepository;
-    private final UsersRepository usersRepository;
+    private final UserRepository usersRepository;
 
     public GroupEntity groupCreate(GroupEntity groupEntity){
         GroupEntity resultGroupEntity = groupRepository.save(groupEntity);
@@ -29,7 +29,7 @@ public class GroupService {
         groupRepository.deleteById(id);
     }
 
-    public List<GroupEntity> GroupRead(Users user){
+    public List<GroupEntity> GroupRead(UserEntity user){
 
         return usersRepository.findByUserId(user.getUserId())
                 .getMasters();

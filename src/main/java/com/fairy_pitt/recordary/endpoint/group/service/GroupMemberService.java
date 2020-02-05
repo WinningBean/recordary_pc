@@ -1,10 +1,11 @@
-package com.fairy_pitt.recordary.group_member.service;
+package com.fairy_pitt.recordary.endpoint.group.service;
 
-import com.fairy_pitt.recordary.group.repository.GroupRepository;
-import com.fairy_pitt.recordary.group_member.domain.entity.GroupMemberEntity;
-import com.fairy_pitt.recordary.group_member.repository.GroupMemberRepository;
-import com.fairy_pitt.recordary.model.Users;
-import com.fairy_pitt.recordary.repository.UsersRepository;
+import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.repository.UserRepository;
+import com.fairy_pitt.recordary.common.repository.GroupRepository;
+import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
+import com.fairy_pitt.recordary.common.repository.GroupMemberRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,14 +20,14 @@ public class GroupMemberService {
     @Autowired
     private final GroupRepository groupRepository;
     @Autowired
-    private final UsersRepository usersRepository;
+    private final UserRepository userRepository;
     @Autowired
     private final GroupMemberRepository groupMemberRepository;
 
 
-    public List<GroupMemberEntity> readUserGroup(Users user)
+    public List<GroupMemberEntity> readUserGroup(UserEntity user)
     {
-        return usersRepository.findByUserId(user.getUserId())
+        return userRepository.findByUserId(user.getUserId())
                 .getGroups();
     }
 

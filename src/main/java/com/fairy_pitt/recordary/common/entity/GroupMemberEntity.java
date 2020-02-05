@@ -1,7 +1,6 @@
-package com.fairy_pitt.recordary.group_member.domain.entity;
+package com.fairy_pitt.recordary.common.entity;
 
-import com.fairy_pitt.recordary.group.domain.entity.GroupEntity;
-import com.fairy_pitt.recordary.model.Users;
+import com.fairy_pitt.recordary.common.id.GroupMemberPK;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,5 +22,5 @@ public class GroupMemberEntity implements Serializable {
 
     @Id
     @ManyToOne
-    private Users userCodeFK;
+    private UserEntity userCodeFK;
 }

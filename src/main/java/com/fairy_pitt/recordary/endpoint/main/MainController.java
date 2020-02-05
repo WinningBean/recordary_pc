@@ -1,9 +1,9 @@
 package com.fairy_pitt.recordary.endpoint.main;
 
-import com.fairy_pitt.recordary.group.domain.entity.GroupEntity;
-import com.fairy_pitt.recordary.group.service.GroupService;
-import com.fairy_pitt.recordary.group_member.domain.entity.GroupMemberEntity;
-import com.fairy_pitt.recordary.group_member.service.GroupMemberService;
+import com.fairy_pitt.recordary.common.entity.GroupEntity;
+import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
+import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
+import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.endpoint.user.service.UserInfoService;
 
