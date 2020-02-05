@@ -1,6 +1,6 @@
 package com.fairy_pitt.recordary.common.entity;
 
-import com.fairy_pitt.recordary.common.id.GroupMemberPK;
+import com.fairy_pitt.recordary.common.id.GroupMemberID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Table(name="GROUP_MEMBER_TB")
 @NoArgsConstructor
 @AllArgsConstructor
-@IdClass(GroupMemberPK.class)
+@IdClass(GroupMemberID.class)
 public class GroupMemberEntity implements Serializable {
 
     @Id

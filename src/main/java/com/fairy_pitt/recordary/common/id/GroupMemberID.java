@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Data
 @Embeddable
-public class GroupMemberPK implements Serializable {
+public class GroupMemberID implements Serializable {
 
     private Long groupCodeFK;
     private Long userCodeFK;
