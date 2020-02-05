@@ -7,25 +7,8 @@ import Button from '@material-ui/core/Button';
 import MenuIcon from '@material-ui/icons/Menu';
 import EditIcon from '@material-ui/icons/Build';
 import InputBase from '@material-ui/core/InputBase';
-import { withStyles } from '@material-ui/styles';
-import { createMuiTheme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/core/styles';
-
-//App Bar with search field
-//https://material-ui.com/components/app-bar/
-// const styles = theme => ({
-//     inputInput: {
-//         padding: theme.spacing(1, 1, 1, 7),
-//         transition: theme.transitions.create('width'),
-//         width: '100%',
-//         [theme.breakpoints.up('sm')]: {
-//             width: 120,
-//             '&:focus': {
-//                 width: 200,
-//             },
-//         },
-//     },
-// });
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import SearchAppBar from '../Other/SearchField';
 
 const defaultProps = {
     data : {
@@ -181,14 +164,18 @@ class Header extends React.Component {
                 </div>
                 <div id="header-right">
                     <div className="search-user">
-                        <InputBase
-                            placeholder="Search…"
-                            // className={classes.inputInput}
-                            // inputProps={{ 'aria-label': 'search' }}
-                        />
+                        {/* <input type="text" /> */}
+                        <SearchAppBar></SearchAppBar>
                     </div>
                     <div className="profile-icon">
-                        <a href="profile.html">profile</a>
+                        {/* <
+                        <a href="profile.html">profile</a> */}
+                        <AccountCircleIcon style={{fontSize : 40 }} onClick={(e)=>{
+                            e.preventDefault();
+                            this.props.onProfileShow();
+                        }}>
+                            Profile
+                        </AccountCircleIcon>
                     </div>
                 </div>
             </header>

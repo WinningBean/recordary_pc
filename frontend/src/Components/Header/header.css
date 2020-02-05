@@ -35,18 +35,19 @@ header{
     margin-left: 10px;
     width: 40px;
     height: 40px;
-    background-color: gold;
+    cursor:pointer;
 }
 
 #header-right .search-user{
-    margin-right: 100px;
+    margin-right: 160px;
     background-color: transparent;
-    padding-top: 3px;
+    padding-top: 5px;
 }
 
-#header-right .search-user>input{
+.search-user>input{
     font-size: 23px;
-    width: 140px;
+    width: 200px;
+    border-radius: 10px;
 }
 
 .menu-wrap{

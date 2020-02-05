@@ -16,7 +16,12 @@
 .icon{
     display: flex;
     justify-content: center;
-    padding-bottom: 100px;
+    padding-bottom: 50px;
+}
+
+.title-image{
+    width: auto;
+    height: 200px;
 }
 
 .login-form{
