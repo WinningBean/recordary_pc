@@ -1,4 +1,4 @@
-package com.fairy_pitt.recordary.common.id;
+package com.fairy_pitt.recordary.common.pk;
 
 import lombok.Data;
 
@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Data
 @Embeddable
-public class GroupMemberID implements Serializable {
+public class GroupMemberPK implements Serializable {
 
     private Long groupCodeFK;
     private Long userCodeFK;
