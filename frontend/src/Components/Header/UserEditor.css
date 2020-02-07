@@ -1,14 +1,29 @@
 .editor{
     display: flex;
-    flex-direction: column;
-    padding: 25px;
+    width: 600px;
+    height: 300px;
+}
+
+.editor-image{
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 300px;
-    height: 400px;
+    height: 300px;
+    padding: 25px;
+}
+
+.editor-info{
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    height: 300px;
+    padding: 25px;
 }
 
 .editor-info-text{
     width:250px;
-    height: 350px;
+    height: 200px;
 }
 
 .editor-info-buttons{

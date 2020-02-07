@@ -54,7 +54,7 @@ def webappDir = "$projectDir/frontend"
 
 task appNpmInstall(type: NpmTask) {
     workingDir = file("${webappDir}")
-    args = ["run-script", "build"] }
+    args = ["run", "build"] }
 task copyStaticApp(type: Copy) {
     from 'frontend/build'
     into "build/resources/main/static"}

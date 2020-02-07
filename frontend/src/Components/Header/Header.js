@@ -9,42 +9,40 @@ import EditIcon from '@material-ui/icons/Build';
 import InputBase from '@material-ui/core/InputBase';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SearchAppBar from '../Other/SearchField';
-import ArrowDown from '@material-ui/icons/KeyboardArrowDown';
-import ArrowUp from '@material-ui/icons/KeyboardArrowUp';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const defaultProps = {
     data : {
-        currentUser: {
-            user_ex: '',
-            user_id: 'HelloWorld1234',
-            user_nm: '홍길동'
+            userId: 'abcd',
+            userName: '위성호',
+            userImage: 'http://placehold.it/30x30'
         },
-        userFriend: [
-            {
-                friend_cd: 1,
-                friend_nm: '친구1',
-                friend_pic: 'http://placehold.it/40x40',
-            },
-            {
-                friend_cd: 1,
-                friend_nm: '친구2',
-                friend_pic: 'http://placehold.it/40x40',
-            }
-        ],
-        userGroup: [
-            {
-                group_cd: 1,
-                group_nm: '그룹1',
-                group_pic: 'http://placehold.it/40x40',
-            },
-            {
-                group_cd: 2,
-                group_nm: '그룹2',
-                group_pic: 'http://placehold.it/40x40',
-            }
-        ]
-    }
+        menuComponents: {
+            
+            groupList: [
+                {
+                    gruopCode: '100249',
+                    groupImage: 'http://placehold.it/30x30',
+                    groupName: '참조',
+                },
+                {
+                    gruopCode: '100250',
+                    groupImage: 'http://placehold.it/30x30',
+                    groupName: '팔색조',
+                },
+                {
+                    gruopCode: '100251',
+                    groupImage: 'http://placehold.it/30x30',
+                    groupName: '조조',
+                },
+            ],
+            friendList: [
+                {
+                    friendCode: '100001',
+                    friendImage: 'http://placehold.it/30x30',
+                    friendName: "위승빈"
+                }
+            ],
+        }
 }
 
 class Header extends React.Component {
@@ -90,67 +88,45 @@ class Header extends React.Component {
             if (this.state.groupOpen === true) {
                 const gruops = this.state.data.userGroup.map(
                     (value) => { return (
-                    <li key={value.group_cd}>
+                    <li key={value.groupCd}>
                         <GroupButton>
-                            <div style={{display:'flex', alignItems:'center'}}>
-                                <img style={{marginRight:'10px', borderRadius:'50%'}} src={value.group_pic} />
-                                {value.group_nm}
-                            </div>
-                            <div>
-                                <IconButton><MoreVertIcon/></IconButton>
-                            </div>
+                            {/* <img src={value.groupPic} /> */}
+                            {value.groupNm}
                         </GroupButton>
                         </li>) }
                 );
                 return (
                     <div className="gruop-field">
-                        <GroupButton style={{backgroundColor:'rgba(209, 204, 192,0.4)'}} onClick={this.setGroupMenuOpen}>
-                            <span style={{fontSize:'18px'}}>Groups</span>
-                            <span><ArrowUp style={{fontSize:'30px'}} /></span>
-                        </GroupButton>
+                        <GroupButton onClick={this.setGroupMenuOpen}>그룹▲</GroupButton>
                         <div><ul>{gruops}</ul></div>
                     </div>
                 );
             }
-            return <GroupButton onClick={this.setGroupMenuOpen}>
-                <span style={{ fontSize: '18px' }}>Groups</span>
-                <span><ArrowDown style={{ fontSize: '30px' }} /></span>
-            </GroupButton>;
+            return <GroupButton onClick={this.setGroupMenuOpen}>그룹▼</GroupButton>;
         })();
         const friendList = (() => {
             if (this.state.friendOpen === true) {
                 const friends = this.state.data.userFriend.map(
                     (value) => { return (
-                    <li key={value.friend_cd}>
+                    <li key={value.friendCd}>
                         <GroupButton>
-                            <div style={{display:'flex', alignItems:'center'}}>
-                                <img style={{marginRight:'10px', borderRadius:'50%'}} src={value.friend_pic} />
-                                {value.friend_nm}
-                            </div>
-                            <div>
-                                <IconButton><MoreVertIcon/></IconButton>
-                            </div>
+                            <img src={value.friendPic} />
+                            {value.friendNm}
                         </GroupButton>
                         </li>) }
                 );
                 return (
                     <div className="gruop-field">
-                        <GroupButton style={{backgroundColor:'rgba(209, 204, 192,0.4)'}} onClick={this.setFriendMenuOpen}>
-                            <span style={{fontSize:'18px'}}>Friends</span>
-                            <span><ArrowUp style={{fontSize:'30px'}} /></span>
-                        </GroupButton>
+                        <GroupButton onClick={this.setFriendMenuOpen}>친구▲</GroupButton>
                         <div><ul>{friends}</ul></div>
                     </div>
                 );
             }
-            return <GroupButton onClick={this.setFriendMenuOpen}>
-            <span style={{fontSize:'18px'}}>Friends</span>
-            <span><ArrowDown style={{fontSize:'30px'}} /></span>
-        </GroupButton>;
+            return <GroupButton onClick={this.setFriendMenuOpen}>친구▼</GroupButton>;
         })();
         const Editor = () => {
             if (this.state.editorClick === true) {
-                return <UserEditor currentUser={this.state.data.currentUser} onCancel={() => this.setState({ editorClick: false })} />;
+                return <UserEditor onCancel={() => this.setState({ editorClick: false })} />;
             }
             return null;
         }
@@ -163,26 +139,19 @@ class Header extends React.Component {
                         <Drawer
                             open={this.state.menuClick}
                             onClose={() => this.setState({ menuClick: false })}
-                            style={{backgroundColor:'rgba(241, 242, 246,0.1)'}}
                             anchor='left'>
                             <div className="menu-wrap">
-                                <div className="menu-profile">
-                                    <div style={{marginRight:'10px'}}>
-                                        <img alt="user img" src="http://placehold.it/50x50" 
-                                        style={{borderRadius:'50%'}}
-                                        />
-                                    </div>
-                                    <span>{this.state.data.currentUser.user_id}</span>
+                                <div className="menu-profile"
+                                    onClick={() => console.log('click')}>
+                                        {/* <img alt="user img" src={this.state.userComponents.userImage} /> */}
+                                    <span>{this.state.data.currentUser.userNm}</span>
+                                    <IconButton onClick={() => this.setState({ editorClick: true })}><EditIcon /></IconButton>
+                                    {Editor()}
                                 </div>
                                 <div className="menu-buttons">
                                     {GroupList}
                                     {friendList}
                                 </div>
-                                <div className="menu-bottom">
-                                    <IconButton onClick={() => this.setState({ editorClick: true })}><EditIcon /></IconButton>
-                                    <IconButton>로그아웃</IconButton>
-                                </div>
-                                {Editor()}
                             </div>
                         </Drawer>
                     </div>
@@ -221,15 +190,9 @@ const IconButton = styled(Button)({
 });
 
 const GroupButton = styled(Button)({
-    width: '250px',
-    height: '50px',
-    borderBottom: '1px solid rgba(209, 204, 192,0.8)',
-    borderRadius: '0',
-    display:'flex', 
-    justifyContent:'space-between',
-    paddingTop:'5px',
-    paddingBottom: '5px',
-    paddingLeft: '10px',
+    width: '300px',
+    height: '80px',
+    border: '1px solid gray',
 });
 
 // export default withStyles(styles)(Header);

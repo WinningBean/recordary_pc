@@ -3,8 +3,10 @@ import './LoginPage.css';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/styles';
+import Dialog from '@material-ui/core/Dialog';
+import Alert from '@material-ui/lab/Alert';
+import AlertTitle from '@material-ui/lab/AlertTitle';
 import Register from './Register';
-import AlertDialog from '../Other/AlertDialog';
 import axios from 'axios';
 
 class Login extends React.Component {
@@ -24,34 +26,6 @@ class Login extends React.Component {
 
     loginHandel = async (e) => {
         e.preventDefault();
-        if(this.state.user_id === ""){
-            this.setState({
-                failedLogin: () => {
-                    return (
-                        <AlertDialog 
-                            severity="error"
-                            content="아이디를 작성하세요."
-                            onAlertClose={()=>{this.setState({ failedLogin: () => {} })}}
-                            />
-                    )
-                }
-            })
-            return;
-        }
-        if(this.state.user_pw === ""){
-            this.setState({
-                failedLogin: () => {
-                    return (
-                        <AlertDialog 
-                            severity="error"
-                            content="비밀번호를 작성하세요."
-                            onAlertClose={()=>{this.setState({ failedLogin: () => {} })}}
-                            />
-                    )
-                }
-            })
-            return;
-        }
         try {
             const Form = new FormData();
             Form.append('user_id', this.state.user_id);
@@ -64,11 +38,17 @@ class Login extends React.Component {
                 this.setState({
                     failedLogin: () => {
                         return (
-                            <AlertDialog 
-                                severity="error"
-                                content="로그인에 실패하였습니다."
-                                onAlertClose={()=>{this.setState({ failedLogin: () => {} })}}
-                                />
+                            <Dialog open>
+                                <div>
+                                    <Alert severity="error">
+                                        <AlertTitle>Error</AlertTitle>
+                                        로그인에 실패하였습니다.
+                                                <Button style={{ marginTop: '10px' }} onClick={() => {
+                                            this.setState({ failedLogin: () => { } });
+                                        }}>닫기</Button>
+                                    </Alert>
+                                </div>
+                            </Dialog>
                         )
                     }
                 })
@@ -83,11 +63,17 @@ class Login extends React.Component {
             this.setState({
                 failedLogin: () => {
                     return (
-                        <AlertDialog
-                            severity="error"
-                            content="서버 오류로인해 로그인에 실패하였습니다."
-                            onAlertClose={() => { this.setState({ failedLogin: () => { } }) }}
-                        />
+                        <Dialog open>
+                            <div>
+                                <Alert severity="error">
+                                    <AlertTitle>Error</AlertTitle>
+                                    서버 오류로인해 로그인에 실패하였습니다.
+                                                <Button style={{ marginTop: '10px' }} onClick={() => {
+                                        this.setState({ failedLogin: () => { } });
+                                    }}>닫기</Button>
+                                </Alert>
+                            </div>
+                        </Dialog>
                     )
                 }
             })
@@ -107,15 +93,20 @@ class Login extends React.Component {
                 return <Register
                     onSuccessRegister={
                         () => {
-                            this.setState({
-                                isRegister: false,
+                            this.setState({  isRegister: false,
                                 successRegister: () => {
                                     return (
-                                        <AlertDialog
-                                            severity="success"
-                                            content="회원가입을 성공하였습니다."
-                                            onAlertClose={() => { this.setState({ successRegister: () => { } }) }}
-                                        />
+                                        <Dialog open>
+                                            <div>
+                                                <Alert severity="success">
+                                                    <AlertTitle>Success</AlertTitle>
+                                                    회원가입을 성공하였습니다.
+                                                    <Button style={{marginTop:'10px'}} onClick={() => {
+                                                            this.setState({ successRegister: () => { } });
+                                                        }}>닫기</Button>
+                                                </Alert>
+                                            </div>
+                                        </Dialog>
                                     )
                                 }
                             })
