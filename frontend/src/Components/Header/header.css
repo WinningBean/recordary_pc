@@ -53,16 +53,31 @@ header{
 .menu-wrap{
     display: flex;
     flex-direction: column;
-    width: 300px;
+    background-color: RGBA(249, 249, 249, 1.0);
+    width: 250px;
+    height: 100%;
 }
 
 .menu-profile{
     display: flex;
-    padding: 20px;
+    padding-top: 5px;
+    padding-left: 10px;
     align-items: center;
-    width: 300px;
-    height: 70px;
+    width: 250px;
+    height: 60px;
     font-size: 15px;
-    background-color: #f9f9f9;
-    border-bottom: 1px solid #cccccc;
+    background-color: rgba(245, 246, 250,1.0);
+    /* border-bottom: 2px solid RGBA(209, 204, 192,0.8); */
+    border-bottom: 2px solid  rgba(48, 51, 107,1.0);
+}
+
+.menu-bottom{
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    bottom: 0;
+    width: 250px;
+    height: 40px;
+    background-color: rgba(209, 204, 192,0.4);
+    border-top: 1px solid rgba(209, 204, 192,0.8);
 }
