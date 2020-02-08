@@ -12,13 +12,30 @@
     padding-right: 20px;
 }
 
+/* 아이콘 색깔 css */
+.MuiSvgIcon-root{
+    color: rgba(20, 81, 51, 0.9);
+}
+
+.makeStyles-inputInput-158{
+    color: rgba(20, 81, 51, 0.9) !important;
+}
+
+#main-profile>.search-user>.makeStyles-search-155{
+    border: 2px solid rgba(20, 81, 51, 0.3);
+    border-radius: 10px;
+}
+
+
 #main-profile-info{
     display: flex;
     height: 500px;
     margin-left: 20px;
     margin-right: 20px;
-    box-shadow: 0px 1px 5px rgb(161, 159, 159);
+    /* box-shadow: 0px 1px 5px rgb(161, 159, 159); */
     border-radius: 20px; 
+    border: 2px solid rgba(20, 81, 51, 0.3);
+
 }
 
 #userinfo{
@@ -103,14 +120,70 @@ nav>div{
     margin-left: 20px;
     margin-right: 20px;
     padding: 10px 20px;
-    box-shadow: 0px 1px 5px rgb(161, 159, 159);
+    /* box-shadow: 0px 1px 5px rgb(161, 159, 159); */
     border-radius: 10px; 
+    border: 2px solid rgba(20, 81, 51, 0.3);
+
 }
 
-.media-area{
-    display: flex;
-    height: 250px;
+/* ScheduleTimeline부분 */
+.profile-ScheduleTimeLine{
+    display:flex;
+    flex-wrap: wrap;
+    width: 900px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top:30px;
 }
+
+article{
+    display: flex;
+}
+
+.timeline-profile-schedule{
+    width: 420px;
+    height: 290px;
+    border-radius: 10px;
+    margin: 10px;
+    /* box-shadow: 0px 1px 5px rgb(161, 159, 159); */
+    border: 2px solid rgba(20, 81, 51, 0.3);
+}
+
+.timeline-profile-time{
+    display: flex;
+    justify-content: space-between;
+}
+
+.timeline-profile-top{
+    display: flex;
+    align-items: center;
+}
+
+.timeline-profile-picture>img{
+    height: 40px;
+    border-radius: 20px;
+    margin-left: 5px;
+    margin-top:3px;
+}
+.timeline-profile-name{
+    padding-left: 10px;
+}
+.timeline-schedule-date{
+    margin-right: 10px;
+    border: none;
+}
+
+.profile-schedule-info{
+    border: 1px solid lightgray;
+}
+
+.profile-schedule-info .timeline-schedule-weekTable{
+    height: 150px;
+}
+
+
+
+
 
 .media-area .media-item{
     margin: 10px 20px;
@@ -124,11 +197,33 @@ nav>div{
     object-fit: cover;
 }
 
-.calender{
-    margin-top: 10px;
-}
-.react-calendar{
+
+
+
+
+/* 캘린더 css */
+
+.schedule-area{
+    display: flex;
+    flex-direction: column;
+    align-content: flex-end;
     height: 480px;
     box-shadow: 0px 1px 2px rgb(161, 159, 159);
     border-radius: 10px;
 }
+
+.schedule-append{
+    display: flex;
+    justify-content: flex-end;
+    align-content: center;
+    width: 610px;
+    margin-top: 10px;
+}
+
+.calender{
+    margin-top: 10px;
+    height: 430px;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+}
+

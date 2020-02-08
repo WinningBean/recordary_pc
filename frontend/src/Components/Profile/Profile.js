@@ -1,9 +1,31 @@
 import React from 'react';
 import './ProfilePage.css';
 import SearchAppBar from '../Other/SearchField';
+import ScheduleTimeline1 from './ScheduleTimeline1'
+
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import Button from '@material-ui/core/Button';
+import { styled } from '@material-ui/core/styles';
+import ChoosePostAppend from './ChoosePostAppend';
 
 class Profile extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            postAppendClick : false,
+        }
+    }
+
     render() {
+        
+        const PostAppendMenu = () => {
+            if(this.state.postAppendClick === true){
+                return <ChoosePostAppend onCancel={() => this.setState({ postAppendClick: false })}></ChoosePostAppend>
+            }
+            return null;
+        }
+
+
         return (
             <main>
                 <div id="main-profile">
@@ -30,32 +52,43 @@ class Profile extends React.Component {
                                 </div>    
                             </div>
                         </div>
-                        <div id="calender-area">
+                        <div id="schedule-area">
+                            <div className="schedule-append">
+                                <IconButton>
+                                    <AddCircleIcon onClick={()=> this.setState({postAppendClick: true})} style={{fontSize: '30px'}}></AddCircleIcon>
+                                </IconButton>
+                                {PostAppendMenu()}
+                            </div>
                             <div className="calender">
                                 {/* 캘린더 추가 */}
+                                달력
                             </div>
                         </div>
                     </div>
                 </div>
                 <nav>
-                    <div id="tap-1">
-                        <a href="profile.html">일정</a>
+                    <div id="tap-1" >
+                        <span>일정</span>
                     </div>
                     <div id="tap-2">
-                        <a href="profile.html">사진</a>
+                        <span>사진</span>
                     </div>
                 </nav>
-                <article>
-                    <div className="media-area">
-                        안녕
-                    </div>
-                    <div className="media-area">
-                        배고프다
-                    </div>
-                </article>
-        </main>
+                <div className="profile-ScheduleTimeLine">
+                    <ScheduleTimeline1></ScheduleTimeline1>
+                    <ScheduleTimeline1></ScheduleTimeline1>
+                    <ScheduleTimeline1></ScheduleTimeline1>
+                    <ScheduleTimeline1></ScheduleTimeline1>
+                </div>
+            </main>
         );
     }
 }
+const IconButton = styled(Button)({
+    minWidth: '40px',
+    height: '40px',
+});
+
+
 
 export default Profile;

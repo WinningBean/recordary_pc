@@ -157,7 +157,7 @@ class Header extends React.Component {
             <header>
                 <div id="header-left">
                     <div className="title-menu">
-                        <IconButton onClick={() => this.setState({ menuClick: true })}><MenuIcon style={{ fontSize: '26px' }} /></IconButton>
+                        <IconButton onClick={() => this.setState({ menuClick: true })}><MenuIcon style={{ fontSize: '30px', color: 'white'}} /></IconButton>
                         <Drawer
                             open={this.state.menuClick}
                             onClose={() => this.setState({ menuClick: false })}
@@ -185,21 +185,22 @@ class Header extends React.Component {
                         </Drawer>
                     </div>
                     <div className="title-icon">
-                        <a href="profile.html"><img alt="icon" src="http://placehold.it/30x30" /></a>
+                        <a href="profile.html"><img alt="icon" src="http://placehold.it/40x40" /></a>
                     </div>
                     <div className="title-name">
-                        <a href="profile.html"><img alt="title" src="http://placehold.it/30x30" /></a>
+                        <a href="profile.html">
+                            <img className="title-image" alt="Recordary icon" src="Recordary.png" style={{height:'40px'}}/>
+                        </a>
                     </div>
                 </div>
                 <div id="header-right">
                     <div className="search-user">
-                        {/* <input type="text" /> */}
                         <SearchAppBar></SearchAppBar>
                     </div>
                     <div className="profile-icon">
                         {/* <
                         <a href="profile.html">profile</a> */}
-                        <AccountCircleIcon style={{fontSize : 40 }} onClick={(e)=>{
+                        <AccountCircleIcon style={{fontSize : 40, color: 'white' }} onClick={(e)=>{
                             e.preventDefault();
                             this.props.onProfileShow();
                         }}>
