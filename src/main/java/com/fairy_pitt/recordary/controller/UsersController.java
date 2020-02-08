@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
+@CrossOrigin
 @RestController
 public class UsersController {
     @Autowired
@@ -33,9 +34,13 @@ public class UsersController {
         String userPw = paramMap.get("user_pw");
         String userNm = paramMap.get("user_nm");
 
-        Boolean joinState = joinService.joinUser(userId, userPw, userNm);
+        Boolean possibleIdState = joinService.possibleId(userId);
+        Boolean joinState = false;
+
+        if (possibleIdState) joinState = joinService.joinUser(userId, userPw, userNm);
 
         Map<String, Boolean> map = new HashMap<>();
+        map.put("isPossibleId", possibleIdState);
         map.put("isJoin", joinState);
 
         return map;
@@ -55,21 +60,8 @@ public class UsersController {
         return map;
     }
 
-
     @Autowired
     private UsersRepository usersRepository;
-
-    // 임시 중복확인
-    @PostMapping(value = "/checkUserId")
-    public Map<String, Boolean> TestResult(@RequestBody Map<String, String> paramMap){
-        String chkUserId = paramMap.get("user_id");
-
-        Map<String, Boolean> map = new HashMap<>();
-        Boolean checkState = false;
-        if (usersRepository.findByUserId(chkUserId) == null) checkState = true;
-        map.put("isPossible", checkState);
-        return map;
-    }
 
     @PostMapping(value = "/userUpdate")
     public Map<String, Boolean> userUpdate(@RequestParam Map<String, String> paramMap){
