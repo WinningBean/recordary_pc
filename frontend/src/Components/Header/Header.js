@@ -159,7 +159,7 @@ class Header extends React.Component {
             <header>
                 <div id="header-left">
                     <div className="title-menu">
-                        <IconButton onClick={() => this.setState({ menuClick: true })}><MenuIcon style={{ fontSize: '26px' }} /></IconButton>
+                        <IconButton onClick={() => this.setState({ menuClick: true })}><MenuIcon style={{ fontSize: '30px', color: 'white'}} /></IconButton>
                         <Drawer
                             open={this.state.menuClick}
                             onClose={() => this.setState({ menuClick: false })}
@@ -202,7 +202,7 @@ class Header extends React.Component {
                     <div className="profile-icon">
                         {/* <
                         <a href="profile.html">profile</a> */}
-                        <AccountCircleIcon style={{fontSize : 40 }} onClick={(e)=>{
+                        <AccountCircleIcon style={{fontSize : 40, color: 'white' }} onClick={(e)=>{
                             e.preventDefault();
                             this.props.onProfileShow();
                         }}>

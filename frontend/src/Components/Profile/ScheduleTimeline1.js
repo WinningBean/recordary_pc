@@ -11,27 +11,24 @@ class ScheduleTimeline1 extends React.Component {
         return (
             <article>
                 <div className="media-area">
-                    <div className="timeline-schedule timeline-profile-schedule">
-                        <div className="timeline-profile">
-                            <div className="profile-picture">
-                                <img src="profile-image.png" />
-                            </div>
-                            <div className="profile-name">
-                                위성호
-                            </div>
-                            <div className="profile-time">
-                                <div className="profile-time-text">
-                                    3일 전
+                    <div className="timeline-profile-schedule">
+                        <div className="timeline-profile-time">
+                            <div className="timeline-profile-top">
+                                <div className="timeline-profile-picture">
+                                    <img src="profile-image.png" />
+                                </div>
+                                <div className="timeline-profile-name">
+                                    위성호
                                 </div>
                             </div>
-                            <div className="profile-moreIcon">
-                                <MoreVertIcon style={{ fontSize: 30 }}></MoreVertIcon>
+                            <div className="timeline-profile-top">
+                                <div className="timeline-schedule-date">
+                                    2020-01-01 ~ 2020-03-03
+                                </div>
+                                <MoreVertIcon stype={{fontSize:'30px'}}></MoreVertIcon>
                             </div>
                         </div>
                         <div className="profile-schedule-info">
-                            <div className="timeline-schedule-date">
-                                2020-01-01 ~ 2020-03-03
-                            </div>
                             <div className="timeline-schedule-title">
                                 일정 제목
                             </div>

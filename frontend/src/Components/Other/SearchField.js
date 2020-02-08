@@ -7,7 +7,7 @@ const useStyles = makeStyles(theme => ({
   search: {
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0,1),
+    backgroundColor: fade(theme.palette.common.white, 0.1),
     '&:hover': {
       backgroundColor: fade(theme.palette.common.white, 0.2),
     },
@@ -16,6 +16,7 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up('sm')]: {
       width: 'auto',
     },
+    // border: '1px solid rgba(255,255,255,0.8)'
   },
   searchIcon: {
     width: theme.spacing(7),
@@ -25,6 +26,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    color: 'white',
   },
   inputRoot: {
     color: 'inherit',
@@ -39,6 +41,7 @@ const useStyles = makeStyles(theme => ({
         width: 200,
       },
     },
+    color: 'white',
   },
 }));
 

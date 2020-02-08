@@ -6,10 +6,11 @@ header{
     width: 100%;
     min-width: 1300px;
     height: 50px;
-    background: no-repeat fixed linear-gradient(-225deg, RGB(255, 223, 75, 0.5), RGB(0, 168, 255, 0.5));
+    /* background: no-repeat fixed linear-gradient(-225deg, RGB(255, 223, 75, 0.5), RGB(0, 168, 255, 0.5)); */
     border-bottom: 1.2px solid lightgray;
     z-index: 10;
     box-shadow: 0px 1px 5px lightgray;
+    background-color: rgba(20, 81, 51, 0.8);
 }
 
 #header-left{
@@ -30,6 +31,14 @@ header{
     margin-right: 10px;
 }
 
+#header-right>.search-user>.makeStyles-search-155>.makeStyles-searchIcon-156>.MuiSvgIcon-root{
+    color: white;
+}
+
+#header-right>.search-user>.makeStyles-search-155>div>.makeStyles-inputInput-158{
+    color: white !important;
+}
+
 #header-right .profile-icon{
     margin-left: 10px;
     width: 40px;
@@ -46,7 +55,6 @@ header{
     width: 250px;
     height: 100%;
 }
-
 .menu-profile{
     display: flex;
     padding-top: 5px;
@@ -57,7 +65,8 @@ header{
     font-size: 15px;
     background-color: rgba(245, 246, 250,1.0);
     /* border-bottom: 2px solid RGBA(209, 204, 192,0.8); */
-    border-bottom: 2px solid  rgba(48, 51, 107,1.0);
+    border-bottom: 3px solid   rgba(20, 81, 51, 0.9);
+
 }
 
 .menu-bottom{
