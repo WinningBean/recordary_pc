@@ -107,15 +107,43 @@ nav>div{
     border-radius: 10px; 
 }
 
-.media-area{
+/* ScheduleTimeline부분 */
+.profile-ScheduleTimeLine{
+    display:flex;
+    flex-wrap: wrap;
+    width: 900px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top:30px;
+}
+
+
+article{
     display: flex;
-    height: 250px;
+}
+
+.timeline-profile-schedule{
+    margin:10px;
+    width: 420px;
+    height: 290px;
+    border-radius: 20px; 
+    box-shadow: 0px 1px 5px rgb(161, 159, 159);
+}
+
+.profile-schedule-info{
+    height: 180px;
+    border: 1px solid lightgray;
+}
+
+.profile-schedule-info .timeline-schedule-weekTable{
+    height: 100px;
 }
 
 .media-area .media-item{
     margin: 10px 20px;
     height: 230px;
     width: 230px;
+
 }
 
 .media-area .media-item>img{
@@ -124,11 +152,33 @@ nav>div{
     object-fit: cover;
 }
 
-.calender{
-    margin-top: 10px;
-}
-.react-calendar{
+
+
+
+
+/* 캘린더 css */
+
+.schedule-area{
+    display: flex;
+    flex-direction: column;
+    align-content: flex-end;
     height: 480px;
     box-shadow: 0px 1px 2px rgb(161, 159, 159);
     border-radius: 10px;
 }
+
+.schedule-append{
+    display: flex;
+    justify-content: flex-end;
+    align-content: center;
+    width: 610px;
+    margin-top: 10px;
+}
+
+.calender{
+    margin-top: 10px;
+    height: 430px;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+}
+

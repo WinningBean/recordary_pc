@@ -187,15 +187,16 @@ class Header extends React.Component {
                         </Drawer>
                     </div>
                     <div className="title-icon">
-                        <a href="profile.html"><img alt="icon" src="http://placehold.it/30x30" /></a>
+                        <a href="profile.html"><img alt="icon" src="http://placehold.it/40x40" /></a>
                     </div>
                     <div className="title-name">
-                        <a href="profile.html"><img alt="title" src="http://placehold.it/30x30" /></a>
+                        <a href="profile.html">
+                            <img className="title-image" alt="Recordary icon" src="Recordary.png" style={{height:'40px'}}/>
+                        </a>
                     </div>
                 </div>
                 <div id="header-right">
                     <div className="search-user">
-                        {/* <input type="text" /> */}
                         <SearchAppBar></SearchAppBar>
                     </div>
                     <div className="profile-icon">

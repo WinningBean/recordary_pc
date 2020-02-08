@@ -22,7 +22,6 @@ header{
     margin-right: 10px;
     width: 40px;
     height: 40px;
-    background-color: gold;
 }
 
 #header-right{
@@ -31,24 +30,14 @@ header{
     margin-right: 10px;
 }
 
-#header-right>div{
+#header-right .profile-icon{
     margin-left: 10px;
     width: 40px;
     height: 40px;
     cursor:pointer;
 }
 
-#header-right .search-user{
-    margin-right: 160px;
-    background-color: transparent;
-    padding-top: 5px;
-}
 
-.search-user>input{
-    font-size: 23px;
-    width: 200px;
-    border-radius: 10px;
-}
 
 .menu-wrap{
     display: flex;

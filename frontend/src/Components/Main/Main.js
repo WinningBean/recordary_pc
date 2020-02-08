@@ -5,7 +5,6 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import ShareIcon from '@material-ui/icons/Share';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
-
 class Main extends React.Component {
     render() {
         return (
@@ -49,7 +48,7 @@ class Main extends React.Component {
                                     <div>abc</div>
                                     <div>abc</div>
                                 </div>
-                                <div className="comment-icon">
+                                <div className="comment-context-icon">
                                     <div className="comment-icon-left">
                                         <div className="likeIcon">
                                             <ThumbUpRoundedIcon style={{ fontSize: 30 }}>like</ThumbUpRoundedIcon>
@@ -63,7 +62,6 @@ class Main extends React.Component {
                                             <ShareIcon style={{ fontSize: 30 }}>share</ShareIcon>
                                         </div>
                                     </div>
-
                                 </div>
                                 <div className="comment-write">
                                     댓글 작성란
@@ -118,7 +116,7 @@ class Main extends React.Component {
                             </div>
                         </div>
                         <div classNamee="comment-context">
-                            <div className="comment-icon">
+                            <div className="comment-context-icon">
                                 <div className="comment-icon-left">
                                     <div className="likeIcon">
                                         <ThumbUpRoundedIcon style={{ fontSize: 30 }}>like</ThumbUpRoundedIcon>
@@ -132,7 +130,6 @@ class Main extends React.Component {
                                         <ShareIcon style={{ fontSize: 30 }}>share</ShareIcon>
                                     </div>
                                 </div>
-
                             </div>
                             <div className="comment-write">
                                 댓글 작성란
@@ -169,7 +166,7 @@ class Main extends React.Component {
                             </div>
                         </div>
                         <div classNamee="comment-context">
-                            <div className="comment-icon">
+                            <div className="comment-context-icon">
                                 <div className="comment-icon-left">
                                     <div className="likeIcon">
                                         <ThumbUpRoundedIcon style={{ fontSize: 30 }}>like</ThumbUpRoundedIcon>
