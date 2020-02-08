@@ -13,7 +13,7 @@ class Profile extends React.Component {
                     <div id="main-profile-info">
                         <div id="userinfo">
                             <div id="user-image">
-                                <img src="profile-image.png" />
+                                <img alt="profile-img" src="profile-image.png" />
                             </div>
                             <div id="userinfo-text">
                                 <div className="info">

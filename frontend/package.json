@@ -11,15 +11,18 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.2",
+    "cross-env": "^7.0.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "react-file-picker": "0.0.6",
+    "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.0",
     "styled-components": "^5.0.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "cross-env NODE_PATH=src react-scripts start",
+    "build": "cross-env NODE_PATH=src react-scripts build",
+    "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

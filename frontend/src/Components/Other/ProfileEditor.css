@@ -1,0 +1,17 @@
+.profile-editor{
+    display: flex;
+    padding: 25px;
+    width: 580px;
+    height: 300px;
+}
+
+.profile-editor-info{
+    width:250px;
+    height: 250px;
+    padding: 25px;
+}
+
+.profile-editor-image{
+    width: 250px;
+    height: 250px;
+}

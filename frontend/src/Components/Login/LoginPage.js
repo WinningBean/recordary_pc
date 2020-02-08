@@ -4,8 +4,10 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/styles';
 import Register from './Register';
-import AlertDialog from '../Other/AlertDialog';
+import AlertDialog from 'Components/Other/AlertDialog';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+import ProfileEditor from 'Components/Other/ProfileEditor';
 
 class Login extends React.Component {
     state = {
@@ -132,12 +134,13 @@ class Login extends React.Component {
                 {registerPage}
                 <form action="go_to_main" onSubmit={this.loginHandel}>
                     <div className="icon">
-                        <a href="main" onClick={(e) => {
+                        {/* <a href="main" onClick={(e) => {
                             e.preventDefault();
                             this.props.onChangePage();
                         }}>
                             <img className="title-image" alt="Recordary icon" src="http://localhost:8888/Recodary.png"/>
-                        </a>
+                        </a> */}
+                        <Link to="/main"><img className="title-image" alt="Recordary icon" src="http://localhost:8888/Recodary.png"/></Link>
                     </div>
                     {this.state.successRegister()}
                     {this.state.failedLogin()}
@@ -161,6 +164,7 @@ class Login extends React.Component {
                         </div>
                     </div>
                 </form >
+                {/* <ProfileEditor/> */}
             </div>
         );
     }

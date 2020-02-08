@@ -6,7 +6,6 @@ import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import MenuIcon from '@material-ui/icons/Menu';
 import EditIcon from '@material-ui/icons/Build';
-import InputBase from '@material-ui/core/InputBase';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SearchAppBar from '../Other/SearchField';
 import ArrowDown from '@material-ui/icons/KeyboardArrowDown';
@@ -93,7 +92,7 @@ class Header extends React.Component {
                     <li key={value.group_cd}>
                         <GroupButton>
                             <div style={{display:'flex', alignItems:'center'}}>
-                                <img style={{marginRight:'10px', borderRadius:'50%'}} src={value.group_pic} />
+                                <img alt="group-img" style={{marginRight:'10px', borderRadius:'50%'}} src={value.group_pic} />
                                 {value.group_nm}
                             </div>
                             <div>
@@ -124,7 +123,7 @@ class Header extends React.Component {
                     <li key={value.friend_cd}>
                         <GroupButton>
                             <div style={{display:'flex', alignItems:'center'}}>
-                                <img style={{marginRight:'10px', borderRadius:'50%'}} src={value.friend_pic} />
+                                <img alt="friend-img" style={{marginRight:'10px', borderRadius:'50%'}} src={value.friend_pic} />
                                 {value.friend_nm}
                             </div>
                             <div>
@@ -154,7 +153,6 @@ class Header extends React.Component {
             }
             return null;
         }
-        const { classes } = this.props;
         return (
             <header>
                 <div id="header-left">
@@ -234,4 +232,5 @@ const GroupButton = styled(Button)({
 
 // export default withStyles(styles)(Header);
 
+Header.defaultProps = defaultProps;
 export default Header;

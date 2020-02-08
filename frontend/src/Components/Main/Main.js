@@ -14,7 +14,7 @@ class Main extends React.Component {
                     <div className="timeline">
                         <div className="timeline-profile">
                             <div className="profile-picture">
-                                <img src="profile-image.png" />
+                                <img alt="profile-img" src="profile-image.png" />
                             </div>
                             <div className="profile-name">
                                 위승빈
@@ -31,7 +31,7 @@ class Main extends React.Component {
                         <div className="timeline-info">
                             <div className="time-line-picture-info">
                                 <div className="timeline-picture">
-                                    <img src="http://placehold.it/490x330" />
+                                    <img alt="timeline-img" src="http://placehold.it/490x330" />
                                 </div>
                                 <div className="timeline-title">
                                     게시물제목 또는 일정제목
@@ -40,7 +40,7 @@ class Main extends React.Component {
                                     게시물내용 또는 일정내용
                                 </div>
                             </div>
-                            <div classNamee="comment-context">
+                            <div className="comment-context">
                                 <div className="comment-title">
                                     Comment
                                 </div>
@@ -76,7 +76,7 @@ class Main extends React.Component {
                     <div className="timeline-schedule">
                         <div className="timeline-profile">
                             <div className="profile-picture">
-                                <img src="profile-image.png" />
+                                <img alt="profile-img" src="profile-image.png" />
                             </div>
                             <div className="profile-name">
                                 황수경
@@ -117,7 +117,7 @@ class Main extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <div classNamee="comment-context">
+                        <div className="comment-context">
                             <div className="comment-icon">
                                 <div className="comment-icon-left">
                                     <div className="likeIcon">
@@ -144,7 +144,7 @@ class Main extends React.Component {
                     <div className="timeline-schedule">
                         <div className="timeline-profile">
                             <div className="profile-picture">
-                                <img src="profile-image.png" />
+                                <img alt="profile-img" src="profile-image.png" />
                             </div>
                             <div className="profile-name">
                                 위성호
@@ -168,7 +168,7 @@ class Main extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <div classNamee="comment-context">
+                        <div className="comment-context">
                             <div className="comment-icon">
                                 <div className="comment-icon-left">
                                     <div className="likeIcon">

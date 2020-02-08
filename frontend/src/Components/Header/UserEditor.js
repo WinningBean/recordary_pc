@@ -48,7 +48,7 @@ class UserEditor extends React.Component {
         })();
         return (
             <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
-                <div className="editor">
+                <div className="user-editor">
                     {/* <div className='editor-image'>
                         <img alt="user img" src={this.state.userImage} />
                     </div> */}

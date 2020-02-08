@@ -7,7 +7,7 @@ class Aside extends React.Component {
             <aside>
                 <div className="aside-profile">
                     <div className="timeline-profile">   
-                        <img src="http://placehold.it/200X200"/>
+                        <img alt="user-img" src="http://placehold.it/200X200"/>
                     </div>
                     <div className="aside-profile-info">
                         <div className="aside-profile-name">
