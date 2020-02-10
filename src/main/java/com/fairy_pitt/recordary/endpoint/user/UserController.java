@@ -28,6 +28,9 @@ public class UserController {
     @Autowired
     private UserInfoService userInfoService;
 
+    @Autowired
+    private HttpSession session;
+
 //    @CrossOrigin
     @PostMapping(value = "/joinRequest")
     public Map<String, Boolean> joinRequest(@RequestParam Map<String, String> paramMap){
@@ -66,16 +69,26 @@ public class UserController {
 
     @PostMapping(value = "/userUpdate")
     public Map<String, Boolean> userUpdate(@RequestParam Map<String, String> paramMap){
-        Long userCd = Long.parseLong(paramMap.get("user_cd"));
-        String userNm = paramMap.get("user_nm");
-        String userPw = paramMap.get("user_pw");
-        String userEx = paramMap.get("user_ex");
+        String checkUserPw = paramMap.get("check_user_pw");
+        Boolean isChangeUserNm = Boolean.parseBoolean(paramMap.get("is_change_user_nm"));
+        String changeUserNm = paramMap.get("change_user_nm");
+        Boolean isChangeUserPw = Boolean.parseBoolean(paramMap.get("is_change_user_pw"));
+        String changeUserPw = paramMap.get("change_user_pw");
+
+        UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
 
         Map<String, Boolean> map = new HashMap<>();
-        Boolean updateState = true;
-        if(userNm.equals("") || userPw.equals("")) updateState =  false;
-        else userInfoService.update(userCd, userNm, userPw, userEx);
-        map.put("updateState", updateState);
+        Boolean checkPwState = false;
+        Boolean updateState = false;
+        if(changeUserNm.equals("") || changeUserPw.equals("")) updateState =  false;
+        else if (userInfoService.checkPw(currentUser, checkUserPw)) {
+            checkPwState = true;
+            if (isChangeUserNm) userInfoService.updateNm(currentUser, changeUserNm);
+            else if (isChangeUserPw) userInfoService.updatePw(currentUser, changeUserPw);
+            updateState = true;
+        }
+        map.put("is_correct_user_pw", checkPwState);
+        map.put("is_update", updateState);
         return map;
     }
 

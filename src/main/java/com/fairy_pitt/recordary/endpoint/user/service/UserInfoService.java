@@ -13,14 +13,23 @@ public class UserInfoService {
     @Autowired private UserRepository userRepository;
     @Autowired private UserPasswordHashService userPasswordHashService;
 
-    public void update(Long userCd, String userNm, String userPw, String userEx) {
-        UserEntity user = userRepository.findByUserCd(userCd);
+    public Boolean checkPw(UserEntity user, String userPw){
+        UserEntity checkUser = userRepository.findByUserPw(userPasswordHashService.getSHA256(userPw));
+        return user.getUserCd().equals(checkUser.getUserCd());
+    }
 
-        if (user == null) return;
-
+    public void updateNm(UserEntity user, String userNm) {
         user.setUserNm(userNm);
+        userRepository.save(user);
+    }
+
+    public void updatePw(UserEntity user, String userPw){
         user.setUserPw(userPasswordHashService.getSHA256(userPw));
-        user.setUserEx(userEx);
+        userRepository.save(user);
+    }
+
+    public void updateEx(UserEntity user, String useEx){
+        user.setUserEx(useEx);
         userRepository.save(user);
     }
 
