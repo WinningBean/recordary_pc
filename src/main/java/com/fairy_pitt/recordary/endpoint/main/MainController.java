@@ -1,6 +1,7 @@
 package com.fairy_pitt.recordary.endpoint.main;
 
 import com.fairy_pitt.recordary.common.entity.GroupEntity;
+import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
 import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
@@ -45,6 +46,7 @@ public class MainController {
 
     @Autowired private GroupService groupService;
     @Autowired private GroupMemberService groupmemberService;
+    @Autowired private FollowerService followerService;
 
     @ResponseBody
     @GetMapping(value = "/mainPage")
@@ -53,42 +55,39 @@ public class MainController {
 
         UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
 
-        List<GroupMemberEntity> result = groupmemberService.readUserGroup(currentUser);
-        List<Optional<GroupEntity>> userGroup = new ArrayList<>();
-        for (GroupMemberEntity groupMemberEntity :result) {
-            Optional<GroupEntity> findResult = groupService.findGroup(groupMemberEntity.getGroupCodeFK());
-           userGroup.add(findResult);
-        }
-
-        Map<String, Object> groupMap = new HashMap<>();
-        for (Optional<GroupEntity> groupEntity :userGroup) {
-
-            GroupEntity groupEntityResult = groupEntity.get();
-            groupMap.put(" groupEx",groupEntityResult.getGEx());
-        }
-
-        if (currentUser == null) map.put("currentUser","none");
+        if (currentUser == null) map.put("current_user",null);
         else{
             Map<String, Object> userMap = new HashMap<>();
-            map.put("currentUser", userMap);
-            userMap.put("userId", currentUser.getUserId());
-            userMap.put("userNm", currentUser.getUserNm());
-            userMap.put("userEx", currentUser.getUserEx());        
+            map.put("current_user", userMap);
+            userMap.put("user_id", currentUser.getUserId());
+            userMap.put("user_nm", currentUser.getUserNm());
+            userMap.put("user_ex", currentUser.getUserEx());
 
-            List friendList = new ArrayList();
-            friendList.add("일깅동");
-            friendList.add("이길동");
-            friendList.add("삼길동");
+            List<GroupMemberEntity> groupMemberEntities = groupmemberService.readUserGroup(currentUser);
+            List<Optional<GroupEntity>> userGroup = new ArrayList<>();
+            for (GroupMemberEntity groupMemberEntity :groupMemberEntities) {
+                Optional<GroupEntity> findResult = groupService.findGroup(groupMemberEntity.getGroupCodeFK());
+               userGroup.add(findResult);
+            }
+
+            Map<String, Object> groupMap = new HashMap<>();
+            for (Optional<GroupEntity> groupEntity :userGroup) {
+                GroupEntity groupEntityResult = groupEntity.get();
+                groupMap.put(" groupEx",groupEntityResult.getGEx());
+            }
+
+            List<UserEntity> friendList = followerService.friends(currentUser.getUserCd());
 
             List friendMapList = new ArrayList();
             for (int i = 0; i < friendList.size(); i++){
                 Map<String, Object> friendDetailMap = new HashMap<>();
-                friendDetailMap.put("friendCd", i+1);
-                friendDetailMap.put("friendPic", "none");
-                friendDetailMap.put("friendNm", (String)friendList.get(i));
+                friendDetailMap.put("friend_user_cd", friendList.get(i).getUserCd());
+                friendDetailMap.put("friend_user_nm", friendList.get(i).getUserNm());
+                friendDetailMap.put("friend_user_pic", null);
+                friendDetailMap.put("friend_user_ex", friendList.get(i).getUserEx());
                 friendMapList.add(friendDetailMap);
             }
-            map.put("userFriend", friendMapList);
+            map.put("user_friendList", friendMapList);
         }
         return map;
     }
