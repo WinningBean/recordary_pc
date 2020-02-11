@@ -25,23 +25,11 @@ import java.util.Map;
 @Controller
 public class MainController {
 
-    @Autowired
-    private HttpSession session;
+    @Autowired private HttpSession session;
 
     @GetMapping(value = "/")
     public String Index(){
         return "index";
-    }
-
-    /* User */
-    @RequestMapping(value = "/joinPage")
-    public String joinPage(){
-        return "User/join";
-    }
-
-    @RequestMapping(value = "/loginPage")
-    public String loginPage(){
-        return "User/login";
     }
 
     @GetMapping("/groupCreatePage")
@@ -56,22 +44,8 @@ public class MainController {
         return "index";
     }
 
-    @Autowired private UserInfoService userInfoService;
     @Autowired private GroupService groupService;
     @Autowired private GroupMemberService groupmemberService;
-
-    @GetMapping(value = "/userInfo")
-    public String userInfo(){
-        return "User/userInfo";
-    }
-
-    @ResponseBody
-    @GetMapping(value = "/userDelete")
-    public String userDelete(){
-        UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
-        userInfoService.delete(currentUser);
-        return "complete";
-    }
 
     @ResponseBody
     @GetMapping(value = "/mainPage")
@@ -118,23 +92,5 @@ public class MainController {
             map.put("userFriend", friendMapList);
         }
         return map;
-    }
-
-//    @CrossOrigin
-    @ResponseBody
-    @GetMapping(value = "/test")
-    public Map<String, String> Test() {
-        Map<String, String> map = new HashMap<>();
-        map.put("Test", "test");
-
-        return map;
-    }
-
-//    @CrossOrigin
-    @ResponseBody
-    @PostMapping(value = "/testResult")
-    public String TestResult(@RequestBody Map<String, Object> param){
-        String str = (String)((Map)param.get("cc")).get("cc1");
-        return str;
     }
 }
