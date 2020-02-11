@@ -17,13 +17,19 @@ public class FollowerController {
     @Autowired private HttpSession session;
     @Autowired private FollowerService followerService;
 
-    @GetMapping("/{targetCD}/follow")
-    public Map<String, Boolean> follow(@PathVariable("targetCD") long targetCD){
+    @GetMapping("/{targetFK}/follow")
+    public Map<String, Boolean> follow(@PathVariable("targetFK") Long targetFK){
         UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
         Map<String, Boolean> map = new HashMap<>();
-        map.put("is_follow", followerService.create(currentUser, targetCD));
+        map.put("is_follow", followerService.create(currentUser, targetFK));
         return map;
     }
 
-
+    @GetMapping("/{targetFK}/unFollow")
+    public Map<String, Boolean> unFollow(@PathVariable("targetFK") Long targetFK){
+        UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("is_unFollow", followerService.delete(currentUser, targetFK));
+        return map;
+    }
 }

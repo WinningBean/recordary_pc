@@ -28,6 +28,13 @@ public class FollowerService {
         return true;
     }
 
+    public Boolean delete(UserEntity currentUser, Long targetFK){
+        UserEntity target = userRepository.findByUserCd(targetFK);
+        FollowerEntity followerEntity = followerRepository.findByUserFKAndTargetFK(currentUser, target);
+        followerRepository.delete(followerEntity);
+        return true;
+    }
+
     public List<UserEntity> followers(Long userFK){ // 사용자를 팔로우
         List<FollowerEntity> followerEntityList = followerRepository.findByTargetFK(userRepository.findByUserCd(userFK));
         List<UserEntity> followerList = new ArrayList<>();
