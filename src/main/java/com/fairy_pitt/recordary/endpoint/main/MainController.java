@@ -81,17 +81,15 @@ public class MainController {
         UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
 
         List<GroupMemberEntity> result = groupmemberService.readUserGroup(currentUser);
-        List<Optional<GroupEntity>> userGroup = new ArrayList<>();
+        List<GroupEntity> userGroup = new ArrayList<>();
         for (GroupMemberEntity groupMemberEntity :result) {
-            Optional<GroupEntity> findResult = groupService.findGroup(groupMemberEntity.getGroupCodeFK());
-           userGroup.add(findResult);
+            GroupEntity findResult = groupService.findGroupId(groupMemberEntity.getGroupCodeFK().getGroupCd());
+            userGroup.add(findResult);
         }
 
         Map<String, Object> groupMap = new HashMap<>();
-        for (Optional<GroupEntity> groupEntity :userGroup) {
-
-            GroupEntity groupEntityResult = groupEntity.get();
-            groupMap.put(" groupEx",groupEntityResult.getGEx());
+        for (GroupEntity groupEntity :userGroup) {
+            groupMap.put(" groupEx",groupEntity.getGEx());
         }
 
         if (currentUser == null) map.put("currentUser","none");

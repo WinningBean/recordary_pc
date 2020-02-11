@@ -10,5 +10,6 @@ import java.util.List;
 public interface GroupRepository extends JpaRepository<GroupEntity, Long> {
 
      List<GroupEntity> findBygNameLike(String gName);//findByContentLike
+     GroupEntity findByGroupCd(Long groupCd);
 
 }
