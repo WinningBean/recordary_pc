@@ -9,7 +9,7 @@ import java.util.List;
 
 //@RequiredArgsConstructor
 @Service
-public class UserInfoService {
+public class UserService {
     @Autowired private UserRepository userRepository;
     @Autowired private UserPasswordHashService userPasswordHashService;
 

@@ -1,10 +1,9 @@
 package com.fairy_pitt.recordary.endpoint.user;
 
 import com.fairy_pitt.recordary.common.entity.UserEntity;
-import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.user.service.JoinService;
 import com.fairy_pitt.recordary.endpoint.user.service.LoginService;
-import com.fairy_pitt.recordary.endpoint.user.service.UserInfoService;
+import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +21,7 @@ import java.util.Map;
 public class UserController {
     @Autowired private JoinService joinService;
     @Autowired private LoginService loginService;
-    @Autowired private UserInfoService userInfoService;
+    @Autowired private UserService userService;
     @Autowired private HttpSession session;
 
     @PostMapping(value = "/joinRequest")
@@ -70,10 +69,10 @@ public class UserController {
         Boolean checkPwState = false;
         Boolean updateState = false;
         if(changeUserNm.equals("") || changeUserPw.equals("")) updateState =  false;
-        else if (userInfoService.checkPw(currentUser, checkUserPw)) {
+        else if (userService.checkPw(currentUser, checkUserPw)) {
             checkPwState = true;
-            if (isChangeUserNm) userInfoService.updateNm(currentUser, changeUserNm);
-            else if (isChangeUserPw) userInfoService.updatePw(currentUser, changeUserPw);
+            if (isChangeUserNm) userService.updateNm(currentUser, changeUserNm);
+            else if (isChangeUserPw) userService.updatePw(currentUser, changeUserPw);
             updateState = true;
         }
         map.put("is_correct_user_pw", checkPwState);
@@ -91,9 +90,9 @@ public class UserController {
         Boolean deleteState = false;
 
         if (checkUserPw.equals("")) deleteState = false;
-        else if (userInfoService.checkPw(currentUser, checkUserPw)){
+        else if (userService.checkPw(currentUser, checkUserPw)){
             checkPwState = true;
-            userInfoService.delete(currentUser);
+            userService.delete(currentUser);
             deleteState = true;
         }
         map.put("is_correct_user_pw", checkPwState);
@@ -103,7 +102,7 @@ public class UserController {
 
     @GetMapping(value = "/search")
     public Map<String, Object> userSearch(@RequestParam(value = "userSearch")String userSearch){
-        List<UserEntity> searchedUser = userInfoService.search(userSearch);
+        List<UserEntity> searchedUser = userService.search(userSearch);
         Map<String, Object> map = new HashMap<>();
         map.put("searchedUserCount", searchedUser.size());
 

@@ -5,7 +5,6 @@ import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
 import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
-import com.fairy_pitt.recordary.endpoint.user.service.UserInfoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
