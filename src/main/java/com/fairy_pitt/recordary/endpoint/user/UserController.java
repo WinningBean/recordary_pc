@@ -104,17 +104,18 @@ public class UserController {
     public Map<String, Object> userSearch(@RequestParam(value = "userSearch")String userSearch){
         List<UserEntity> searchedUser = userService.search(userSearch);
         Map<String, Object> map = new HashMap<>();
-        map.put("searchedUserCount", searchedUser.size());
+        map.put("searched_count", searchedUser.size());
 
         List UserMapList = new ArrayList();
         for (int i = 0; i < searchedUser.size(); i++){
             Map<String, Object> userDetailMap = new HashMap<>();
-            userDetailMap.put("groupCd", searchedUser.get(i).getUserCd());
-            userDetailMap.put("groupPic", "none");
-            userDetailMap.put("groupNm", searchedUser.get(i).getUserNm());
+            userDetailMap.put("user_cd", searchedUser.get(i).getUserCd());
+            userDetailMap.put("user_nm", searchedUser.get(i).getUserNm());
+            userDetailMap.put("user_pic", null);
+            userDetailMap.put("user_ex", searchedUser.get(i).getUserEx());
             UserMapList.add(userDetailMap);
         }
-        map.put("searedUser", UserMapList);
+        map.put("seared_user", UserMapList);
 
         return map;
     }
