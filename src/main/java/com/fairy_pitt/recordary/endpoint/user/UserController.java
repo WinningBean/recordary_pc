@@ -18,20 +18,13 @@ import java.util.Map;
 @Transactional
 @CrossOrigin
 @RestController
+@RequestMapping("user")
 public class UserController {
-    @Autowired
-    private JoinService joinService;
+    @Autowired private JoinService joinService;
+    @Autowired private LoginService loginService;
+    @Autowired private UserInfoService userInfoService;
+    @Autowired private HttpSession session;
 
-    @Autowired
-    private LoginService loginService;
-
-    @Autowired
-    private UserInfoService userInfoService;
-
-    @Autowired
-    private HttpSession session;
-
-//    @CrossOrigin
     @PostMapping(value = "/joinRequest")
     public Map<String, Boolean> joinRequest(@RequestParam Map<String, String> paramMap){
         String userId = paramMap.get("user_id");
@@ -50,7 +43,6 @@ public class UserController {
         return map;
     }
 
-//    @CrossOrigin
     @PostMapping(value = "/loginRequest")
     public Map<String, Boolean> loginRequest(@RequestParam Map<String, String> paramMap){
         String userId = paramMap.get("user_id");
@@ -64,10 +56,7 @@ public class UserController {
         return map;
     }
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @PostMapping(value = "/userUpdate")
+    @PostMapping(value = "/update")
     public Map<String, Boolean> userUpdate(@RequestParam Map<String, String> paramMap){
         String checkUserPw = paramMap.get("check_user_pw");
         Boolean isChangeUserNm = Boolean.parseBoolean(paramMap.get("is_change_user_nm"));
@@ -92,7 +81,27 @@ public class UserController {
         return map;
     }
 
-    @GetMapping(value = "/userSearch")
+    @PostMapping(value = "/delete")
+    public Map<String, Boolean> userDelete(@RequestParam Map<String, String> paramMap){
+        String checkUserPw = paramMap.get("check_user_pw");
+        UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
+
+        Map<String, Boolean> map = new HashMap<>();
+        Boolean checkPwState = false;
+        Boolean deleteState = false;
+
+        if (checkUserPw.equals("")) deleteState = false;
+        else if (userInfoService.checkPw(currentUser, checkUserPw)){
+            checkPwState = true;
+            userInfoService.delete(currentUser);
+            deleteState = true;
+        }
+        map.put("is_correct_user_pw", checkPwState);
+        map.put("is_delete", deleteState);
+        return map;
+    }
+
+    @GetMapping(value = "/search")
     public Map<String, Object> userSearch(@RequestParam(value = "userSearch")String userSearch){
         List<UserEntity> searchedUser = userInfoService.search(userSearch);
         Map<String, Object> map = new HashMap<>();
