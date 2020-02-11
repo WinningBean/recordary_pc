@@ -36,5 +36,7 @@ public class GroupEntity {
    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupCodeFK")
     private List<GroupMemberEntity> members;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupCodeFK")
+    private List<GroupApplyEntity> applyMembers;
 
 }
