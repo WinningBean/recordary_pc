@@ -1,6 +1,8 @@
 package com.fairy_pitt.recordary.endpoint.group.service;
 
+import com.fairy_pitt.recordary.common.entity.GroupEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.id.GroupMemberPK;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
@@ -31,6 +33,13 @@ public class GroupMemberService {
                 .getGroups();
     }
 
+    //그룹의 맴버 유저 찾기
+    public List<GroupMemberEntity> readGroupUser(GroupEntity group)
+    {
+        return groupRepository.findByGroupCd(group.getGroupCd())
+                .getMembers();
+    }
+
 
     public Boolean insertMember(GroupMemberEntity groupMemberEntity)
     {
@@ -40,6 +49,18 @@ public class GroupMemberService {
         } else {
             return false;
         }
+    }
+
+    //그룹 탈퇴
+    public void deleteMember(GroupMemberEntity groupMemberEntity)
+    {
+        groupMemberRepository.delete(groupMemberEntity);
+    }
+
+
+    public  Optional<GroupMemberEntity> findMember(GroupMemberPK groupMemberID)
+    {
+        return groupMemberRepository.findById(groupMemberID);
     }
 
 //    public Boolean deleteGroup()
