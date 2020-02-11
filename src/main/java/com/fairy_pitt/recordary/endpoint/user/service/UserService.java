@@ -41,4 +41,8 @@ public class UserService {
     public List<UserEntity> search(String userSearch){
        return userRepository.findByUserNmLike("%"+userSearch+"%");
     }
+
+    public UserEntity find(Long cd){
+        return userRepository.findByUserCd(cd);
+    }
 }
