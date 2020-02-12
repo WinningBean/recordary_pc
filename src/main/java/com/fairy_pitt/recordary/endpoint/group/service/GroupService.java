@@ -43,11 +43,13 @@ public class GroupService {
     //그룹 검색
     public List<GroupEntity> groupSearch(String gName){
 
+
     return groupRepository.findBygNameLike("%"+gName+"%");
 
     }
 
     public Optional<GroupEntity> findGroup(GroupEntity groupEntity){
+
         return groupRepository.findById(groupEntity.getGroupCd());
     }
 
@@ -65,4 +67,9 @@ public class GroupService {
         return  true;
     }
 
+    //모든 공개그룹
+    public List<GroupEntity> findAllPublicGroup()
+    {
+        return groupRepository.findAllBygState(true);
+    }
 }

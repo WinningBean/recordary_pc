@@ -43,12 +43,13 @@ public class GroupController {
 
         groupEntity.setGName((String)groupInfo.get("group_name"));
         groupEntity.setGEx((String) groupInfo.get("group_ex"));
-        if(groupInfo.get("group_state") == "true")
-        {
-            groupEntity.setGState(true);
-        }else {
-            groupEntity.setGState(false);
-        }
+        groupEntity.setGState(true);
+//        if(groupInfo.get("group_state") == "true")
+//        {
+//            groupEntity.setGState(true);
+//        }else {
+//            groupEntity.setGState(false);
+//        }
 
         groupEntity.setGMstUserFK(currUser);
         GroupEntity groupCreate = groupService.groupCreate(groupEntity);
@@ -71,8 +72,13 @@ public class GroupController {
         List<GroupEntity> searchResult = groupService.groupSearch(groupSearch);
 
         for (GroupEntity groupEntity:searchResult) {
-            groupMap.put("group_name",groupEntity.getGName());
-            groupMap.put("group_ex",groupEntity.getGEx());
+            if(groupEntity.getGState() == true)
+            {
+                groupMap.put("group_name",groupEntity.getGName());
+                groupMap.put("group_ex",groupEntity.getGEx());
+                groupMap.put("groupPic",groupEntity.getGPic());
+            }else continue;
+
         }
         return groupMap;
     }
@@ -123,6 +129,33 @@ public class GroupController {
         value.put("groupPic",groupValue.getGPic());
         value.put("groupMember",groupMemberInfoList);
         return value;
+    }
+
+    @ResponseBody
+    @GetMapping("readAll")
+    public Map<String, Object> readAllGroup()
+    {
+        List<GroupEntity> group =  groupService.findAllPublicGroup();
+        Map<String, Object> resultMap = new HashMap<>();
+        List resultList = new ArrayList();
+      //  System.out.println(group);
+        if(group != null)
+        {
+            for(GroupEntity temp : group)
+            {
+                Map<String, Object> tempResultMap = new HashMap<>();
+                tempResultMap.put("groupNm",temp.getGName());
+                tempResultMap.put("groupEx",temp.getGEx());
+                resultList.add(tempResultMap);
+            }
+            resultMap.put("group",resultList);
+
+        }else {
+            resultMap.put(".",null);
+            return resultMap;
+        }
+
+        return resultMap;
     }
 
 }
