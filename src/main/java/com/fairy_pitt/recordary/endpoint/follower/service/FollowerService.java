@@ -36,7 +36,7 @@ public class FollowerService {
     }
 
     public List<UserEntity> followers(Long userFK){ // 사용자를 팔로우
-        List<FollowerEntity> followerEntityList = followerRepository.findByTargetFK(userRepository.findByUserCd(userFK));
+        List<FollowerEntity> followerEntityList = followerRepository.findAllByTargetFK(userRepository.findByUserCd(userFK));
         List<UserEntity> followerList = new ArrayList<>();
         for (FollowerEntity followerEntity : followerEntityList){
             followerList.add(followerEntity.getUserFK());
@@ -45,7 +45,7 @@ public class FollowerService {
     }
 
     public List<UserEntity> following(Long userFK){ // 사용자가 팔로우
-        List<FollowerEntity> followerEntityList = followerRepository.findByUserFK(userRepository.findByUserCd(userFK));
+        List<FollowerEntity> followerEntityList = followerRepository.findAllByUserFK(userRepository.findByUserCd(userFK));
         List<UserEntity> followingList = new ArrayList<>();
         for (FollowerEntity followerEntity : followerEntityList){
             followingList.add(followerEntity.getTargetFK());

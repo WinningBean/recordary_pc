@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface FollowerRepository extends JpaRepository<FollowerEntity, FollowerPK> {
     FollowerEntity findByUserFKAndTargetFK(UserEntity userFK, UserEntity targetFK);
-    List<FollowerEntity> findByUserFK(UserEntity userFK);
-    List<FollowerEntity> findByTargetFK(UserEntity targetFK);
+    List<FollowerEntity> findAllByUserFK(UserEntity userFK);
+    List<FollowerEntity> findAllByTargetFK(UserEntity targetFK);
 }
