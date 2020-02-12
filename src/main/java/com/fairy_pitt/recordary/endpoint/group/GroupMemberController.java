@@ -38,24 +38,24 @@ public class GroupMemberController {
         groupMemberService.deleteMember(groupMemberEntity.get());
         return "success";
     }
-    @ResponseBody
-    @GetMapping("joinGroup/{groupCd}/{memberCd}")
-    public String joinGroup(@PathVariable("groupCd") long groupCd, @PathVariable("memberCd") long memberCd){
-
-
-        GroupMemberEntity groupMemberEntity = new GroupMemberEntity();
-
-        groupMemberEntity.setGroupCodeFK(groupService.findGroupId(groupCd));
-        groupMemberEntity.setUserCodeFK(userInfoService.findUser(memberCd));
-
-       Boolean result = groupMemberService.insertMember(groupMemberEntity);
-       if(result)
-       {
-           return "success";
-       }else
-       {
-           return "fail";
-       }
-
-    }
+//    @ResponseBody
+//    @GetMapping("joinGroup/{groupCd}/{memberCd}")
+//    public String joinGroup(@PathVariable("groupCd") long groupCd, @PathVariable("memberCd") long memberCd){
+//
+//
+//        GroupMemberEntity groupMemberEntity = new GroupMemberEntity();
+//
+//        groupMemberEntity.setGroupCodeFK(groupService.findGroupId(groupCd));
+//        groupMemberEntity.setUserCodeFK(userInfoService.findUser(memberCd));
+//
+//       Boolean result = groupMemberService.insertMember(groupMemberEntity);
+//       if(result)
+//       {
+//           return "success";
+//       }else
+//       {
+//           return "fail";
+//       }
+//
+//    }
 }
