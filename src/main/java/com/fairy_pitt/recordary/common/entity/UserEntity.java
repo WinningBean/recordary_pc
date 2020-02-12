@@ -36,4 +36,7 @@ public class UserEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userCodeFK")
     private List<GroupMemberEntity> groups;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK")
+    private  List<PostEntity> postEntityList;
 }
