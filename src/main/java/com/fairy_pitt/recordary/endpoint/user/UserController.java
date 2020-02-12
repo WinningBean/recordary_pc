@@ -1,8 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.user;
 
 import com.fairy_pitt.recordary.common.entity.UserEntity;
-import com.fairy_pitt.recordary.endpoint.user.service.JoinService;
-import com.fairy_pitt.recordary.endpoint.user.service.LoginService;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +17,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("user")
 public class UserController {
-    @Autowired private JoinService joinService;
-    @Autowired private LoginService loginService;
     @Autowired private UserService userService;
     @Autowired private HttpSession session;
 
@@ -30,10 +26,10 @@ public class UserController {
         String userPw = paramMap.get("user_pw");
         String userNm = paramMap.get("user_nm");
 
-        Boolean possibleIdState = joinService.possibleId(userId);
+        Boolean possibleIdState = userService.possibleId(userId);
         Boolean joinState = false;
 
-        if (possibleIdState) joinState = joinService.joinUser(userId, userPw, userNm);
+        if (possibleIdState) joinState = userService.joinUser(userId, userPw, userNm);
 
         Map<String, Boolean> map = new HashMap<>();
         map.put("isPossibleId", possibleIdState);
@@ -47,7 +43,7 @@ public class UserController {
         String userId = paramMap.get("user_id");
         String userPw = paramMap.get("user_pw");
 
-        Boolean loginState = loginService.login(userId, userPw);
+        Boolean loginState = userService.login(userId, userPw);
 
         Map<String, Boolean> map = new HashMap<>();
         map.put("isLogin", loginState);

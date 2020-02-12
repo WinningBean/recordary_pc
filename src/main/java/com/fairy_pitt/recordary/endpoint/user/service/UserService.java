@@ -5,6 +5,7 @@ import com.fairy_pitt.recordary.common.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 //@RequiredArgsConstructor
@@ -12,6 +13,37 @@ import java.util.List;
 public class UserService {
     @Autowired private UserRepository userRepository;
     @Autowired private UserPasswordHashService userPasswordHashService;
+    @Autowired private HttpSession session;
+
+    public Boolean joinUser(String userId, String userPw, String userNm){
+
+        if (userId.equals("") || userPw.equals("") || userNm.equals("")) return false;
+
+        UserEntity user = new UserEntity();
+        user.setUserId(userId);
+        user.setUserPw(userPasswordHashService.getSHA256(userPw));
+        user.setUserNm(userNm);
+
+        userRepository.save(user);
+        return true;
+    }
+
+    public Boolean possibleId(String input_id){
+        if (userRepository.findByUserId(input_id) == null) return true;
+        return false;
+    }
+
+    public Boolean login(String userId, String userPw){
+        if (userId.equals("") || userPw.equals("")) return false;
+
+        String hashedPassword = userPasswordHashService.getSHA256(userPw);
+        UserEntity user = userRepository.findByUserIdAndUserPw(userId, hashedPassword);
+        if (user == null) return false;
+
+        session.setAttribute("loginUser", user);
+
+        return true;
+    }
 
     public Boolean checkPw(UserEntity user, String userPw){
         UserEntity checkUser = userRepository.findByUserPw(userPasswordHashService.getSHA256(userPw));
