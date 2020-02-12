@@ -164,7 +164,6 @@ class Login extends React.Component {
                         </div>
                     </div>
                 </form >
-                {/* <ProfileEditor/> */}
             </div>
         );
     }
