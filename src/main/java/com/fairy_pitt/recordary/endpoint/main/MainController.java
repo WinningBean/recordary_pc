@@ -27,12 +27,12 @@ public class MainController {
 
     @Autowired private HttpSession session;
 
-//    @GetMapping(value = "/")
-//    public String Index(){
-//        return "loginPage";
-//    }
+    @GetMapping(value = "/")
+    public String Index(){
+        return "index";
+    }
 
-    @GetMapping("/checkSession")
+    @PostMapping("/checkSession")
     public Map<String, Boolean> checkSession(@RequestParam Map<String, String> paramMap){
         Map<String, Boolean> map = new HashMap<>();
         Boolean sessionState = false;
