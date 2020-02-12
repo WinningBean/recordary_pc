@@ -12,5 +12,13 @@ import javax.persistence.Table;
 @Table(name = "SCHEDULE_GB_TB")
 public class ScheduleTabEntity {
 
+    @Id
+    private long TabCd;
 
+    @ManyToOne
+    private UserEntity tabUserFk;
+
+    private String tabNm;
+
+    private String tabCol;
 }

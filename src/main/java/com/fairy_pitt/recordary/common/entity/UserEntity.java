@@ -42,4 +42,7 @@ public class UserEntity {
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK")
     private  List<PostEntity> postEntityList;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tabUserFk")
+    private  List<ScheduleTabEntity> userTab;
 }
