@@ -1,6 +1,8 @@
 package com.fairy_pitt.recordary.common.entity;
 
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -24,7 +26,8 @@ public class GroupEntity {
     @Column(name = "GROUP_NM")
     private String gName;
 
-    @Column(name = "GROUP_PB_ST")
+    @Column(name = "GROUP_PB_ST" )
+    @ColumnDefault("true")
     private Boolean gState;
 
     @Column(name = "GROUP_PIC" )
@@ -35,6 +38,9 @@ public class GroupEntity {
 
    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupCodeFK")
     private List<GroupMemberEntity> members;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupCodeFK")
+    private List<GroupApplyEntity> applyMembers;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK")
     private List<PostEntity> postEntityList;
