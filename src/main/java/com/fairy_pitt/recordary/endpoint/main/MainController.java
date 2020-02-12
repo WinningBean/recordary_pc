@@ -7,6 +7,7 @@ import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 @Transactional
 @CrossOrigin
 @Controller
@@ -27,9 +27,21 @@ public class MainController {
 
     @Autowired private HttpSession session;
 
-    @GetMapping(value = "/")
-    public String Index(){
-        return "index";
+//    @GetMapping(value = "/")
+//    public String Index(){
+//        return "loginPage";
+//    }
+
+    @GetMapping("/checkSession")
+    public Map<String, Boolean> checkSession(@RequestParam Map<String, String> paramMap){
+        Map<String, Boolean> map = new HashMap<>();
+        Boolean sessionState = false;
+
+        UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
+        if (currentUser.getUserCd().equals(paramMap.get("user_cd"))) sessionState = true;
+
+        map.put("isSessionUser", sessionState);
+        return map;
     }
 
     @GetMapping("/groupCreatePage")
@@ -49,16 +61,16 @@ public class MainController {
     @Autowired private FollowerService followerService;
 
     @ResponseBody
-    @GetMapping(value = "/mainPage")
+    @GetMapping("/mainPage")
     public Map<String, Object> profileRequest(){
         Map<String, Object> map = new HashMap<>();
 
         UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
 
-        if (currentUser == null) map.put("current_user",null);
-        else{
+        if (currentUser == null) map.put("currentUser",null);
+        else {
             Map<String, Object> userMap = new HashMap<>();
-            map.put("current_user", userMap);
+            map.put("currentUser", userMap);
             userMap.put("user_id", currentUser.getUserId());
             userMap.put("user_nm", currentUser.getUserNm());
             userMap.put("user_ex", currentUser.getUserEx());
@@ -79,7 +91,7 @@ public class MainController {
             List<UserEntity> friendList = followerService.friends(currentUser.getUserCd());
 
             List friendMapList = new ArrayList();
-            for (int i = 0; i < friendList.size(); i++){
+            for (int i = 0; i < friendList.size(); i++) {
                 Map<String, Object> friendDetailMap = new HashMap<>();
                 friendDetailMap.put("friend_user_cd", friendList.get(i).getUserCd());
                 friendDetailMap.put("friend_user_nm", friendList.get(i).getUserNm());
@@ -87,7 +99,7 @@ public class MainController {
                 friendDetailMap.put("friend_user_ex", friendList.get(i).getUserEx());
                 friendMapList.add(friendDetailMap);
             }
-            map.put("user_friendList", friendMapList);
+            map.put("friendList", friendMapList);
         }
         return map;
     }
