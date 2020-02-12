@@ -3,10 +3,11 @@ package com.fairy_pitt.recordary.endpoint.group.service;
 import com.fairy_pitt.recordary.common.entity.GroupApplyEntity;
 import com.fairy_pitt.recordary.common.entity.GroupEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
-import com.fairy_pitt.recordary.common.id.GroupMemberPK;
+import com.fairy_pitt.recordary.common.pk.GroupMemberPK;
+import com.fairy_pitt.recordary.common.pk.GroupMemberPK;
 import com.fairy_pitt.recordary.common.repository.GroupApplyRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
-import com.fairy_pitt.recordary.endpoint.user.service.UserInfoService;
+import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class GroupApplyService {
 
     @Autowired
     private  final  GroupApplyRepository groupApplyRepository;
-    private final UserInfoService userInfoService;
+    private final UserService userInfoService;
     private final  GroupService groupService;
 
     public  Boolean applyInsert(GroupApplyEntity groupApplyInfo)

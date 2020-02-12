@@ -1,6 +1,6 @@
 package com.fairy_pitt.recordary.common.entity;
 
-import com.fairy_pitt.recordary.common.id.GroupMemberPK;
+import com.fairy_pitt.recordary.common.pk.GroupMemberPK;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

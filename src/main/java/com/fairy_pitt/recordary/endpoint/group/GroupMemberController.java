@@ -1,10 +1,10 @@
 package com.fairy_pitt.recordary.endpoint.group;
 
 import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
-import com.fairy_pitt.recordary.common.id.GroupMemberPK;
+import com.fairy_pitt.recordary.common.pk.GroupMemberPK;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
-import com.fairy_pitt.recordary.endpoint.user.service.UserInfoService;
+import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +21,7 @@ public class GroupMemberController {
     @Autowired
     private GroupMemberService groupMemberService ;
     @Autowired
-    private UserInfoService userInfoService;
+    private UserService userService;
 
 
 

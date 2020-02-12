@@ -5,7 +5,7 @@ import com.fairy_pitt.recordary.common.entity.GroupEntity;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
 import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
-import com.fairy_pitt.recordary.endpoint.user.service.UserInfoService;
+import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +31,7 @@ public class GroupController {
     private GroupMemberService groupMemberService ;
 
     @Autowired
-    private UserInfoService userInfoService;
+    private UserService userService;
 
     @ResponseBody
     @PostMapping("create") // 그룹 생성
@@ -118,7 +118,7 @@ public class GroupController {
         for(GroupMemberEntity groupMember : members)
         {
             Map<String, Object> groupMemberInfoMap = new HashMap<>();
-            UserEntity user =  userInfoService.findUser(groupMember.getUserCodeFK().getUserCd());
+            UserEntity user =  userService.find(groupMember.getUserCodeFK().getUserCd());
             groupMemberInfoMap.put("userId", user.getUserId());
             groupMemberInfoMap.put("userNm", user.getUserNm());
             groupMemberInfoMap.put("userEx", user.getUserEx());

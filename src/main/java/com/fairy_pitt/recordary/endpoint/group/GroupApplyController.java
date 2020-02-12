@@ -4,11 +4,12 @@ import com.fairy_pitt.recordary.common.entity.GroupApplyEntity;
 import com.fairy_pitt.recordary.common.entity.GroupEntity;
 import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
-import com.fairy_pitt.recordary.common.id.GroupMemberPK;
+import com.fairy_pitt.recordary.common.pk.GroupMemberPK;
+import com.fairy_pitt.recordary.common.pk.GroupMemberPK;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupApplyService;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
-import com.fairy_pitt.recordary.endpoint.user.service.UserInfoService;
+import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,7 +27,7 @@ import java.util.Map;
 public class GroupApplyController {
 
     @Autowired
-    private final UserInfoService userInfoService;
+    private final UserService userService;
     private final GroupService groupService;
     private final GroupApplyService groupApplyService;
     private  final GroupMemberService groupMemberService;
@@ -36,7 +37,7 @@ public class GroupApplyController {
     public String apply(@RequestParam Map<String, Object> applyInfo)
     {
         GroupApplyEntity groupApplyEntity = new GroupApplyEntity();
-        groupApplyEntity.setUserCodeFK(userInfoService.findUser((Long)applyInfo.get("userCd")));
+        groupApplyEntity.setUserCodeFK(userService.find((Long)applyInfo.get("userCd")));
         groupApplyEntity.setGroupCodeFK(groupService.findGroupId((Long)applyInfo.get("groupCd")));
         groupApplyEntity.setApplyState((int)applyInfo.get("groupSate"));
 
@@ -61,7 +62,7 @@ public class GroupApplyController {
             GroupMemberEntity groupMemberEntity = new GroupMemberEntity();
 
             groupMemberEntity.setGroupCodeFK(groupService.findGroupId((Long)checkInfo.get("userCd")));
-            groupMemberEntity.setUserCodeFK(userInfoService.findUser((Long)checkInfo.get("groupCd")));
+            groupMemberEntity.setUserCodeFK(userService.find((Long)checkInfo.get("groupCd")));
             Boolean result = groupMemberService.insertMember(groupMemberEntity);
             if(result)
             {
@@ -80,7 +81,7 @@ public class GroupApplyController {
     public Map<String, Object> findApply(@RequestParam Map<String, Object> userInfo)
     {
         Map<String, Object> applyFindResult = new HashMap<>();
-        UserEntity userEntity = userInfoService.findUser((long)userInfo.get("userCd"));
+        UserEntity userEntity = userService.find((long)userInfo.get("userCd"));
         List<GroupApplyEntity> apply = groupApplyService.findGroupAppliesToUser(userEntity);
         List applyGroupInfoLIst = new ArrayList<>();
 
@@ -111,7 +112,7 @@ public class GroupApplyController {
         for(GroupApplyEntity temp : apply)
         {
             Map<String, Object> userInfoMap = new HashMap<>();
-            UserEntity userEntity = userInfoService.findUser(temp.getUserCodeFK().getUserCd());
+            UserEntity userEntity = userService.find(temp.getUserCodeFK().getUserCd());
             userInfoMap.put("userNM",userEntity.getUserNm());
             userInfoMap.put("userEx",userEntity.getUserEx());
             userInfoMap.put("userId",userEntity.getUserId());
