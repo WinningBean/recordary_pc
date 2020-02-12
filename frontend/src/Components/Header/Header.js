@@ -1,16 +1,23 @@
 import React from 'react';
 import './header.css';
 import UserEditor from './UserEditor';
+import GroupAdd from '../Group/GroupAdd';
+import LongMenu from '../Other/MoreMenu';
+import ProfileEditor from 'Components/Other/ProfileEditor';
+
 import { styled } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import MenuIcon from '@material-ui/icons/Menu';
-import EditIcon from '@material-ui/icons/Build';
+import SettingsIcon from '@material-ui/icons/Settings';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SearchAppBar from '../Other/SearchField';
 import ArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import ArrowUp from '@material-ui/icons/KeyboardArrowUp';
+import AddIcon from '@material-ui/icons/Add';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import EditIcon from '@material-ui/icons/Edit';
+import NotificationsIcon from '@material-ui/icons/Notifications';
 
 const defaultProps = {
     data : {
@@ -51,10 +58,13 @@ class Header extends React.Component {
         super(props);
         this.state = {
             menuClick: false,
+            ProfileEditorClick : false,
             editorClick: false,
             groupOpen: false,
+            groupAddClick : false,
             friendOpen: false,
             data: this.props.data,
+            
         }
     }
 
@@ -79,41 +89,70 @@ class Header extends React.Component {
             friendOpen: true
         });
     };
+    
 
     componentDidMount(){
         this.setState({data : this.props.data});
     }
-
+    
     render() {
+        const GroupAddForm = () => {
+            if(this.state.groupAddClick === true){
+                return <GroupAdd onCancel={() => this.setState({ groupAddClick: false })}></GroupAdd>
+            }
+            return null;
+        }
+
+        const ProfileEditForm = () => {
+            if(this.state.ProfileEditorClick === true){
+                return <ProfileEditor onCancel={() => this.setState({ ProfileEditorClick: false })}></ProfileEditor>
+            }
+            return null;
+        }
+
+
         const GroupList = (() => {
             if (this.state.groupOpen === true) {
                 const gruops = this.state.data.userGroup.map(
                     (value) => { return (
                     <li key={value.group_cd}>
                         <GroupButton>
-                            <div style={{display:'flex', alignItems:'center'}}>
+                            <div style={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
                                 <img alt="group-img" style={{marginRight:'10px', borderRadius:'50%'}} src={value.group_pic} />
                                 {value.group_nm}
                             </div>
-                            <div>
-                                <IconButton><MoreVertIcon/></IconButton>
+                            <div className="LongMenuOpen">
+                                <LongMenu style={{fontSize:'30px'}}/>
                             </div>
                         </GroupButton>
                         </li>) }
                 );
                 return (
                     <div className="gruop-field">
-                        <GroupButton style={{backgroundColor:'rgba(209, 204, 192,0.4)'}} onClick={this.setGroupMenuOpen}>
-                            <span style={{fontSize:'18px'}}>Groups</span>
-                            <span><ArrowUp style={{fontSize:'30px'}} /></span>
+                        <GroupButton style={{backgroundColor:'rgba(209, 204, 192,0.4)'}}>
+                            <div>
+                                <span style={{fontSize:'18px', paddingTop: '5px'}}>Groups</span>
+                                <span>
+                                    <PlusIconButton><AddIcon onClick={()=> this.setState({groupAddClick: true})} style={{fontSize:'20px;'}}/></PlusIconButton>
+                                </span>
+                                {GroupAddForm()}
+                            </div>
+                            <span><IconButton><ArrowUp style={{fontSize:'30px'}}  onClick={this.setGroupMenuOpen}/></IconButton></span>
                         </GroupButton>
                         <div><ul>{gruops}</ul></div>
+                        
                     </div>
                 );
             }
-            return <GroupButton onClick={this.setGroupMenuOpen}>
-                <span style={{ fontSize: '18px' }}>Groups</span>
-                <span><ArrowDown style={{ fontSize: '30px' }} /></span>
+            return <GroupButton>
+                <div>
+                    <span style={{fontSize:'18px', paddingTop: '5px'}}>Groups</span>
+                    <span>
+                        <PlusIconButton><AddIcon style={{fontSize:'20px;'}} onClick={()=> this.setState({groupAddClick: true})} /></PlusIconButton>
+                    </span>
+                    {GroupAddForm()}
+                </div>
+                <span><IconButton><ArrowDown style={{ fontSize: '30px' }} onClick={this.setGroupMenuOpen}/></IconButton></span>
             </GroupButton>;
         })();
         const friendList = (() => {
@@ -122,7 +161,7 @@ class Header extends React.Component {
                     (value) => { return (
                     <li key={value.friend_cd}>
                         <GroupButton>
-                            <div style={{display:'flex', alignItems:'center'}}>
+                            <div style={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
                                 <img alt="friend-img" style={{marginRight:'10px', borderRadius:'50%'}} src={value.friend_pic} />
                                 {value.friend_nm}
                             </div>
@@ -134,18 +173,23 @@ class Header extends React.Component {
                 );
                 return (
                     <div className="gruop-field">
-                        <GroupButton style={{backgroundColor:'rgba(209, 204, 192,0.4)'}} onClick={this.setFriendMenuOpen}>
-                            <span style={{fontSize:'18px'}}>Friends</span>
-                            <span><ArrowUp style={{fontSize:'30px'}} /></span>
+                        <GroupButton style={{backgroundColor:'rgba(209, 204, 192,0.4)'}}>
+                            <div>
+                                <span style={{fontSize:'18px', paddingTop: '5px'}}>Friends</span>
+                            </div>
+                            <span><IconButton><ArrowUp style={{fontSize:'30px'}}  onClick={this.setFriendMenuOpen}/></IconButton></span>
                         </GroupButton>
                         <div><ul>{friends}</ul></div>
+                        
                     </div>
                 );
             }
-            return <GroupButton onClick={this.setFriendMenuOpen}>
-            <span style={{fontSize:'18px'}}>Friends</span>
-            <span><ArrowDown style={{fontSize:'30px'}} /></span>
-        </GroupButton>;
+            return <GroupButton>
+                <div>
+                    <span style={{fontSize:'18px', paddingTop: '5px'}}>Friends</span>
+                </div>
+                <span><IconButton><ArrowDown style={{fontSize:'30px'}}  onClick={this.setFriendMenuOpen}/></IconButton></span>
+            </GroupButton>;
         })();
         const Editor = () => {
             if (this.state.editorClick === true) {
@@ -157,7 +201,9 @@ class Header extends React.Component {
             <header>
                 <div id="header-left">
                     <div className="title-menu">
-                        <IconButton onClick={() => this.setState({ menuClick: true })}><MenuIcon style={{ fontSize: '30px', color: 'white'}} /></IconButton>
+                        <IconButton onClick={() => this.setState({ menuClick: true })}>
+                            <MenuIcon style={{ fontSize: '30px', color: 'white'}} />
+                        </IconButton>
                         <Drawer
                             open={this.state.menuClick}
                             onClose={() => this.setState({ menuClick: false })}
@@ -165,30 +211,36 @@ class Header extends React.Component {
                             anchor='left'>
                             <div className="menu-wrap">
                                 <div className="menu-profile">
-                                    <div style={{marginRight:'10px'}}>
-                                        <img alt="user img" src="http://placehold.it/50x50" 
-                                        style={{borderRadius:'50%'}}
-                                        />
+                                    <div className="menu-profile-pic-nm">
+                                        <div style={{marginRight:'10px'}}>
+                                            <img alt="user img" src="http://placehold.it/50x50" 
+                                            style={{borderRadius:'50%'}}
+                                            />
+                                        </div>
+                                        <span>{this.state.data.currentUser.user_id}</span>
                                     </div>
-                                    <span>{this.state.data.currentUser.user_id}</span>
+                                    <div className="profile-edit-icon">
+                                        <IconButton><EditIcon onClick={() => this.setState({ ProfileEditorClick: true })}/></IconButton>
+                                    </div>
+                                    {ProfileEditForm()}
                                 </div>
                                 <div className="menu-buttons">
                                     {GroupList}
                                     {friendList}
                                 </div>
                                 <div className="menu-bottom">
-                                    <IconButton onClick={() => this.setState({ editorClick: true })}><EditIcon /></IconButton>
+                                    <IconButton onClick={() => this.setState({ editorClick: true })}><SettingsIcon /></IconButton>
                                     <IconButton>로그아웃</IconButton>
                                 </div>
                                 {Editor()}
                             </div>
                         </Drawer>
                     </div>
-                    <div className="title-icon">
-                        <a href="profile.html"><img alt="icon" src="http://placehold.it/40x40" /></a>
-                    </div>
+                    {/* <div className="title-icon">
+                        <a href="profile.html"><img alt="icon" src="RIcon.png" /></a>
+                    </div> */}
                     <div className="title-name">
-                        <a href="profile.html">
+                        <a href="http://localhost:3000/main">
                             <img className="title-image" alt="Recordary icon" src="Recordary.png" style={{height:'40px'}}/>
                         </a>
                     </div>
@@ -196,6 +248,9 @@ class Header extends React.Component {
                 <div id="header-right">
                     <div className="search-user">
                         <SearchAppBar></SearchAppBar>
+                    </div>
+                    <div className="header-ring">
+                        <NotificationsIcon style={{fontSize : 40, color: 'white' }} ></NotificationsIcon>
                     </div>
                     <div className="profile-icon">
                         {/* <
@@ -218,7 +273,10 @@ const IconButton = styled(Button)({
     minWidth: '40px',
     height: '40px',
 });
-
+const PlusIconButton = styled(Button)({
+    minWidth: '30px',
+    height: '40px',
+});
 const GroupButton = styled(Button)({
     width: '250px',
     height: '50px',
@@ -230,7 +288,6 @@ const GroupButton = styled(Button)({
     paddingBottom: '5px',
     paddingLeft: '10px',
 });
-
 // export default withStyles(styles)(Header);
 
 Header.defaultProps = defaultProps;

@@ -1,3 +1,7 @@
+.profile-edit-title{
+    padding-top: 25px;
+    padding-left: 25px;
+}
 .profile-editor{
     display: flex;
     padding: 25px;
@@ -6,12 +10,14 @@
 }
 
 .profile-editor-info{
-    width:250px;
+    width: 300px;
     height: 250px;
     padding: 25px;
 }
-
 .profile-editor-image{
     width: 250px;
     height: 250px;
+}
+.profile-editor-info-buttons{
+    display: flex;
 }

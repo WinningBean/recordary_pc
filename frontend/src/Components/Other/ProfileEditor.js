@@ -24,6 +24,9 @@ class ProfileEditor extends React.Component {
     render() {
         return (
             <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
+                <div className="profile-edit-title">
+                    프로필 수정
+                </div>
                 <div className="profile-editor">
                     <div className='profile-editor-image'>
                         <ImagePicker
@@ -36,9 +39,12 @@ class ProfileEditor extends React.Component {
                         </ImagePicker>
                     </div>
                     <div className="profile-editor-info">
+                        <TextField name="user_nm" autoFocus label="이름" style={{width:'250px',fontSize:'30px', marginBottom:'10px'}} defaultValue="Water_Glasses"  onChange={this.changeHandel}/>
                         <TextField name="user_ex" autoFocus label="상태메세지" style={{width:'250px',fontSize:'30px', marginBottom:'75px'}} defaultValue={this.state.user_ex} onChange={this.changeHandel} />
-                        <EditorButton color="secondary">수정</EditorButton>
-                        <EditorButton onClick={() => this.props.onCancel()}>취소</EditorButton>
+                        <div className="profile-editor-info-buttons">
+                            <EditorButton color="secondary">수정</EditorButton>
+                            <EditorButton onClick={() => this.props.onCancel()}>취소</EditorButton>
+                        </div>
                     </div>
                     {/* <div>
                         

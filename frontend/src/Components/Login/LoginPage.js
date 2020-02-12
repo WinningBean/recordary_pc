@@ -7,7 +7,7 @@ import Register from './Register';
 import AlertDialog from 'Components/Other/AlertDialog';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import ProfileEditor from 'Components/Other/ProfileEditor';
+
 
 class Login extends React.Component {
     state = {
@@ -138,9 +138,12 @@ class Login extends React.Component {
                             e.preventDefault();
                             this.props.onChangePage();
                         }}>
-                            <img className="title-image" alt="Recordary icon" src="http://localhost:8888/Recodary.png"/>
+                            <img className="title-image" alt="Recordary icon" src="http://localhost:888/Recodary.png"/>
                         </a> */}
-                        <Link to="/main"><img className="title-image" alt="Recordary icon" src="http://localhost:8888/Recodary.png"/></Link>
+                        <Link to="/main">
+                            {/* <img className="title-image" alt="Recordary icon" src="http://localhost:8888/Recodary.png"/> */}
+                            <img className="title-image" alt="Recordary icon" src="Recordary.png"/>                       
+                        </Link>
                     </div>
                     {this.state.successRegister()}
                     {this.state.failedLogin()}
@@ -164,7 +167,6 @@ class Login extends React.Component {
                         </div>
                     </div>
                 </form >
-                {/* <ProfileEditor/> */}
             </div>
         );
     }

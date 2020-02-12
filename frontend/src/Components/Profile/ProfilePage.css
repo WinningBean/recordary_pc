@@ -13,18 +13,16 @@
 }
 
 /* 아이콘 색깔 css */
-.MuiSvgIcon-root{
-    color: rgba(20, 81, 51, 0.9);
+#main-profile>.search-user>.makeStyles-search-55>.makeStyles-searchIcon-56>.MuiSvgIcon-root{
+    color: rgba(20, 81, 51, 0.7);
 }
 
-.makeStyles-inputInput-158{
+#main-profile>.search-user>.makeStyles-search-55>.MuiInputBase-root>.makeStyles-inputInput-58{
     color: rgba(20, 81, 51, 0.9) !important;
+    border: 2px solid rgba(20, 81, 51, 0.3) !important;
+    border-radius: 10px !important;
 }
 
-#main-profile>.search-user>.makeStyles-search-155{
-    border: 2px solid rgba(20, 81, 51, 0.3);
-    border-radius: 10px;
-}
 
 
 #main-profile-info{
@@ -119,7 +117,6 @@ nav{
 nav>div{
     margin-left: 20px;
     margin-right: 20px;
-    padding: 10px 20px;
     /* box-shadow: 0px 1px 5px rgb(161, 159, 159); */
     border-radius: 10px; 
     border: 2px solid rgba(20, 81, 51, 0.3);
@@ -127,7 +124,7 @@ nav>div{
 }
 
 /* ScheduleTimeline부분 */
-.profile-ScheduleTimeLine{
+.profile-ScheduleTimeLine, .profile-MediaTimeline{
     display:flex;
     flex-wrap: wrap;
     width: 900px;
@@ -140,13 +137,18 @@ article{
     display: flex;
 }
 
-.timeline-profile-schedule{
+.timeline-profile-schedule, .media-box{
     width: 420px;
     height: 290px;
     border-radius: 10px;
     margin: 10px;
     /* box-shadow: 0px 1px 5px rgb(161, 159, 159); */
     border: 2px solid rgba(20, 81, 51, 0.3);
+    
+}
+.timeline-profile-schedule:hover, .media-box:hover{
+    border: 2px solid rgba(20, 81, 51, 0.6);
+    background-color: rgba(20, 81, 51, 0.05);
 }
 
 .timeline-profile-time{
@@ -181,24 +183,11 @@ article{
     height: 150px;
 }
 
-
-
-
-
-.media-area .media-item{
-    margin: 10px 20px;
-    height: 230px;
-    width: 230px;
+.media-box{
+    display:flex;
+    align-content: center;
+    justify-content: center;
 }
-
-.media-area .media-item>img{
-    height: 230px;
-    width: 230px;
-    object-fit: cover;
-}
-
-
-
 
 
 /* 캘린더 css */
