@@ -1,7 +1,9 @@
 import React from 'react';
 import './ProfilePage.css';
 import SearchAppBar from '../Other/SearchField';
-import ScheduleTimeline1 from './ScheduleTimeline1'
+import ScheduleTimeline1 from './ScheduleTimeline1';
+import PictureTimeline from './PictureTimeline';
+import ScrollToTopOnMount from '../Other/ScrollToTopOnMount'
 
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Button from '@material-ui/core/Button';
@@ -13,8 +15,38 @@ class Profile extends React.Component {
         super(props);
         this.state = {
             postAppendClick : false,
+            profileScheduleClick : false,
+            profilePictureClick : false,
         }
     }
+
+    setProfileScheduleOpen = () => {
+        if(this.state.profileScheduleClick === true){
+            return this.setState({
+                profileScheduleClick : false,
+                profilePictureClick : true
+            });
+        }
+        return this.setState({
+            profileScheduleClick : true,
+            profilePictureClick : false
+        });
+    };
+
+    setProfilePictureOpen = () => {
+        if(this.state.profilePictureClick === true){
+            return this.setState({
+                profilePictureClick : false,
+                profileScheduleClick : true
+            });
+        }
+        return this.setState({
+            profilePictureClick : true,
+            profileScheduleClick : false
+
+        });
+    };
+
 
     render() {
         
@@ -25,9 +57,35 @@ class Profile extends React.Component {
             return null;
         }
 
+        
+        const ProfileDownTimeLine = () => {
+            if(this.state.profileScheduleClick === true && this.state.profilePictureClick === false){
+                return(
+                    <div className="profile-ScheduleTimeLine">
+                        <ScheduleTimeline1></ScheduleTimeline1>
+                        <ScheduleTimeline1></ScheduleTimeline1>
+                        <ScheduleTimeline1></ScheduleTimeline1>
+                        <ScheduleTimeline1></ScheduleTimeline1>
+                    </div>
+                )
+            }
+            if(this.state.profilePictureClick === true && this.state.profileScheduleClick === false){
+                return(
+                    <div className="profile-MediaTimeline">
+                        <PictureTimeline></PictureTimeline>
+                        <PictureTimeline></PictureTimeline>
+                        <PictureTimeline></PictureTimeline>
+                        <PictureTimeline></PictureTimeline>
+                    </div>
+                    )
+            }
+            return null;
+        }
+        
 
         return (
             <main>
+                <ScrollToTopOnMount/>
                 <div id="main-profile">
                     <div className="search-user">
                         <SearchAppBar></SearchAppBar>
@@ -68,18 +126,13 @@ class Profile extends React.Component {
                 </div>
                 <nav>
                     <div id="tap-1" >
-                        <span>일정</span>
+                        <Button onClick={this.setProfileScheduleOpen}><span>일정</span></Button>
                     </div>
                     <div id="tap-2">
-                        <span>사진</span>
+                        <Button onClick={this.setProfilePictureOpen}><span>사진</span></Button>
                     </div>
                 </nav>
-                <div className="profile-ScheduleTimeLine">
-                    <ScheduleTimeline1></ScheduleTimeline1>
-                    <ScheduleTimeline1></ScheduleTimeline1>
-                    <ScheduleTimeline1></ScheduleTimeline1>
-                    <ScheduleTimeline1></ScheduleTimeline1>
-                </div>
+                {ProfileDownTimeLine()}
             </main>
         );
     }

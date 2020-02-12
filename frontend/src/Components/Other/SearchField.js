@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: 'white',
+    color: fade(theme.palette.common.white, 0.8),
   },
   inputRoot: {
     color: 'inherit',

@@ -24,6 +24,12 @@ header{
     width: 40px;
     height: 40px;
 }
+.title-icon>a>img{
+    height:40px;
+    object-fit: cover;
+    border: 1px solid white;
+    border-radius: 5px;
+}
 
 #header-right{
     display: flex;
@@ -37,6 +43,10 @@ header{
 
 #header-right>.search-user>.makeStyles-search-155>div>.makeStyles-inputInput-158{
     color: white !important;
+}
+
+#header-right .header-ring{
+    margin-left: 10px;
 }
 
 #header-right .profile-icon{
@@ -57,9 +67,9 @@ header{
 }
 .menu-profile{
     display: flex;
+    justify-content: space-between;
     padding-top: 5px;
     padding-left: 10px;
-    align-items: center;
     width: 250px;
     height: 60px;
     font-size: 15px;
@@ -67,6 +77,13 @@ header{
     /* border-bottom: 2px solid RGBA(209, 204, 192,0.8); */
     border-bottom: 3px solid   rgba(20, 81, 51, 0.9);
 
+}
+.menu-profile-pic-nm{
+    display: flex;
+    align-items: center;
+}
+.profile-edit-icon{
+    margin-top: 3px;
 }
 
 .menu-bottom{
@@ -78,4 +95,15 @@ header{
     height: 40px;
     background-color: rgba(209, 204, 192,0.4);
     border-top: 1px solid rgba(209, 204, 192,0.8);
+}
+
+.MuiButton-label>div{
+    display: flex;
+    align-content: center;
+}
+
+.LongMenuOpen>div>.MuiButtonBase-root{
+    padding: 5px;
+    border-radius: none;
+    margin-bottom: 10px;
 }

@@ -66,6 +66,9 @@ class ProfileEditor extends React.Component {
     render() {
         return (
             <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
+                <div className="profile-edit-title">
+                    프로필 수정
+                </div>
                 <div className="profile-editor">
                     <div className='profile-editor-image'>
                         <img style={{width:'250px', height:'250px', objectFit:'cover'}} alt="profile-img" src={this.state.user_pic} />
