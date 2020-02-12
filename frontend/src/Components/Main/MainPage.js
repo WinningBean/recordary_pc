@@ -41,38 +41,7 @@ class MainPage extends React.Component {
 
     async componentDidMount(){
         // 유저에 대한 정보를 가져오고 그 결과값을 state 에 저장
-        // const {data} = await axios.get("http://localhost:8888/mainPage");
-        const data = {
-            currentUser:{
-                user_ex: null,
-                user_id: 'HelloWorld1234',
-                user_nm: '홍길동'
-        },
-        userFriend:[
-            {
-                friend_cd:1,
-                friend_nm:'친구1',
-                friend_pic:'http://placehold.it/40x40',
-            },
-            {
-                friend_cd:1,
-                friend_nm:'친구2',
-                friend_pic:'http://placehold.it/40x40',
-            }
-        ],
-        userGroup:[
-            {
-                group_cd:1,
-                group_nm:'그룹1',
-                group_pic:'http://placehold.it/40x40',
-            },
-            {
-                group_cd:2,
-                group_nm:'그룹2',
-                group_pic:'http://placehold.it/40x40',
-            }
-        ]
-    }
+        const {data} = await axios.get("http://localhost:8888/mainPage");
         this.setState({data, isLoading : false});
         console.log(data);
     }
