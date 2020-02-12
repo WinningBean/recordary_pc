@@ -32,7 +32,7 @@ public class PostEntity {
     private int postPublicState;
 
     @Column(name = "POST_STR_YMD")
-    private String postStartYMD;
+    private String postStrYMD;
 
     @Column(name = "POST_END_YMD")
     private String postEndYMD;

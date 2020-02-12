@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@Transactional
 public class FollowerController {
     @Autowired private HttpSession session;
     @Autowired private FollowerService followerService;
