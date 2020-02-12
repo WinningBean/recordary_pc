@@ -71,8 +71,8 @@ public class UserController {
             else if (isChangeUserPw) userService.updatePw(currentUser, changeUserPw);
             updateState = true;
         }
-        map.put("is_correct_user_pw", checkPwState);
-        map.put("is_update", updateState);
+        map.put("isCorrect_user_pw", checkPwState);
+        map.put("isUpdate", updateState);
         return map;
     }
 
@@ -91,8 +91,8 @@ public class UserController {
             userService.delete(currentUser);
             deleteState = true;
         }
-        map.put("is_correct_user_pw", checkPwState);
-        map.put("is_delete", deleteState);
+        map.put("isCorrect_user_pw", checkPwState);
+        map.put("isDelete", deleteState);
         return map;
     }
 
@@ -100,7 +100,7 @@ public class UserController {
     public Map<String, Object> userSearch(@RequestParam(value = "userSearch")String userSearch){
         List<UserEntity> searchedUser = userService.search(userSearch);
         Map<String, Object> map = new HashMap<>();
-        map.put("searched_count", searchedUser.size());
+        map.put("searchedCount", searchedUser.size());
 
         List UserMapList = new ArrayList();
         for (int i = 0; i < searchedUser.size(); i++){
@@ -111,7 +111,7 @@ public class UserController {
             userDetailMap.put("user_ex", searchedUser.get(i).getUserEx());
             UserMapList.add(userDetailMap);
         }
-        map.put("seared_user", UserMapList);
+        map.put("searedUser", UserMapList);
 
         return map;
     }

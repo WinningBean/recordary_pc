@@ -66,6 +66,7 @@ public class FollowerService {
         Set<UserEntity> followings = new HashSet<UserEntity>(following(userFK));
         // Arrays.asList(list)
 
+        if (followers == null || followings == null) return null;
         followers.retainAll(followings);
         List<UserEntity> friendsList = new ArrayList<UserEntity>(followers);
         return friendsList;
