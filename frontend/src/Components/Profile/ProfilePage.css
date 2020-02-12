@@ -1,0 +1,218 @@
+#main-profile{
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    padding-top: 10px;
+    width: 900px;
+}
+
+#main-profile .search-user{
+    align-self: flex-end;
+    padding-bottom: 10px;
+    padding-right: 20px;
+}
+
+/* 아이콘 색깔 css */
+#main-profile>.search-user>.makeStyles-search-55>.makeStyles-searchIcon-56>.MuiSvgIcon-root{
+    color: rgba(20, 81, 51, 0.7);
+}
+
+#main-profile>.search-user>.makeStyles-search-55>.MuiInputBase-root>.makeStyles-inputInput-58{
+    color: rgba(20, 81, 51, 0.9) !important;
+    border: 2px solid rgba(20, 81, 51, 0.3) !important;
+    border-radius: 10px !important;
+}
+
+
+
+#main-profile-info{
+    display: flex;
+    height: 500px;
+    margin-left: 20px;
+    margin-right: 20px;
+    /* box-shadow: 0px 1px 5px rgb(161, 159, 159); */
+    border-radius: 20px; 
+    border: 2px solid rgba(20, 81, 51, 0.3);
+
+}
+
+#userinfo{
+    width: 240px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#user-image{
+    height: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+#user-image >img{
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+}
+
+#userinfo #userinfo-text{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid lightgray;
+    border-radius: 10px; 
+}
+
+.info ul li{
+    font-size: 20px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.follower, .follow{
+    padding-left: 30px;
+}
+
+.status-content{
+    height: 100px;
+    width: 200px;
+    margin-top: 10px;
+    padding: 2px 10px;
+    border: 1px solid lightgray;
+}
+
+#calender-area{
+    height: 100%;
+    width: 70%;
+}
+
+#calender-area .search-schedule{
+    height: 50px;
+    position: relative;
+}
+
+#calender-area .search-schedule>input{
+    position: absolute;
+    right: 0;
+    top: 10px;
+    font-size: 15px;
+}
+
+#calender-area .calender{
+    height: 450px;
+}
+
+nav{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+nav>div{
+    margin-left: 20px;
+    margin-right: 20px;
+    /* box-shadow: 0px 1px 5px rgb(161, 159, 159); */
+    border-radius: 10px; 
+    border: 2px solid rgba(20, 81, 51, 0.3);
+
+}
+
+/* ScheduleTimeline부분 */
+.profile-ScheduleTimeLine, .profile-MediaTimeline{
+    display:flex;
+    flex-wrap: wrap;
+    width: 900px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top:30px;
+}
+
+article{
+    display: flex;
+}
+
+.timeline-profile-schedule, .media-box{
+    width: 420px;
+    height: 290px;
+    border-radius: 10px;
+    margin: 10px;
+    /* box-shadow: 0px 1px 5px rgb(161, 159, 159); */
+    border: 2px solid rgba(20, 81, 51, 0.3);
+    
+}
+.timeline-profile-schedule:hover, .media-box:hover{
+    border: 2px solid rgba(20, 81, 51, 0.6);
+    background-color: rgba(20, 81, 51, 0.05);
+}
+
+.timeline-profile-time{
+    display: flex;
+    justify-content: space-between;
+}
+
+.timeline-profile-top{
+    display: flex;
+    align-items: center;
+}
+
+.timeline-profile-picture>img{
+    height: 40px;
+    border-radius: 20px;
+    margin-left: 5px;
+    margin-top:3px;
+}
+.timeline-profile-name{
+    padding-left: 10px;
+}
+.timeline-schedule-date{
+    margin-right: 10px;
+    border: none;
+}
+
+.profile-schedule-info{
+    border: 1px solid lightgray;
+}
+
+.profile-schedule-info .timeline-schedule-weekTable{
+    height: 150px;
+}
+
+.media-box{
+    display:flex;
+    align-content: center;
+    justify-content: center;
+}
+
+
+/* 캘린더 css */
+
+.schedule-area{
+    display: flex;
+    flex-direction: column;
+    align-content: flex-end;
+    height: 480px;
+    box-shadow: 0px 1px 2px rgb(161, 159, 159);
+    border-radius: 10px;
+}
+
+.schedule-append{
+    display: flex;
+    justify-content: flex-end;
+    align-content: center;
+    width: 610px;
+    margin-top: 10px;
+}
+
+.calender{
+    margin-top: 10px;
+    height: 430px;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+}
+

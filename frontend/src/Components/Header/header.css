@@ -6,10 +6,11 @@ header{
     width: 100%;
     min-width: 1300px;
     height: 50px;
-    background: no-repeat fixed linear-gradient(-225deg, RGB(255, 223, 75, 0.5), RGB(0, 168, 255, 0.5));
+    /* background: no-repeat fixed linear-gradient(-225deg, RGB(255, 223, 75, 0.5), RGB(0, 168, 255, 0.5)); */
     border-bottom: 1.2px solid lightgray;
     z-index: 10;
     box-shadow: 0px 1px 5px lightgray;
+    background-color: rgba(20, 81, 51, 0.8);
 }
 
 #header-left{
@@ -22,7 +23,12 @@ header{
     margin-right: 10px;
     width: 40px;
     height: 40px;
-    background-color: gold;
+}
+.title-icon>a>img{
+    height:40px;
+    object-fit: cover;
+    border: 1px solid white;
+    border-radius: 5px;
 }
 
 #header-right{
@@ -31,37 +37,73 @@ header{
     margin-right: 10px;
 }
 
-#header-right>div{
+#header-right>.search-user>.makeStyles-search-155>.makeStyles-searchIcon-156>.MuiSvgIcon-root{
+    color: white;
+}
+
+#header-right>.search-user>.makeStyles-search-155>div>.makeStyles-inputInput-158{
+    color: white !important;
+}
+
+#header-right .header-ring{
+    margin-left: 10px;
+}
+
+#header-right .profile-icon{
     margin-left: 10px;
     width: 40px;
     height: 40px;
-    background-color: gold;
+    cursor:pointer;
 }
 
-#header-right .search-user{
-    margin-right: 100px;
-    background-color: transparent;
-    padding-top: 3px;
-}
 
-#header-right .search-user>input{
-    font-size: 23px;
-    width: 140px;
-}
 
 .menu-wrap{
     display: flex;
     flex-direction: column;
-    width: 300px;
+    background-color: RGBA(249, 249, 249, 1.0);
+    width: 250px;
+    height: 100%;
 }
-
 .menu-profile{
     display: flex;
-    padding: 20px;
-    align-items: center;
-    width: 300px;
-    height: 70px;
+    justify-content: space-between;
+    padding-top: 5px;
+    padding-left: 10px;
+    width: 250px;
+    height: 60px;
     font-size: 15px;
-    background-color: #f9f9f9;
-    border-bottom: 1px solid #cccccc;
+    background-color: rgba(245, 246, 250,1.0);
+    /* border-bottom: 2px solid RGBA(209, 204, 192,0.8); */
+    border-bottom: 3px solid   rgba(20, 81, 51, 0.9);
+
+}
+.menu-profile-pic-nm{
+    display: flex;
+    align-items: center;
+}
+.profile-edit-icon{
+    margin-top: 3px;
+}
+
+.menu-bottom{
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    bottom: 0;
+    width: 250px;
+    height: 40px;
+    background-color: rgba(209, 204, 192,0.4);
+    border-top: 1px solid rgba(209, 204, 192,0.8);
+}
+
+.MuiButton-label>div{
+    display: flex;
+    align-content: center;
+}
+
+.LongMenuOpen>div>.MuiButtonBase-root{
+    padding: 5px;
+    border-radius: none;
+    margin-bottom: 10px;
 }

@@ -1,65 +1,56 @@
 import React from 'react';
 import './header.css';
 import UserEditor from './UserEditor';
+import GroupAdd from '../Group/GroupAdd';
+import LongMenu from '../Other/MoreMenu';
+import ProfileEditor from 'Components/Other/ProfileEditor';
+
 import { styled } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import MenuIcon from '@material-ui/icons/Menu';
-import EditIcon from '@material-ui/icons/Build';
-import InputBase from '@material-ui/core/InputBase';
-import { withStyles } from '@material-ui/styles';
-import { createMuiTheme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/core/styles';
-
-//App Bar with search field
-//https://material-ui.com/components/app-bar/
-// const styles = theme => ({
-//     inputInput: {
-//         padding: theme.spacing(1, 1, 1, 7),
-//         transition: theme.transitions.create('width'),
-//         width: '100%',
-//         [theme.breakpoints.up('sm')]: {
-//             width: 120,
-//             '&:focus': {
-//                 width: 200,
-//             },
-//         },
-//     },
-// });
+import SettingsIcon from '@material-ui/icons/Settings';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import SearchAppBar from '../Other/SearchField';
+import ArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import ArrowUp from '@material-ui/icons/KeyboardArrowUp';
+import AddIcon from '@material-ui/icons/Add';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import EditIcon from '@material-ui/icons/Edit';
+import NotificationsIcon from '@material-ui/icons/Notifications';
 
 const defaultProps = {
     data : {
-            userId: 'abcd',
-            userName: '위성호',
-            userImage: 'http://placehold.it/30x30'
+        currentUser: {
+            user_ex: '',
+            user_id: 'HelloWorld1234',
+            user_nm: '홍길동'
         },
-        menuComponents: {
-            
-            groupList: [
-                {
-                    gruopCode: '100249',
-                    groupImage: 'http://placehold.it/30x30',
-                    groupName: '참조',
-                },
-                {
-                    gruopCode: '100250',
-                    groupImage: 'http://placehold.it/30x30',
-                    groupName: '팔색조',
-                },
-                {
-                    gruopCode: '100251',
-                    groupImage: 'http://placehold.it/30x30',
-                    groupName: '조조',
-                },
-            ],
-            friendList: [
-                {
-                    friendCode: '100001',
-                    friendImage: 'http://placehold.it/30x30',
-                    friendName: "위승빈"
-                }
-            ],
-        }
+        userFriend: [
+            {
+                friend_cd: 1,
+                friend_nm: '친구1',
+                friend_pic: 'http://placehold.it/40x40',
+            },
+            {
+                friend_cd: 1,
+                friend_nm: '친구2',
+                friend_pic: 'http://placehold.it/40x40',
+            }
+        ],
+        userGroup: [
+            {
+                group_cd: 1,
+                group_nm: '그룹1',
+                group_pic: 'http://placehold.it/40x40',
+            },
+            {
+                group_cd: 2,
+                group_nm: '그룹2',
+                group_pic: 'http://placehold.it/40x40',
+            }
+        ]
+    }
 }
 
 class Header extends React.Component {
@@ -67,10 +58,13 @@ class Header extends React.Component {
         super(props);
         this.state = {
             menuClick: false,
+            ProfileEditorClick : false,
             editorClick: false,
             groupOpen: false,
+            groupAddClick : false,
             friendOpen: false,
             data: this.props.data,
+            
         }
     }
 
@@ -95,96 +89,178 @@ class Header extends React.Component {
             friendOpen: true
         });
     };
+    
 
+    componentDidMount(){
+        this.setState({data : this.props.data});
+    }
+    
     render() {
+        const GroupAddForm = () => {
+            if(this.state.groupAddClick === true){
+                return <GroupAdd onCancel={() => this.setState({ groupAddClick: false })}></GroupAdd>
+            }
+            return null;
+        }
+
+        const ProfileEditForm = () => {
+            if(this.state.ProfileEditorClick === true){
+                return <ProfileEditor onCancel={() => this.setState({ ProfileEditorClick: false })}></ProfileEditor>
+            }
+            return null;
+        }
+
+
         const GroupList = (() => {
             if (this.state.groupOpen === true) {
                 const gruops = this.state.data.userGroup.map(
                     (value) => { return (
-                    <li key={value.groupCd}>
+                    <li key={value.group_cd}>
                         <GroupButton>
-                            {/* <img src={value.groupPic} /> */}
-                            {value.groupNm}
+                            <div style={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
+                                <img alt="group-img" style={{marginRight:'10px', borderRadius:'50%'}} src={value.group_pic} />
+                                {value.group_nm}
+                            </div>
+                            <div className="LongMenuOpen">
+                                <LongMenu style={{fontSize:'30px'}}/>
+                            </div>
                         </GroupButton>
                         </li>) }
                 );
                 return (
                     <div className="gruop-field">
-                        <GroupButton onClick={this.setGroupMenuOpen}>그룹▲</GroupButton>
+                        <GroupButton style={{backgroundColor:'rgba(209, 204, 192,0.4)'}}>
+                            <div>
+                                <span style={{fontSize:'18px', paddingTop: '5px'}}>Groups</span>
+                                <span>
+                                    <PlusIconButton><AddIcon onClick={()=> this.setState({groupAddClick: true})} style={{fontSize:'20px;'}}/></PlusIconButton>
+                                </span>
+                                {GroupAddForm()}
+                            </div>
+                            <span><IconButton><ArrowUp style={{fontSize:'30px'}}  onClick={this.setGroupMenuOpen}/></IconButton></span>
+                        </GroupButton>
                         <div><ul>{gruops}</ul></div>
+                        
                     </div>
                 );
             }
-            return <GroupButton onClick={this.setGroupMenuOpen}>그룹▼</GroupButton>;
+            return <GroupButton>
+                <div>
+                    <span style={{fontSize:'18px', paddingTop: '5px'}}>Groups</span>
+                    <span>
+                        <PlusIconButton><AddIcon style={{fontSize:'20px;'}} onClick={()=> this.setState({groupAddClick: true})} /></PlusIconButton>
+                    </span>
+                    {GroupAddForm()}
+                </div>
+                <span><IconButton><ArrowDown style={{ fontSize: '30px' }} onClick={this.setGroupMenuOpen}/></IconButton></span>
+            </GroupButton>;
         })();
         const friendList = (() => {
             if (this.state.friendOpen === true) {
                 const friends = this.state.data.userFriend.map(
                     (value) => { return (
-                    <li key={value.friendCd}>
+                    <li key={value.friend_cd}>
                         <GroupButton>
-                            <img src={value.friendPic} />
-                            {value.friendNm}
+                            <div style={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
+                                <img alt="friend-img" style={{marginRight:'10px', borderRadius:'50%'}} src={value.friend_pic} />
+                                {value.friend_nm}
+                            </div>
+                            <div>
+                                <IconButton><MoreVertIcon/></IconButton>
+                            </div>
                         </GroupButton>
                         </li>) }
                 );
                 return (
                     <div className="gruop-field">
-                        <GroupButton onClick={this.setFriendMenuOpen}>친구▲</GroupButton>
+                        <GroupButton style={{backgroundColor:'rgba(209, 204, 192,0.4)'}}>
+                            <div>
+                                <span style={{fontSize:'18px', paddingTop: '5px'}}>Friends</span>
+                            </div>
+                            <span><IconButton><ArrowUp style={{fontSize:'30px'}}  onClick={this.setFriendMenuOpen}/></IconButton></span>
+                        </GroupButton>
                         <div><ul>{friends}</ul></div>
+                        
                     </div>
                 );
             }
-            return <GroupButton onClick={this.setFriendMenuOpen}>친구▼</GroupButton>;
+            return <GroupButton>
+                <div>
+                    <span style={{fontSize:'18px', paddingTop: '5px'}}>Friends</span>
+                </div>
+                <span><IconButton><ArrowDown style={{fontSize:'30px'}}  onClick={this.setFriendMenuOpen}/></IconButton></span>
+            </GroupButton>;
         })();
         const Editor = () => {
             if (this.state.editorClick === true) {
-                return <UserEditor onCancel={() => this.setState({ editorClick: false })} />;
+                return <UserEditor currentUser={this.state.data.currentUser} onCancel={() => this.setState({ editorClick: false })} />;
             }
             return null;
         }
-        const { classes } = this.props;
         return (
             <header>
                 <div id="header-left">
                     <div className="title-menu">
-                        <IconButton onClick={() => this.setState({ menuClick: true })}><MenuIcon style={{ fontSize: '26px' }} /></IconButton>
+                        <IconButton onClick={() => this.setState({ menuClick: true })}>
+                            <MenuIcon style={{ fontSize: '30px', color: 'white'}} />
+                        </IconButton>
                         <Drawer
                             open={this.state.menuClick}
                             onClose={() => this.setState({ menuClick: false })}
+                            style={{backgroundColor:'rgba(241, 242, 246,0.1)'}}
                             anchor='left'>
                             <div className="menu-wrap">
-                                <div className="menu-profile"
-                                    onClick={() => console.log('click')}>
-                                        {/*<img alt="user img" src={this.state.data.currentUser.userPic} />*/}
-                                    <span>{this.state.currentUser.userNm}</span>
-                                    <IconButton onClick={() => this.setState({ editorClick: true })}><EditIcon /></IconButton>
-                                    {Editor()}
+                                <div className="menu-profile">
+                                    <div className="menu-profile-pic-nm">
+                                        <div style={{marginRight:'10px'}}>
+                                            <img alt="user img" src="http://placehold.it/50x50" 
+                                            style={{borderRadius:'50%'}}
+                                            />
+                                        </div>
+                                        <span>{this.state.data.currentUser.user_id}</span>
+                                    </div>
+                                    <div className="profile-edit-icon">
+                                        <IconButton><EditIcon onClick={() => this.setState({ ProfileEditorClick: true })}/></IconButton>
+                                    </div>
+                                    {ProfileEditForm()}
                                 </div>
                                 <div className="menu-buttons">
                                     {GroupList}
                                     {friendList}
                                 </div>
+                                <div className="menu-bottom">
+                                    <IconButton onClick={() => this.setState({ editorClick: true })}><SettingsIcon /></IconButton>
+                                    <IconButton>로그아웃</IconButton>
+                                </div>
+                                {Editor()}
                             </div>
                         </Drawer>
                     </div>
-                    <div className="title-icon">
-                        <a href="profile.html"><img alt="icon" src="http://placehold.it/30x30" /></a>
-                    </div>
+                    {/* <div className="title-icon">
+                        <a href="profile.html"><img alt="icon" src="RIcon.png" /></a>
+                    </div> */}
                     <div className="title-name">
-                        <a href="profile.html"><img alt="title" src="http://placehold.it/30x30" /></a>
+                        <a href="http://localhost:3000/main">
+                            <img className="title-image" alt="Recordary icon" src="Recordary.png" style={{height:'40px'}}/>
+                        </a>
                     </div>
                 </div>
                 <div id="header-right">
                     <div className="search-user">
-                        <InputBase
-                            placeholder="Search…"
-                            // className={classes.inputInput}
-                            // inputProps={{ 'aria-label': 'search' }}
-                        />
+                        <SearchAppBar></SearchAppBar>
+                    </div>
+                    <div className="header-ring">
+                        <NotificationsIcon style={{fontSize : 40, color: 'white' }} ></NotificationsIcon>
                     </div>
                     <div className="profile-icon">
-                        <a href="profile.html">profile</a>
+                        {/* <
+                        <a href="profile.html">profile</a> */}
+                        <AccountCircleIcon style={{fontSize : 40, color: 'white' }} onClick={(e)=>{
+                            e.preventDefault();
+                            this.props.onProfileShow();
+                        }}>
+                            Profile
+                        </AccountCircleIcon>
                     </div>
                 </div>
             </header>
@@ -197,13 +273,22 @@ const IconButton = styled(Button)({
     minWidth: '40px',
     height: '40px',
 });
-
-const GroupButton = styled(Button)({
-    width: '300px',
-    height: '80px',
-    border: '1px solid gray',
+const PlusIconButton = styled(Button)({
+    minWidth: '30px',
+    height: '40px',
 });
-
+const GroupButton = styled(Button)({
+    width: '250px',
+    height: '50px',
+    borderBottom: '1px solid rgba(209, 204, 192,0.8)',
+    borderRadius: '0',
+    display:'flex', 
+    justifyContent:'space-between',
+    paddingTop:'5px',
+    paddingBottom: '5px',
+    paddingLeft: '10px',
+});
 // export default withStyles(styles)(Header);
 
+Header.defaultProps = defaultProps;
 export default Header;

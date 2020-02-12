@@ -16,6 +16,7 @@ spring:
       ddl-auto: create
       use-new-id-generator-mappings: false
 
+
 server:
   error:
     whitelabel:
