@@ -25,6 +25,12 @@ public class UserEntity {
     @Column(name = "USER_EX")
     private String userEx;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK")
+    private List<FollowerEntity> followerUser;// = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "targetFK")
+    private List<FollowerEntity> followerTarget;// = new ArrayList<>();
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "gMstUserFK")
     private List<GroupEntity> masters;
 
@@ -33,4 +39,7 @@ public class UserEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userCodeFK")
     private List<GroupApplyEntity> applyGroups;
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK")
+    private  List<PostEntity> postEntityList;
 }

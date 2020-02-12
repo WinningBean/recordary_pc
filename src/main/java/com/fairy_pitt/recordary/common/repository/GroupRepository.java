@@ -12,5 +12,4 @@ public interface GroupRepository extends JpaRepository<GroupEntity, Long> {
      List<GroupEntity> findBygNameLike(String gName);//findByContentLike
      GroupEntity findByGroupCd(Long groupCd);
      List<GroupEntity> findAllBygState(boolean state);
-
 }

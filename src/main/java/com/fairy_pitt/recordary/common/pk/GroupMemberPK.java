@@ -1,4 +1,4 @@
-package com.fairy_pitt.recordary.common.id;
+package com.fairy_pitt.recordary.common.pk;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

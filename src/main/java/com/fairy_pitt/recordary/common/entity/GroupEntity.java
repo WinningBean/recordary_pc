@@ -42,4 +42,6 @@ public class GroupEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupCodeFK")
     private List<GroupApplyEntity> applyMembers;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK")
+    private List<PostEntity> postEntityList;
 }

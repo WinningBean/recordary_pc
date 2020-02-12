@@ -1,11 +1,11 @@
 package com.fairy_pitt.recordary.endpoint.main;
 
 import com.fairy_pitt.recordary.common.entity.GroupEntity;
+import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
 import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
-import com.fairy_pitt.recordary.endpoint.user.service.UserInfoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,23 +25,11 @@ import java.util.Map;
 @Controller
 public class MainController {
 
-    @Autowired
-    private HttpSession session;
+    @Autowired private HttpSession session;
 
     @GetMapping(value = "/")
     public String Index(){
         return "index";
-    }
-
-    /* User */
-    @RequestMapping(value = "/joinPage")
-    public String joinPage(){
-        return "User/join";
-    }
-
-    @RequestMapping(value = "/loginPage")
-    public String loginPage(){
-        return "User/login";
     }
 
     @GetMapping("/groupCreatePage")
@@ -56,22 +44,9 @@ public class MainController {
         return "index";
     }
 
-    @Autowired private UserInfoService userInfoService;
     @Autowired private GroupService groupService;
     @Autowired private GroupMemberService groupmemberService;
-
-    @GetMapping(value = "/userInfo")
-    public String userInfo(){
-        return "User/userInfo";
-    }
-
-    @ResponseBody
-    @GetMapping(value = "/userDelete")
-    public String userDelete(){
-        UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
-        userInfoService.delete(currentUser);
-        return "complete";
-    }
+    @Autowired private FollowerService followerService;
 
     @ResponseBody
     @GetMapping(value = "/mainPage")
@@ -80,59 +55,40 @@ public class MainController {
 
         UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
 
-        List<GroupMemberEntity> result = groupmemberService.readUserGroup(currentUser);
-        List<GroupEntity> userGroup = new ArrayList<>();
-        for (GroupMemberEntity groupMemberEntity :result) {
-            GroupEntity findResult = groupService.findGroupId(groupMemberEntity.getGroupCodeFK().getGroupCd());
-            userGroup.add(findResult);
-        }
-
-        Map<String, Object> groupMap = new HashMap<>();
-        for (GroupEntity groupEntity :userGroup) {
-            groupMap.put(" groupEx",groupEntity.getGEx());
-        }
-
-        if (currentUser == null) map.put("currentUser","none");
+        if (currentUser == null) map.put("current_user",null);
         else{
             Map<String, Object> userMap = new HashMap<>();
-            map.put("currentUser", userMap);
-            userMap.put("userId", currentUser.getUserId());
-            userMap.put("userNm", currentUser.getUserNm());
-            userMap.put("userEx", currentUser.getUserEx());        
+            map.put("current_user", userMap);
+            userMap.put("user_id", currentUser.getUserId());
+            userMap.put("user_nm", currentUser.getUserNm());
+            userMap.put("user_ex", currentUser.getUserEx());
 
-            List friendList = new ArrayList();
-            friendList.add("일깅동");
-            friendList.add("이길동");
-            friendList.add("삼길동");
+            List<GroupMemberEntity> groupMemberEntities = groupmemberService.readUserGroup(currentUser);
+            List<Optional<GroupEntity>> userGroup = new ArrayList<>();
+            for (GroupMemberEntity groupMemberEntity :groupMemberEntities) {
+                Optional<GroupEntity> findResult = groupService.findGroup(groupMemberEntity.getGroupCodeFK());
+               userGroup.add(findResult);
+            }
+
+            Map<String, Object> groupMap = new HashMap<>();
+            for (Optional<GroupEntity> groupEntity :userGroup) {
+                GroupEntity groupEntityResult = groupEntity.get();
+                groupMap.put(" groupEx",groupEntityResult.getGEx());
+            }
+
+            List<UserEntity> friendList = followerService.friends(currentUser.getUserCd());
 
             List friendMapList = new ArrayList();
             for (int i = 0; i < friendList.size(); i++){
                 Map<String, Object> friendDetailMap = new HashMap<>();
-                friendDetailMap.put("friendCd", i+1);
-                friendDetailMap.put("friendPic", "none");
-                friendDetailMap.put("friendNm", (String)friendList.get(i));
+                friendDetailMap.put("friend_user_cd", friendList.get(i).getUserCd());
+                friendDetailMap.put("friend_user_nm", friendList.get(i).getUserNm());
+                friendDetailMap.put("friend_user_pic", null);
+                friendDetailMap.put("friend_user_ex", friendList.get(i).getUserEx());
                 friendMapList.add(friendDetailMap);
             }
-            map.put("userFriend", friendMapList);
+            map.put("user_friendList", friendMapList);
         }
         return map;
-    }
-
-//    @CrossOrigin
-    @ResponseBody
-    @GetMapping(value = "/test")
-    public Map<String, String> Test() {
-        Map<String, String> map = new HashMap<>();
-        map.put("Test", "test");
-
-        return map;
-    }
-
-//    @CrossOrigin
-    @ResponseBody
-    @PostMapping(value = "/testResult")
-    public String TestResult(@RequestBody Map<String, Object> param){
-        String str = (String)((Map)param.get("cc")).get("cc1");
-        return str;
     }
 }
