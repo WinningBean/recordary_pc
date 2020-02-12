@@ -25,7 +25,12 @@ public class GroupService {
         return resultGroupEntity;
     }
 
-   public void GroupDelete(long id){
+    public GroupEntity findGroupId(long id){
+        return groupRepository.findByGroupCd(id);
+    }
+
+    //그룹 삭제
+    public void GroupDelete(long id){
         groupRepository.deleteById(id);
     }
 
@@ -35,20 +40,36 @@ public class GroupService {
                 .getMasters();
     }
 
+    //그룹 검색
     public List<GroupEntity> groupSearch(String gName){
+
 
     return groupRepository.findBygNameLike("%"+gName+"%");
 
     }
 
     public Optional<GroupEntity> findGroup(GroupEntity groupEntity){
+
         return groupRepository.findById(groupEntity.getGroupCd());
     }
 
+    public Boolean groupUpdate(GroupEntity groupEntity, long id){
+        GroupEntity  thisBoardEntity = this.findGroupId(id);
 
+        //GroupEntity updateGroupEntity = thisBoardEntity.get();
 
-    //Check groupMaster
-    //Check groupMember
+        thisBoardEntity.setGEx(groupEntity.getGEx());
+        thisBoardEntity.setGName(groupEntity.getGName());
+        thisBoardEntity.setGPic(groupEntity.getGPic());
+        thisBoardEntity.setGState(groupEntity.getGState());
 
+        groupRepository.save(thisBoardEntity);
+        return  true;
+    }
 
+    //모든 공개그룹
+    public List<GroupEntity> findAllPublicGroup()
+    {
+        return groupRepository.findAllBygState(true);
+    }
 }
