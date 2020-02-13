@@ -32,6 +32,21 @@ public class MainController {
         return "index";
     }
 
+    @ResponseBody
+    @GetMapping("/checkUser")
+    public Map<String, Boolean> checkUser(){
+        Map<String, Boolean> map = new HashMap<>();
+        Boolean userState = false;
+
+        UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
+        if (currentUser != null) userState = true;
+
+        map.put("isCurrentUser", userState);
+        System.out.println(userState);
+        return map;
+    }
+
+    @ResponseBody
     @PostMapping("/checkSession")
     public Map<String, Boolean> checkSession(@RequestParam Map<String, String> paramMap){
         Map<String, Boolean> map = new HashMap<>();
