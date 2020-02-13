@@ -26,10 +26,10 @@ public class UserEntity {
     private String userEx;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK")
-    private List<FollowerEntity> followerUser;// = new ArrayList<>();
+    private List<FollowerEntity> followUser;// = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "targetFK")
-    private List<FollowerEntity> followerTarget;// = new ArrayList<>();
+    private List<FollowerEntity> followTarget;// = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "gMstUserFK")
     private List<GroupEntity> masters;
