@@ -1,0 +1,33 @@
+.dialog-wrap{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 600px;
+    height: 420px;
+}
+
+.dialog-header{
+    display:flex;
+    align-items: center;
+    height:60px;
+    font-size: 25px;
+    padding:8px 16px;
+    background-color:rgba(20, 81, 51, 0.8);
+    color:#ffffff
+}
+
+.dialog-header-icon{
+    width:44px;
+    height:44px;
+}
+.dialog-header>div{
+    display: flex;
+    align-content: center;
+    height:44px;
+}
+
+.dialog-content{
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+}

@@ -6,7 +6,7 @@ import { styled } from '@material-ui/styles';
 import Register from './Register';
 import AlertDialog from 'Components/Other/AlertDialog';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 
 class Login extends React.Component {
@@ -77,7 +77,8 @@ class Login extends React.Component {
                 return;
             }
             // 주석 풀어야함
-            this.props.onChangePage();
+            
+            this.props.history.push('/main');
             return;
             
         } catch (error) {
