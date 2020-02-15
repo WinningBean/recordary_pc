@@ -46,7 +46,7 @@ header{
 }
 
 #header-right .header-ring{
-    margin-left: 10px;
+    margin-left: 12px;
 }
 
 #header-right .profile-icon{
@@ -71,10 +71,9 @@ header{
     padding-top: 5px;
     padding-left: 10px;
     width: 250px;
-    height: 60px;
+    height: 50px;
     font-size: 15px;
     background-color: rgba(245, 246, 250,1.0);
-    /* border-bottom: 2px solid RGBA(209, 204, 192,0.8); */
     border-bottom: 3px solid   rgba(20, 81, 51, 0.9);
 
 }
@@ -83,7 +82,8 @@ header{
     align-items: center;
 }
 .profile-edit-icon{
-    margin-top: 3px;
+    margin-right: 3px;
+    margin-bottom: 2px;
 }
 
 .menu-bottom{

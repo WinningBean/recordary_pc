@@ -27,7 +27,7 @@ class ScheduleTimeline1 extends React.Component {
             if(this.state.TimelineClick === true){
                 return (
                     <Dialog className="DialogTimeline" open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }} onClose={()=> this.setState({TimelineClick : false})}>
-                        <Timeline></Timeline>
+                        <TimelineWeekSchedule></TimelineWeekSchedule>
                     </Dialog>
                 )
             }

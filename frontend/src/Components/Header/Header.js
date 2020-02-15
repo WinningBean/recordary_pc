@@ -63,8 +63,8 @@ class Header extends React.Component {
             groupOpen: false,
             groupAddClick : false,
             friendOpen: false,
+            friendAddClick : false,
             data: this.props.data,
-            
         }
     }
 
@@ -89,7 +89,6 @@ class Header extends React.Component {
             friendOpen: true
         });
     };
-    
 
     componentDidMount(){
         this.setState({data : this.props.data});
@@ -102,6 +101,12 @@ class Header extends React.Component {
             }
             return null;
         }
+        const FriendAddForm = () => {
+            if(this.state.friendAddClick === true){
+                return <GroupAdd onCancel={() => this.setState({ friendAddClick: false })}></GroupAdd>
+            }
+            return null;
+        }
 
         const ProfileEditForm = () => {
             if(this.state.ProfileEditorClick === true){
@@ -109,8 +114,7 @@ class Header extends React.Component {
             }
             return null;
         }
-
-
+        
         const GroupList = (() => {
             if (this.state.groupOpen === true) {
                 const gruops = this.state.data.userGroup.map(
@@ -123,7 +127,7 @@ class Header extends React.Component {
                             </div>
                             <div className="LongMenuOpen">
                                 <LongMenu style={{fontSize:'30px'}}/>
-                            </div>
+                            </div>  
                         </GroupButton>
                         </li>) }
                 );
@@ -176,6 +180,10 @@ class Header extends React.Component {
                         <GroupButton style={{backgroundColor:'rgba(209, 204, 192,0.4)'}}>
                             <div>
                                 <span style={{fontSize:'18px', paddingTop: '5px'}}>Friends</span>
+                                <span>
+                                    <PlusIconButton><AddIcon onClick={()=> this.setState({friendAddClick: true})} style={{fontSize:'20px;'}}/></PlusIconButton>
+                                </span>
+                                {FriendAddForm()}
                             </div>
                             <span><IconButton><ArrowUp style={{fontSize:'30px'}}  onClick={this.setFriendMenuOpen}/></IconButton></span>
                         </GroupButton>
@@ -187,16 +195,22 @@ class Header extends React.Component {
             return <GroupButton>
                 <div>
                     <span style={{fontSize:'18px', paddingTop: '5px'}}>Friends</span>
+                    <span>
+                        <PlusIconButton><AddIcon style={{fontSize:'20px;'}} onClick={()=> this.setState({friendAddClick: true})} /></PlusIconButton>
+                    </span>
+                    {FriendAddForm()}
                 </div>
                 <span><IconButton><ArrowDown style={{fontSize:'30px'}}  onClick={this.setFriendMenuOpen}/></IconButton></span>
             </GroupButton>;
         })();
+
         const Editor = () => {
             if (this.state.editorClick === true) {
                 return <UserEditor currentUser={this.state.data.currentUser} onCancel={() => this.setState({ editorClick: false })} />;
             }
             return null;
         }
+
         return (
             <header>
                 <div id="header-left">
@@ -213,14 +227,16 @@ class Header extends React.Component {
                                 <div className="menu-profile">
                                     <div className="menu-profile-pic-nm">
                                         <div style={{marginRight:'10px'}}>
-                                            <img alt="user img" src="http://placehold.it/50x50" 
+                                            <img alt="user img" src="http://placehold.it/40x40" 
                                             style={{borderRadius:'50%'}}
                                             />
                                         </div>
                                         <span>{this.state.data.currentUser.user_id}</span>
                                     </div>
                                     <div className="profile-edit-icon">
-                                        <IconButton><EditIcon onClick={() => this.setState({ ProfileEditorClick: true })}/></IconButton>
+                                        <IconButton>
+                                            <EditIcon onClick={() => this.setState({ ProfileEditorClick: true })} style={{fontSize:'20px'}}/>
+                                        </IconButton>
                                     </div>
                                     {ProfileEditForm()}
                                 </div>
@@ -250,12 +266,12 @@ class Header extends React.Component {
                         <SearchAppBar></SearchAppBar>
                     </div>
                     <div className="header-ring">
-                        <NotificationsIcon style={{fontSize : 40, color: 'white' }} ></NotificationsIcon>
+                        <NotificationsIcon style={{fontSize : 38, color: 'white' }} ></NotificationsIcon>
                     </div>
                     <div className="profile-icon">
                         {/* <
                         <a href="profile.html">profile</a> */}
-                        <AccountCircleIcon style={{fontSize : 40, color: 'white' }} onClick={(e)=>{
+                        <AccountCircleIcon style={{fontSize : 38, color: 'white' }} onClick={(e)=>{
                             e.preventDefault();
                             this.props.onProfileShow();
                         }}>

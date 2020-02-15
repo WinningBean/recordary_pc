@@ -138,7 +138,7 @@ class Login extends React.Component {
                             e.preventDefault();
                             this.props.onChangePage();
                         }}>
-                            <img className="title-image" alt="Recordary icon" src="http://localhost:888/Recodary.png"/>
+                            <img className="title-image" alt="Recordary icon" src="http://localhost:8888/Recodary.png"/>
                         </a> */}
                         <Link to="/main">
                             {/* <img className="title-image" alt="Recordary icon" src="http://localhost:8888/Recodary.png"/> */}

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
+import SearchFieldResult from 'Components/Other/SearchFieldResult';
 
 const useStyles = makeStyles(theme => ({
   search: {
@@ -47,9 +48,25 @@ const useStyles = makeStyles(theme => ({
 
 export default function SearchAppBar() {
   const classes = useStyles();
+  const [searchState, setsearchState] = useState(false);
+
+  const setEnterKeyPress = () =>{
+    if(searchState === true){
+      return(
+        <SearchFieldResult onCancel={() => setsearchState(false)}></SearchFieldResult>    
+      )
+    }
+    return null;
+  }
+  const handleKeyPress = (e) => {
+    if(e.key === 'Enter') {
+      setsearchState(true);
+    }
+  }
 
   return (
-        <div className={classes.search}>
+        <div>
+          <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
@@ -60,7 +77,12 @@ export default function SearchAppBar() {
                   input: classes.inputInput,
             }}
             inputProps={{ 'aria-label': 'search' }}
+            onKeyPress={handleKeyPress}
             />
+          </div>
+          {setEnterKeyPress()}
+          
         </div>
+        
   );
 }

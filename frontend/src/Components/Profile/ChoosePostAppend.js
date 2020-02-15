@@ -4,7 +4,6 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import { styled } from '@material-ui/core/styles';
 import PostMediaScheduleAppend from './PostMediaScheduleAppend';
-import PostScheduleAppend from './PostScheduleAppend';
 import PostShare from './PostShare';
 
 
@@ -14,7 +13,6 @@ class ChoosePostAppend extends React.Component {
         super(props);
         this.state = {
             postMediaScheduleClick : false,
-            postScheduleClick: false,
             postShareClick: false,
         }
     }
@@ -23,13 +21,6 @@ class ChoosePostAppend extends React.Component {
         const PostMediaScheduleWrite = () => {
             if(this.state.postMediaScheduleClick === true){
                 return <PostMediaScheduleAppend onCancel={() => this.setState({ postMediaScheduleClick: false })}></PostMediaScheduleAppend>
-            }
-            return null;
-        }
-
-        const PostScheduleWrite = () => {
-            if(this.state.postScheduleClick === true){
-                return <PostScheduleAppend onCancel={() => this.setState({ postScheduleClick: false })}></PostScheduleAppend>
             }
             return null;
         }
@@ -51,18 +42,10 @@ class ChoosePostAppend extends React.Component {
                         <div className="Choose-Post-All-Append">  
                             <PostAppendButton onClick={()=> this.setState({postMediaScheduleClick: true})}>
                                 <div style={{display:'flex', alignItems:'center'}}>
-                                    게시물(사진+일정)추가
+                                    게시물(사진/일정)추가
                                 </div>
                             </PostAppendButton>
                             {PostMediaScheduleWrite()}
-                        </div>
-                        <div className="Choose-Post-Schedule-Append">
-                            <PostAppendButton onClick={()=> this.setState({postScheduleClick: true})}>
-                                <div style={{display:'flex', alignItems:'center'}}>
-                                    게시물(일정) 추가
-                                </div>
-                            </PostAppendButton>
-                            {PostScheduleWrite()}
                         </div>
                         <div className="Choose-Post-Schedule-Shared">
                             <PostAppendButton onClick={()=> this.setState({postShareClick: true})}>

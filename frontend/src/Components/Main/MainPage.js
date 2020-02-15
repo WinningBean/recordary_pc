@@ -5,6 +5,7 @@ import Main from './Main';
 import Profile from '../Profile/Profile';
 import Loading from '../Loading/Loading';
 import Aside from './Aside';
+import TimelinePlusButton from 'Components/Main/TimelinePlusButton'
 
 import axios from 'axios';
 
@@ -14,6 +15,7 @@ class MainPage extends React.Component {
         this.state = {
             userCode : this.props.userCode,
             isLoading : true,
+            postAppendClick : false,
             data : {},
             mainCurrPage: 0,
             mainPage : [
@@ -38,6 +40,7 @@ class MainPage extends React.Component {
             ]
             }
     }
+
 
     async componentDidMount(){
         // 유저에 대한 정보를 가져오고 그 결과값을 state 에 저장
@@ -78,6 +81,8 @@ class MainPage extends React.Component {
     }
 
     render() {
+
+        
         if(this.state.isLoading === true){
             return (
                 <Loading></Loading>
@@ -91,6 +96,7 @@ class MainPage extends React.Component {
                 }}
                 ></Header>
                 {this.state.mainPage[this.state.mainCurrPage]()}
+                <TimelinePlusButton></TimelinePlusButton>
             </div>
         );
     }

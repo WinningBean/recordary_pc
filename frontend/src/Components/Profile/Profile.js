@@ -3,23 +3,23 @@ import './ProfilePage.css';
 import SearchAppBar from '../Other/SearchField';
 import ScheduleTimeline1 from './ScheduleTimeline1';
 import PictureTimeline from './PictureTimeline';
-import ScrollToTopOnMount from '../Other/ScrollToTopOnMount'
+import ScrollToTopOnMount from '../Other/ScrollToTopOnMount';
+import Follower from 'Components/Profile/Follower';
 
-import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/core/styles';
-import ChoosePostAppend from './ChoosePostAppend';
+import Link from '@material-ui/core/Link';
 
 class Profile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            postAppendClick : false,
+            addScheduleClick : false,
             profileScheduleClick : false,
             profilePictureClick : false,
+            followerNumClick: false,
         }
     }
-
     setProfileScheduleOpen = () => {
         if(this.state.profileScheduleClick === true){
             return this.setState({
@@ -49,17 +49,11 @@ class Profile extends React.Component {
 
 
     render() {
-        
-        const PostAppendMenu = () => {
-            if(this.state.postAppendClick === true){
-                return <ChoosePostAppend onCancel={() => this.setState({ postAppendClick: false })}></ChoosePostAppend>
-            }
-            return null;
-        }
 
         
         const ProfileDownTimeLine = () => {
             if(this.state.profileScheduleClick === true && this.state.profilePictureClick === false){
+
                 return(
                     <div className="profile-ScheduleTimeLine">
                         <ScheduleTimeline1></ScheduleTimeline1>
@@ -81,6 +75,13 @@ class Profile extends React.Component {
             }
             return null;
         }
+
+        const FollowerShow = () => {
+            if (this.state.followerNumClick === true) {
+                return <Follower onCancel={() => this.setState({ followerNumClick: false })}></Follower>
+            }
+            return null;
+        }
         
 
         return (
@@ -99,8 +100,19 @@ class Profile extends React.Component {
                                 <div className="info">
                                     <ul>
                                         <li><span className="name">WaterGlasses</span></li>
-                                        <li><span>팔로워<span className="follower">50</span></span></li>
-                                        <li><span>팔로우<span className="follow">40</span></span></li>
+                                        <li>
+                                            <span className="followerName">팔로워</span>
+                                            <Link component="button" onClick={() => this.setState({ followerNumClick: true })}>
+                                                <span className="followerNum">50</span>
+                                            </Link>
+                                            {FollowerShow()}
+                                        </li>
+                                        <li>
+                                            <span className="followerName">팔로우</span>
+                                            <Link component="button" onClick={() => this.setState({ followerNumClick: true })}>
+                                                <span className="followNum">50</span>
+                                            </Link>
+                                        </li>
                                     </ul>
                                     <div className="status-content">
                                         상태메시지입니담!
@@ -111,12 +123,6 @@ class Profile extends React.Component {
                             </div>
                         </div>
                         <div id="schedule-area">
-                            <div className="schedule-append">
-                                <IconButton>
-                                    <AddCircleIcon onClick={()=> this.setState({postAppendClick: true})} style={{fontSize: '30px'}}></AddCircleIcon>
-                                </IconButton>
-                                {PostAppendMenu()}
-                            </div>
                             <div className="calender">
                                 {/* 캘린더 추가 */}
                                 달력
@@ -126,10 +132,10 @@ class Profile extends React.Component {
                 </div>
                 <nav>
                     <div id="tap-1" >
-                        <Button onClick={this.setProfileScheduleOpen}><span>일정</span></Button>
+                        <NavButton onClick={this.setProfileScheduleOpen}><span>일정</span></NavButton>
                     </div>
                     <div id="tap-2">
-                        <Button onClick={this.setProfilePictureOpen}><span>사진</span></Button>
+                        <NavButton onClick={this.setProfilePictureOpen}><span>사진</span></NavButton>
                     </div>
                 </nav>
                 {ProfileDownTimeLine()}
@@ -137,11 +143,12 @@ class Profile extends React.Component {
         );
     }
 }
-const IconButton = styled(Button)({
-    minWidth: '40px',
-    height: '40px',
-});
 
-
+const NavButton = styled(Button)({
+    minWidth:'430px',
+    height: '60px',
+    fontSize:'18px',
+    fontStyle: 'bold',
+})
 
 export default Profile;

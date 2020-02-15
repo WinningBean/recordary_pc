@@ -1,0 +1,15 @@
+.searchField-result{
+    height: 100%;
+    width: 100%;
+}
+.searchField-title{
+    padding: 10px;
+}
+.searchField-result-list{
+    padding: 10px;
+}
+.follower_list{
+    display: flex;
+    justify-content: space-between;
+    width: 200px;
+}
