@@ -9,6 +9,7 @@ import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -19,19 +20,20 @@ public class FollowerService {
     @Autowired private FollowerRepository followerRepository;
     @Autowired private UserRepository userRepository;
 
-    @Transactional
     public Boolean create(UserEntity currentUser, String targetId){
         FollowerEntity follower = new FollowerEntity();
+        UserEntity targetUser = userRepository.findByUserId(targetId);
+
         follower.setUserFK(currentUser);
-        follower.setTargetFK(userRepository.findByUserId(targetId));
+        follower.setTargetFK(targetUser);
 
         Optional<FollowerEntity> resultFollowerEntity = Optional.of(followerRepository.save(follower));
         if (resultFollowerEntity.isPresent()) return true;
         else return false;
     }
 
-    public Boolean delete(UserEntity currentUser, Long targetFK){
-        UserEntity target = userService.find(targetFK);
+    public Boolean delete(UserEntity currentUser, String targetId){
+        UserEntity target = userRepository.findByUserId(targetId);
         FollowerEntity followerEntity = followerRepository.findByUserFKAndTargetFK(currentUser, target);
         followerRepository.delete(followerEntity);
         return true;
@@ -66,7 +68,6 @@ public class FollowerService {
     public List<UserEntity> friends(Long userFK){ // 사용자 친구 리스트 (맞팔)
         Set<UserEntity> followers = new HashSet<UserEntity>(followers(userFK));
         Set<UserEntity> followings = new HashSet<UserEntity>(following(userFK));
-        // Arrays.asList(list)
 
         if (followers == null || followings == null) return null;
         followers.retainAll(followings);
