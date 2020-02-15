@@ -56,6 +56,38 @@ public class PostController {
         return map;
     }
 
+    @GetMapping("/")
+    public Map<String, Object> userPost(@RequestParam Map<String, Object> paramMap){
+        Long userCd = (Long)paramMap.get("user_cd");
+        UserEntity userEntity = userRepository.findByUserCd(userCd);
+        List<PostEntity> postList;
+
+        Long groupCd = (Long)paramMap.get("group_cd");
+        if (groupCd != null){
+            GroupEntity groupEntity = groupRepository.findByGroupCd(groupCd);
+            postList = postService.groupPost(groupEntity);
+        }
+        else postList = postService.userPost(userEntity);
+
+
+        Map<String, Object> map = new HashMap<>();
+        List postMapList = new ArrayList();
+        for (int i = 0; i < postList.size(); i++){
+            Map<String, Object> postDetailMap = new HashMap<>();
+            postDetailMap.put("post_cd", postList.get(i).getPostCd());
+            postDetailMap.put("post_group_fk", postList.get(i).getGroupFK().getGroupCd());
+            postDetailMap.put("post_ex", postList.get(i).getPostEx());
+            postDetailMap.put("post_pb_st", postList.get(i).getPostPublicState());
+            postDetailMap.put("post_str_ymd", postList.get(i).getPostStrYMD());
+            postDetailMap.put("post_end_ymd", postList.get(i).getPostEndYMD());
+            postDetailMap.put("post_created_dt", postList.get(i).getCreatedDate());
+            postDetailMap.put("post_updated_dt", postList.get(i).getUpdatedDate());
+            postMapList.add(postDetailMap);
+        }
+        map.put("userPost", postMapList);
+        return map;
+    }
+
         return map;
     }
 }

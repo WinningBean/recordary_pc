@@ -50,4 +50,33 @@ public class PostService {
         return true;
     }
 
+    public List<PostEntity> timeLine(UserEntity userEntity){ // 수정 필요
+        List<FollowerEntity> followerEntityList = followerRepository.findAllByUserFK(userEntity);
+        List<GroupEntity> groupEntityList = groupMemberRepository.findAllByUserCodeFK(userEntity);
+
+        List<PostEntity> postList = new ArrayList<>();
+        for (FollowerEntity follower : followerEntityList){
+            List<PostEntity> userPost = postRepository.findAllByUserFK(follower.getTargetFK());
+            for (PostEntity post : userPost){
+                postList.add(post);
+            }
+        }
+        for (GroupEntity group : groupEntityList){
+            List<PostEntity> groupPost = postRepository.findAllByGroupFK(group);
+            for (PostEntity post : groupPost){
+                postList.add(post);
+            }
+        }
+
+        return postList;
+    }
+
+    public List<PostEntity> userPost(UserEntity userEntity){
+        return postRepository.findAllByUserFK(userEntity);
+    }
+
+    public List<PostEntity> groupPost(GroupEntity groupEntity){
+        return postRepository.findAllByGroupFK(groupEntity);
+    }
+
 }
