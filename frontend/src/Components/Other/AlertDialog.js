@@ -4,6 +4,8 @@ import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
 import Button from '@material-ui/core/Button';
 
+// severity (success or error)
+
 class AlertDialog extends React.Component {
     render() {
         return (

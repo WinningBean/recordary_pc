@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './group.css';
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
@@ -16,15 +15,15 @@ import Snackbar from 'Components/UI/Snackbar';
 import Backdrop from 'Components/UI/Backdrop';
 import axios from 'axios';
 
-const GroupAdd = (props) => {
-    const [openSwitch, setOpenSwitch] = useState({
-        open: true
-    });
+const GroupModify = (props) => {
+    const [openSwitch, setOpenSwitch] = useState(props.group.group_state);
 
     const [group, setGroup] = useState({
-        group_nm: '',
-        group_ex: '',
-        group_pic: '',
+        group_cd: props.group.group_cd,
+        group_nm: props.group.group_nm,
+        group_ex: props.group.group_ex,
+        group_pic: props.group.group_pic,
+        group_state: props.group.group_state
     });
     const [imageSrc, setImageSrc] = useState(null);
     const [alert, setAlert] = useState(null);
@@ -66,10 +65,11 @@ const GroupAdd = (props) => {
             form.append('group_nm', group.group_nm);
             form.append('group_ex', group.group_ex);
             // form.append('group_pic', dataUrl);
-            form.append('group_state', openSwitch.open)
-            const { data } = await axios.post("http://localhost:8888/group/create", form);
-
-            if (data.isCreate) {
+            form.append('group_state', openSwitch);
+            console.log('1');
+            const { data } = await axios.post(`http://localhost:8888/group/update/${group.group_cd}`, form);
+            console.log('2');
+            if (data.isUdate) {
                 setAlert(
                     <AlertDialog
                         severity='success'
@@ -96,15 +96,14 @@ const GroupAdd = (props) => {
             )
         }
     }
-
+console.log(group);
     return (
-        <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
             <div className="dialog-wrap">
-                <div className='dialog-header'>
+                {/* <div className='dialog-header'>
                     <div className='dialog-header-icon'><GroupAddIcon style={{ fontSize: '44px' }} /></div>
                     &nbsp;
-                    <span>그룹 생성</span>
-                </div>
+                    <span>그룹 수정</span>
+                </div> */}
                 <DialogContent style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <div className="dialog-content">
                         <div>
@@ -146,6 +145,7 @@ const GroupAdd = (props) => {
                         <TextField 
                             label="그룹명"
                             name='group_nm'
+                            defaultValue={group.group_nm}
                             onChange={changeHandel}
                         />
                         <TextField
@@ -154,25 +154,25 @@ const GroupAdd = (props) => {
                             multiline={true}
                             rows={10}
                             rowsMax={10}
+                            defaultValue={group.group_ex}
                             onChange={changeHandel}
                         />
                     </div>
                 </DialogContent>
                 <DialogActions>
-                    <Tooltip title="검색시 그룹이 보여집니다." placement="top">
+                    <Tooltip title="검색시 그룹이 보여집니다.">
                         <FormControlLabel
                             control={
                                 <Switch
-                                    checked={openSwitch.open}
-                                    onChange={event => setOpenSwitch({ open: event.target.checked })}
+                                    checked={openSwitch}
+                                    onChange={event => setOpenSwitch(event.target.checked)}
                                     color="primary"
                                 />
                             }
                             label="그룹 공개"
                         />
                     </Tooltip>
-                    <Button color="secondary" onClick={() => props.onCancel()}>취소</Button>
-                    <Button color="primary" onClick={onSubmit}>생성</Button>
+                    <Button color="primary" onClick={onSubmit}>변경</Button>
                 </DialogActions>
                 {imageSrc && (
                     <ImageEditor
@@ -184,10 +184,9 @@ const GroupAdd = (props) => {
                         }}
                     />
                 )}
+                {alert}
             </div>
-            {alert}
-        </Dialog>
     );
 }
 
-export default GroupAdd;
+export default GroupModify;

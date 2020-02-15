@@ -97,10 +97,11 @@ header{
     border-top: 1px solid rgba(209, 204, 192,0.8);
 }
 
-.MuiButton-label>div{
-    display: flex;
-    align-content: center;
+.LongMenuOpen{
+    display: flex !important;
+    align-content: center !important;
 }
+
 
 .LongMenuOpen>div>.MuiButtonBase-root{
     padding: 5px;
