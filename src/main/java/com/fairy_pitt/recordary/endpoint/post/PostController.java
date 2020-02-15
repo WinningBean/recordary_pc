@@ -88,6 +88,14 @@ public class PostController {
         return map;
     }
 
+    @PostMapping("/delete")
+    public Map<String, Boolean> delete(@RequestParam Map<String, Object> paramMap){
+        Boolean deleteState = postService.delete((Long) paramMap.get("post_cd"));
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("isDelete", deleteState);
+        return map;
+    }
+
         return map;
     }
 }

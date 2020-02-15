@@ -79,4 +79,11 @@ public class PostService {
         return postRepository.findAllByGroupFK(groupEntity);
     }
 
+    public Boolean delete(Long postCd){
+        PostEntity postEntity = postRepository.findByPostCd(postCd);
+        postRepository.delete(postEntity);
+        if (postRepository.findByPostCd(postCd) != null) return false;
+        return true;
+    }
+
 }
