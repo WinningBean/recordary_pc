@@ -78,7 +78,7 @@ class Login extends React.Component {
             }
             // 주석 풀어야함
             
-            this.props.history.push('/main');
+            this.props.history.push('/main');//페이지 이동
             return;
             
         } catch (error) {

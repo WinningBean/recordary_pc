@@ -8,13 +8,18 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import HowToRegIcon from '@material-ui/icons/HowToReg';
 import Dialog from '@material-ui/core/Dialog';
 import AddIcon from '@material-ui/icons/Add';
-
+import axios from 'axios';
 
 
 class SearchFieldResult extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            currentUser: {
+                user_ex: '',
+                user_id: 'HelloWorld1234',
+                user_nm: '홍길동'
+            },
             userFollower: [
                 {
                     follower_cd: 1,
@@ -52,14 +57,15 @@ class SearchFieldResult extends React.Component {
     }
 
     followerChange = (index, click) => {
+
         const array = this.state.userFollower;
         array[index] = { ...array[index], follower_click: click };
 
         this.setState({ userFollower: array });
+
     };
 
     render() {
-
         const exfollowerList = this.state.userFollower.map((value, index) => { 
             return (
                 <li key={value.follower_cd} >
@@ -74,21 +80,37 @@ class SearchFieldResult extends React.Component {
                         </div>
                         <div>
                             {(()=>{
-                                if (value.follower_click) {
-                                    return (<FollowButton onClick={()=>this.followerChange(index, !value.follower_click)}>
-                                                <HowToRegIcon style={{ fontSize: '20px;' }} />
-                                            </FollowButton>)
+                                if (!value.follower_click) {
+                                    return (
+                                        <FollowButton onClick={async(e) => {
+                                            console.log(value);//
+                                            e.preventDefault();
+                                            this.followerChange(index, !value.follower_click);
+
+                                            const Form = new FormData();
+                                            Form.append('follower_cd', value.follower_cd);
+                                            Form.append('follower_nm', value.follower_nm);
+                                            Form.append('follower_pic', value.follower_pic);
+                                            Form.append('follower_click', value.follower_click);
+                                            
+                                            const { data } = await axios.post(`http://localhost:8888/${this.state.currentUser.user_id}/follow`, Form);
+                                            // .catch();
+                                            console.log(data);
+                                        }}>
+                                            <HowToRegIcon style={{ fontSize: '20px;' }} />
+                                        </FollowButton>)
                                 } else {
                                     return (<FollowButton onClick={()=>this.followerChange(index, !value.follower_click)}>
                                                 <AddIcon style={{ fontSize: '20px;' }} />
                                             </FollowButton>)
                                 }
                             })()}
+                            
                         </div>
                     </div>
                 </li>
-                )}
-            );
+            )}
+        );
 
         return (
             <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}  onClose={() => this.props.onCancel()} >

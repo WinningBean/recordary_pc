@@ -53,7 +53,7 @@ export default function SearchAppBar() {
   const setEnterKeyPress = () =>{
     if(searchState === true){
       return(
-        <SearchFieldResult onCancel={() => setsearchState(false)}></SearchFieldResult>    
+        <SearchFieldResult onCancel={() => setsearchState(false)}></SearchFieldResult>
       )
     }
     return null;
