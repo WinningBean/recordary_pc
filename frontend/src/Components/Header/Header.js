@@ -4,6 +4,7 @@ import UserEditor from './UserEditor';
 import GroupAdd from '../Group/GroupAdd';
 import LongMenu from '../Other/MoreMenu';
 import ProfileEditor from 'Components/Profile/ProfileEditor';
+import GroupSetting from 'Components/Group/GroupSetting';
 
 import { styled } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -64,7 +65,7 @@ class Header extends React.Component {
             groupAddClick : false,
             friendOpen: false,
             data: this.props.data,
-            clickGroup: null,
+            menuDialog: null,
         }
     }
 
@@ -89,7 +90,18 @@ class Header extends React.Component {
             friendOpen: true
         });
     };
-    
+
+    onGroupMenuSelect = (selectedValue, code) => {
+        switch(selectedValue){
+            case '그룹 정보':
+                break;
+            case '그룹 관리':
+                this.setState({menuDialog : <GroupSetting onClose={()=> this.setState({menuDialog : null})} />})
+                break;
+            case '그룹 삭제':
+                break;
+        }
+    }
 
     componentDidMount(){
         this.setState({data : this.props.data});
@@ -124,10 +136,10 @@ class Header extends React.Component {
                                     </div>
                                     <div className="LongMenuOpen">
                                         <LongMenu 
-                                        options={[ '그룹 정보', '그룹멤버 추가', '그룹 수정', '그룹 삭제',]} 
+                                        options={[ '그룹 정보', '그룹 관리', '그룹 삭제']} 
                                         style={{ fontSize: '30px' }}
                                         code={value.group_cd}
-                                        returnValue={(selectedValue, code)=>console.log(selectedValue + ', ' + code)}
+                                        returnValue={this.onGroupMenuSelect} 
                                         />
                                     </div>
                                 </div>
@@ -240,6 +252,7 @@ class Header extends React.Component {
                                 </div>
                                 {Editor()}
                                 {GroupAddForm()}
+                                {this.state.menuDialog}
                             </div>
                         </Drawer>
                     </div>

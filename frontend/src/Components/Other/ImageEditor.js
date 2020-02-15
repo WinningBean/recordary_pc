@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import ReactCrop from 'react-image-crop';
 import AlertDialog from './AlertDialog';
 import Dialog from '@material-ui/core/Dialog';
@@ -15,9 +15,9 @@ const ImageEditor = (props) => {
     const [alert, setAlert] = useState(null);
     const [completeCrop, setComplateCrop] = useState(null);
 
-    useEffect(()=>{
-        setSrc(props.src);
-    });
+    // useEffect((props1)=>{
+    //     setSrc(props.src);
+    // });
 
     const getCroppedImg = () => {
         const crop = completeCrop;

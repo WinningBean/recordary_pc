@@ -114,7 +114,6 @@ class ProfileEditor extends React.Component {
                                 canvas.width = width;
                                 canvas.height = height;
                                 // canvas에 변경된 크기의 이미지를 다시 그려줍니다.
-                                var ctx = canvas.getContext("2d");
                                 ctx.drawImage(cut, 0, 0, width, height);
                                 // canvas 에 있는 이미지를 img 태그로 넣어줍니다
                                 var dataurl = canvas.toDataURL("image/jpg");

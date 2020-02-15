@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './group.css';
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
@@ -16,15 +15,16 @@ import Snackbar from 'Components/UI/Snackbar';
 import Backdrop from 'Components/UI/Backdrop';
 import axios from 'axios';
 
-const GroupAdd = (props) => {
+const GroupModify = (props) => {
     const [openSwitch, setOpenSwitch] = useState({
-        open: true
+        open: props.group.group_open
     });
 
     const [group, setGroup] = useState({
-        group_nm: '',
-        group_ex: '',
-        group_pic: '',
+        group_nm: props.group.group_nm,
+        group_ex: props.group.group_ex,
+        group_pic: props.group.group_pic,
+        group_open: props.group.group_open
     });
     const [imageSrc, setImageSrc] = useState(null);
     const [alert, setAlert] = useState(null);
@@ -97,13 +97,12 @@ const GroupAdd = (props) => {
     }
 
     return (
-        <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
             <div className="dialog-wrap">
-                <div className='dialog-header'>
+                {/* <div className='dialog-header'>
                     <div className='dialog-header-icon'><GroupAddIcon style={{ fontSize: '44px' }} /></div>
                     &nbsp;
-                    <span>그룹 생성</span>
-                </div>
+                    <span>그룹 수정</span>
+                </div> */}
                 <DialogContent style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <div className="dialog-content">
                         <div>
@@ -158,7 +157,7 @@ const GroupAdd = (props) => {
                     </div>
                 </DialogContent>
                 <DialogActions>
-                    <Tooltip title="검색시 그룹이 보여집니다." placement="top">
+                    <Tooltip title="검색시 그룹이 보여집니다.">
                         <FormControlLabel
                             control={
                                 <Switch
@@ -170,8 +169,7 @@ const GroupAdd = (props) => {
                             label="그룹 공개"
                         />
                     </Tooltip>
-                    <Button color="secondary" onClick={() => props.onCancel()}>취소</Button>
-                    <Button color="primary" onClick={onSubmit}>생성</Button>
+                    <Button color="primary" onClick={onSubmit}>변경</Button>
                 </DialogActions>
                 {imageSrc && (
                     <ImageEditor
@@ -183,10 +181,9 @@ const GroupAdd = (props) => {
                         }}
                     />
                 )}
+                {alert}
             </div>
-            {alert}
-        </Dialog>
     );
 }
 
-export default GroupAdd;
+export default GroupModify;
