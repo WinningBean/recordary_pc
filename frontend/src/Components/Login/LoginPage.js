@@ -58,7 +58,7 @@ class Login extends React.Component {
             const Form = new FormData();
             Form.append('user_id', this.state.user_id);
             Form.append('user_pw', this.state.user_pw);
-            const { data } = await axios.post("http://localhost:8888/loginRequest", Form);
+            const { data } = await axios.post("http://localhost:8888/user/loginRequest", Form);
             // .catch();
             console.log(data);
             
@@ -76,8 +76,6 @@ class Login extends React.Component {
                 })
                 return;
             }
-            // 주석 풀어야함
-            
             this.props.history.push('/main');//페이지 이동
             return;
             
