@@ -36,27 +36,34 @@ public class GroupController {
     @ResponseBody
     @PostMapping("create") // 그룹 생성
     public Map<String,Boolean> CreateGroup(@RequestParam Map<String, Object> groupInfo) {
-        UserEntity currUser = (UserEntity) session.getAttribute("loginUser");
+        //UserEntity currUser = (UserEntity) session.getAttribute("loginUser");
 
         GroupEntity groupEntity = new GroupEntity();
         GroupMemberEntity groupMemberEntity = new GroupMemberEntity();
 
-        groupEntity.setGName((String)groupInfo.get("group_name"));
+        groupEntity.setGName((String)groupInfo.get("group_nm"));
         groupEntity.setGEx((String) groupInfo.get("group_ex"));
-        groupEntity.setGState(true);
-//        if(groupInfo.get("group_state") == "true")
-//        {
-//            groupEntity.setGState(true);
-//        }else {
-//            groupEntity.setGState(false);
-//        }
-
-        groupEntity.setGMstUserFK(currUser);
+        System.out.print("-------------------------------------------------------------------1 \n");
+        groupEntity.setGMstUserFK((UserEntity) session.getAttribute("loginUser"));
+        System.out.print("-------------------------------------------------------------------2 \n");
+        if((String) groupInfo.get("group_state") == "true")
+        {
+            groupEntity.setGState(true);
+        }else {
+            groupEntity.setGState(false);
+        }
+        System.out.print("-------------------------------------------------------------------3 \n");
         GroupEntity groupCreate = groupService.groupCreate(groupEntity);
+        System.out.print("-------------------------------------------------------------------4 \n");
 
-        groupMemberEntity.setUserCodeFK(currUser);
+        groupMemberEntity.setUserCodeFK(groupCreate.getGMstUserFK());
+        System.out.print("-------------------------------------------------------------------5 \n");
         groupMemberEntity.setGroupCodeFK(groupCreate);
+        System.out.print("-------------------------------------------------------------------6 \n");
+       // System.out.print(currUser.);
         boolean groupCreateComplete = groupMemberService.insertMember(groupMemberEntity);
+
+        System.out.print("-------------------------------------------------------------------7 \n");
 
         Map<String, Boolean> result = new HashMap<>();
         result.put("isCreate", groupCreateComplete );
@@ -84,25 +91,34 @@ public class GroupController {
     }
 
     @ResponseBody
-    @GetMapping("delete/{id}")
-    public String DeleteGroup(@PathVariable("id") long id)
+    @PostMapping("delete/{id}")
+    public Map<String,Boolean> DeleteGroup(@PathVariable("id") long id)
     {
         groupService.GroupDelete(id);
-        return "success";
+        Map<String,Boolean> result = new HashMap<>();
+        result.put("isDelete", true);
+        return result;
     }
 
     //그룹 정보수정
     @ResponseBody
-    @GetMapping("update/{id}")
-    public String UpdateGroup(@PathVariable("id") long id, @RequestParam Map<String,Object> groupInfo)
+    @PostMapping("update/{id}")
+    public Map<String,Boolean> UpdateGroup(@PathVariable("id") long id, @RequestParam Map<String,Object> groupInfo)
     {
         GroupEntity groupEntity = new GroupEntity();
-        groupEntity.setGName((String)groupInfo.get("group_name"));
+        groupEntity.setGName((String)groupInfo.get("group_nm"));
         groupEntity.setGEx((String) groupInfo.get("group_ex"));
-        groupEntity.setGState((boolean)groupInfo.get("group_state"));
 
-        groupService.groupUpdate(groupEntity,id);
-        return "success";
+        if((String) groupInfo.get("group_state") == "true")
+        {
+            groupEntity.setGState(true);
+        }else {
+            groupEntity.setGState(false);
+        }
+        Map<String,Boolean> result = new HashMap<>();
+        result.put("isUdate", groupService.groupUpdate(groupEntity,id));
+
+        return result;
     }
 
     //그룹 자세히보기 - 그룹 정보와, 그룹의 맴버 정보 전달

@@ -43,6 +43,7 @@ public class GroupMemberService {
 
     public Boolean insertMember(GroupMemberEntity groupMemberEntity)
     {
+        System.out.print(groupMemberEntity.getUserCodeFK());
         Optional<GroupMemberEntity> resultMemberEntity = Optional.of(groupMemberRepository.save(groupMemberEntity));
         if (resultMemberEntity.isPresent()) {
             return true;

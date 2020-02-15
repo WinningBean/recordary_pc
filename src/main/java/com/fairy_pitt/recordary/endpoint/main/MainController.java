@@ -76,31 +76,39 @@ public class MainController {
             userMap.put("user_ex", currentUser.getUserEx());
 
             List<GroupMemberEntity> groupMemberEntities = groupmemberService.readUserGroup(currentUser);
+
             List<Optional<GroupEntity>> userGroup = new ArrayList<>();
             for (GroupMemberEntity groupMemberEntity :groupMemberEntities) {
                 Optional<GroupEntity> findResult = groupService.findGroup(groupMemberEntity.getGroupCodeFK());
                userGroup.add(findResult);
             }
 
-            Map<String, Object> groupMap = new HashMap<>();
+            List groupMapList = new ArrayList();
             for (Optional<GroupEntity> groupEntity :userGroup) {
+                Map<String, Object> groupMap = new HashMap<>();
                 GroupEntity groupEntityResult = groupEntity.get();
-                groupMap.put(" groupEx",groupEntityResult.getGEx());
+                groupMap.put("group_ex",groupEntityResult.getGEx());
+                groupMap.put("group_nm",groupEntityResult.getGName());
+                groupMap.put("group_cd",groupEntityResult.getGroupCd());
+                groupMap.put("group_pic",groupEntityResult.getGPic());
+                groupMap.put("group_state", groupEntityResult.getGState());
+                groupMapList.add(groupMap);
             }
-
-            List<UserEntity> friendList = followerService.friends(currentUser.getUserCd());
-
-            List friendMapList = new ArrayList();
-            for (int i = 0; i < friendList.size(); i++) {
-                Map<String, Object> friendDetailMap = new HashMap<>();
-                friendDetailMap.put("friend_user_cd", friendList.get(i).getUserCd());
-                friendDetailMap.put("friend_user_nm", friendList.get(i).getUserNm());
-                friendDetailMap.put("friend_user_pic", null);
-                friendDetailMap.put("friend_user_ex", friendList.get(i).getUserEx());
-                friendMapList.add(friendDetailMap);
-            }
-            map.put("friendList", friendMapList);
+            map.put("userGroup", groupMapList);
+//            List<UserEntity> friendList = followerService.friends(currentUser.getUserCd());
+//
+//            List friendMapList = new ArrayList();
+//            for (int i = 0; i < friendList.size(); i++) {
+//                Map<String, Object> friendDetailMap = new HashMap<>();
+//                friendDetailMap.put("friend_user_cd", friendList.get(i).getUserCd());
+//                friendDetailMap.put("friend_user_nm", friendList.get(i).getUserNm());
+//                friendDetailMap.put("friend_user_pic", null);
+//                friendDetailMap.put("friend_user_ex", friendList.get(i).getUserEx());
+//                friendMapList.add(friendDetailMap);
+//            }
+//            map.put("friendList", friendMapList);
         }
+
         return map;
     }
 }
