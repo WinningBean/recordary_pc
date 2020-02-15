@@ -86,4 +86,11 @@ public class PostService {
         return true;
     }
 
+    public List<PostEntity> userPostSearch(String searchContent, UserEntity userEntity){
+        return postRepository.findAllByPostExLikeAndUserFK("%"+searchContent+"%", userEntity);
+    }
+
+    public List<PostEntity> groupPostSearch(String searchContent, GroupEntity groupEntity){
+        return postRepository.findAllByPostExLikeAndGroupFK("%"+searchContent+"%", groupEntity);
+    }
 }
