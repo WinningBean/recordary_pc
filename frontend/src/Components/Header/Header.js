@@ -3,7 +3,8 @@ import './header.css';
 import UserEditor from './UserEditor';
 import GroupAdd from '../Group/GroupAdd';
 import LongMenu from '../Other/MoreMenu';
-import ProfileEditor from 'Components/Other/ProfileEditor';
+import ProfileEditor from 'Components/Profile/ProfileEditor';
+import GroupSetting from 'Components/Group/GroupSetting';
 
 import { styled } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -49,7 +50,7 @@ const defaultProps = {
                 group_nm: '그룹2',
                 group_pic: 'http://placehold.it/40x40',
             }
-        ]
+        ],
     }
 }
 
@@ -64,7 +65,7 @@ class Header extends React.Component {
             groupAddClick : false,
             friendOpen: false,
             data: this.props.data,
-            
+            menuDialog: null,
         }
     }
 
@@ -89,7 +90,18 @@ class Header extends React.Component {
             friendOpen: true
         });
     };
-    
+
+    onGroupMenuSelect = (selectedValue, code) => {
+        switch(selectedValue){
+            case '그룹 정보':
+                break;
+            case '그룹 관리':
+                this.setState({menuDialog : <GroupSetting onClose={()=> this.setState({menuDialog : null})} />})
+                break;
+            case '그룹 삭제':
+                break;
+        }
+    }
 
     componentDidMount(){
         this.setState({data : this.props.data});
@@ -115,17 +127,25 @@ class Header extends React.Component {
             if (this.state.groupOpen === true) {
                 const gruops = this.state.data.userGroup.map(
                     (value) => { return (
-                    <li key={value.group_cd}>
-                        <GroupButton>
-                            <div style={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
-                                <img alt="group-img" style={{marginRight:'10px', borderRadius:'50%'}} src={value.group_pic} />
-                                {value.group_nm}
-                            </div>
-                            <div className="LongMenuOpen">
-                                <LongMenu style={{fontSize:'30px'}}/>
-                            </div>
-                        </GroupButton>
-                        </li>) }
+                        <li key={value.group_cd}>
+                            <GroupButton>
+                                <div style={{ display: 'flex', width:'250px', justifyContent:'space-between' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                                        <img alt="group-img" style={{ marginRight: '10px', borderRadius: '50%' }} src={value.group_pic} />
+                                        {value.group_nm}
+                                    </div>
+                                    <div className="LongMenuOpen">
+                                        <LongMenu 
+                                        options={[ '그룹 정보', '그룹 관리', '그룹 삭제']} 
+                                        style={{ fontSize: '30px' }}
+                                        code={value.group_cd}
+                                        returnValue={this.onGroupMenuSelect} 
+                                        />
+                                    </div>
+                                </div>
+                            </GroupButton>
+                        </li>)
+                    }
                 );
                 return (
                     <div className="gruop-field">
@@ -135,7 +155,6 @@ class Header extends React.Component {
                                 <span>
                                     <PlusIconButton><AddIcon onClick={()=> this.setState({groupAddClick: true})} style={{fontSize:'20px;'}}/></PlusIconButton>
                                 </span>
-                                {GroupAddForm()}
                             </div>
                             <span><IconButton><ArrowUp style={{fontSize:'30px'}}  onClick={this.setGroupMenuOpen}/></IconButton></span>
                         </GroupButton>
@@ -150,7 +169,6 @@ class Header extends React.Component {
                     <span>
                         <PlusIconButton><AddIcon style={{fontSize:'20px;'}} onClick={()=> this.setState({groupAddClick: true})} /></PlusIconButton>
                     </span>
-                    {GroupAddForm()}
                 </div>
                 <span><IconButton><ArrowDown style={{ fontSize: '30px' }} onClick={this.setGroupMenuOpen}/></IconButton></span>
             </GroupButton>;
@@ -233,6 +251,8 @@ class Header extends React.Component {
                                     <IconButton>로그아웃</IconButton>
                                 </div>
                                 {Editor()}
+                                {GroupAddForm()}
+                                {this.state.menuDialog}
                             </div>
                         </Drawer>
                     </div>
