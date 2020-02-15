@@ -19,11 +19,11 @@ public class FollowerController {
     @Autowired private HttpSession session;
     @Autowired private FollowerService followerService;
 
-    @GetMapping("/{targetFK}/follow")
-    public Map<String, Boolean> follow(@PathVariable("targetFK") Long targetFK){
+    @GetMapping("/{targetId}/follow")
+    public Map<String, Boolean> follow(@PathVariable("targetId") String targetId){
         UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
         Map<String, Boolean> map = new HashMap<>();
-        map.put("is_follow", followerService.create(currentUser, targetFK));
+        map.put("is_follow", followerService.create(currentUser, targetId));
         return map;
     }
 

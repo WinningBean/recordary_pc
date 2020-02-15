@@ -2,6 +2,7 @@ package com.fairy_pitt.recordary.common.entity;
 
 import lombok.Data;
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -28,7 +29,7 @@ public class UserEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK")
     private List<FollowerEntity> followUser;// = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "targetFK")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "targetFK")
     private List<FollowerEntity> followTarget;// = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "gMstUserFK")
