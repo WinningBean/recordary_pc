@@ -83,7 +83,7 @@ class SearchFieldResult extends React.Component {
                                 if (!value.follower_click) {
                                     return (
                                         <FollowButton onClick={async(e) => {
-                                            console.log(value);//
+                                            console.log(value);
                                             e.preventDefault();
                                             this.followerChange(index, !value.follower_click);
 
@@ -93,7 +93,7 @@ class SearchFieldResult extends React.Component {
                                             Form.append('follower_pic', value.follower_pic);
                                             Form.append('follower_click', value.follower_click);
                                             
-                                            const { data } = await axios.post(`http://localhost:8888/${this.state.currentUser.user_id}/follow`, Form);
+                                            const { data } = await axios.post(`http://localhost:8888/${this.state.data.currentUser.user_id}/follow`, Form);
                                             // .catch();
                                             console.log(data);
                                         }}>
