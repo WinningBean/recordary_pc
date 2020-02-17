@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +26,8 @@ public class GroupMemberService {
     private final UserRepository userRepository;
     @Autowired
     private final GroupMemberRepository groupMemberRepository;
+    @Autowired
+    private HttpSession session;
 
 
     public List<GroupMemberEntity> readUserGroup(UserEntity user)
@@ -41,9 +44,15 @@ public class GroupMemberService {
     }
 
 
-    public Boolean insertMember(GroupMemberEntity groupMemberEntity)
+    public Boolean insertMember(GroupEntity groupEntity)
     {
-        Optional<GroupMemberEntity> resultMemberEntity = Optional.of(groupMemberRepository.save(groupMemberEntity));
+       // System.out.print(groupMemberEntity.getUserCodeFK());
+        UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
+        GroupMemberEntity insertGroupMember = new GroupMemberEntity();
+        insertGroupMember.setGroupCodeFK(groupEntity);
+        insertGroupMember.setUserCodeFK(currentUser);
+        Optional<GroupMemberEntity> resultMemberEntity = Optional.of(groupMemberRepository.save(insertGroupMember));
+
         if (resultMemberEntity.isPresent()) {
             return true;
         } else {

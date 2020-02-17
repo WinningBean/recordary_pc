@@ -7,6 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
+import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
     content: {
@@ -21,13 +22,7 @@ const useStyles = makeStyles(theme => ({
 const GroupDelete = (props) => {
     const classes = useStyles();
 
-    const [group, setGroup] = useState({
-        group_nm: props.group.group_nm,
-        group_admin: props.group.group_admin,
-        group_ex: props.group.group_ex,
-        group_pic: props.group.group_pic,
-        group_open: props.group.group_open
-    });
+    const [group, setGroup] = useState(props.group);
     const [check, setCheck] = useState(false);
 
     return (
@@ -61,7 +56,20 @@ const GroupDelete = (props) => {
                     }
                     label="정말로 그룹을 삭제하시겠습니까?"
                 />
-                <Button color="secondary" disabled={!check}>삭제</Button>
+                <Button color="secondary" disabled={!check}
+                onClick={async ()=>{
+                    try {
+                        const {data} = await axios.post(`http://localhost:8888/group/delete/${group.group_cd}`);
+                        if (data.isDelete) {
+                            console.log('완료');
+                            return;
+                        }
+                        console.log('에러');
+                    }catch(error){
+                        console.error(error);
+                    }
+                }}
+                >삭제</Button>
             </DialogActions>
         </div>
     );
