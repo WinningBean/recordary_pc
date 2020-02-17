@@ -47,6 +47,7 @@ header{
 
 #header-right .header-ring{
     margin-left: 12px;
+    cursor:pointer;
 }
 
 #header-right .profile-icon{

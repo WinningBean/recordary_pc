@@ -230,14 +230,16 @@ td{
     text-align: center;
 }
 /* aside 프로필 */
-@media (max-width: 1400px) {
+@media (max-width: 1000px) {
     aside{
         display: none;
     }
     .timeline-plus-button{
         display: none;
     }
-
+    .timeline-chatting-button{
+        display: none;
+    }
 } 
 aside{ 
     position: fixed;
@@ -285,8 +287,14 @@ aside>.aside-profile{
 .timeline-plus-button{
     position: fixed;
     bottom : 20px;
+    right: 115px;
+}
+.timeline-chatting-button{
+    position: fixed;
+    bottom : 27px;
     right: 50px;
 }
+
 .MuiFab-primary{
     background-color: rgba(20, 81, 51, 0.9) !important;
 }

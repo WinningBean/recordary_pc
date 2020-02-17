@@ -1,7 +1,7 @@
 import React from 'react';
 import './mainPage.css';
 import ChoosePostAppend from 'Components/Profile/ChoosePostAppend';
-import FloatingActionButtons from 'Components/Other/FloatingActionButtons';
+import ChattingButton from 'Components/Other/ChattingButton';
 import SpeedDials from 'Components/UI/SimpleSpeedDial';
 
 
@@ -30,6 +30,9 @@ class TimelinePlusButton extends React.Component {
                     <SpeedDials/>
                 </div>
                 {PostAppendMenu()}
+                <div  className="timeline-chatting-button" >
+                    <ChattingButton/>
+                </div>
             </div>
 
         );

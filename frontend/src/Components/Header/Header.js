@@ -5,6 +5,7 @@ import GroupAdd from '../Group/GroupAdd';
 import LongMenu from '../Other/MoreMenu';
 import ProfileEditor from 'Components/Profile/ProfileEditor';
 import GroupSetting from 'Components/Group/GroupSetting';
+import NotifyIconCount from 'Components/UI/NotifyIconCount';
 
 import { styled } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -18,7 +19,8 @@ import ArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import AddIcon from '@material-ui/icons/Add';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import EditIcon from '@material-ui/icons/Edit';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+import Popover from '@material-ui/core/Popover';
+
 
 const defaultProps = {
     data : {
@@ -107,6 +109,8 @@ class Header extends React.Component {
     componentDidMount(){
         this.setState({data : this.props.data});
     }
+    
+    
     
     render() {
         const GroupAddForm = () => {
@@ -288,7 +292,7 @@ class Header extends React.Component {
                         <SearchAppBar></SearchAppBar>
                     </div>
                     <div className="header-ring">
-                        <NotificationsIcon style={{fontSize : 38, color: 'white' }} ></NotificationsIcon>
+                        <NotifyIconCount/>
                     </div>
                     <div className="profile-icon">
                         {/* <

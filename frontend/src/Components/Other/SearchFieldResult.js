@@ -1,6 +1,6 @@
 import React from 'react';
 import './SearchField.css' ;
-import SearchField from 'Components/Other/SearchField'
+import TabSearch from 'Components/UI/TabSearch'
 
 import { styled } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -8,6 +8,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import HowToRegIcon from '@material-ui/icons/HowToReg';
 import Dialog from '@material-ui/core/Dialog';
 import AddIcon from '@material-ui/icons/Add';
+import SearchIcon from '@material-ui/icons/Search';
+
 import axios from 'axios';
 
 
@@ -93,7 +95,7 @@ class SearchFieldResult extends React.Component {
                                             Form.append('follower_pic', value.follower_pic);
                                             Form.append('follower_click', value.follower_click);
                                             
-                                            const { data } = await axios.post(`http://localhost:8888/${this.state.data.currentUser.user_id}/follow`, Form);
+                                            const { data } = await axios.post(`http://localhost:8888/${this.state.currentUser.user_id}/follow`, Form);
                                             // .catch();
                                             console.log(data);
                                         }}>
@@ -116,12 +118,14 @@ class SearchFieldResult extends React.Component {
             <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}  onClose={() => this.props.onCancel()} >
                 <div className="searchField-result">
                     <div className="searchField-title">
-                        {/* {this.props.value}에 대한 검색 결과 */}
-                        검색 결과
+                        <SearchIcon style={{ fontSize: '30px;', color: 'white', marginTop: '5px'}}  />
                     </div><hr/>
                     <div className="searchField-result-list">
-                        <div className="follower_list">
+                        <div className="group-follow_change">
                             <div>
+                                <TabSearch style={{marginBottom: '10px'}}/>
+                            </div>
+                            <div className="follower_list">
                                 <ul>
                                     {exfollowerList}
                                 </ul>
