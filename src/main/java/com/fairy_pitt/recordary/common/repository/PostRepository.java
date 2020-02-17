@@ -14,9 +14,7 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
 
     List<PostEntity> findAllByUserFK(UserEntity userFK);
     List<PostEntity> findAllByGroupFK(GroupEntity groupEntity);
-    List<PostEntity> findAllByPostExLike(String postEx);
-    List<PostEntity> findAllByPostExLikeAndUserFK(String postEx, UserEntity userEntity);
-    List<PostEntity> findAllByPostExLikeAndGroupFK(String postEx, GroupEntity groupEntity);
+    List<PostEntity> findAllByPostEx(String postEx);
     List<PostEntity> findAllByPostPublicState(int postPublicState);
 
     List<PostEntity> findAllByUserFKAndPostPublicState(UserEntity userFK, int postPublicState);

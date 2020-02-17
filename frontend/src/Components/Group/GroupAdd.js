@@ -65,11 +65,10 @@ const GroupAdd = (props) => {
             const form = new FormData();
             form.append('group_nm', group.group_nm);
             form.append('group_ex', group.group_ex);
-            // form.append('group_pic', dataUrl);
-            form.append('group_state', openSwitch.open)
-            const { data } = await axios.post("http://localhost:8888/group/create", form);
+            form.append('group_pic', dataUrl);
+            const { data } = await axios.post("http://localhost:8888/createGroup", form);
 
-            if (data.isCreate) {
+            if (data.success) {
                 setAlert(
                     <AlertDialog
                         severity='success'

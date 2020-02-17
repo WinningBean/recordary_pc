@@ -97,9 +97,7 @@ class Header extends React.Component {
             case '그룹 정보':
                 break;
             case '그룹 관리':
-                const currData = (this.state.data.userGroup.filter((value)=> value.group_cd === code ))[0];
-                console.log(currData);
-                this.setState({menuDialog : <GroupSetting data={currData} onClose={()=> this.setState({menuDialog : null})} />})
+                this.setState({menuDialog : <GroupSetting onClose={()=> this.setState({menuDialog : null})} />})
                 break;
             case '그룹 삭제':
                 break;

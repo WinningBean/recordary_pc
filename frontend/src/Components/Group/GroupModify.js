@@ -16,14 +16,15 @@ import Backdrop from 'Components/UI/Backdrop';
 import axios from 'axios';
 
 const GroupModify = (props) => {
-    const [openSwitch, setOpenSwitch] = useState(props.group.group_state);
+    const [openSwitch, setOpenSwitch] = useState({
+        open: props.group.group_open
+    });
 
     const [group, setGroup] = useState({
-        group_cd: props.group.group_cd,
         group_nm: props.group.group_nm,
         group_ex: props.group.group_ex,
         group_pic: props.group.group_pic,
-        group_state: props.group.group_state
+        group_open: props.group.group_open
     });
     const [imageSrc, setImageSrc] = useState(null);
     const [alert, setAlert] = useState(null);
@@ -64,12 +65,10 @@ const GroupModify = (props) => {
             const form = new FormData();
             form.append('group_nm', group.group_nm);
             form.append('group_ex', group.group_ex);
-            // form.append('group_pic', dataUrl);
-            form.append('group_state', openSwitch);
-            console.log('1');
-            const { data } = await axios.post(`http://localhost:8888/group/update/${group.group_cd}`, form);
-            console.log('2');
-            if (data.isUdate) {
+            form.append('group_pic', dataUrl);
+            const { data } = await axios.post("http://localhost:8888/createGroup", form);
+
+            if (data.success) {
                 setAlert(
                     <AlertDialog
                         severity='success'
@@ -96,7 +95,7 @@ const GroupModify = (props) => {
             )
         }
     }
-console.log(group);
+
     return (
             <div className="dialog-wrap">
                 {/* <div className='dialog-header'>
@@ -145,7 +144,6 @@ console.log(group);
                         <TextField 
                             label="그룹명"
                             name='group_nm'
-                            defaultValue={group.group_nm}
                             onChange={changeHandel}
                         />
                         <TextField
@@ -154,7 +152,6 @@ console.log(group);
                             multiline={true}
                             rows={10}
                             rowsMax={10}
-                            defaultValue={group.group_ex}
                             onChange={changeHandel}
                         />
                     </div>
@@ -164,8 +161,8 @@ console.log(group);
                         <FormControlLabel
                             control={
                                 <Switch
-                                    checked={openSwitch}
-                                    onChange={event => setOpenSwitch(event.target.checked)}
+                                    checked={openSwitch.open}
+                                    onChange={event => setOpenSwitch({ open: event.target.checked })}
                                     color="primary"
                                 />
                             }

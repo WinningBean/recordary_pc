@@ -1,6 +1,5 @@
 package com.fairy_pitt.recordary.endpoint.group.service;
 
-import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.common.entity.GroupEntity;
@@ -20,7 +19,6 @@ public class GroupService {
     @Autowired
     private final GroupRepository  groupRepository;
     private final UserRepository usersRepository;
-    private final GroupMemberService groupMemverService;
 
     public GroupEntity groupCreate(GroupEntity groupEntity){
         GroupEntity resultGroupEntity = groupRepository.save(groupEntity);
@@ -33,12 +31,6 @@ public class GroupService {
 
     //그룹 삭제
     public void GroupDelete(long id){
-
-        GroupEntity groupEntity = groupRepository.findByGroupCd(id);
-        GroupMemberEntity groupMemberEntity = new GroupMemberEntity();
-        groupMemberEntity.setUserCodeFK(groupEntity.getGMstUserFK());
-        groupMemberEntity.setGroupCodeFK(groupEntity);
-        groupMemverService.deleteMember(groupMemberEntity);
         groupRepository.deleteById(id);
     }
 

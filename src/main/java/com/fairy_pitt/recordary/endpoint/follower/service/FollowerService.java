@@ -9,8 +9,6 @@ import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
@@ -20,27 +18,25 @@ public class FollowerService {
     @Autowired private FollowerRepository followerRepository;
     @Autowired private UserRepository userRepository;
 
-    public Boolean create(UserEntity currentUser, String targetId){
+    public Boolean create(UserEntity currentUser, Long targetFK){
         FollowerEntity follower = new FollowerEntity();
-        UserEntity targetUser = userRepository.findByUserId(targetId);
-
         follower.setUserFK(currentUser);
-        follower.setTargetFK(targetUser);
+        follower.setTargetFK(userService.find(targetFK));
 
         Optional<FollowerEntity> resultFollowerEntity = Optional.of(followerRepository.save(follower));
         if (resultFollowerEntity.isPresent()) return true;
         else return false;
     }
 
-    public Boolean delete(UserEntity currentUser, String targetId){
-        UserEntity target = userRepository.findByUserId(targetId);
+    public Boolean delete(UserEntity currentUser, Long targetFK){
+        UserEntity target = userRepository.findByUserCd(targetFK);
         FollowerEntity followerEntity = followerRepository.findByUserFKAndTargetFK(currentUser, target);
         followerRepository.delete(followerEntity);
         return true;
     }
 
     public List<UserEntity> followers(Long userFK){ // 사용자를 팔로우
-        List<FollowerEntity> followerEntityList = userService.find(userFK).getFollowTarget();
+        List<FollowerEntity> followerEntityList = followerRepository.findAllByTargetFK(userRepository.findByUserCd(userFK));
         List<UserEntity> followerList = new ArrayList<>();
         for (FollowerEntity followerEntity : followerEntityList){
             followerList.add(followerEntity.getUserFK());
@@ -49,7 +45,7 @@ public class FollowerService {
     }
 
     public List<UserEntity> following(Long userFK){ // 사용자가 팔로우
-        List<FollowerEntity> followerEntityList = userService.find(userFK).getFollowUser();
+        List<FollowerEntity> followerEntityList = followerRepository.findAllByUserFK(userRepository.findByUserCd(userFK));
         List<UserEntity> followingList = new ArrayList<>();
         for (FollowerEntity followerEntity : followerEntityList){
             followingList.add(followerEntity.getTargetFK());
@@ -58,8 +54,8 @@ public class FollowerService {
     }
 
     public Boolean followEachOther(Long userFK, Long targetFK){ // 맞팔 상태
-        UserEntity user = userService.find(userFK);
-        UserEntity target = userService.find(targetFK);
+        UserEntity user = userRepository.findByUserCd(userFK);
+        UserEntity target = userRepository.findByUserCd(targetFK);
         FollowerEntity followerEntity = followerRepository.findByUserFKAndTargetFK(user, target);
         if (followerEntity == null) return false;
         return true;
@@ -68,6 +64,7 @@ public class FollowerService {
     public List<UserEntity> friends(Long userFK){ // 사용자 친구 리스트 (맞팔)
         Set<UserEntity> followers = new HashSet<UserEntity>(followers(userFK));
         Set<UserEntity> followings = new HashSet<UserEntity>(following(userFK));
+        // Arrays.asList(list)
 
         if (followers == null || followings == null) return null;
         followers.retainAll(followings);
