@@ -47,7 +47,6 @@ header{
 
 #header-right .header-ring{
     margin-left: 12px;
-    cursor:pointer;
 }
 
 #header-right .profile-icon{
@@ -108,4 +107,11 @@ header{
     padding: 5px;
     border-radius: none;
     margin-bottom: 10px;
+}
+.notify-list{
+    display: flex;
+    flex-direction: column;
+}
+.notify-list-time{
+    color: rgb(209, 204, 192);
 }
