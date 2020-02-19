@@ -15,6 +15,7 @@ import AlertDialog from 'Components/Other/AlertDialog';
 import Snackbar from 'Components/UI/Snackbar';
 import Backdrop from 'Components/UI/Backdrop';
 import axios from 'axios';
+import store from 'store';
 
 const GroupAdd = (props) => {
     const [openSwitch, setOpenSwitch] = useState({
@@ -25,6 +26,7 @@ const GroupAdd = (props) => {
         group_nm: '',
         group_ex: '',
         group_pic: '',
+        group_admin: store.getState().user.currentUser.user_cd,
     });
     const [imageSrc, setImageSrc] = useState(null);
     const [alert, setAlert] = useState(null);
@@ -64,13 +66,13 @@ const GroupAdd = (props) => {
 
         
         try {
-            // const form = new FormData();
-            // form.append('group_nm', group.group_nm);
-            // form.append('group_ex', group.group_ex);
-            // form.append('group_pic', dataUrl);
-            // const { data } = await axios.post("http://localhost:8888/createGroup", form);
+            const form = new FormData();
+            form.append('group_nm', group.group_nm);
+            form.append('group_ex', group.group_ex);
+            form.append('group_pic', dataUrl);
+            const { data } = await axios.post("http://localhost:8888/group/create", form);
 
-            const data = { success : true };
+            // const data = { success : true };
 
             if (data.success) {
                 props.onAdd(group);
@@ -91,6 +93,7 @@ const GroupAdd = (props) => {
                 )
             }
         } catch (error) {
+            console.log(error);
             setAlert(
                 <Snackbar 
                     severity='error'
