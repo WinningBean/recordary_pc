@@ -85,9 +85,24 @@ class SearchFieldResult extends React.Component {
                                             <HowToRegIcon style={{ fontSize: '20px;' }} />
                                         </FollowButton>)
                                 } else {
-                                    return (<FollowButton onClick={()=>this.followerChange(index, !value.user_click)}>
-                                                <AddIcon style={{ fontSize: '20px;' }} />
-                                            </FollowButton>)
+                                    return (
+                                        <FollowButton onClick={async(e) => {
+                                            console.log(value);
+                                            e.preventDefault();
+                                            this.followerChange(index, !value.user_click);
+
+                                            const Form = new FormData();
+                                            Form.append('user_cd', value.user_cd);
+                                            Form.append('user_nm', value.user_nm);
+                                            Form.append('user_pic', value.user_pic);
+                                            Form.append('user_click', value.user_click);
+                                            
+                                            const { data } = await axios.post(`http://localhost:8888/${this.state.data.searchedUser.user_id}/follow`, Form);
+                                            // .catch();
+                                            console.log(data);
+                                        }}>
+                                            <AddIcon style={{ fontSize: '20px;' }} />
+                                        </FollowButton>)
                                 }
                             })()}
                             
