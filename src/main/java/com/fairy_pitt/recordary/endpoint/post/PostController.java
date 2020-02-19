@@ -72,16 +72,16 @@ public class PostController {
 
         Map<String, Object> map = new HashMap<>();
         List postMapList = new ArrayList();
-        for (int i = 0; i < postList.size(); i++){
+        for (PostEntity postEntity : postList){
             Map<String, Object> postDetailMap = new HashMap<>();
-            postDetailMap.put("post_cd", postList.get(i).getPostCd());
-            postDetailMap.put("post_group_fk", postList.get(i).getGroupFK().getGroupCd());
-            postDetailMap.put("post_ex", postList.get(i).getPostEx());
-            postDetailMap.put("post_pb_st", postList.get(i).getPostPublicState());
-            postDetailMap.put("post_str_ymd", postList.get(i).getPostStrYMD());
-            postDetailMap.put("post_end_ymd", postList.get(i).getPostEndYMD());
-            postDetailMap.put("post_created_dt", postList.get(i).getCreatedDate());
-            postDetailMap.put("post_updated_dt", postList.get(i).getUpdatedDate());
+            postDetailMap.put("post_cd", postEntity.getPostCd());
+            postDetailMap.put("post_group_fk", postEntity.getGroupFK().getGroupCd());
+            postDetailMap.put("post_ex", postEntity.getPostEx());
+            postDetailMap.put("post_pb_st", postEntity.getPostPublicState());
+            postDetailMap.put("post_str_ymd", postEntity.getPostStrYMD());
+            postDetailMap.put("post_end_ymd", postEntity.getPostEndYMD());
+            postDetailMap.put("post_created_dt", postEntity.getCreatedDate());
+            postDetailMap.put("post_updated_dt", postEntity.getUpdatedDate());
             postMapList.add(postDetailMap);
         }
         map.put("userPost", postMapList);
@@ -112,16 +112,16 @@ public class PostController {
 
         Map<String, Object> map = new HashMap<>();
         List postMapList = new ArrayList();
-        for (int i = 0; i < postList.size(); i++){
+        for (PostEntity postEntity : postList){
             Map<String, Object> postDetailMap = new HashMap<>();
-            postDetailMap.put("post_cd", postList.get(i).getPostCd());
-            postDetailMap.put("post_group_fk", postList.get(i).getGroupFK().getGroupCd());
-            postDetailMap.put("post_ex", postList.get(i).getPostEx());
-            postDetailMap.put("post_pb_st", postList.get(i).getPostPublicState());
-            postDetailMap.put("post_str_ymd", postList.get(i).getPostStrYMD());
-            postDetailMap.put("post_end_ymd", postList.get(i).getPostEndYMD());
-            postDetailMap.put("post_created_dt", postList.get(i).getCreatedDate());
-            postDetailMap.put("post_updated_dt", postList.get(i).getUpdatedDate());
+            postDetailMap.put("post_cd", postEntity.getPostCd());
+            postDetailMap.put("post_group_fk", postEntity.getGroupFK().getGroupCd());
+            postDetailMap.put("post_ex", postEntity.getPostEx());
+            postDetailMap.put("post_pb_st", postEntity.getPostPublicState());
+            postDetailMap.put("post_str_ymd", postEntity.getPostStrYMD());
+            postDetailMap.put("post_end_ymd", postEntity.getPostEndYMD());
+            postDetailMap.put("post_created_dt", postEntity.getCreatedDate());
+            postDetailMap.put("post_updated_dt", postEntity.getUpdatedDate());
             postMapList.add(postDetailMap);
         }
         map.put("searchedPost", postMapList);

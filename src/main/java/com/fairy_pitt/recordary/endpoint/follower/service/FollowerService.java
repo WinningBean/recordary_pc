@@ -27,8 +27,8 @@ public class FollowerService {
         follower.setUserFK(currentUser);
         follower.setTargetFK(targetUser);
 
-        Optional<FollowerEntity> resultFollowerEntity = Optional.of(followerRepository.save(follower));
-        if (resultFollowerEntity.isPresent()) return true;
+        Optional<FollowerEntity> resultFollower = Optional.of(followerRepository.save(follower));
+        if (resultFollower.isPresent()) return true;
         else return false;
     }
 
@@ -36,7 +36,8 @@ public class FollowerService {
         UserEntity target = userRepository.findByUserId(targetId);
         FollowerEntity followerEntity = followerRepository.findByUserFKAndTargetFK(currentUser, target);
         followerRepository.delete(followerEntity);
-        return true;
+        if (followerRepository.findByUserFKAndTargetFK(currentUser, target) != null) return false;
+        else return true;
     }
 
     public List<UserEntity> followers(Long userFK){ // 사용자를 팔로우

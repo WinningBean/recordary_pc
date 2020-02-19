@@ -103,12 +103,12 @@ public class UserController {
         map.put("searchedCount", searchedUser.size());
 
         List UserMapList = new ArrayList();
-        for (int i = 0; i < searchedUser.size(); i++){
+        for (UserEntity userEntity : searchedUser){
             Map<String, Object> userDetailMap = new HashMap<>();
-            userDetailMap.put("user_cd", searchedUser.get(i).getUserCd());
-            userDetailMap.put("user_nm", searchedUser.get(i).getUserNm());
+            userDetailMap.put("user_cd", userEntity.getUserCd());
+            userDetailMap.put("user_nm", userEntity.getUserNm());
             userDetailMap.put("user_pic", null);
-            userDetailMap.put("user_ex", searchedUser.get(i).getUserEx());
+            userDetailMap.put("user_ex", userEntity.getUserEx());
             UserMapList.add(userDetailMap);
         }
         map.put("searedUser", UserMapList);
