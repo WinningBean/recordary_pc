@@ -87,7 +87,6 @@ public class MainController {
         else {
             Map<String, Object> userMap = new HashMap<>();
             map.put("currentUser", userMap);
-           // userMap.put("user_cd",currentUser.getUserId());
             userMap.put("user_id", currentUser.getUserId());
             userMap.put("user_nm", currentUser.getUserNm());
             userMap.put("user_ex", currentUser.getUserEx());
@@ -112,6 +111,18 @@ public class MainController {
                 groupMapList.add(groupMap);
             }
             map.put("userGroup", groupMapList);
+
+            List<UserEntity> friendList = followerService.friends(currentUser.getUserCd());
+            List friendMapList = new ArrayList();
+            for (UserEntity friend : friendList) {
+                Map<String, Object> friendDetailMap = new HashMap<>();
+                friendDetailMap.put("friend_user_id", friend.getUserId());
+                friendDetailMap.put("friend_user_nm", friend.getUserNm());
+                friendDetailMap.put("friend_user_pic", null);
+                friendDetailMap.put("friend_user_ex", friend.getUserEx());
+                friendMapList.add(friendDetailMap);
+            }
+            map.put("friendList", friendMapList);
 //            List<UserEntity> friendList = followerService.friends(currentUser.getUserCd());
 //
 //            List friendMapList = new ArrayList();
