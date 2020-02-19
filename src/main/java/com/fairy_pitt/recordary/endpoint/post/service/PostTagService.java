@@ -39,3 +39,14 @@ public class PostTagService {
         if (postTagRepository.findByPostFKAndUserFK(post, user) != null) return false;
         else return true;
     }
+
+    public List<PostEntity> userTagPost(Long userFK){ // 사용자가 태그된 포스트
+        UserEntity user = userRepository.findByUserCd(userFK);
+        return postTagRepository.findAllByUserFK(user);
+    }
+
+    public List<UserEntity> postTagUser(Long postFK){
+        PostEntity post = postRepository.findByPostCd(postFK);
+        return postTagRepository.findAllByPostFK(post);
+    }
+}

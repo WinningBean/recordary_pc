@@ -49,3 +49,46 @@ public class PostTagController {
         map.put("isDelete", postTagService.delete(postCd, userCd));
         return map;
     }
+
+    @GetMapping("/post/tagList")
+    public Map<String, Object> postTagList(@RequestParam Map<String, Object> paramMap){
+        Long postCd = (Long)paramMap.get("post_cd");
+        List<UserEntity> tagUserList = postTagService.postTagUser(postCd);
+
+        Map<String, Object> map = new HashMap<>();
+        List userMapList = new ArrayList();
+        for (UserEntity userEntity : tagUserList){
+            Map<String, Object> userDetailMap = new HashMap<>();
+            userDetailMap.put("user_cd", userEntity.getUserCd());
+            userDetailMap.put("user_nm", userEntity.getUserNm());
+            userDetailMap.put("user_pic", null);
+            userDetailMap.put("user_ex", userEntity.getUserEx());
+            userMapList.add(userDetailMap);
+        }
+        map.put("postTagUserList", userMapList);
+        return map;
+    }
+
+    @GetMapping("/{userId}/post")
+    public Map<String, Object> userPostTagList(@PathVariable("userId") String userId){
+        UserEntity user = userRepository.findByUserId(userId);
+        List<PostEntity> tagPostList = postTagService.userTagPost(user.getUserCd());
+
+        Map<String, Object> map = new HashMap<>();
+        List postMapList = new ArrayList();
+        for (PostEntity postEntity : tagPostList){
+            Map<String, Object> postDetailMap = new HashMap<>();
+            postDetailMap.put("post_cd", postEntity.getPostCd());
+            postDetailMap.put("post_group_fk", postEntity.getGroupFK().getGroupCd());
+            postDetailMap.put("post_ex", postEntity.getPostEx());
+            postDetailMap.put("post_pb_st", postEntity.getPostPublicState());
+            postDetailMap.put("post_str_ymd", postEntity.getPostStrYMD());
+            postDetailMap.put("post_end_ymd", postEntity.getPostEndYMD());
+            postDetailMap.put("post_created_dt", postEntity.getCreatedDate());
+            postDetailMap.put("post_updated_dt", postEntity.getUpdatedDate());
+            postMapList.add(postDetailMap);
+        }
+        map.put("userTagPostList", postMapList);
+        return map;
+    }
+}
