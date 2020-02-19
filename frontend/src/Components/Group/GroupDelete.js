@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
 const GroupDelete = (props) => {
     const classes = useStyles();
 
-    const [group, setGroup] = useState(props.group);
+    const data = props.data;
     const [check, setCheck] = useState(false);
 
     return (
@@ -31,20 +31,20 @@ const GroupDelete = (props) => {
                     className={classes.marginBottom}
                     label="그룹명"
                     name='group_nm'
-                    defaultValue={group.group_nm}
+                    defaultValue={data.group.group_nm}
                     disabled
                 />
                 <TextField
                     className={classes.marginBottom}
                     label="그룹 상태메세지"
                     name='group_nm'
-                    defaultValue={group.group_ex}
+                    defaultValue={data.group.group_ex}
                     disabled
                 />
                 <TextField
                     label="그룹장"
                     name='group_ex'
-                    defaultValue={group.group_admin}
+                    defaultValue={data.group.group_admin}
                     disabled
                 />
             </DialogContent>

@@ -46,7 +46,10 @@ const HeaderMenu = (props) => {
             case '그룹 정보':
                 break;
             case '그룹 관리':
-                setMenuDialog(<GroupSetting data={value} onClose={() => setMenuDialog(null)} />);
+                setMenuDialog(<GroupSetting data={{
+                    user_id : data.currentUser.user_id,
+                    group : value
+                }} onClose={() => setMenuDialog(null)} />);
                 break;
             case '그룹 삭제':
                 break;
@@ -81,7 +84,7 @@ const HeaderMenu = (props) => {
                                 <GroupButton>
                                     <div style={{ display: 'flex', width: '250px', justifyContent: 'space-between' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                                            <img alt="group-img" style={{ marginRight: '10px', borderRadius: '50%' }} src={value.group_pic} />
+                                            <img alt="group-img" style={{ marginRight: '10px', borderRadius: '50%', width:'40px', height:'40px',objectFit:'cover' }} src={value.group_pic} />
                                             {value.group_nm}
                                         </div>
                                         {/* <div className="LongMenuOpen">

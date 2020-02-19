@@ -15,7 +15,37 @@ const reducer = (state, action)=>{
         case 'ADD_GROUP':
             return {
                 ...state,
-                user : {...state.user, userGroup : state.user.userGroup.concat(action.groupData)}
+                user : {...state.user, userGroup : state.user.userGroup.concat(action.groupAddData)}
+            }
+        case 'MODIFY_GROUP':
+            const data = action.groupModifyData;
+            var isChangePic = true;
+            if(data.group_pic === null){
+                isChangePic = false;
+            }
+            const changedGroup = state.user.userGroup.map(
+                (value) => {
+                    if (value.group_cd === data.group_cd) {
+                        if (isChangePic) {
+                            return {
+                                ...value,
+                                group_nm: data.group_nm,
+                                group_ex: data.group_ex,
+                                group_pic: data.group_pic,
+                            }
+                        } else {
+                            return {
+                                ...value,
+                                group_nm: data.group_nm,
+                                group_ex: data.group_ex,
+                            }
+                        }
+                    }
+                    return value;
+                });
+            return {
+                ...state,
+                user : {...state.user, userGroup : changedGroup}
             }
     }
     return state;

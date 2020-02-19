@@ -6,7 +6,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
-import store from 'store';
 
 const useStyles = makeStyles(theme => ({
     content: {
@@ -20,11 +19,9 @@ const useStyles = makeStyles(theme => ({
 
 const GroupApply = (props) => {
     const classes = useStyles();
-
-    const [group, setGroup] = useState(props.group);
-    const [user_id, setUser_id] = useState(store.getState().user.currentUser.user_id);
     const [applyUser, setApplyUser] = useState('');
 
+    const data = props.data;
     return (
         <div className="dialog-wrap">
             <DialogContent className={classes.content}>
@@ -32,20 +29,20 @@ const GroupApply = (props) => {
                     className={classes.marginBottom}
                     label="그룹명"
                     name='group_nm'
-                    defaultValue={group.group_nm}
+                    defaultValue={data.group.group_nm}
                     disabled
                 />
                 <TextField
                     className={classes.marginBottom}
                     label="그룹 상태메세지"
                     name='group_nm'
-                    defaultValue={group.group_ex}
+                    defaultValue={data.group.group_ex}
                     disabled
                 />
                 <TextField
                     label="그룹장"
                     name='group_ex'
-                    defaultValue={group.group_admin}
+                    defaultValue={data.group.group_admin}
                     disabled
                 />
                 <TextField
@@ -61,8 +58,8 @@ const GroupApply = (props) => {
                     color="secondary"
                     onClick={async ()=>{
                         const form = new FormData();
-                        form.append('user_id', user_id);
-                        form.append('group_cd', group.group_cd);
+                        form.append('user_id', data.user_id);
+                        form.append('group_cd', data.group.group_cd);
                         form.append('apply_user', applyUser);
                         const { data } = await axios.post('http://localhost:8888/apply', form);
                         if(data.isSuccess){
