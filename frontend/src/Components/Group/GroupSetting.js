@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import GroupModify from 'Components/Group/GroupModify';
 import GroupDelete from 'Components/Group/GroupDelete';
+import GroupApply from 'Components/Group/GroupApply';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
@@ -54,7 +55,9 @@ const GroupSetting = (props) => {
             case 0:
                 return <GroupModify group={data} />;
             case 1:
-                return <GroupDelete group={data}/>;
+                return <GroupApply group={data} />;
+            case 2:
+                return <GroupDelete group={data} />;
         }
     })();
 
@@ -92,6 +95,19 @@ const GroupSetting = (props) => {
                             onClick={() => {
                                 if (listIndex !== 1) {
                                     setListIndex(1);
+                                }
+                            }}>
+                            <ListItemIcon>
+                                <DeleteIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="그룹 초대" />
+                        </ListItem>
+                        <ListItem
+                            button
+                            selected={listIndex === 2}
+                            onClick={() => {
+                                if (listIndex !== 2) {
+                                    setListIndex(2);
                                 }
                             }}>
                             <ListItemIcon>

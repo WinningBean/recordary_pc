@@ -4,12 +4,11 @@ import './header.css';
 import { styled } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import NotificationsIcon from '@material-ui/icons/Notifications';
 import Button from '@material-ui/core/Button';
 
 import SearchAppBar from '../Other/SearchField';
 import HeaderMenu from 'Containers/Header/HeaderMenu';
-import NotifyPopup from 'Components/UI/NotifyPopup';
-
 
 
 class Header extends React.Component {
@@ -44,12 +43,12 @@ class Header extends React.Component {
                         <SearchAppBar></SearchAppBar>
                     </div>
                     <div className="header-ring">
-                        <NotifyPopup/>
+                        <NotificationsIcon style={{fontSize : 40, color: 'white' }} ></NotificationsIcon>
                     </div>
                     <div className="profile-icon">
                         {/* <
                         <a href="profile.html">profile</a> */}
-                        <AccountCircleIcon style={{fontSize : 38, color: 'white' }} onClick={(e)=>{
+                        <AccountCircleIcon style={{fontSize : 40, color: 'white' }} onClick={(e)=>{
                             e.preventDefault();
                             this.props.onProfileShow();
                         }}>
