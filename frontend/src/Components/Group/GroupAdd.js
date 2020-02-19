@@ -61,14 +61,19 @@ const GroupAdd = (props) => {
         ctx.drawImage(cut, 0, 0, width, height);
         // canvas 에 있는 이미지를 img 태그로 넣어줍니다
         var dataUrl = canvas.toDataURL("image/jpg");
+
+        
         try {
-            const form = new FormData();
-            form.append('group_nm', group.group_nm);
-            form.append('group_ex', group.group_ex);
-            form.append('group_pic', dataUrl);
-            const { data } = await axios.post("http://localhost:8888/createGroup", form);
+            // const form = new FormData();
+            // form.append('group_nm', group.group_nm);
+            // form.append('group_ex', group.group_ex);
+            // form.append('group_pic', dataUrl);
+            // const { data } = await axios.post("http://localhost:8888/createGroup", form);
+
+            const data = { success : true };
 
             if (data.success) {
+                props.onAdd(group);
                 setAlert(
                     <AlertDialog
                         severity='success'

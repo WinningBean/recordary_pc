@@ -47,24 +47,14 @@ const GroupSetting = (props) => {
     const classes = useStyles();
     
     const [listIndex, setListIndex] = useState(0);
+    const data = props.data;
 
     const currPage = (() => {
         switch(listIndex){
             case 0:
-                return <GroupModify group={{
-                    group_nm: 'kimchi',
-                    group_ex: '안녕하세요',
-                    group_pic: 'http://placehold.it/250x250',
-                    group_open: true,
-                }} />;
+                return <GroupModify group={data} />;
             case 1:
-                return <GroupDelete group={{
-                    group_nm: 'kimchi',
-                    group_ex: '안녕하세요',
-                    group_pic: 'http://placehold.it/250x250',
-                    group_open: true,
-                    group_admin: '김아무개'
-                }}/>;
+                return <GroupDelete group={data}/>;
         }
     })();
 
