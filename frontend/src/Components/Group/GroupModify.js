@@ -3,7 +3,6 @@ import './group.css';
 import Button from '@material-ui/core/Button';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
-import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import TextField from '@material-ui/core/TextField';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -16,15 +15,9 @@ import Backdrop from 'Components/UI/Backdrop';
 import axios from 'axios';
 
 const GroupModify = (props) => {
+    const [changeData, setChangeData] = useState(props.data);
     const [openSwitch, setOpenSwitch] = useState({
-        open: props.group.group_open
-    });
-
-    const [group, setGroup] = useState({
-        group_nm: props.group.group_nm,
-        group_ex: props.group.group_ex,
-        group_pic: props.group.group_pic,
-        group_open: props.group.group_open
+        open: props.data.group.group_open
     });
     const [imageSrc, setImageSrc] = useState(null);
     const [alert, setAlert] = useState(null);
@@ -32,9 +25,9 @@ const GroupModify = (props) => {
     let fileUpload = null;
 
     const changeHandel = (e) => {
-        setGroup({
-            ...group,
-            [e.target.name]: e.target.value
+        setChangeData({
+            ...changeData,
+            group : {...changeData.group, [e.target.name]: e.target.value}
         });
     }
 
@@ -47,28 +40,37 @@ const GroupModify = (props) => {
             //     />
             <Backdrop />
         )
-        var canvas = document.createElement("canvas");
-        var ctx = canvas.getContext("2d");
-        const cut = new Image();
-        cut.src = group.group_pic;
-        let height = cut.height;
-        let width = cut.width;
-        height *= 250 / width;
-        width = 250;
-        canvas.width = width;
-        canvas.height = height;
-        // canvas에 변경된 크기의 이미지를 다시 그려줍니다.
-        ctx.drawImage(cut, 0, 0, width, height);
-        // canvas 에 있는 이미지를 img 태그로 넣어줍니다
-        var dataUrl = canvas.toDataURL("image/jpg");
+        if (changeData.group.group_pic !== props.data.group.group_pic) {
+            var canvas = document.createElement("canvas");
+            var ctx = canvas.getContext("2d");
+            const cut = new Image();
+            cut.src = changeData.group.group_pic;
+            let height = cut.height;
+            let width = cut.width;
+            height *= 250 / width;
+            width = 250;
+            canvas.width = width;
+            canvas.height = height;
+            // canvas에 변경된 크기의 이미지를 다시 그려줍니다.
+            ctx.drawImage(cut, 0, 0, width, height);
+            // canvas 에 있는 이미지를 img 태그로 넣어줍니다
+            var dataUrl = canvas.toDataURL("image/jpg");
+        }else{
+            var dataUrl = null;
+        }
+        console.log(dataUrl);
         try {
-            const form = new FormData();
-            form.append('group_nm', group.group_nm);
-            form.append('group_ex', group.group_ex);
-            form.append('group_pic', dataUrl);
-            const { data } = await axios.post("http://localhost:8888/createGroup", form);
-
+            // const form = new FormData();
+            // form.append('group_nm', Changedata.group.group_nm);
+            // form.append('group_ex', Chagnedata.group.group_ex);
+            // form.append('group_pic', dataUrl);
+            // const { data } = await axios.post("http://localhost:8888/group/modify", form);
+            const data = { success : true };
             if (data.success) {
+                props.onChange({
+                    ...changeData.group,
+                    group_pic : dataUrl
+                });
                 setAlert(
                     <AlertDialog
                         severity='success'
@@ -86,6 +88,7 @@ const GroupModify = (props) => {
                 )
             }
         } catch (error) {
+            console.error(error);
             setAlert(
                 <Snackbar 
                     severity='error'
@@ -106,7 +109,7 @@ const GroupModify = (props) => {
                 <DialogContent style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <div className="dialog-content">
                         <div>
-                            <img style={{ width: '250px', height: '250px', objectFit: 'cover', borderRadius: '50%' }} alt="profile-img" src={group.group_pic} />
+                            <img style={{ width: '250px', height: '250px', objectFit: 'cover', borderRadius: '50%' }} alt="profile-img" src={changeData.group.group_pic} />
                         </div>
                         <Button
                             startIcon={<CloudUploadIcon />}
@@ -145,6 +148,7 @@ const GroupModify = (props) => {
                             label="그룹명"
                             name='group_nm'
                             onChange={changeHandel}
+                            defaultValue={changeData.group.group_nm}
                         />
                         <TextField
                             label="그룹 설명"
@@ -153,6 +157,7 @@ const GroupModify = (props) => {
                             rows={10}
                             rowsMax={10}
                             onChange={changeHandel}
+                            defaultValue={changeData.group.group_ex}
                         />
                     </div>
                 </DialogContent>
@@ -177,7 +182,7 @@ const GroupModify = (props) => {
                         onClose={() => setImageSrc(null)}
                         onComplete={(src) => {
                             setImageSrc(null);
-                            setGroup({ ...group, group_pic: src });
+                            setChangeData({ ...changeData, group : {...changeData.group , group_pic: src} });
                         }}
                     />
                 )}

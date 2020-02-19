@@ -4,7 +4,7 @@ import GroupAdd from 'Components/Group/GroupAdd';
 const mapDispatchToProps = (dispatch)=>{
     return {
         onAdd : (data)=>{
-            dispatch({type:'ADD_GROUP', groupData : data});
+            dispatch({type:'ADD_GROUP', groupAddData : data});
         }
     }
 }

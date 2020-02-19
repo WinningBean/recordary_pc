@@ -93,7 +93,8 @@ class Register extends React.Component {
                         })
                         return;
                     }
-                    const passwordRules = /^[a-zA-Z0-9]{10,15}$/;
+                    // const passwordRules = /^[a-zA-Z0-9]{10,15}$/;
+                    const passwordRules = /^[0-9]{4,15}$/;
                     if (!passwordRules.test(this.state.user_pw)) {
                         this.setState({
                             alertDialog: () => {
