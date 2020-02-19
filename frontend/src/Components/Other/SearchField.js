@@ -74,14 +74,14 @@ export default function SearchAppBar() {
         const data = {
             searchedUser : [
                 {
-                    user_cd : '3',
+                    user_id : 'hgd',
                     user_nm : '홍길동',
                     user_pic: null,
                     user_ex : '안녕하세요'
                 },
                 {
-                    user_cd : '4',
-                    user_nm : '위길동',
+                    user_id : 'wsh',
+                    user_nm : '위성홍',
                     user_pic: null,
                     user_ex : '안녕하세요222'
                 }
