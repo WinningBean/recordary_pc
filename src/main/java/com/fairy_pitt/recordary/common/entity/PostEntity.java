@@ -50,6 +50,9 @@ public class PostEntity {
     @LastModifiedDate
     private LocalDateTime updatedDate;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postCodeFK")
+    private List<ScheduleEntity> postSchedules;
+    
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = {CascadeType.ALL})
     private List<PostTagEntity> postTagList;
 

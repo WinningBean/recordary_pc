@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -33,20 +34,27 @@ public class GroupApplyController {
     private  final GroupMemberService groupMemberService;
 
     @ResponseBody
-    @GetMapping("apply")// 초대 ,신청
-    public String apply(@RequestParam Map<String, Object> applyInfo)
+    @PostMapping("apply")// 초대 ,신청
+    public Map<String, Boolean> apply(@RequestParam Map<String, Object> applyInfo)
     {
         GroupApplyEntity groupApplyEntity = new GroupApplyEntity();
-        groupApplyEntity.setUserCodeFK(userService.find((Long)applyInfo.get("userCd")));
-        groupApplyEntity.setGroupCodeFK(groupService.findGroupId((Long)applyInfo.get("groupCd")));
-        groupApplyEntity.setApplyState((int)applyInfo.get("groupSate"));
+        System.out.print((String)applyInfo.get("user_id")+"\n");
+        groupApplyEntity.setUserCodeFK(userService.findById((String)applyInfo.get("user_id")));
+        System.out.print(userService.findById((String)applyInfo.get("user_id")).getUserCd()+" \n");
+        groupApplyEntity.setGroupCodeFK(groupService.findGroupId(Long.parseLong((String)applyInfo.get("group_cd"))));
+        System.out.print(groupService.findGroupId(Long.parseLong((String)applyInfo.get("group_cd"))).getGroupCd()+ "\n");
+        groupApplyEntity.setApplyState(Integer.parseInt((String)applyInfo.get("apply_user")));
+        System.out.print("_____________--4 \n");
 
-        groupApplyService.applyInsert(groupApplyEntity);
-        return "success";
+        boolean applyResult = groupApplyService.applyInsert(groupApplyEntity);
+        Map<String, Boolean> result = new HashMap<>();
+        result.put("isSuccess", applyResult );
+
+        return result;
     }
 
     @ResponseBody // 수락, 거절
-    @GetMapping("apply/check")
+    @PostMapping("apply/check")
     public String check(@RequestParam Map<String, Object> checkInfo)
     {
 
@@ -73,7 +81,7 @@ public class GroupApplyController {
 
     // 그룹이 유저한테 초대보낸 것을 찾기
     @ResponseBody
-    @GetMapping("apply/find")
+    @PostMapping("apply/find")
     public Map<String, Object> findApply(@RequestParam Map<String, Object> userInfo)
     {
         Map<String, Object> applyFindResult = new HashMap<>();
@@ -97,7 +105,7 @@ public class GroupApplyController {
 
     //유저가 그룹한테 신청보넨 정보 찾기
     @ResponseBody
-    @GetMapping
+    @PostMapping
     public Map<String, Object> findGroupApply(@RequestParam Map<String, Object> groupInfo)
     {
         Map<String, Object> applyFindResult = new HashMap<>();

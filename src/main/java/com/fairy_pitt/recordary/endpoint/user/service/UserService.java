@@ -77,4 +77,6 @@ public class UserService {
     public UserEntity find(Long cd){
         return userRepository.findByUserCd(cd);
     }
+
+    public UserEntity findById(String userId){return  userRepository.findByUserId(userId);}
 }

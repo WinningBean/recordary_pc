@@ -21,6 +21,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("post")
 public class PostController {
+
     @Autowired private PostService postService;
     @Autowired private HttpSession session;
     @Autowired private PostRepository postRepository;

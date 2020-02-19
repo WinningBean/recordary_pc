@@ -118,7 +118,7 @@ public class GroupController {
 
     //그룹 자세히보기 - 그룹 정보와, 그룹의 맴버 정보 전달
     @ResponseBody
-    @GetMapping("show/{id}")
+    @PostMapping("show/{id}")
     public Map<String, Object> ShowGroup(@PathVariable("id") long groupId)
     {
         GroupEntity groupValue = groupService.findGroupId(groupId);
@@ -162,7 +162,7 @@ public class GroupController {
             resultMap.put("group",resultList);
 
         }else {
-            resultMap.put(".",null);
+            resultMap.put("group",null);
             return resultMap;
         }
 
