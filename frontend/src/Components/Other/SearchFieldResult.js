@@ -17,92 +17,75 @@ class SearchFieldResult extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentUser: {
-                user_ex: '',
-                user_id: 'HelloWorld1234',
-                user_nm: '홍길동'
-            },
-            userFollower: [
-                {
-                    follower_cd: 1,
-                    follower_nm: '팔로워1',
-                    follower_pic: 'http://placehold.it/40x40',
-                    follower_click: false,
-                },
-                {
-                    follower_cd: 2,
-                    follower_nm: '팔로워2',
-                    follower_pic: 'http://placehold.it/40x40',
-                    follower_click: false,
-                },
-                {
-                    follower_cd: 3,
-                    follower_nm: '팔로워3',
-                    follower_pic: 'http://placehold.it/40x40',
-                    follower_click: false,
-                },
-                {
-                    follower_cd: 4,
-                    follower_nm: '팔로워4',
-                    follower_pic: 'http://placehold.it/40x40',
-                    follower_click: false,
-                },
-                {
-                    follower_cd: 5,
-                    follower_nm: '팔로워5',
-                    follower_pic: 'http://placehold.it/40x40',
-                    follower_click: false,
-                },
-            ],
+            data : props.data,
             followerIconClick : false,
         }
     }
+    // data = {
+    //     searchedUser = [
+    //         {
+    //             user_cd : '3',
+    //             user_nm : '홍길동',
+    //             user_pic: null,
+    //             user_ex : '안녕하세요'
+    //             user_click : false,
+    //         },
+    //         {
+    //             user_cd : '4',
+    //             user_nm : '위길동',
+    //             user_pic: null,
+    //             user_ex : '안녕하세요222',
+    //             user_click : false,
+    //         }
+    //     ]
+    // }
 
     followerChange = (index, click) => {
 
-        const array = this.state.userFollower;
-        array[index] = { ...array[index], follower_click: click };
+        const array = this.state.data.searchedUser;
+        array[index] = { ...array[index], user_click: click };
 
         this.setState({ userFollower: array });
 
     };
-
+    
     render() {
-        const exfollowerList = this.state.userFollower.map((value, index) => { 
+        console.log(this.state.data);
+        const exfollowList = this.state.data.searchedUser.map((value, index) => { 
             return (
-                <li key={value.follower_cd} >
+                <li key={value.user_cd} >
                     <div className="follower_list">
                         <div style={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
                             <img
                                 alt="friend-img" 
                                 style={{marginRight:'10px', borderRadius:'50%'}} 
-                                src={value.follower_pic} 
+                                src={value.user_pic} 
                             />
-                            {value.follower_nm}
+                            {value.user_nm}
                         </div>
                         <div>
                             {(()=>{
-                                if (!value.follower_click) {
+                                if (!value.user_click) {
                                     return (
                                         <FollowButton onClick={async(e) => {
                                             console.log(value);
                                             e.preventDefault();
-                                            this.followerChange(index, !value.follower_click);
+                                            this.followerChange(index, !value.user_click);
 
                                             const Form = new FormData();
-                                            Form.append('follower_cd', value.follower_cd);
-                                            Form.append('follower_nm', value.follower_nm);
-                                            Form.append('follower_pic', value.follower_pic);
-                                            Form.append('follower_click', value.follower_click);
+                                            Form.append('user_cd', value.user_cd);
+                                            Form.append('user_nm', value.user_nm);
+                                            Form.append('user_pic', value.user_pic);
+                                            Form.append('user_click', value.user_click);
                                             
-                                            const { data } = await axios.post(`http://localhost:8888/${this.state.currentUser.user_id}/follow`, Form);
+                                            const { data } = await axios.post(`http://localhost:8888/${this.state.data.searchedUser.user_id}/follow`, Form);
                                             // .catch();
                                             console.log(data);
                                         }}>
                                             <HowToRegIcon style={{ fontSize: '20px;' }} />
                                         </FollowButton>)
                                 } else {
-                                    return (<FollowButton onClick={()=>this.followerChange(index, !value.follower_click)}>
+                                    return (<FollowButton onClick={()=>this.followerChange(index, !value.user_click)}>
                                                 <AddIcon style={{ fontSize: '20px;' }} />
                                             </FollowButton>)
                                 }
@@ -127,7 +110,7 @@ class SearchFieldResult extends React.Component {
                             </div>
                             <div className="follower_list">
                                 <ul>
-                                    {exfollowerList}
+                                    {exfollowList}
                                 </ul>
                             </div>
                         </div>

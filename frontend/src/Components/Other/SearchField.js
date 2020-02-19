@@ -52,11 +52,12 @@ export default function SearchAppBar() {
   const classes = useStyles();
   const [searchState, setsearchState] = useState(false);
   const [userSearch, setUserSearch] = useState('');
+  const [data, setData] = useState(null);
 
   const setEnterKeyPress = () =>{
     if(searchState === true){
       return(
-        <SearchFieldResult onCancel={() => setsearchState(false)}></SearchFieldResult>  
+        <SearchFieldResult data={data} onCancel={() => setsearchState(false)}></SearchFieldResult>  
       )
     }
     return null;
@@ -70,7 +71,34 @@ export default function SearchAppBar() {
 
       // const { data } = await axios.post("http://localhost:8888/search", Form);
       // console.log(data);
+        const data = {
+            searchedUser : [
+                {
+                    user_cd : '3',
+                    user_nm : '홍길동',
+                    user_pic: null,
+                    user_ex : '안녕하세요'
+                },
+                {
+                    user_cd : '4',
+                    user_nm : '위길동',
+                    user_pic: null,
+                    user_ex : '안녕하세요222'
+                }
+            ]
+        };
+
+        const addedData = data.searchedUser.map((value)=>{
+          const plusData = {
+            ...value,
+            user_click : false,
+          }
+          return plusData;
+        })
       console.log(userSearch);
+      setData({
+        ...data,
+        searchedUser : addedData});
       setsearchState(true);
     }
   }

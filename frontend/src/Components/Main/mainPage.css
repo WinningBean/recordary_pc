@@ -230,7 +230,7 @@ td{
     text-align: center;
 }
 /* aside 프로필 */
-@media (max-width: 1000px) {
+@media (max-width: 1300px) {
     aside{
         display: none;
     }

@@ -49,7 +49,7 @@ const NotifyPopup = () => {
                         <div className="notify-list-time">
                             7일 전
                         </div>
-                        <div>
+                        <div> 
                             'Choi Ju Wun' 님이 팔로우 하였습니다.
                         </div>
                     </div>                    
