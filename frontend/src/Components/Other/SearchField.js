@@ -3,6 +3,8 @@ import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import SearchFieldResult from 'Components/Other/SearchFieldResult';
+import axios from 'axios';
+
 
 const useStyles = makeStyles(theme => ({
   search: {
@@ -49,17 +51,26 @@ const useStyles = makeStyles(theme => ({
 export default function SearchAppBar() {
   const classes = useStyles();
   const [searchState, setsearchState] = useState(false);
+  const [userSearch, setUserSearch] = useState('');
 
   const setEnterKeyPress = () =>{
     if(searchState === true){
       return(
-        <SearchFieldResult onCancel={() => setsearchState(false)}></SearchFieldResult>
+        <SearchFieldResult onCancel={() => setsearchState(false)}></SearchFieldResult>  
       )
     }
     return null;
   }
-  const handleKeyPress = (e) => {
+
+  const handleKeyPress = async (e) => {
     if(e.key === 'Enter') {
+      
+      // const Form = new FormData();
+      // Form.append('userSearch', userSearch);
+
+      // const { data } = await axios.post("http://localhost:8888/search", Form);
+      // console.log(data);
+      console.log(userSearch);
       setsearchState(true);
     }
   }
@@ -71,18 +82,19 @@ export default function SearchAppBar() {
               <SearchIcon />
             </div>
             <InputBase
-              placeholder="Search…"
-              classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-            }}
-            inputProps={{ 'aria-label': 'search' }}
-            onKeyPress={handleKeyPress}
+                placeholder="Search…"
+                classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput,
+              }}
+              inputProps={{ 'aria-label': 'search' }}
+              onKeyPress={handleKeyPress}
+              onChange={(e)=>{
+                setUserSearch(e.target.value);
+              }}
             />
           </div>
           {setEnterKeyPress()}
-          
-        </div>
-        
-  );
-}
+      </div>
+    )
+  }

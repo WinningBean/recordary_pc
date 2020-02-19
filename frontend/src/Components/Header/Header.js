@@ -109,8 +109,6 @@ class Header extends React.Component {
         this.setState({data : this.props.data});
     }
     
-    
-    
     render() {
         const GroupAddForm = () => {
             if(this.state.groupAddClick === true){
@@ -291,7 +289,7 @@ class Header extends React.Component {
                         <SearchAppBar></SearchAppBar>
                     </div>
                     <div className="header-ring">
-                        <NotifyPopup/>
+                        <NotifyPopup on/>
                     </div>
                     <div className="profile-icon">
                         {/* <
