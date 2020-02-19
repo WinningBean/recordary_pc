@@ -35,15 +35,22 @@ public class GroupApplyController {
 
     @ResponseBody
     @PostMapping("apply")// 초대 ,신청
-    public String apply(@RequestParam Map<String, Object> applyInfo)
+    public Map<String, Boolean> apply(@RequestParam Map<String, Object> applyInfo)
     {
         GroupApplyEntity groupApplyEntity = new GroupApplyEntity();
-        groupApplyEntity.setUserCodeFK(userService.find((Long)applyInfo.get("user_cd")));
-        groupApplyEntity.setGroupCodeFK(groupService.findGroupId((Long)applyInfo.get("group_cd")));
-        groupApplyEntity.setApplyState((int)applyInfo.get("Sate"));
+        System.out.print((String)applyInfo.get("user_id")+"\n");
+        groupApplyEntity.setUserCodeFK(userService.findById((String)applyInfo.get("user_id")));
+        System.out.print(userService.findById((String)applyInfo.get("user_id")).getUserCd()+" \n");
+        groupApplyEntity.setGroupCodeFK(groupService.findGroupId(Long.parseLong((String)applyInfo.get("group_cd"))));
+        System.out.print(groupService.findGroupId(Long.parseLong((String)applyInfo.get("group_cd"))).getGroupCd()+ "\n");
+        groupApplyEntity.setApplyState(Integer.parseInt((String)applyInfo.get("apply_user")));
+        System.out.print("_____________--4 \n");
 
-        groupApplyService.applyInsert(groupApplyEntity);
-        return "success";
+        boolean applyResult = groupApplyService.applyInsert(groupApplyEntity);
+        Map<String, Boolean> result = new HashMap<>();
+        result.put("isSuccess", applyResult );
+
+        return result;
     }
 
     @ResponseBody // 수락, 거절

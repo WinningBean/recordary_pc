@@ -6,6 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
+import store from 'store';
 
 const useStyles = makeStyles(theme => ({
     content: {
@@ -21,7 +22,7 @@ const GroupApply = (props) => {
     const classes = useStyles();
 
     const [group, setGroup] = useState(props.group);
-    const [check, setCheck] = useState(false);
+    const [user_id, setUser_id] = useState(store.getState().user.currentUser.user_id);
     const [applyUser, setApplyUser] = useState('');
 
     return (
@@ -60,9 +61,9 @@ const GroupApply = (props) => {
                     color="secondary"
                     onClick={async ()=>{
                         const form = new FormData();
-                        form.append('user_cd', applyUser);
+                        form.append('user_id', user_id);
                         form.append('group_cd', group.group_cd);
-                        form.append('apply_st', 1);
+                        form.append('apply_user', applyUser);
                         const { data } = await axios.post('http://localhost:8888/apply', form);
                         if(data.isSuccess){
                             console.log('완료');

@@ -74,7 +74,7 @@ const GroupAdd = (props) => {
 
             // const data = { success : true };
 
-            if (data.success) {
+            if (data.isCreate) {
                 props.onAdd(group);
                 setAlert(
                     <AlertDialog

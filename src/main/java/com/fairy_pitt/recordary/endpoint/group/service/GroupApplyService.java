@@ -2,6 +2,7 @@ package com.fairy_pitt.recordary.endpoint.group.service;
 
 import com.fairy_pitt.recordary.common.entity.GroupApplyEntity;
 import com.fairy_pitt.recordary.common.entity.GroupEntity;
+import com.fairy_pitt.recordary.common.entity.PostTagEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.pk.GroupMemberPK;
 import com.fairy_pitt.recordary.common.pk.GroupMemberPK;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,9 +28,10 @@ public class GroupApplyService {
 
     public  Boolean applyInsert(GroupApplyEntity groupApplyInfo)
     {
-       groupApplyRepository.save(groupApplyInfo);
 
-        return true;
+        Optional<GroupApplyEntity> resultPostTag = Optional.of(groupApplyRepository.save(groupApplyInfo));
+        if (resultPostTag.isPresent()) return true;
+        else return false;
     }
 
     public Boolean applyDelete(GroupMemberPK groupApplyInfoID)

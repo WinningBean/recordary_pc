@@ -87,6 +87,7 @@ public class MainController {
         else {
             Map<String, Object> userMap = new HashMap<>();
             map.put("currentUser", userMap);
+           // userMap.put("user_cd",currentUser.getUserId());
             userMap.put("user_id", currentUser.getUserId());
             userMap.put("user_nm", currentUser.getUserNm());
             userMap.put("user_ex", currentUser.getUserEx());
