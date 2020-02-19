@@ -2,10 +2,8 @@ package com.fairy_pitt.recordary.common.entity;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -13,7 +11,7 @@ import javax.persistence.Table;
 public class ScheduleTabEntity {
 
     @Id
-    private long TabCd;
+    private Long tabCd;
 
     @ManyToOne
     private UserEntity tabUserFk;
@@ -21,4 +19,7 @@ public class ScheduleTabEntity {
     private String tabNm;
 
     private String tabCol;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "TabCodeFK")
+    private List<ScheduleEntity> tabSchedules;
 }

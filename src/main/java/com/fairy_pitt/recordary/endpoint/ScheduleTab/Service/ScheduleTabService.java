@@ -54,4 +54,9 @@ public class ScheduleTabService {
                 .getUserTab();
     }
 
+//    public ScheduleTabEntity findById(Long id)
+//    {
+//        return scheduleTabRepository.findBytabCd(id);
+//    }
+
 }
