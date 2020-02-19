@@ -187,7 +187,7 @@ const HeaderMenu = (props) => {
                 <div className="menu-profile">
                     <div className="menu-profile-pic-nm">
                         <div style={{ marginRight: '10px' }}>
-                            <img alt="user img" src="http://placehold.it/50x50"
+                            <img alt="user img" src="http://placehold.it/40x40"
                                 style={{ borderRadius: '50%' }}
                             />
                         </div>
