@@ -4,8 +4,9 @@ import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import ReactCrop from 'react-image-crop';
-import AlertDialog from './AlertDialog';
+// import ReactCrop from 'react-image-crop';
+// import AlertDialog from './AlertDialog';
+import ImageEditor from 'Components/Other/ImageEditor';
 import 'react-image-crop/dist/ReactCrop.css';
 import './ProfileEditor.css';
 
@@ -13,14 +14,14 @@ class ProfileEditor extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            image : null,
+            // image : null,
             imageSrc : null,
-            crop: {
-                unit: '%',
-                width: 30,
-                aspect: 1 / 1,
-            },
-            completeCrop : null,
+            // crop: {
+            //     unit: '%',
+            //     width: 30,
+            //     aspect: 1 / 1,
+            // },
+            // completeCrop : null,
             alert: null,
             user_id : '',
             user_ex : '',
@@ -34,34 +35,34 @@ class ProfileEditor extends React.Component {
         });
     }
 
-    getCroppedImg = () => {
-        const crop = this.state.completeCrop;
-        const image = this.state.image;
-        const canvas = document.createElement('canvas');
-        const scaleX = image.naturalWidth / image.width;
-        const scaleY = image.naturalHeight / image.height;
-        canvas.width = crop.width;
-        canvas.height = crop.height;
-        const ctx = canvas.getContext('2d');
+    // getCroppedImg = () => {
+    //     const crop = this.state.completeCrop;
+    //     const image = this.state.image;
+    //     const canvas = document.createElement('canvas');
+    //     const scaleX = image.naturalWidth / image.width;
+    //     const scaleY = image.naturalHeight / image.height;
+    //     canvas.width = crop.width;
+    //     canvas.height = crop.height;
+    //     const ctx = canvas.getContext('2d');
 
-        ctx.drawImage(
-            image,
-            crop.x * scaleX,
-            crop.y * scaleY,
-            crop.width * scaleX,
-            crop.height * scaleY,
-            0,
-            0,
-            crop.width,
-            crop.height,
-        );
+    //     ctx.drawImage(
+    //         image,
+    //         crop.x * scaleX,
+    //         crop.y * scaleY,
+    //         crop.width * scaleX,
+    //         crop.height * scaleY,
+    //         0,
+    //         0,
+    //         crop.width,
+    //         crop.height,
+    //     );
 
-        // As Base64 string
-        const base64Image = canvas.toDataURL('image/jpeg');
+    //     // As Base64 string
+    //     const base64Image = canvas.toDataURL('image/jpeg');
 
         
-        this.setState({user_pic : base64Image, imageSrc : null, completeCrop : null});
-    }
+    //     this.setState({user_pic : base64Image, imageSrc : null, completeCrop : null});
+    // }
 
     render() {
         return (
@@ -113,46 +114,20 @@ class ProfileEditor extends React.Component {
                                 canvas.width = width;
                                 canvas.height = height;
                                 // canvas에 변경된 크기의 이미지를 다시 그려줍니다.
-                                var ctx = canvas.getContext("2d");
                                 ctx.drawImage(cut, 0, 0, width, height);
                                 // canvas 에 있는 이미지를 img 태그로 넣어줍니다
                                 var dataurl = canvas.toDataURL("image/jpg");
-                                console.log(height);
-                                console.log(width);
                                 this.setState({ user_pic: dataurl });
                             }}
                         >수정</EditorButton>
                         <EditorButton onClick={() => this.props.onCancel()}>취소</EditorButton>
                     </div>
                     {this.state.imageSrc && (
-                        <Dialog open onClose={()=>{this.setState({imageSrc : null})}}>
-                            <div>
-                                <ReactCrop
-                                    src={this.state.imageSrc}
-                                    crop={this.state.crop}
-                                    ruleOfThirds
-                                    onImageLoaded={(image)=>{
-                                        if(image.width < 50 || image.height < 50){
-                                            this.setState({alert: 
-                                            <AlertDialog 
-                                            severity="error"
-                                            content={`사진 크기가 너무 작습니다. [넓이:${image.width}px : 50px] [높이:${image.height}px : 50px]`}
-                                            onAlertClose={()=>this.setState({alert:null, imageSrc:null})}
-                                            />})
-                                            return false;
-                                        }
-                                        this.setState({image});
-                                    }}
-                                    onChange={(currCrop)=>this.setState({crop : currCrop})}
-                                    onComplete={(currCrop)=>this.setState({completeCrop : currCrop})}
-                                />
-                            </div>
-                            <div style={{display:'flex', justifyContent:'center'}}>
-                                <Button color="primary" onClick={this.getCroppedImg}>완료</Button>
-                                <Button color="secondary" onClick={e => this.setState({imageSrc : null})}>취소</Button>
-                            </div>
-                            {this.state.alert}
-                        </Dialog>
+                        <ImageEditor 
+                            src={this.state.imageSrc} 
+                            onClose={() => this.setState({imageSrc : null})}
+                            onComplete={(src)=>this.setState({imageSrc : null, user_pic : src})}
+                            />
                     )}
                 </div>
             </Dialog>
