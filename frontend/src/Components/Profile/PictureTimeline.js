@@ -36,7 +36,6 @@ class PictureTimeline extends React.Component {
                     </div>
                 </div>
                 {TimelineOpen()}
-
             </article>
         );
     }

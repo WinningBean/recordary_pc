@@ -26,6 +26,10 @@ public class PostEntity {
     @JoinColumn(name = "POST_GROUP_FK")
     private GroupEntity groupFK;
 
+    @ManyToOne
+    @JoinColumn(name = "POST_ORIGIN_FK")
+    private PostEntity postOriginFK;
+
     @Column(name = "POST_EX")
     private String postEx;
 
@@ -48,4 +52,10 @@ public class PostEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "postCodeFK")
     private List<ScheduleEntity> postSchedules;
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = {CascadeType.ALL})
+    private List<PostTagEntity> postTagList;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = {CascadeType.ALL})
+    private List<PostEntity> postOriginList;
 }

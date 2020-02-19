@@ -4,9 +4,8 @@ import Button from '@material-ui/core/Button';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
+import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
     content: {
@@ -18,11 +17,12 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const GroupDelete = (props) => {
+const GroupApply = (props) => {
     const classes = useStyles();
 
     const [group, setGroup] = useState(props.group);
     const [check, setCheck] = useState(false);
+    const [applyUser, setApplyUser] = useState('');
 
     return (
         <div className="dialog-wrap">
@@ -47,18 +47,33 @@ const GroupDelete = (props) => {
                     defaultValue={group.group_admin}
                     disabled
                 />
+                <TextField
+                    label="초대 유저"
+                    name='apply_user'
+                    onChange={(e)=>{
+                        setApplyUser(e.target.value);
+                    }}
+                />
             </DialogContent>
             <DialogActions>
-                <FormControlLabel
-                    control={
-                        <Checkbox checked={check} onChange={()=>setCheck(!check)} value="checkedA" />
-                    }
-                    label="정말로 그룹을 삭제하시겠습니까?"
-                />
-                <Button color="secondary" disabled={!check}>삭제</Button>
+                <Button 
+                    color="secondary"
+                    onClick={async ()=>{
+                        const form = new FormData();
+                        form.append('user_cd', applyUser);
+                        form.append('group_cd', group.group_cd);
+                        form.append('apply_st', 1);
+                        const { data } = await axios.post('http://localhost:8888/apply', form);
+                        if(data.isSuccess){
+                            console.log('완료');
+                            return;
+                        }
+                        console.log('실패');
+                    }}
+                >초대</Button>
             </DialogActions>
         </div>
     );
 }
 
-export default GroupDelete;
+export default GroupApply;
