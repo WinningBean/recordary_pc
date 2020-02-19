@@ -7,6 +7,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -44,4 +45,7 @@ public class PostEntity {
     @Column(name = "POST_UPDATED_DT")
     @LastModifiedDate
     private LocalDateTime updatedDate;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postCodeFK")
+    private List<ScheduleEntity> postSchedules;
 }
