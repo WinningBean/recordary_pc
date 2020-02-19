@@ -13,9 +13,9 @@ const StyledBadge = withStyles(theme => ({
 }))(Badge);
 
 export default function NotifyIconCount() {
-    return (
+    return ( 
         <StyledBadge badgeContent={4} color="secondary">
-            <NotificationsIcon  style={{fontSize : 38, color: 'white' }}/>
+            <NotificationsIcon  style={{fontSize : 38, color: 'white'}}/>
         </StyledBadge>
     );
 }

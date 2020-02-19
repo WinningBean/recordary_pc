@@ -59,11 +59,7 @@ public class GroupApplyController {
 
         if((Boolean)checkInfo.get("result") == true)
         {
-            GroupMemberEntity groupMemberEntity = new GroupMemberEntity();
-
-            groupMemberEntity.setGroupCodeFK(groupService.findGroupId((Long)checkInfo.get("userCd")));
-            groupMemberEntity.setUserCodeFK(userService.find((Long)checkInfo.get("groupCd")));
-            Boolean result = groupMemberService.insertMember(groupMemberEntity);
+            Boolean result = groupMemberService.insertMember(groupService.findGroupId((Long)checkInfo.get("groupCd")));
             if(result)
             {
                 return "success";

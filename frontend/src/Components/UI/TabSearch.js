@@ -7,7 +7,7 @@ import HowToRegIcon from '@material-ui/icons/HowToReg';
 
 
 export default function TabSearch() {
-    const [value, setValue] = React.useState(2);
+    const [value, setValue] = React.useState(0);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
