@@ -40,3 +40,12 @@ public class PostTagController {
         map.put("isCreate", postTagService.create(postCd, userCd));
         return map;
     }
+
+    @PostMapping("/post/tag/delete")
+    public Map<String, Boolean> delete(@RequestParam Map<String, Object> paramMap){
+        Long postCd = (Long)paramMap.get("post_cd");
+        Long userCd = (Long)paramMap.get("user_cd");
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("isDelete", postTagService.delete(postCd, userCd));
+        return map;
+    }

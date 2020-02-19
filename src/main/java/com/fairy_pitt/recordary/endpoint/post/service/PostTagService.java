@@ -30,3 +30,12 @@ public class PostTagService {
         if (resultPostTag.isPresent()) return true;
         else return false;
     }
+
+    public  Boolean delete(Long postFK, Long userFK){
+        PostEntity post = postRepository.findByPostCd(postFK);
+        UserEntity user = userRepository.findByUserCd(userFK);
+        PostTagEntity postTag = postTagRepository.findByPostFKAndUserFK(post, user);
+        postTagRepository.delete(postTag);
+        if (postTagRepository.findByPostFKAndUserFK(post, user) != null) return false;
+        else return true;
+    }
