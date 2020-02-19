@@ -19,11 +19,10 @@ export default function LongMenu(props) {
     const handleClose = () => {
         setAnchorEl(null);
     };
-
     const options = props.options;
 
     return (
-        <div>
+        <>
         <IconButton
             aria-label="more"
             aria-controls="long-menu"
@@ -54,6 +53,6 @@ export default function LongMenu(props) {
             </MenuItem>
             ))}
         </Menu>
-        </div>
+        </>
     );
 }
