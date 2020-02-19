@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -33,20 +34,20 @@ public class GroupApplyController {
     private  final GroupMemberService groupMemberService;
 
     @ResponseBody
-    @GetMapping("apply")// 초대 ,신청
+    @PostMapping("apply")// 초대 ,신청
     public String apply(@RequestParam Map<String, Object> applyInfo)
     {
         GroupApplyEntity groupApplyEntity = new GroupApplyEntity();
-        groupApplyEntity.setUserCodeFK(userService.find((Long)applyInfo.get("userCd")));
-        groupApplyEntity.setGroupCodeFK(groupService.findGroupId((Long)applyInfo.get("groupCd")));
-        groupApplyEntity.setApplyState((int)applyInfo.get("groupSate"));
+        groupApplyEntity.setUserCodeFK(userService.find((Long)applyInfo.get("user_cd")));
+        groupApplyEntity.setGroupCodeFK(groupService.findGroupId((Long)applyInfo.get("group_cd")));
+        groupApplyEntity.setApplyState((int)applyInfo.get("Sate"));
 
         groupApplyService.applyInsert(groupApplyEntity);
         return "success";
     }
 
     @ResponseBody // 수락, 거절
-    @GetMapping("apply/check")
+    @PostMapping("apply/check")
     public String check(@RequestParam Map<String, Object> checkInfo)
     {
 
@@ -73,7 +74,7 @@ public class GroupApplyController {
 
     // 그룹이 유저한테 초대보낸 것을 찾기
     @ResponseBody
-    @GetMapping("apply/find")
+    @PostMapping("apply/find")
     public Map<String, Object> findApply(@RequestParam Map<String, Object> userInfo)
     {
         Map<String, Object> applyFindResult = new HashMap<>();
@@ -97,7 +98,7 @@ public class GroupApplyController {
 
     //유저가 그룹한테 신청보넨 정보 찾기
     @ResponseBody
-    @GetMapping
+    @PostMapping
     public Map<String, Object> findGroupApply(@RequestParam Map<String, Object> groupInfo)
     {
         Map<String, Object> applyFindResult = new HashMap<>();
