@@ -19,13 +19,22 @@ class SearchFieldResult extends React.Component {
         this.state = {
             // data : props.data,
             data : {
-                searchedUser : {
-                    user_id : 'hgd',
-                    user_nm : '홍길동',
-                    user_pic: null,
-                    user_ex : '안녕하세요',
-                    user_click : false,
-                }
+                searchedUser : [
+                    {
+                        user_id : 'hgd',
+                        user_nm : '홍길동',
+                        user_pic: null,
+                        user_ex : '안녕하세요',
+                        user_click : false,
+                    },
+                    {
+                        user_id : 'wsh',
+                        user_nm : '위성호',
+                        user_pic: null,
+                        user_ex : '안녕하세요222',
+                        user_click : false,
+                    }
+                ]
             },
             followerIconClick : false,
         }
@@ -55,7 +64,7 @@ class SearchFieldResult extends React.Component {
         const array = this.state.data.searchedUser;
         array[index] = { ...array[index], user_click: click };
 
-        this.setState({ userFollower: array });
+        this.setState({ searchedUser : array });
 
     };
     
@@ -85,11 +94,11 @@ class SearchFieldResult extends React.Component {
                                             const Form = new FormData();
                                             Form.append('user_id', value.user_id);
                                             
-                                            const { data } = await axios.get(`http://localhost:8888/${this.state.data.searchedUser.user_id}/follow`);
+                                            const { data } = await axios.get(`http://localhost:8888/${value.user_id}/follow`);
                                             // .catch();
                                             console.log(data);
                                         }}>
-                                            <HowToRegIcon style={{ fontSize: '20px;' }} />
+                                            <AddIcon style={{ fontSize: '20px;' }} />
                                         </FollowButton>)
                                 } else {
                                     return (
@@ -104,11 +113,11 @@ class SearchFieldResult extends React.Component {
                                             Form.append('user_pic', value.user_pic);
                                             Form.append('user_click', value.user_click);
                                             
-                                            const { data } = await axios.get(`http://localhost:8888/${this.state.data.searchedUser.user_id}/follow`);
+                                            const { data } = await axios.get(`http://localhost:8888/${value.user_id}/unFollow`);
                                             // .catch();
                                             console.log(data);
                                         }}>
-                                            <AddIcon style={{ fontSize: '20px;' }} />
+                                            <HowToRegIcon style={{ fontSize: '20px;' }} />
                                         </FollowButton>)
                                 }
                             })()}
