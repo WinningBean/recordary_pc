@@ -42,7 +42,10 @@ public class UserEntity {
     private List<GroupApplyEntity> applyGroups;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = {CascadeType.ALL})
-    private  List<PostEntity> postEntityList;
+    private List<PostEntity> postList;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = {CascadeType.ALL})
+    private List<PostTagEntity> postTagList;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tabUserFk")
     private  List<ScheduleTabEntity> userTab;

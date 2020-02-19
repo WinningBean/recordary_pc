@@ -36,7 +36,7 @@ public class GroupEntity {
     @Column(name = "GROUP_EX")
     private String  gEx;
 
-   @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupCodeFK")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupCodeFK")
     private List<GroupMemberEntity> members;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupCodeFK")
