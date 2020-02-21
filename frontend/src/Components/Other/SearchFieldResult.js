@@ -94,7 +94,7 @@ class SearchFieldResult extends React.Component {
                                             const Form = new FormData();
                                             Form.append('user_id', value.user_id);
                                             
-                                            const { data } = await axios.get(`http://localhost:8888/${value.user_id}/follow`);
+                                            const { data } = await axios.get(`http://localhost:8080/${value.user_id}/follow`);
                                             // .catch();
                                             console.log(data);
                                         }}>
@@ -113,7 +113,7 @@ class SearchFieldResult extends React.Component {
                                             Form.append('user_pic', value.user_pic);
                                             Form.append('user_click', value.user_click);
                                             
-                                            const { data } = await axios.get(`http://localhost:8888/${value.user_id}/unFollow`);
+                                            const { data } = await axios.get(`http://localhost:8080/${value.user_id}/unFollow`);
                                             // .catch();
                                             console.log(data);
                                         }}>

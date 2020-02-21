@@ -66,7 +66,7 @@ const GroupModify = (props) => {
             form.append('group_nm', group.group_nm);
             form.append('group_ex', group.group_ex);
             form.append('group_pic', dataUrl);
-            const { data } = await axios.post("http://localhost:8888/createGroup", form);
+            const { data } = await axios.post("http://localhost:8080/createGroup", form);
 
             if (data.success) {
                 setAlert(

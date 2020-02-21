@@ -64,7 +64,7 @@ const GroupApply = (props) => {
                         form.append('user_id', user_id);
                         form.append('group_cd', group.group_cd);
                         form.append('apply_user', applyUser);
-                        const { data } = await axios.post('http://localhost:8888/apply', form);
+                        const { data } = await axios.post('http://localhost:8080/apply', form);
                         if(data.isSuccess){
                             console.log('완료');
                             return;

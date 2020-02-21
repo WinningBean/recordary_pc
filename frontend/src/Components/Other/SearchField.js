@@ -69,7 +69,7 @@ export default function SearchAppBar() {
       // const Form = new FormData();
       // Form.append('userSearch', userSearch);
 
-      // const { data } = await axios.post("http://localhost:8888/search", Form);
+      // const { data } = await axios.post("http://localhost:8080/search", Form);
       // console.log(data);
         const data = {
             searchedUser : [
