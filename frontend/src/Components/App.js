@@ -17,13 +17,13 @@ class App extends React.Component {
   //   ]
   // }
   render() {
+    console.log('aa')
     return (
       <div id="wrapper">
         <Switch>
           <Route exact path="/" component={LoginPage} />
-          <Route path="/main" component={MainPage}/>
-          <Route exact path="/profile" component={ProfilePage} />
-          <Route path="/profile/:userId" component={ProfilePage} />
+          <Route exact path="/main" component={MainPage}/>
+          <Route path="/:userId" component={ProfilePage} />
           <Redirect path='*' to='/' />
         </Switch>
       </div>

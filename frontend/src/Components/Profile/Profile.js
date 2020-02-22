@@ -5,7 +5,7 @@ import ScheduleTimeline1 from './ScheduleTimeline1';
 import PictureTimeline from './PictureTimeline';
 import ScrollToTopOnMount from '../Other/ScrollToTopOnMount';
 import Follower from 'Components/Profile/Follower';
-import Header from 'Components/Header/Header';
+import Header from 'Containers/Header/Header';
 
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/core/styles';
@@ -87,7 +87,7 @@ class Profile extends React.Component {
 
         return (
             <>
-                {/* <Header /> */}
+                <Header />
                 <main>
                     <ScrollToTopOnMount />
                     <div id="main-profile">

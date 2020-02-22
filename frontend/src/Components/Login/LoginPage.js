@@ -84,7 +84,7 @@ class Login extends React.Component {
             const data = {
                 currentUser: {
                     user_ex: null,
-                    user_id: 'IamMainPage',
+                    user_id: 'ffff3311',
                     user_nm: '홍길동'
                 },
                 userFriend: [

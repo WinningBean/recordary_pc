@@ -58,9 +58,9 @@ const GroupApply = (props) => {
                     color="secondary"
                     onClick={async ()=>{
                         const form = new FormData();
-                        form.append('user_id', data.user_id);
+                        form.append('user_id', applyUser);
                         form.append('group_cd', data.group.group_cd);
-                        form.append('apply_user', applyUser);
+                        form.append('apply_state', 0);
                         const { data } = await axios.post('http://localhost:8080/apply', form);
                         if(data.isSuccess){
                             console.log('완료');

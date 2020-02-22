@@ -3,11 +3,12 @@ import './mainPage.css';
 import Main from './Main';
 import Aside from './Aside';
 import TimelinePlusButton from 'Components/Main/TimelinePlusButton'
-import Header from 'Components/Header/Header';
+import Header from 'Containers/Header/Header';
 import { Redirect } from 'react-router-dom';
 
 class MainPage extends React.Component {
     render() {
+        console.log(this.props)
         if(!this.props.isLogin){
             return <Redirect to='/'/>;
         }

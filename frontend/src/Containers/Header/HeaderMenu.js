@@ -4,6 +4,7 @@ import HeaderMenu from 'Components/Header/HeaderMenu';
 const mapStateToProps = (state)=>{
     return {
         data : state.user,
+        isLogin : state.isLogin
     }
 }
 
