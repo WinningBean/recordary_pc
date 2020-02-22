@@ -96,6 +96,7 @@ public class UserController {
         return map;
     }
 
+    @CrossOrigin
     @GetMapping(value = "/search")
     public Map<String, Object> userSearch(@RequestParam(value = "userSearch")String userSearch){
         List<UserEntity> searchedUser = userService.search(userSearch);
@@ -111,7 +112,7 @@ public class UserController {
             userDetailMap.put("user_ex", userEntity.getUserEx());
             UserMapList.add(userDetailMap);
         }
-        map.put("searedUser", UserMapList);
+        map.put("searchedUser", UserMapList);
 
         return map;
     }
