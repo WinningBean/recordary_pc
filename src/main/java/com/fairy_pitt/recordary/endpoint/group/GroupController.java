@@ -79,9 +79,10 @@ public class GroupController {
             if(groupEntity.getGState() == true)
             {
                 Map<String,Object> groupMapTemp = new HashMap<>();
-                groupMapTemp.put("group_name",groupEntity.getGName());
+                groupMapTemp.put("group_nm",groupEntity.getGName());
                 groupMapTemp.put("group_ex",groupEntity.getGEx());
-                groupMapTemp.put("groupPic",groupEntity.getGPic());
+                groupMapTemp.put("group_pic",groupEntity.getGPic());
+                groupMapTemp.put("group_cd", groupEntity.getGroupCd());
                 GroupMapList.add(groupMapTemp);
             }
             else{

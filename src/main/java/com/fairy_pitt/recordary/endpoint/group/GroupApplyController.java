@@ -13,11 +13,9 @@ import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,18 +31,16 @@ public class GroupApplyController {
     private final GroupApplyService groupApplyService;
     private  final GroupMemberService groupMemberService;
 
+    @CrossOrigin
     @ResponseBody
     @PostMapping("apply")// 초대 ,신청
-    public Map<String, Boolean> apply(@RequestParam Map<String, Object> applyInfo)
+    public Map<String, Boolean> apply(@RequestParam Map<String, String> applyInfo)
     {
         GroupApplyEntity groupApplyEntity = new GroupApplyEntity();
-        System.out.print((String)applyInfo.get("user_id")+"\n");
-        groupApplyEntity.setUserCodeFK(userService.findById((String)applyInfo.get("user_id")));
-        System.out.print(userService.findById((String)applyInfo.get("user_id")).getUserCd()+" \n");
-        groupApplyEntity.setGroupCodeFK(groupService.findGroupId(Long.parseLong((String)applyInfo.get("group_cd"))));
-        System.out.print(groupService.findGroupId(Long.parseLong((String)applyInfo.get("group_cd"))).getGroupCd()+ "\n");
-        groupApplyEntity.setApplyState(Integer.parseInt((String)applyInfo.get("apply_user")));
-        System.out.print("_____________--4 \n");
+        System.out.print(applyInfo.get("user_id") +"\n" + applyInfo.get("group_cd") +"\n" + applyInfo.get("apply_state") +"\n");
+        groupApplyEntity.setUserCodeFK(userService.findById(applyInfo.get("user_id")));
+        groupApplyEntity.setGroupCodeFK(groupService.findGroupId(Long.parseLong(applyInfo.get("group_cd"))));
+        groupApplyEntity.setApplyState(Integer.parseInt(applyInfo.get("apply_state")));
 
         boolean applyResult = groupApplyService.applyInsert(groupApplyEntity);
         Map<String, Boolean> result = new HashMap<>();
@@ -125,5 +121,20 @@ public class GroupApplyController {
         applyFindResult.put("user",applyUserInfoLIst );
 
         return applyFindResult;
+    }
+
+    @CrossOrigin
+    @ResponseBody
+    @PostMapping("apply/delete")
+    public Map<String, Object> applyDelete(@RequestParam Map<String, String> applyInfo)
+    {
+        Map<String, Object> result = new HashMap<>();
+
+        GroupMemberPK groupMemberPK = new GroupMemberPK();
+        groupMemberPK.setUserCodeFK(userService.findById((applyInfo.get("user_id"))).getUserCd());
+        groupMemberPK.setGroupCodeFK(Long.parseLong(applyInfo.get("group_cd")));
+
+        result.put("isDelete",groupApplyService.applyDelete(groupMemberPK));
+        return result;
     }
 }
