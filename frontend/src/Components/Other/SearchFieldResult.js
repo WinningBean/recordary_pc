@@ -17,35 +17,54 @@ class SearchFieldResult extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data : props.data,
+            // data : props.data,
+            data : {
+                searchedUser : [
+                    {
+                        user_id : 'hgd',
+                        user_nm : '홍길동',
+                        user_pic: null,
+                        user_ex : '안녕하세요',
+                        user_click : false,
+                    },
+                    {
+                        user_id : 'wsh',
+                        user_nm : '위성호',
+                        user_pic: null,
+                        user_ex : '안녕하세요222',
+                        user_click : false,
+                    }
+                ]
+            },
             followerIconClick : false,
         }
     }
     // data = {
     //     searchedUser = [
     //         {
-    //             user_cd : '3',
+    //             user_id : 'hgd',
     //             user_nm : '홍길동',
     //             user_pic: null,
-    //             user_ex : '안녕하세요'
+    //             user_ex : '안녕하세요',
     //             user_click : false,
     //         },
     //         {
-    //             user_cd : '4',
-    //             user_nm : '위길동',
+    //             user_id : 'wsh',
+    //             user_nm : '위성호',
     //             user_pic: null,
     //             user_ex : '안녕하세요222',
     //             user_click : false,
     //         }
     //     ]
     // }
+    
 
     followerChange = (index, click) => {
 
         const array = this.state.data.searchedUser;
         array[index] = { ...array[index], user_click: click };
 
-        this.setState({ userFollower: array });
+        this.setState({ searchedUser : array });
 
     };
     
@@ -53,7 +72,7 @@ class SearchFieldResult extends React.Component {
         console.log(this.state.data);
         const exfollowList = this.state.data.searchedUser.map((value, index) => { 
             return (
-                <li key={value.user_cd} >
+                <li key={value.user_id} >
                     <div className="follower_list">
                         <div style={{display:'flex', alignItems:'center', marginBottom:'10px'}}>
                             <img
@@ -73,16 +92,13 @@ class SearchFieldResult extends React.Component {
                                             this.followerChange(index, !value.user_click);
 
                                             const Form = new FormData();
-                                            Form.append('user_cd', value.user_cd);
-                                            Form.append('user_nm', value.user_nm);
-                                            Form.append('user_pic', value.user_pic);
-                                            Form.append('user_click', value.user_click);
+                                            Form.append('user_id', value.user_id);
                                             
-                                            const { data } = await axios.post(`http://localhost:8888/${this.state.data.searchedUser.user_id}/follow`, Form);
+                                            const { data } = await axios.get(`http://localhost:8080/${value.user_id}/follow`);
                                             // .catch();
                                             console.log(data);
                                         }}>
-                                            <HowToRegIcon style={{ fontSize: '20px;' }} />
+                                            <AddIcon style={{ fontSize: '20px;' }} />
                                         </FollowButton>)
                                 } else {
                                     return (
@@ -92,16 +108,16 @@ class SearchFieldResult extends React.Component {
                                             this.followerChange(index, !value.user_click);
 
                                             const Form = new FormData();
-                                            Form.append('user_cd', value.user_cd);
+                                            Form.append('user_id', value.user_id);
                                             Form.append('user_nm', value.user_nm);
                                             Form.append('user_pic', value.user_pic);
                                             Form.append('user_click', value.user_click);
                                             
-                                            const { data } = await axios.post(`http://localhost:8888/${this.state.data.searchedUser.user_id}/follow`, Form);
+                                            const { data } = await axios.get(`http://localhost:8080/${value.user_id}/unFollow`);
                                             // .catch();
                                             console.log(data);
                                         }}>
-                                            <AddIcon style={{ fontSize: '20px;' }} />
+                                            <HowToRegIcon style={{ fontSize: '20px;' }} />
                                         </FollowButton>)
                                 }
                             })()}

@@ -69,19 +69,19 @@ export default function SearchAppBar() {
       // const Form = new FormData();
       // Form.append('userSearch', userSearch);
 
-      // const { data } = await axios.post("http://localhost:8888/search", Form);
+      // const { data } = await axios.post("http://localhost:8080/search", Form);
       // console.log(data);
         const data = {
             searchedUser : [
                 {
-                    user_cd : '3',
+                    user_id : 'hgd',
                     user_nm : '홍길동',
                     user_pic: null,
                     user_ex : '안녕하세요'
                 },
                 {
-                    user_cd : '4',
-                    user_nm : '위길동',
+                    user_id : 'wsh',
+                    user_nm : '위성홍',
                     user_pic: null,
                     user_ex : '안녕하세요222'
                 }

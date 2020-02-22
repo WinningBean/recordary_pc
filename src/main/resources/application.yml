@@ -3,11 +3,11 @@ spring:
   profiles:
     active: local
 
-  datasource:
-    driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/recordary?serverTimezone=UTC
-    username: recordary-admin
-    password: recordary
+#  datasource:
+#    driverClassName: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/recordary?serverTimezone=UTC
+#    username: recordary-admin
+#    password: recordary
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
@@ -22,4 +22,4 @@ server:
     whitelabel:
       enabled: false
 
-  port: 8888
+  port: 8080
