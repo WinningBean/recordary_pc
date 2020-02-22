@@ -3,10 +3,16 @@ import { createStore } from 'redux';
 const reducer = (state, action)=>{
     if(state === undefined){
         return {
+            isLogin : false,
             user : {},
         }
     }
     switch(action.type){
+        case 'SET_LOGIN':
+            return {
+                ...state,
+                isLogin : action.loginData
+            }
         case 'SET_USER':
             return {
                 ...state,

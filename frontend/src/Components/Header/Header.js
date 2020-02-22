@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 
 import SearchAppBar from '../Other/SearchField';
 import HeaderMenu from 'Containers/Header/HeaderMenu';
+import { Link } from 'react-router-dom';
 
 
 class Header extends React.Component {
@@ -48,12 +49,11 @@ class Header extends React.Component {
                     <div className="profile-icon">
                         {/* <
                         <a href="profile.html">profile</a> */}
-                        <AccountCircleIcon style={{fontSize : 40, color: 'white' }} onClick={(e)=>{
-                            e.preventDefault();
-                            this.props.onProfileShow();
-                        }}>
-                            Profile
+                        <Link to="/profile">
+                            <AccountCircleIcon style={{ fontSize: 40, color: 'white' }}>
+                                Profile
                         </AccountCircleIcon>
+                        </Link>
                     </div>
                 </div>
             </header>

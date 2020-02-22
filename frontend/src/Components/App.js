@@ -1,8 +1,9 @@
 import React from 'react';
 import './default.css';
-import LoginPage from 'Components/Login/LoginPage';
-import MainPage from './Main/MainPage';
-import { Route, BrowserRouter } from 'react-router-dom';
+import LoginPage from 'Containers/Login/LoginPage';
+import MainPage from 'Containers/Main/MainPage';
+import ProfilePage from 'Components/Profile/Profile';
+import { Route, Switch, Redirect } from 'react-router-dom';
 class App extends React.Component {
   // state = {
   //   currPage : 0,
@@ -18,11 +19,13 @@ class App extends React.Component {
   render() {
     return (
       <div id="wrapper">
-        {/* {this.state.page[this.state.currPage]()} */}
-        <BrowserRouter>
+        <Switch>
           <Route exact path="/" component={LoginPage} />
-          <Route exact path="/main" component={MainPage} />
-        </BrowserRouter>
+          <Route path="/main" component={MainPage}/>
+          <Route exact path="/profile" component={ProfilePage} />
+          <Route path="/profile/:userId" component={ProfilePage} />
+          <Redirect path='*' to='/' />
+        </Switch>
       </div>
     );
   }
