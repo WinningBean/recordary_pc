@@ -5,8 +5,6 @@ import com.fairy_pitt.recordary.common.entity.GroupEntity;
 import com.fairy_pitt.recordary.common.entity.PostEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.*;
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import javafx.scene.Group;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
