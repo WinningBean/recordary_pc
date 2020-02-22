@@ -66,22 +66,29 @@ public class GroupController {
         return result;
     }
 
+    @CrossOrigin
     @ResponseBody
-    @PostMapping("search") // 그룹 검색
+    @GetMapping("search") // 그룹 검색
     public Map<String,Object> SearchGroup(@RequestParam(value = "groupSearch") String groupSearch)
     {
         Map<String, Object> groupMap = new HashMap<>();
         List<GroupEntity> searchResult = groupService.groupSearch(groupSearch);
 
+        List GroupMapList = new ArrayList();
         for (GroupEntity groupEntity:searchResult) {
             if(groupEntity.getGState() == true)
             {
-                groupMap.put("group_name",groupEntity.getGName());
-                groupMap.put("group_ex",groupEntity.getGEx());
-                groupMap.put("groupPic",groupEntity.getGPic());
-            }else continue;
-
+                Map<String,Object> groupMapTemp = new HashMap<>();
+                groupMapTemp.put("group_name",groupEntity.getGName());
+                groupMapTemp.put("group_ex",groupEntity.getGEx());
+                groupMapTemp.put("groupPic",groupEntity.getGPic());
+                GroupMapList.add(groupMapTemp);
+            }
+            else{
+                continue;
+            }
         }
+        groupMap.put("searchedGroup", GroupMapList);
         return groupMap;
     }
 
