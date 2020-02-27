@@ -65,8 +65,8 @@ export default function SearchAppBar() {
 
   const handleKeyPress = async (e) => {
     if(e.key === 'Enter') {
-      const userData = (await axios.get("http://172.30.1.47:8080/user/search", {params : { userSearch : userSearch}})).data;
-      const groupData = (await axios.get("http://172.30.1.47:8080/group/search", {params : { groupSearch : userSearch}})).data;
+      const userData = (await axios.get("http://localhost:8080/user/search", {params : { userSearch : userSearch}})).data;
+      const groupData = (await axios.get("http://localhost:8080/group/search", {params : { groupSearch : userSearch}})).data;
       // console.log(data);
         // const data = {
         //     searchedUser : [
