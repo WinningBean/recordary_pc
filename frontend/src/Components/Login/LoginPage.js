@@ -5,8 +5,9 @@ import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/styles';
 import Register from './Register';
 import AlertDialog from 'Components/Other/AlertDialog';
+import Loading from 'Components/Loading/Loading';
 import axios from 'axios';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 
 class Login extends React.Component {
@@ -16,6 +17,7 @@ class Login extends React.Component {
         failedLogin: ()=>{},
         user_id: "",
         user_pw: "",
+        loading: false,
     }
 
     changeHandel = (e) => {
@@ -26,59 +28,95 @@ class Login extends React.Component {
 
     loginHandel = async (e) => {
         e.preventDefault();
-        if(this.state.user_id === ""){
-            this.setState({
-                failedLogin: () => {
-                    return (
-                        <AlertDialog 
-                            severity="error"
-                            content="아이디를 작성하세요."
-                            onAlertClose={()=>{this.setState({ failedLogin: () => {} })}}
-                            />
-                    )
-                }
-            })
-            return;
-        }
-        if(this.state.user_pw === ""){
-            this.setState({
-                failedLogin: () => {
-                    return (
-                        <AlertDialog 
-                            severity="error"
-                            content="비밀번호를 작성하세요."
-                            onAlertClose={()=>{this.setState({ failedLogin: () => {} })}}
-                            />
-                    )
-                }
-            })
-            return;
-        }
+        // if(this.state.user_id === ""){
+        //     this.setState({
+        //         failedLogin: () => {
+        //             return (
+        //                 <AlertDialog 
+        //                     severity="error"
+        //                     content="아이디를 작성하세요."
+        //                     onAlertClose={()=>{this.setState({ failedLogin: () => {} })}}
+        //                     />
+        //             )
+        //         }
+        //     })
+        //     return;
+        // }
+        // if(this.state.user_pw === ""){
+        //     this.setState({
+        //         failedLogin: () => {
+        //             return (
+        //                 <AlertDialog 
+        //                     severity="error"
+        //                     content="비밀번호를 작성하세요."
+        //                     onAlertClose={()=>{this.setState({ failedLogin: () => {} })}}
+        //                     />
+        //             )
+        //         }
+        //     })
+        //     return;
+        // }
         try {
-            const Form = new FormData();
-            Form.append('user_id', this.state.user_id);
-            Form.append('user_pw', this.state.user_pw);
-            const { data } = await axios.post("http://localhost:8888/user/loginRequest", Form);
-            // .catch();
-            console.log(data);
+            // const Form = new FormData();
+            // Form.append('user_id', this.state.user_id);
+            // Form.append('user_pw', this.state.user_pw);
+            // const { data } = await axios.post("http://localhost:8888/user/loginRequest", Form);
+            // // .catch();
+            // console.log(data);
             
-            if(data.isLogin === false){
-                this.setState({
-                    failedLogin: () => {
-                        return (
-                            <AlertDialog 
-                                severity="error"
-                                content="로그인에 실패하였습니다."
-                                onAlertClose={()=>{this.setState({ failedLogin: () => {} })}}
-                                />
-                        )
+            // if(data.isLogin === false){
+            //     this.setState({
+            //         failedLogin: () => {
+            //             return (
+            //                 <AlertDialog 
+            //                     severity="error"
+            //                     content="로그인에 실패하였습니다."
+            //                     onAlertClose={()=>{this.setState({ failedLogin: () => {} })}}
+            //                     />
+            //             )
+            //         }
+            //     })
+            //     return;
+            // }
+            this.setState({ isLoading: true });
+            // 유저에 대한 정보를 가져오고 그 결과값을 state 에 저장
+            // const {data} = await axios.get("http://localhost:8888/mainPage");
+            const data = {
+                currentUser: {
+                    user_ex: null,
+                    user_id: 'ffff3311',
+                    user_nm: '홍길동'
+                },
+                userFriend: [
+                    {
+                        friend_cd: 1,
+                        friend_nm: '친구1',
+                        friend_pic: 'http://placehold.it/40x40',
+                    },
+                    {
+                        friend_cd: 2,
+                        friend_nm: '친구2',
+                        friend_pic: 'http://placehold.it/40x40',
                     }
-                })
-                return;
+                ],
+                userGroup: [
+                    {
+                        group_cd: 1,
+                        group_nm: '그룹1',
+                        group_pic: 'http://placehold.it/40x40',
+                        group_open: true,
+                    },
+                    {
+                        group_cd: 2,
+                        group_nm: '그룹2',
+                        group_pic: 'http://placehold.it/40x40',
+                        group_open: true,
+                    }
+                ]
             }
-            this.props.history.push('/main');//페이지 이동
-            return;
-            
+            this.props.onLogin();
+            this.props.onSavaUserData(data);
+            this.props.history.push('/main');//페이지 이동            
         } catch (error) {
             console.error(error);
             this.setState({
@@ -92,8 +130,6 @@ class Login extends React.Component {
                     )
                 }
             })
-        } finally {
-            return false;
         }
     }
 
@@ -128,6 +164,9 @@ class Login extends React.Component {
             }
             return null;
         })();
+        if(this.state.isLoading){
+            return <Loading />;
+        }
         return (
             <div id="index-page">
                 {registerPage}
@@ -137,10 +176,10 @@ class Login extends React.Component {
                             e.preventDefault();
                             this.props.onChangePage();
                         }}>
-                            <img className="title-image" alt="Recordary icon" src="http://localhost:8888/Recodary.png"/>
+                            <img className="title-image" alt="Recordary icon" src="http://localhost:8080/Recodary.png"/>
                         </a> */}
                         <Link to="/main">
-                            {/* <img className="title-image" alt="Recordary icon" src="http://localhost:8888/Recodary.png"/> */}
+                            {/* <img className="title-image" alt="Recordary icon" src="http://localhost:8080/Recodary.png"/> */}
                             <img className="title-image" alt="Recordary icon" src="Recordary.png"/>                       
                         </Link>
                     </div>

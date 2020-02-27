@@ -58,7 +58,6 @@ const GroupModify = (props) => {
         }else{
             var dataUrl = null;
         }
-        console.log(dataUrl);
         try {
             // const form = new FormData();
             // form.append('group_nm', Changedata.group.group_nm);
