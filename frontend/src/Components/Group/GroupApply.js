@@ -20,29 +20,37 @@ const useStyles = makeStyles(theme => ({
     },
     chip: {
         marginBottom: '4px',
-        marginRight: '4px',
+        marginRight: '4px'
     }
 }));
 
-const GroupApply = (props) => {
+const GroupApply = props => {
     const classes = useStyles();
     const [dialog, setDialog] = useState(false);
 
     const data = props.data;
-    const [info,setInfo] = useState(props.info);
+    const [info, setInfo] = useState(props.info);
 
     return (
-        <div className="dialog-wrap">
+        <div className='dialog-wrap'>
             <DialogContent className={classes.content}>
                 <div className={classes.marginBottom}>
                     <span>그룹장</span>
                     &nbsp;&nbsp;
                     <div>
                         <Chip
-                            avatar={<Avatar alt={`${info.admin.user_id} img`} src={info.admin.user_pic} />}
+                            avatar={
+                                <Avatar
+                                    alt={`${info.admin.user_id} img`}
+                                    src={info.admin.user_pic}
+                                />
+                            }
                             className={classes.chip}
                             label={info.admin.user_nm}
-                            style={{ backgroundColor: 'rgba(20, 81, 51, 0.8)', color: '#ffffff' }}
+                            style={{
+                                backgroundColor: 'rgba(20, 81, 51, 0.8)',
+                                color: '#ffffff'
+                            }}
                         />
                     </div>
                 </div>
@@ -51,34 +59,42 @@ const GroupApply = (props) => {
                     &nbsp;&nbsp;
                     <div>
                         {(() => {
-                            return info.member.map((value) => {
+                            return info.member.map(value => {
                                 return (
                                     <Chip
-                                        avatar={<Avatar alt={`${value.user_id} img`} src={value.user_pic} />}
+                                        avatar={
+                                            <Avatar
+                                                alt={`${value.user_id} img`}
+                                                src={value.user_pic}
+                                            />
+                                        }
                                         className={classes.chip}
                                         label={value.user_nm}
                                         clickable
-                                        variant="outlined"
+                                        variant='outlined'
                                         onDelete={async () => {
-                                            await axios.post('/group/memberDelete',
+                                            await axios.post(
+                                                '/group/memberDelete',
                                                 {
                                                     params: {
-                                                        group_cd: data.group.group_cd,
+                                                        group_cd:
+                                                            data.group.group_cd,
                                                         user_cd: value.user_cd
                                                     }
-                                                })
+                                                }
+                                            );
                                         }}
-                                    />)
-                            })
-                        })()
-                        }
+                                    />
+                                );
+                            });
+                        })()}
                         <Chip
                             className={classes.chip}
                             icon={<AddIcon />}
                             label='ADD'
                             clickable
-                            variant="outlined"
-                            onClick={()=>{
+                            variant='outlined'
+                            onClick={() => {
                                 setDialog(true);
                             }}
                             // onClick={async () => {
@@ -94,23 +110,24 @@ const GroupApply = (props) => {
                     </div>
                 </div>
             </DialogContent>
-            {dialog && 
-                <GroupMemberSearch 
-                    onCancel={()=>setDialog(false)}
-                    onAdd={(value)=>{
+            {dialog && (
+                <GroupMemberSearch
+                    onCancel={() => setDialog(false)}
+                    onAdd={value => {
                         setInfo({
-                            ...info, 
+                            ...info,
                             member: info.member.concat({
                                 user_id: value.user_id,
                                 user_nm: value.user_nm,
                                 user_pic: value.user_pic
-                                })});
+                            })
+                        });
                         setDialog(false);
                     }}
                 />
-            }
+            )}
         </div>
     );
-}
+};
 
 export default GroupApply;

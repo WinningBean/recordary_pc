@@ -14,10 +14,15 @@ class AlertDialog extends React.Component {
                 <div>
                     <Alert severity={this.props.severity}>
                         <AlertTitle>{this.props.severity}</AlertTitle>
-                            {this.props.content}
-                        <Button style={{ marginTop: '10px' }} onClick={() => {
-                            this.props.onAlertClose();
-                        }}>닫기</Button>
+                        {this.props.content}
+                        <Button
+                            style={{ marginTop: '10px' }}
+                            onClick={() => {
+                                this.props.onAlertClose();
+                            }}
+                        >
+                            닫기
+                        </Button>
                     </Alert>
                 </div>
             </Dialog>

@@ -5,7 +5,7 @@ import Switch from '@material-ui/core/Switch';
 export default function SwitchLabels() {
     const [state, setState] = React.useState({
         checkedA: true,
-        checkedB: true,
+        checkedB: true
     });
 
     const handleChange = name => event => {
@@ -15,14 +15,14 @@ export default function SwitchLabels() {
     return (
         <FormControlLabel
             control={
-            <Switch
-                checked={state.checkedB}
-                onChange={handleChange('checkedB')}
-                value="checkedB"
-                color="primary"
-            />
+                <Switch
+                    checked={state.checkedB}
+                    onChange={handleChange('checkedB')}
+                    value='checkedB'
+                    color='primary'
+                />
             }
-            label="공유"
+            label='공유'
         />
     );
-    }
+}
