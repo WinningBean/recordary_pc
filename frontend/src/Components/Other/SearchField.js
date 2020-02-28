@@ -65,25 +65,39 @@ export default function SearchAppBar() {
 
   const handleKeyPress = async (e) => {
     if(e.key === 'Enter') {
-      const userData = (await axios.get("http://localhost:8080/user/search", {params : { userSearch : userSearch}})).data;
-      const groupData = (await axios.get("http://localhost:8080/group/search", {params : { groupSearch : userSearch}})).data;
+      // const userData = (await axios.get("http://172.30.1.47:8080/user/search", {params : { userSearch : userSearch}})).data;
+      // const groupData = (await axios.get("http://172.30.1.47:8080/group/search", {params : { groupSearch : userSearch}})).data;
       // console.log(data);
-        // const data = {
-        //     searchedUser : [
-        //         {
-        //             user_id : 'hgd',
-        //             user_nm : '홍길동',
-        //             user_pic: null,
-        //             user_ex : '안녕하세요'
-        //         },
-        //         {
-        //             user_id : 'wsh',
-        //             user_nm : '위성홍',
-        //             user_pic: null,
-        //             user_ex : '안녕하세요222'
-        //         }
-        //     ]
-        // };
+      const userData = {
+        searchedUser : [
+          {
+              user_id : 'hgd',
+              user_nm : '홍길동',
+              user_pic: null,
+              user_ex : '안녕하세요'
+          },
+          {
+              user_id : 'wsh',
+              user_nm : '위성홍',
+              user_pic: null,
+              user_ex : '안녕하세요222'
+          }
+      ]
+      };
+      const groupData = {
+        searchedGroup: [
+              {
+                group_cd: '2',
+                group_nm: 'sd',
+                group_pic: null,
+              },
+              {
+                group_cd: '3',
+                group_nm: 'sd',
+                group_pic: null,
+              }
+            ]
+        };
 
         const addedUserData = userData.searchedUser.map((value)=>{
           return {
