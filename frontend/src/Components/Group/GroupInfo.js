@@ -11,12 +11,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import {Link} from 'react-router-dom';
 import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
     content: {
         width: '552px',
         display: 'flex',
+        justifyContent:'center'
     },
     marginBottom: {
         marginBottom: '10px'
@@ -40,7 +42,8 @@ const GroupInfo = (props) => {
 
     // useEffect( async ()=>{
     //     // 그룹 대표사진 250x250 img, 유저 리스트, 유저 40x40 img
-    //     const info = (await axios.post('/group/info',{params:{group_cd:data.group.group_cd}})).data;
+    //     const groupInfo = (await axios.post('/group/info',{params:{group_cd:data.group.group_cd}})).data;
+    // setInfo(info);
     // });
 
     return (
@@ -72,7 +75,28 @@ const GroupInfo = (props) => {
                                 InputProps={{
                                     readOnly: true,
                                 }}
-                                onClick={()=>setInfo({group_pic:'http://placehold.it/250x250'})}
+                                onClick={()=>setInfo(
+                                    {
+                                        admin: {
+                                            user_id: 'admin048',
+                                            user_pic: 'http://placehold.it/40x40',
+                                            user_nm: '어드민'
+                                        },
+                                        group_pic:'http://placehold.it/250x250',
+                                        member: [
+                                            {
+                                                user_id:'abcd1234',
+                                                user_pic:'http://placehold.it/40x40',
+                                                user_nm:'홍길동'
+                                            },
+                                            {
+                                                user_id:'kkk8874',
+                                                user_pic:'http://placehold.it/40x40',
+                                                user_nm:'김길동'
+                                            }
+                                        ]
+                                    }
+                                    )}
                             />
                             <TextField
                                 className={classes.marginBottom}
@@ -107,45 +131,29 @@ const GroupInfo = (props) => {
                             <CircularProgress />
                         </div>)
                         :(
-                            <div style={{ padding: '4px', minHeight: '180px'}}>
-                            <Chip
-                                avatar={<Avatar alt="Natacha" src="https://material-ui.com/static/images/avatar/1.jpg" />}
-                                className={classes.chip}
-                                label="그룹장"
-                                color="primary"
-                                style={{backgroundColor: 'rgba(20, 81, 51, 0.8)'}}
-                                clickable
-                            />
-                            <Chip
-                                avatar={<Avatar alt="Natacha" src="http://placehold.it/40x40" />}
-                                className={classes.chip}
-                                label="gadsfasgsadf"
-                            />
-                            <Chip
-                                avatar={<Avatar alt="Natacha" src="http://placehold.it/40x40" />}
-                                className={classes.chip}
-                                label="홍길동"
-                            />
-                            <Chip
-                                avatar={<Avatar alt="Natacha" src="http://placehold.it/40x40" />}
-                                className={classes.chip}
-                                label="asdf"
-                            />
-                            <Chip
-                                avatar={<Avatar alt="Natacha" src="http://placehold.it/40x40" />}
-                                className={classes.chip}
-                                label="gsdafasfsdg"
-                            />
-                            <Chip
-                                avatar={<Avatar alt="Natacha" src="http://placehold.it/40x40" />}
-                                className={classes.chip}
-                                label="sf"
-                            />
-                            <Chip
-                                avatar={<Avatar alt="Natacha" src="http://placehold.it/40x40" />}
-                                className={classes.chip}
-                                label="gdsaf"
-                            />
+                        <div style={{ padding: '4px', minHeight: '180px'}}>
+                                    <Link to={`/${info.admin.user_id}`}>
+                                        <Chip
+                                            avatar={<Avatar alt={`${info.admin.user_id} img`} src={info.admin.user_pic} />}
+                                            className={classes.chip}
+                                            label={info.admin.user_nm}
+                                            style={{ backgroundColor: 'rgba(20, 81, 51, 0.8)', color:'#ffffff' }}
+                                            clickable
+                                        /></Link>
+                                    {
+                                (()=>{
+                                    return info.member.map((value)=>{
+                                        return (
+                                            <Link to={`/${value.user_id}`}>
+                                                <Chip
+                                                    avatar={<Avatar alt={`${value.user_id} img`} src={value.user_pic} />}
+                                                    className={classes.chip}
+                                                    label={value.user_nm}
+                                                    clickable
+                                        /></Link>)
+                                    })
+                                })()
+                            }
                         </div>   
                         )}
                         
@@ -157,3 +165,42 @@ const GroupInfo = (props) => {
 }
 
 export default GroupInfo;
+
+// <Chip
+//                                 avatar={<Avatar alt="Natacha" src="https://material-ui.com/static/images/avatar/1.jpg" />}
+//                                 className={classes.chip}
+//                                 label="그룹장"
+//                                 color="primary"
+//                                 style={{backgroundColor: 'rgba(20, 81, 51, 0.8)'}}
+//                                 clickable
+//                             />
+//                             <Chip
+//                                 avatar={<Avatar alt="Natacha" src="http://placehold.it/40x40" />}
+//                                 className={classes.chip}
+//                                 label="gadsfasgsadf"
+//                             />
+//                             <Chip
+//                                 avatar={<Avatar alt="Natacha" src="http://placehold.it/40x40" />}
+//                                 className={classes.chip}
+//                                 label="홍길동"
+//                             />
+//                             <Chip
+//                                 avatar={<Avatar alt="Natacha" src="http://placehold.it/40x40" />}
+//                                 className={classes.chip}
+//                                 label="asdf"
+//                             />
+//                             <Chip
+//                                 avatar={<Avatar alt="Natacha" src="http://placehold.it/40x40" />}
+//                                 className={classes.chip}
+//                                 label="gsdafasfsdg"
+//                             />
+//                             <Chip
+//                                 avatar={<Avatar alt="Natacha" src="http://placehold.it/40x40" />}
+//                                 className={classes.chip}
+//                                 label="sf"
+//                             />
+//                             <Chip
+//                                 avatar={<Avatar alt="Natacha" src="http://placehold.it/40x40" />}
+//                                 className={classes.chip}
+//                                 label="gdsaf"
+//                             />

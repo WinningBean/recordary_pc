@@ -3,73 +3,112 @@ import './group.css';
 import Button from '@material-ui/core/Button';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
-import TextField from '@material-ui/core/TextField';
+import Avatar from '@material-ui/core/Avatar';
+import Chip from '@material-ui/core/Chip';
 import { makeStyles } from '@material-ui/core/styles';
+import AddIcon from '@material-ui/icons/Add';
+import GroupMemberSearch from 'Components/Group/GroupMemberSearch';
 import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
     content: {
-        display : 'flex',
+        display: 'flex',
         flexDirection: 'column'
     },
-    marginBottom : {
+    marginBottom: {
         marginBottom: '10px'
+    },
+    chip: {
+        marginBottom: '4px',
+        marginRight: '4px',
     }
 }));
 
 const GroupApply = (props) => {
     const classes = useStyles();
-    const [applyUser, setApplyUser] = useState('');
+    const [dialog, setDialog] = useState(false);
 
     const data = props.data;
+    const [info,setInfo] = useState(props.info);
+
     return (
         <div className="dialog-wrap">
             <DialogContent className={classes.content}>
-                <TextField
-                    className={classes.marginBottom}
-                    label="그룹명"
-                    name='group_nm'
-                    defaultValue={data.group.group_nm}
-                    disabled
-                />
-                <TextField
-                    className={classes.marginBottom}
-                    label="그룹 상태메세지"
-                    name='group_nm'
-                    defaultValue={data.group.group_ex}
-                    disabled
-                />
-                <TextField
-                    label="그룹장"
-                    name='group_ex'
-                    defaultValue={data.group.group_admin}
-                    disabled
-                />
-                <TextField
-                    label="초대 유저"
-                    name='apply_user'
-                    onChange={(e)=>{
-                        setApplyUser(e.target.value);
-                    }}
-                />
-            </DialogContent>
-            <DialogActions>
-                <Button 
-                    color="secondary"
-                    onClick={async ()=>{
-                        const form = new FormData();
-                        form.append('user_id', applyUser);
-                        form.append('group_cd', data.group.group_cd);
-                        form.append('apply_state', 0);
-                        const { data } = await axios.post('http://localhost:8080/apply', form);
-                        if(data.isSuccess){
-                            console.log('완료');
-                            return;
+                <div className={classes.marginBottom}>
+                    <span>그룹장</span>
+                    &nbsp;&nbsp;
+                    <div>
+                        <Chip
+                            avatar={<Avatar alt={`${info.admin.user_id} img`} src={info.admin.user_pic} />}
+                            className={classes.chip}
+                            label={info.admin.user_nm}
+                            style={{ backgroundColor: 'rgba(20, 81, 51, 0.8)', color: '#ffffff' }}
+                        />
+                    </div>
+                </div>
+                <div>
+                    <span>그룹멤버</span>
+                    &nbsp;&nbsp;
+                    <div>
+                        {(() => {
+                            return info.member.map((value) => {
+                                return (
+                                    <Chip
+                                        avatar={<Avatar alt={`${value.user_id} img`} src={value.user_pic} />}
+                                        className={classes.chip}
+                                        label={value.user_nm}
+                                        clickable
+                                        variant="outlined"
+                                        onDelete={async () => {
+                                            await axios.post('/group/memberDelete',
+                                                {
+                                                    params: {
+                                                        group_cd: data.group.group_cd,
+                                                        user_cd: value.user_cd
+                                                    }
+                                                })
+                                        }}
+                                    />)
+                            })
+                        })()
                         }
-                        console.log('실패');
+                        <Chip
+                            className={classes.chip}
+                            icon={<AddIcon />}
+                            label='ADD'
+                            clickable
+                            variant="outlined"
+                            onClick={()=>{
+                                setDialog(true);
+                            }}
+                            // onClick={async () => {
+                            //     await axios.post('/group/memberDelete',
+                            //         {
+                            //             params: {
+                            //                 group_cd: data.group.group_cd,
+                            //                 user_cd: value.user_cd
+                            //             }
+                            //         })
+                            // }}
+                        />
+                    </div>
+                </div>
+            </DialogContent>
+            {dialog && 
+                <GroupMemberSearch 
+                    onCancel={()=>setDialog(false)}
+                    onAdd={(value)=>{
+                        setInfo({
+                            ...info, 
+                            member: info.member.concat({
+                                user_id: value.user_id,
+                                user_nm: value.user_nm,
+                                user_pic: value.user_pic
+                                })});
+                        setDialog(false);
                     }}
-                >초대</Button>
-            </DialogActions>
+                />
+            }
         </div>
     );
 }

@@ -5,6 +5,7 @@ import AlertTitle from '@material-ui/lab/AlertTitle';
 import Button from '@material-ui/core/Button';
 
 // severity (success or error)
+// <AlertDialog severity='error' content='' onAlertClose={} />
 
 class AlertDialog extends React.Component {
     render() {

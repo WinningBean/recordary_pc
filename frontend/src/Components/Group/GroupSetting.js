@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import GroupModify from 'Containers/Group/GroupModify';
 import GroupDelete from 'Components/Group/GroupDelete';
 import GroupApply from 'Components/Group/GroupApply';
@@ -14,6 +14,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import GroupIcon from '@material-ui/icons/Group';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import SearchIcon from '@material-ui/icons/Search';
+import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -48,18 +50,44 @@ const GroupSetting = (props) => {
     const classes = useStyles();
     
     const [listIndex, setListIndex] = useState(0);
+    const [info, setInfo] = useState(null);
     const data = props.data;
 
     const currPage = (() => {
         switch(listIndex){
             case 0:
-                return <GroupModify data={data} />;
+                return <GroupModify data={data} pic={info !== null ? info.group_pic : null} />;
             case 1:
-                return <GroupApply data={data} />;
+                return <GroupApply data={data} info={info !== null ? info : null} />;
             case 2:
                 return <GroupDelete data={data} />;
         }
     })();
+
+    useEffect(()=>{
+        // const info = (await axios.post('/group/info',{params:{group_cd:data.group.group_cd}})).data;
+        const info = {
+            admin: {
+                user_id: 'admin048',
+                user_pic: 'http://placehold.it/40x40',
+                user_nm: '어드민'
+            },
+            group_pic:'http://placehold.it/250x250',
+            member: [
+                {
+                    user_id:'abcd1234',
+                    user_pic:'http://placehold.it/40x40',
+                    user_nm:'홍길동'
+                },
+                {
+                    user_id:'kkk8874',
+                    user_pic:'http://placehold.it/40x40',
+                    user_nm:'김길동'
+                }
+            ]
+        };
+        setInfo(info);
+    }, [])
 
     return (
         <Dialog open onClose={()=>props.onClose()}>
@@ -98,7 +126,7 @@ const GroupSetting = (props) => {
                                 }
                             }}>
                             <ListItemIcon>
-                                <DeleteIcon />
+                                <SearchIcon />
                             </ListItemIcon>
                             <ListItemText primary="그룹 초대" />
                         </ListItem>

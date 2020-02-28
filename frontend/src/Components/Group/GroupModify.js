@@ -16,6 +16,7 @@ import axios from 'axios';
 
 const GroupModify = (props) => {
     const [changeData, setChangeData] = useState(props.data);
+    const [changePic, setChangePic] = useState(props.pic)
     const [openSwitch, setOpenSwitch] = useState({
         open: props.data.group.group_open
     });
@@ -40,11 +41,11 @@ const GroupModify = (props) => {
             //     />
             <Backdrop />
         )
-        if (changeData.group.group_pic !== props.data.group.group_pic) {
+        if (changePic !== props.pic) {
             var canvas = document.createElement("canvas");
             var ctx = canvas.getContext("2d");
             const cut = new Image();
-            cut.src = changeData.group.group_pic;
+            cut.src = changePic;
             let height = cut.height;
             let width = cut.width;
             height *= 250 / width;
@@ -63,7 +64,7 @@ const GroupModify = (props) => {
             // form.append('group_nm', Changedata.group.group_nm);
             // form.append('group_ex', Chagnedata.group.group_ex);
             // form.append('group_pic', dataUrl);
-            // const { data } = await axios.post("http://localhost:8888/group/modify", form);
+            // const { data } = await axios.post("/group/modify", form);
             const data = { success : true };
             if (data.success) {
                 props.onChange({
@@ -73,7 +74,7 @@ const GroupModify = (props) => {
                 setAlert(
                     <AlertDialog
                         severity='success'
-                        content='그룹을 생성하였습니다.'
+                        content='그룹정보를 변경하였습니다.'
                         onAlertClose={() => setAlert(null)}
                     />
                 )
@@ -81,7 +82,7 @@ const GroupModify = (props) => {
                 setAlert(
                     <Snackbar 
                     severity='error'
-                    content='그룹 생성에 실패하였습니다.'
+                    content='그룹정보 변경에 실패하였습니다.'
                     onClose={()=>setAlert(null)}
                 />
                 )
@@ -91,7 +92,7 @@ const GroupModify = (props) => {
             setAlert(
                 <Snackbar 
                     severity='error'
-                    content='서버 에러로 그룹 생성에 실패하였습니다.'
+                    content='서버 에러로 그룹정보 변경에 실패하였습니다.'
                     onClose={()=>setAlert(null)}
                 />
             )
@@ -108,7 +109,7 @@ const GroupModify = (props) => {
                 <DialogContent style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <div className="dialog-content">
                         <div>
-                            <img style={{ width: '250px', height: '250px', objectFit: 'cover', borderRadius: '50%' }} alt="profile-img" src={changeData.group.group_pic} />
+                            <img style={{ width: '250px', height: '250px', objectFit: 'cover', borderRadius: '50%' }} alt="profile-img" src={changePic} />
                         </div>
                         <Button
                             startIcon={<CloudUploadIcon />}
@@ -181,7 +182,8 @@ const GroupModify = (props) => {
                         onClose={() => setImageSrc(null)}
                         onComplete={(src) => {
                             setImageSrc(null);
-                            setChangeData({ ...changeData, group : {...changeData.group , group_pic: src} });
+                            // setChangeData({ ...changeData, group : {...changeData.group , group_pic: src} });
+                            setChangePic(src);
                         }}
                     />
                 )}

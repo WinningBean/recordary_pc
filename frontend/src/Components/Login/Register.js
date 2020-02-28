@@ -40,74 +40,74 @@ class Register extends React.Component {
                 <DialogTitle>회원가입</DialogTitle>
                 <form method="POST" onSubmit={async (e) => {
                     e.preventDefault();
-                    const nameRules = /^[가-힣]{2,4}|[a-zA-Z]{2,10}\s[a-zA-Z]{2,10}$/;
-                    if (!nameRules.test(this.state.user_nm)) {
-                        this.setState({
-                            alertDialog: () => {
-                                return (
-                                    <AlertDialog
-                                        severity="error"
-                                        content="이름이 옳바르지않습니다 다시 작성해주세요."
-                                        onAlertClose={() => { this.setState({ alertDialog: () => { } }); }} />
-                                )
-                            }
-                        })
-                        return;
-                    }
-                    if (this.state.user_id === "") {
-                        this.setState({
-                            alertDialog: () => {
-                                return (
-                                    <AlertDialog
-                                        severity="error"
-                                        content="아이디를 입력하세요."
-                                        onAlertClose={() => { this.setState({ alertDialog: () => { } }); }} />
-                                )
-                            }
-                        })
-                        return;
-                    }
-                    if (this.state.user_pw === "") {
-                        this.setState({
-                            alertDialog: () => {
-                                return (
-                                    <AlertDialog
-                                        severity="error"
-                                        content="패스워드를 입력하세요."
-                                        onAlertClose={() => { this.setState({ alertDialog: () => { } }); }} />
-                                )
-                            }
-                        })
-                        return;
-                    }
-                    if (!this.state.isSamePw) {
-                        this.setState({
-                            alertDialog: () => {
-                                return (
-                                    <AlertDialog
-                                        severity="error"
-                                        content="패스워드가 같지않습니다."
-                                        onAlertClose={() => { this.setState({ alertDialog: () => { } }); }} />
-                                )
-                            }
-                        })
-                        return;
-                    }
-                    // const passwordRules = /^[a-zA-Z0-9]{10,15}$/;
-                    const passwordRules = /^[0-9]{4,15}$/;
-                    if (!passwordRules.test(this.state.user_pw)) {
-                        this.setState({
-                            alertDialog: () => {
-                                return (
-                                    <AlertDialog
-                                        severity="error"
-                                        content="패스워드는 숫자와 영문자 조합으로 10~15자리를 사용해야 합니다."
-                                        onAlertClose={() => { this.setState({ alertDialog: () => { } }); }} />
-                                )
-                            }
-                        })
-                        return;
-                    }
+                    // const nameRules = /^[가-힣]{2,4}|[a-zA-Z]{2,10}\s[a-zA-Z]{2,10}$/;
+                    // if (!nameRules.test(this.state.user_nm)) {
+                    //     this.setState({
+                    //         alertDialog: () => {
+                    //             return (
+                    //                 <AlertDialog
+                    //                     severity="error"
+                    //                     content="이름이 옳바르지않습니다 다시 작성해주세요."
+                    //                     onAlertClose={() => { this.setState({ alertDialog: () => { } }); }} />
+                    //             )
+                    //         }
+                    //     })
+                    //     return;
+                    // }
+                    // if (this.state.user_id === "") {
+                    //     this.setState({
+                    //         alertDialog: () => {
+                    //             return (
+                    //                 <AlertDialog
+                    //                     severity="error"
+                    //                     content="아이디를 입력하세요."
+                    //                     onAlertClose={() => { this.setState({ alertDialog: () => { } }); }} />
+                    //             )
+                    //         }
+                    //     })
+                    //     return;
+                    // }
+                    // if (this.state.user_pw === "") {
+                    //     this.setState({
+                    //         alertDialog: () => {
+                    //             return (
+                    //                 <AlertDialog
+                    //                     severity="error"
+                    //                     content="패스워드를 입력하세요."
+                    //                     onAlertClose={() => { this.setState({ alertDialog: () => { } }); }} />
+                    //             )
+                    //         }
+                    //     })
+                    //     return;
+                    // }
+                    // if (!this.state.isSamePw) {
+                    //     this.setState({
+                    //         alertDialog: () => {
+                    //             return (
+                    //                 <AlertDialog
+                    //                     severity="error"
+                    //                     content="패스워드가 같지않습니다."
+                    //                     onAlertClose={() => { this.setState({ alertDialog: () => { } }); }} />
+                    //             )
+                    //         }
+                    //     })
+                    //     return;
+                    // }
+                    // // const passwordRules = /^[a-zA-Z0-9]{10,15}$/;
+                    // const passwordRules = /^[0-9]{4,15}$/;
+                    // if (!passwordRules.test(this.state.user_pw)) {
+                    //     this.setState({
+                    //         alertDialog: () => {
+                    //             return (
+                    //                 <AlertDialog
+                    //                     severity="error"
+                    //                     content="패스워드는 숫자와 영문자 조합으로 10~15자리를 사용해야 합니다."
+                    //                     onAlertClose={() => { this.setState({ alertDialog: () => { } }); }} />
+                    //             )
+                    //         }
+                    //     })
+                    //     return;
+                    // }
                     this.setState({alert : ()=>{return <Spinner style={{position:'absolute', top:'30px', left:'100px'}}/>}})
                     try{
                         const form = new FormData();

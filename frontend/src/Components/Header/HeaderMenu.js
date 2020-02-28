@@ -54,12 +54,12 @@ const HeaderMenu = (props) => {
                     />);
                 break;
             case '그룹 관리':
-                setMenuDialog(<GroupSetting data={{
-                    user_id : data.currentUser.user_id,
-                    group : value
-                }} onClose={() => setMenuDialog(null)} />);
-                break;
-            case '그룹 삭제':
+                setMenuDialog(<GroupSetting 
+                    onClose={() => setMenuDialog(null)}
+                    data={{
+                        user_id : data.currentUser.user_id,
+                        group : value
+                }}/>);
                 break;
         }
     }
@@ -106,7 +106,7 @@ const HeaderMenu = (props) => {
                                 </GroupButton>
                                 <div className="LongMenuOpen">
                                     <LongMenu
-                                        options={['그룹 정보', '그룹 관리', '그룹 삭제']}
+                                        options={['그룹 정보', '그룹 관리']}
                                         code={value.group_cd}
                                         returnValue={onGroupMenuSelect}
                                     />
