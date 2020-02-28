@@ -60,11 +60,11 @@ class Login extends React.Component {
             // const Form = new FormData();
             // Form.append('user_id', this.state.user_id);
             // Form.append('user_pw', this.state.user_pw);
-            // const { data } = await axios.post("http://localhost:8888/user/loginRequest", Form);
+            // const { isLogin } = (await axios.post("/user/loginRequest", Form)).data;
             // // .catch();
-            // console.log(data);
+            // console.log(isLogin);
             
-            // if(data.isLogin === false){
+            // if(isLogin === false){
             //     this.setState({
             //         failedLogin: () => {
             //             return (
@@ -80,7 +80,7 @@ class Login extends React.Component {
             // }
             this.setState({ isLoading: true });
             // 유저에 대한 정보를 가져오고 그 결과값을 state 에 저장
-            // const {data} = await axios.get("http://localhost:8888/mainPage");
+            // const {data} = await axios.get("/mainPage");
             const data = {
                 currentUser: {
                     user_ex: null,
