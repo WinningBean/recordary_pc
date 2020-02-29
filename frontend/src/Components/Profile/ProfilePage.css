@@ -4,6 +4,7 @@
     height: 580px;
     padding-top: 10px;
     width: 900px;
+    align-self: center;
 }
 
 #main-profile .search-user{

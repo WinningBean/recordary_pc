@@ -50,13 +50,13 @@ aside{
 aside>.aside-profile{
     height: 400px;
     width: 220px;
-    border-radius: 5px;
     padding-left: 10px;
     padding-top: 10px;
     box-shadow: 0px 1px 2px rgba(161, 159, 159, 0.8);
     background-color: white;
     padding: 10px;
 }
+
 
 .aside-profile .timeline-profile{
     height: 200px;
@@ -66,7 +66,9 @@ aside>.aside-profile{
 .aside-profile .timeline-profile>img{
     border-radius: 50%; 
     overflow: hidden;
-
+    object-fit: cover ;
+    height: 200px;
+    width: 200px;   
 }
 .aside-profile-info{
     margin-top: 10px;

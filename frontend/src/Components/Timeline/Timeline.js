@@ -17,7 +17,7 @@ class Timeline extends React.Component {
             <div className='timeline'>
                 <div className='timeline-profile'>
                     <div className='profile-picture'>
-                        <img alt='profile-img' src='profile-image.png' />
+                        <img alt='profile-img' src='https://pds.joins.com/news/component/htmlphoto_mmdata/201608/21/htm_20160821132446783592.jpg' />
                     </div>
                     <div className='profile-name'>Hwang_WaterGlasses</div>
                     <div className='profile-time'>
@@ -53,7 +53,7 @@ class Timeline extends React.Component {
                                 <div className='comment-reply-users-img'>
                                     <img
                                         alt='profile-img'
-                                        src='http://placehold.it/40x40'
+                                        src='https://img.hani.co.kr/imgdb/resize/2018/0320/00501068_20180320.JPG'
                                     />
                                 </div>
                                 <div className='comment-reply-users-name'>
@@ -79,7 +79,7 @@ class Timeline extends React.Component {
                                 <div className='comment-reply-users-img'>
                                     <img
                                         alt='profile-img'
-                                        src='http://placehold.it/40x40'
+                                        src='https://ojsfile.ohmynews.com/STD_IMG_FILE/2012/0820/IE001479170_STD.jpg'
                                     />
                                 </div>
                                 <div className='comment-reply-users-name'>
