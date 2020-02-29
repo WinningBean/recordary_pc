@@ -58,4 +58,7 @@ public class PostEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "postOriginFK", cascade = {CascadeType.ALL})
     private List<PostEntity> postOriginList;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postFK", cascade = {CascadeType.ALL})
+    private List<PostLikeEntity> postLikList;
 }
