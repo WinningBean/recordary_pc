@@ -65,40 +65,44 @@ export default function SearchAppBar() {
 
   const handleKeyPress = async (e) => {
     if(e.key === 'Enter') {
-      
-      // const Form = new FormData();
-      // Form.append('userSearch', userSearch);
-
-      // const { data } = await axios.post("http://localhost:8888/search", Form);
+      const userData = (await axios.get("http://172.30.1.47:8080/user/search", {params : { userSearch : userSearch}})).data;
+      const groupData = (await axios.get("http://172.30.1.47:8080/group/search", {params : { groupSearch : userSearch}})).data;
       // console.log(data);
-        const data = {
-            searchedUser : [
-                {
-                    user_id : 'hgd',
-                    user_nm : '홍길동',
-                    user_pic: null,
-                    user_ex : '안녕하세요'
-                },
-                {
-                    user_id : 'wsh',
-                    user_nm : '위성홍',
-                    user_pic: null,
-                    user_ex : '안녕하세요222'
-                }
-            ]
-        };
+        // const data = {
+        //     searchedUser : [
+        //         {
+        //             user_id : 'hgd',
+        //             user_nm : '홍길동',
+        //             user_pic: null,
+        //             user_ex : '안녕하세요'
+        //         },
+        //         {
+        //             user_id : 'wsh',
+        //             user_nm : '위성홍',
+        //             user_pic: null,
+        //             user_ex : '안녕하세요222'
+        //         }
+        //     ]
+        // };
 
-        const addedData = data.searchedUser.map((value)=>{
-          const plusData = {
+        const addedUserData = userData.searchedUser.map((value)=>{
+          return {
             ...value,
             user_click : false,
           }
-          return plusData;
+        })
+        const addedGroupData = groupData.searchedGroup.map((value)=>{
+          return {
+            ...value,
+            group_click : false,
+          }
         })
       console.log(userSearch);
       setData({
         ...data,
-        searchedUser : addedData});
+        searchedUser : addedUserData,
+        searchedGroup : addedGroupData,
+      });
       setsearchState(true);
     }
   }

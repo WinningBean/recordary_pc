@@ -97,7 +97,7 @@ class UserEditor extends React.Component {
                                     form.append("user_nm", this.state.user_id);
                                     form.append("user_pw", this.state.user_pw);
                                     form.append("user_change_pw", this.state.user_change_pw);
-                                    await axios.post("http://localhost:8888/userUpdate", form);
+                                    await axios.post("http://localhost:8080/userUpdate", form);
                                 } catch (error) {
                                     console.error(error);
                                 }
@@ -164,7 +164,7 @@ class UserEditor extends React.Component {
                                 form.append("user_nm", this.state.user_id);
                                 form.append("user_pw", this.state.user_pw);
                                 form.append("user_change_pw", this.state.user_change_pw);
-                                const { data : { updateState } } = await axios.post("http://localhost:8888/userUpdate", form);
+                                const { data : { updateState } } = await axios.post("http://localhost:8080/userUpdate", form);
                                 if (updateState === true) {
                                     this.setState({
                                         alertDialog: () => {

@@ -5,6 +5,7 @@ import GroupAdd from 'Containers/Group/GroupAdd';
 import LongMenu from '../Other/MoreMenu';
 import ProfileEditor from 'Components/Profile/ProfileEditor';
 import GroupSetting from 'Components/Group/GroupSetting';
+import GroupInfo from 'Components/Group/GroupInfo';
 
 import { styled } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -44,9 +45,19 @@ const HeaderMenu = (props) => {
         // 그룹목록에서 현재 선택된 그룹 객체를 찾음
         switch (selectedValue) {
             case '그룹 정보':
+                setMenuDialog(<GroupInfo 
+                    onClose={() => setMenuDialog(null)}
+                    data={{
+                        user_id : data.currentUser.user_id,
+                        group : value
+                    }}
+                    />);
                 break;
             case '그룹 관리':
-                setMenuDialog(<GroupSetting data={value} onClose={() => setMenuDialog(null)} />);
+                setMenuDialog(<GroupSetting data={{
+                    user_id : data.currentUser.user_id,
+                    group : value
+                }} onClose={() => setMenuDialog(null)} />);
                 break;
             case '그룹 삭제':
                 break;
@@ -71,7 +82,7 @@ const HeaderMenu = (props) => {
         return;
     }
 
-    const GroupList = (() => {
+    const GroupList = () => {
         if (open.group === true) {
             const gruops = data.userGroup.map(
                 (value) => {
@@ -81,7 +92,7 @@ const HeaderMenu = (props) => {
                                 <GroupButton>
                                     <div style={{ display: 'flex', width: '250px', justifyContent: 'space-between' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                                            <img alt="group-img" style={{ marginRight: '10px', borderRadius: '50%' }} src={value.group_pic} />
+                                            <img alt="group-img" style={{ marginRight: '10px', borderRadius: '50%', width:'40px', height:'40px',objectFit:'cover' }} src={value.group_pic} />
                                             {value.group_nm}
                                         </div>
                                         {/* <div className="LongMenuOpen">
@@ -130,8 +141,8 @@ const HeaderMenu = (props) => {
                 <IconButton onClick={showGroupAdd}><AddIcon style={{ fontSize: '20px' }} /></IconButton>
             </div>
         </div>);
-    })();
-    const friendList = (() => {
+    };
+    const friendList = () => {
         if (open.friend === true) {
             const friends = data.userFriend.map(
                 (value) => {
@@ -167,7 +178,7 @@ const HeaderMenu = (props) => {
             </div>
             <span><ArrowDown style={{ fontSize: '30px' }} /></span>
         </GroupButton>;
-    })();
+    };
     const showEditor = () => {
         if (editor === null) {
             setEditor(<UserEditor currentUser={data.currentUser} onCancel={()=>setEditor(null)} />)
@@ -199,8 +210,8 @@ const HeaderMenu = (props) => {
                     {profileEditForm}
                 </div>
                 <div className="menu-buttons">
-                    {GroupList}
-                    {friendList}
+                    {GroupList()}
+                    {friendList()}
                 </div>
                 <div className="menu-bottom">
                     <CustomIconButton onClick={showEditor}><SettingsIcon /></CustomIconButton>

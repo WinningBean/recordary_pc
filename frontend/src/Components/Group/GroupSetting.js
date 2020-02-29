@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import GroupModify from 'Components/Group/GroupModify';
+import GroupModify from 'Containers/Group/GroupModify';
 import GroupDelete from 'Components/Group/GroupDelete';
 import GroupApply from 'Components/Group/GroupApply';
 
@@ -53,11 +53,11 @@ const GroupSetting = (props) => {
     const currPage = (() => {
         switch(listIndex){
             case 0:
-                return <GroupModify group={data} />;
+                return <GroupModify data={data} />;
             case 1:
-                return <GroupApply group={data} />;
+                return <GroupApply data={data} />;
             case 2:
-                return <GroupDelete group={data} />;
+                return <GroupDelete data={data} />;
         }
     })();
 
