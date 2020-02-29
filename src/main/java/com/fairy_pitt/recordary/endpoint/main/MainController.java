@@ -8,6 +8,7 @@ import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 
+import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,7 +44,6 @@ public class MainController {
         if (currentUser != null) userState = true;
 
         map.put("isCurrentUser", userState);
-        System.out.println(userState);
         return map;
     }
 
@@ -72,6 +72,7 @@ public class MainController {
         return "index";
     }
 
+    @Autowired private UserService userService;
     @Autowired private GroupService groupService;
     @Autowired private GroupMemberService groupmemberService;
     @Autowired private FollowerService followerService;
@@ -85,14 +86,9 @@ public class MainController {
 
         if (currentUser == null) map.put("currentUser",null);
         else {
-            Map<String, Object> userMap = new HashMap<>();
-            map.put("currentUser", userMap);
-            userMap.put("user_id", currentUser.getUserId());
-            userMap.put("user_nm", currentUser.getUserNm());
-            userMap.put("user_ex", currentUser.getUserEx());
+            map.put("currentUser", userService.userInfo(currentUser.getUserId()));
 
             List<GroupMemberEntity> groupMemberEntities = groupmemberService.readUserGroup(currentUser);
-
             List<Optional<GroupEntity>> userGroup = new ArrayList<>();
             for (GroupMemberEntity groupMemberEntity :groupMemberEntities) {
                 Optional<GroupEntity> findResult = groupService.findGroup(groupMemberEntity.getGroupCodeFK());
@@ -115,28 +111,18 @@ public class MainController {
             List<UserEntity> friendList = followerService.friends(currentUser.getUserCd());
             List friendMapList = new ArrayList();
             for (UserEntity friend : friendList) {
-                Map<String, Object> friendDetailMap = new HashMap<>();
-                friendDetailMap.put("friend_user_id", friend.getUserId());
-                friendDetailMap.put("friend_user_nm", friend.getUserNm());
-                friendDetailMap.put("friend_user_pic", null);
-                friendDetailMap.put("friend_user_ex", friend.getUserEx());
-                friendMapList.add(friendDetailMap);
+                friendMapList.add(userService.userInfo(friend.getUserId()));
             }
             map.put("friendList", friendMapList);
-//            List<UserEntity> friendList = followerService.friends(currentUser.getUserCd());
-//
-//            List friendMapList = new ArrayList();
-//            for (int i = 0; i < friendList.size(); i++) {
-//                Map<String, Object> friendDetailMap = new HashMap<>();
-//                friendDetailMap.put("friend_user_cd", friendList.get(i).getUserCd());
-//                friendDetailMap.put("friend_user_nm", friendList.get(i).getUserNm());
-//                friendDetailMap.put("friend_user_pic", null);
-//                friendDetailMap.put("friend_user_ex", friendList.get(i).getUserEx());
-//                friendMapList.add(friendDetailMap);
-//            }
-//            map.put("friendList", friendMapList);
         }
+        return map;
+    }
 
+    @ResponseBody
+    @GetMapping("/{userId}")
+    public Map<String, Object> userProfile(@PathVariable("userId") String userId){
+        Map<String, Object> map = new HashMap<>();
+        map.put("userInfo", userService.userInfo(userId));
         return map;
     }
 }

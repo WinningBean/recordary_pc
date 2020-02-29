@@ -20,7 +20,7 @@ public class UserController {
     @Autowired private UserService userService;
     @Autowired private HttpSession session;
 
-    @PostMapping(value = "/joinRequest")
+    @PostMapping("/joinRequest")
     public Map<String, Boolean> joinRequest(@RequestParam Map<String, String> paramMap){
         String userId = paramMap.get("user_id");
         String userPw = paramMap.get("user_pw");
@@ -38,7 +38,7 @@ public class UserController {
         return map;
     }
 
-    @PostMapping(value = "/loginRequest")
+    @PostMapping("/loginRequest")
     public Map<String, Boolean> loginRequest(@RequestParam Map<String, String> paramMap){
         String userId = paramMap.get("user_id");
         String userPw = paramMap.get("user_pw");
@@ -51,7 +51,7 @@ public class UserController {
         return map;
     }
 
-    @PostMapping(value = "/update")
+    @PostMapping("/update")
     public Map<String, Boolean> userUpdate(@RequestParam Map<String, String> paramMap){
         String checkUserPw = paramMap.get("check_user_pw");
         Boolean isChangeUserNm = Boolean.parseBoolean(paramMap.get("is_change_user_nm"));
@@ -76,7 +76,7 @@ public class UserController {
         return map;
     }
 
-    @PostMapping(value = "/delete")
+    @PostMapping("/delete")
     public Map<String, Boolean> userDelete(@RequestParam Map<String, String> paramMap){
         String checkUserPw = paramMap.get("check_user_pw");
         UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
@@ -96,7 +96,7 @@ public class UserController {
         return map;
     }
 
-    @GetMapping(value = "/search")
+    @GetMapping("/search")
     public Map<String, Object> userSearch(@RequestParam(value = "userSearch")String userSearch){
         List<UserEntity> searchedUser = userService.search(userSearch);
         Map<String, Object> map = new HashMap<>();
@@ -111,7 +111,7 @@ public class UserController {
             userDetailMap.put("user_ex", userEntity.getUserEx());
             UserMapList.add(userDetailMap);
         }
-        map.put("searedUser", UserMapList);
+        map.put("searchedUser", UserMapList);
 
         return map;
     }
