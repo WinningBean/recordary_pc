@@ -111,7 +111,7 @@ public class UserController {
             userDetailMap.put("user_ex", userEntity.getUserEx());
             UserMapList.add(userDetailMap);
         }
-        map.put("searedUser", UserMapList);
+        map.put("searchedUser", UserMapList);
 
         return map;
     }

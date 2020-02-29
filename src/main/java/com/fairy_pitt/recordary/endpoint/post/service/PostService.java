@@ -29,6 +29,27 @@ public class PostService {
         post.setUserFK(currentUser);
         if (groupEntity == null) post.setGroupFK(null);
         else post.setGroupFK(groupEntity);
+        post.setPostOriginFK(null);
+        post.setPostEx((String)postMap.get("post_ex"));
+        post.setPostPublicState((int)postMap.get("post_pb_st"));
+        post.setPostStrYMD((String)postMap.get("post_str_ymd"));
+        post.setPostEndYMD((String)postMap.get("post_end_ymd"));
+
+        Optional<PostEntity> resultPostEntity = Optional.of(postRepository.save(post));
+        if (resultPostEntity.isPresent()) return true;
+        else return false;
+    }
+
+    public Boolean share(UserEntity currentUser, GroupEntity groupEntity, Map<String, Object> postMap){
+        if (currentUser == null || postMap == null) return false;
+
+        PostEntity postOrigin = postRepository.findByPostCd((Long)postMap.get("post_origin_fk"));
+
+        PostEntity post = new PostEntity();
+        post.setUserFK(currentUser);
+        if (groupEntity == null) post.setGroupFK(null);
+        else post.setGroupFK(groupEntity);
+        post.setPostOriginFK(postOrigin);
         post.setPostEx((String)postMap.get("post_ex"));
         post.setPostPublicState((int)postMap.get("post_pb_st"));
         post.setPostStrYMD((String)postMap.get("post_str_ymd"));
