@@ -56,12 +56,12 @@ class Login extends React.Component {
         //     return;
         // }
         try {
-            // const Form = new FormData();
-            // Form.append('user_id', this.state.user_id);
-            // Form.append('user_pw', this.state.user_pw);
-            // const { isLogin } = (await axios.post("/user/loginRequest", Form)).data;
-            // // .catch();
-            // console.log(isLogin);
+            const Form = new FormData();
+            Form.append('user_id', this.state.user_id);
+            Form.append('user_pw', this.state.user_pw);
+            const { isLogin } = (await axios.post("/user/loginRequest", Form)).data;
+            // .catch();
+            console.log(isLogin);
 
             // if(isLogin === false){
             //     this.setState({

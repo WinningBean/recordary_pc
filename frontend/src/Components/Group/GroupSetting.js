@@ -50,7 +50,7 @@ const GroupSetting = props => {
     const classes = useStyles();
 
     const [listIndex, setListIndex] = useState(0);
-    const [info, setInfo] = useState(null);
+    const [info, setInfo] = useState(undefined);
     const data = props.data;
 
     const currPage = (() => {
@@ -59,14 +59,14 @@ const GroupSetting = props => {
                 return (
                     <GroupModify
                         data={data}
-                        pic={info !== null ? info.group_pic : null}
+                        pic={info !== undefined ? info.group_pic : null}
                     />
                 );
             case 1:
                 return (
                     <GroupApply
                         data={data}
-                        info={info !== null ? info : null}
+                        info={info !== undefined ? info : null}
                     />
                 );
             case 2:
@@ -75,29 +75,21 @@ const GroupSetting = props => {
     })();
 
     useEffect(() => {
-        // const info = (await axios.post('/group/info',{params:{group_cd:data.group.group_cd}})).data;
-        const info = {
-            admin: {
-                user_id: 'admin048',
-                user_pic: 'http://placehold.it/40x40',
-                user_nm: '어드민'
-            },
-            group_pic: 'http://placehold.it/250x250',
-            member: [
-                {
-                    user_id: 'abcd1234',
-                    user_pic: 'http://placehold.it/40x40',
-                    user_nm: '홍길동'
-                },
-                {
-                    user_id: 'kkk8874',
-                    user_pic: 'http://placehold.it/40x40',
-                    user_nm: '김길동'
-                }
-            ]
-        };
-        setInfo(info);
+        const form = new FormData();
+        form.append('group_cd', 2);
+        (async () => {
+            const groupData = await axios.post(
+                '/group/show',
+                form
+            );
+            console.log(groupData.data)
+            setInfo(groupData.data);
+        })();
     }, []);
+
+    if (info === undefined) {
+        return <div></div>;
+    }
 
     return (
         <Dialog open onClose={() => props.onClose()}>
@@ -171,3 +163,24 @@ const GroupSetting = props => {
 };
 
 export default GroupSetting;
+
+// const info = {
+//     admin: {
+//         user_id: 'admin048',
+//         user_pic: 'http://placehold.it/40x40',
+//         user_nm: '어드민'
+//     },
+//     group_pic: 'http://placehold.it/250x250',
+//     member: [
+//         {
+//             user_id: 'abcd1234',
+//             user_pic: 'http://placehold.it/40x40',
+//             user_nm: '홍길동'
+//         },
+//         {
+//             user_id: 'kkk8874',
+//             user_pic: 'http://placehold.it/40x40',
+//             user_nm: '김길동'
+//         }
+//     ]
+// };
