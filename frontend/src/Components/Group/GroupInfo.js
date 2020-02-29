@@ -40,11 +40,13 @@ const GroupInfo = props => {
     const data = props.data;
     const [info, setInfo] = useState(null);
 
-    // useEffect( async ()=>{
-    //     // 그룹 대표사진 250x250 img, 유저 리스트, 유저 40x40 img
-    //     const groupInfo = (await axios.post('/group/info',{params:{group_cd:data.group.group_cd}})).data;
-    // setInfo(info);
-    // });
+    useEffect(async () => {
+        // 그룹 대표사진 250x250 img, 유저 리스트, 유저 40x40 img
+        const form = new FormData();
+        form.append('group_cd', data.group.gorup_cd);
+        const groupInfo = (await axios.post('/group/info', form)).data;
+        setInfo(info);
+    });
 
     return (
         <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
@@ -114,32 +116,6 @@ const GroupInfo = props => {
                                 InputProps={{
                                     readOnly: true
                                 }}
-                                onClick={() =>
-                                    setInfo({
-                                        admin: {
-                                            user_id: 'admin048',
-                                            user_pic:
-                                                'http://placehold.it/40x40',
-                                            user_nm: '어드민'
-                                        },
-                                        group_pic:
-                                            'http://placehold.it/250x250',
-                                        member: [
-                                            {
-                                                user_id: 'abcd1234',
-                                                user_pic:
-                                                    'http://placehold.it/40x40',
-                                                user_nm: '홍길동'
-                                            },
-                                            {
-                                                user_id: 'kkk8874',
-                                                user_pic:
-                                                    'http://placehold.it/40x40',
-                                                user_nm: '김길동'
-                                            }
-                                        ]
-                                    })
-                                }
                             />
                             <TextField
                                 className={classes.marginBottom}
@@ -183,16 +159,16 @@ const GroupInfo = props => {
                             </div>
                         ) : (
                             <div style={{ padding: '4px', minHeight: '180px' }}>
-                                <Link to={`/${info.admin.user_id}`}>
+                                <Link to={`/${info.user_id}`}>
                                     <Chip
                                         avatar={
                                             <Avatar
-                                                alt={`${info.admin.user_id} img`}
-                                                src={info.admin.user_pic}
+                                                alt={`${info.user_id} img`}
+                                                src={info.user_pic}
                                             />
                                         }
                                         className={classes.chip}
-                                        label={info.admin.user_nm}
+                                        label={info.user_nm}
                                         style={{
                                             backgroundColor:
                                                 'rgba(20, 81, 51, 0.8)',
