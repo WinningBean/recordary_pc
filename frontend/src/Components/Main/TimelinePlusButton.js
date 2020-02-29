@@ -4,37 +4,42 @@ import ChoosePostAppend from 'Components/Profile/ChoosePostAppend';
 import ChattingButton from 'Components/Other/ChattingButton';
 import SpeedDials from 'Components/UI/SimpleSpeedDial';
 
-
 class TimelinePlusButton extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            postAppendClick : false,
-        }
+            postAppendClick: false
+        };
     }
 
     render() {
-        
         const PostAppendMenu = () => {
-            if(this.state.postAppendClick === true){
-                return <ChoosePostAppend onCancel={() => this.setState({ postAppendClick: false })}></ChoosePostAppend>
+            if (this.state.postAppendClick === true) {
+                return (
+                    <ChoosePostAppend
+                        onCancel={() =>
+                            this.setState({ postAppendClick: false })
+                        }
+                    ></ChoosePostAppend>
+                );
             }
             return null;
-        }
+        };
 
-        
         return (
             <div>
-                <div className="timeline-plus-button"  onClick={()=> this.setState({postAppendClick: true})} >
+                <div
+                    className='timeline-plus-button'
+                    onClick={() => this.setState({ postAppendClick: true })}
+                >
                     {/* <FloatingActionButtons onCancel={() => this.setState({ postAppendClick: false })}/> */}
-                    <SpeedDials/>
+                    <SpeedDials />
                 </div>
                 {PostAppendMenu()}
-                <div  className="timeline-chatting-button" >
-                    <ChattingButton/>
+                <div className='timeline-chatting-button'>
+                    <ChattingButton />
                 </div>
             </div>
-
         );
     }
 }

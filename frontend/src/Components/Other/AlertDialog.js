@@ -5,6 +5,7 @@ import AlertTitle from '@material-ui/lab/AlertTitle';
 import Button from '@material-ui/core/Button';
 
 // severity (success or error)
+// <AlertDialog severity='error' content='' onAlertClose={} onAlertSubmit={}/>
 
 class AlertDialog extends React.Component {
     render() {
@@ -13,10 +14,23 @@ class AlertDialog extends React.Component {
                 <div>
                     <Alert severity={this.props.severity}>
                         <AlertTitle>{this.props.severity}</AlertTitle>
-                            {this.props.content}
-                        <Button style={{ marginTop: '10px' }} onClick={() => {
-                            this.props.onAlertClose();
-                        }}>닫기</Button>
+                        {this.props.content}
+                        {this.props.onAlertSubmit === undefined ? null : (
+                            <Button
+                                style={{ marginTop: '10px' }}
+                                onClick={() => this.props.onAlertSubmit()}
+                            >
+                                확인
+                            </Button>
+                        )}
+                        <Button
+                            style={{ marginTop: '10px' }}
+                            onClick={() => {
+                                this.props.onAlertClose();
+                            }}
+                        >
+                            닫기
+                        </Button>
                     </Alert>
                 </div>
             </Dialog>

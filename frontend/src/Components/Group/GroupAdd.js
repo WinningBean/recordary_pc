@@ -17,7 +17,7 @@ import Backdrop from 'Components/UI/Backdrop';
 import axios from 'axios';
 import store from 'store';
 
-const GroupAdd = (props) => {
+const GroupAdd = props => {
     const [openSwitch, setOpenSwitch] = useState({
         open: true
     });
@@ -26,31 +26,31 @@ const GroupAdd = (props) => {
         group_nm: '',
         group_ex: '',
         group_pic: '',
-        group_admin: store.getState().user.currentUser.user_cd,
+        group_admin: store.getState().user.currentUser.user_cd
     });
     const [imageSrc, setImageSrc] = useState(null);
     const [alert, setAlert] = useState(null);
 
     let fileUpload = null;
 
-    const changeHandel = (e) => {
+    const changeHandel = e => {
         setGroup({
             ...group,
             [e.target.name]: e.target.value
         });
-    }
+    };
 
     const onSubmit = async () => {
         setAlert(
-            // <Snackbar 
+            // <Snackbar
             //         severity='info'
             //         content='Loading...'
             //         onClose={()=>setAlert(null)}
             //     />
             <Backdrop />
-        )
-        var canvas = document.createElement("canvas");
-        var ctx = canvas.getContext("2d");
+        );
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
         const cut = new Image();
         cut.src = group.group_pic;
         let height = cut.height;
@@ -62,15 +62,14 @@ const GroupAdd = (props) => {
         // canvas에 변경된 크기의 이미지를 다시 그려줍니다.
         ctx.drawImage(cut, 0, 0, width, height);
         // canvas 에 있는 이미지를 img 태그로 넣어줍니다
-        var dataUrl = canvas.toDataURL("image/jpg");
+        var dataUrl = canvas.toDataURL('image/jpg');
 
-        
         try {
             const form = new FormData();
             form.append('group_nm', group.group_nm);
             form.append('group_ex', group.group_ex);
             form.append('group_pic', dataUrl);
-            const { data } = await axios.post("/group/create", form);
+            const { data } = await axios.post('/group/create', form);
 
             // const data = { success : true };
 
@@ -82,64 +81,79 @@ const GroupAdd = (props) => {
                         content='그룹을 생성하였습니다.'
                         onAlertClose={() => setAlert(null)}
                     />
-                )
-            }else{
+                );
+            } else {
                 setAlert(
-                    <Snackbar 
-                    severity='error'
-                    content='그룹 생성에 실패하였습니다.'
-                    onClose={()=>setAlert(null)}
-                />
-                )
+                    <Snackbar
+                        severity='error'
+                        content='그룹 생성에 실패하였습니다.'
+                        onClose={() => setAlert(null)}
+                    />
+                );
             }
         } catch (error) {
             console.log(error);
             setAlert(
-                <Snackbar 
+                <Snackbar
                     severity='error'
                     content='서버 에러로 그룹 생성에 실패하였습니다.'
-                    onClose={()=>setAlert(null)}
+                    onClose={() => setAlert(null)}
                 />
-            )
+            );
         }
-    }
+    };
 
     return (
         <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
-            <div className="dialog-wrap">
+            <div className='dialog-wrap'>
                 <div className='dialog-header'>
-                    <div className='dialog-header-icon'><GroupAddIcon style={{ fontSize: '44px' }} /></div>
+                    <div className='dialog-header-icon'>
+                        <GroupAddIcon style={{ fontSize: '44px' }} />
+                    </div>
                     &nbsp;
                     <span>그룹 생성</span>
                 </div>
-                <DialogContent style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <div className="dialog-content">
+                <DialogContent
+                    style={{ display: 'flex', justifyContent: 'space-between' }}
+                >
+                    <div className='dialog-content'>
                         <div>
-                            <img style={{ width: '250px', height: '250px', objectFit: 'cover', borderRadius: '50%' }} alt="profile-img" src={group.group_pic} />
+                            <img
+                                style={{
+                                    width: '250px',
+                                    height: '250px',
+                                    objectFit: 'cover',
+                                    borderRadius: '50%'
+                                }}
+                                alt='profile-img'
+                                src={group.group_pic}
+                            />
                         </div>
                         <Button
                             startIcon={<CloudUploadIcon />}
-                            variant="outlined"
+                            variant='outlined'
                             onClick={() => fileUpload.click()}
-                        // onClick={()=>{
-                        //     setImageEditor(
-                        //         <ImageEditor
-                        //             src={user.user_pic}
-                        //             onClose={() => this.setState({ imageSrc: null })}
-                        //             onComplete={(src) => this.setState({ imageSrc: null, user_pic: src })}
-                        //         />
-                        //     )
-                        // }}
-                        >&nbsp;Upload</Button>
+                            // onClick={()=>{
+                            //     setImageEditor(
+                            //         <ImageEditor
+                            //             src={user.user_pic}
+                            //             onClose={() => this.setState({ imageSrc: null })}
+                            //             onComplete={(src) => this.setState({ imageSrc: null, user_pic: src })}
+                            //         />
+                            //     )
+                            // }}
+                        >
+                            &nbsp;Upload
+                        </Button>
                     </div>
                     <input
-                        type="file"
-                        accept="image/*"
+                        type='file'
+                        accept='image/*'
                         style={{ display: 'none' }}
-                        ref={(file) => {
+                        ref={file => {
                             fileUpload = file;
                         }}
-                        onChange={(e) => {
+                        onChange={e => {
                             if (e.target.files && e.target.files.length > 0) {
                                 const reader = new FileReader();
                                 reader.addEventListener('load', () =>
@@ -148,15 +162,16 @@ const GroupAdd = (props) => {
                                 reader.readAsDataURL(e.target.files[0]);
                                 e.target.value = null;
                             }
-                        }} />
-                    <div className="dialog-content">
-                        <TextField 
-                            label="그룹명"
+                        }}
+                    />
+                    <div className='dialog-content'>
+                        <TextField
+                            label='그룹명'
                             name='group_nm'
                             onChange={changeHandel}
                         />
                         <TextField
-                            label="그룹 설명"
+                            label='그룹 설명'
                             name='group_ex'
                             multiline={true}
                             rows={10}
@@ -166,26 +181,34 @@ const GroupAdd = (props) => {
                     </div>
                 </DialogContent>
                 <DialogActions>
-                    <Tooltip title="검색시 그룹이 보여집니다." placement="top">
+                    <Tooltip title='검색시 그룹이 보여집니다.' placement='top'>
                         <FormControlLabel
                             control={
                                 <Switch
                                     checked={openSwitch.open}
-                                    onChange={event => setOpenSwitch({ open: event.target.checked })}
-                                    color="primary"
+                                    onChange={event =>
+                                        setOpenSwitch({
+                                            open: event.target.checked
+                                        })
+                                    }
+                                    color='primary'
                                 />
                             }
-                            label="그룹 공개"
+                            label='그룹 공개'
                         />
                     </Tooltip>
-                    <Button color="secondary" onClick={() => props.onCancel()}>취소</Button>
-                    <Button color="primary" onClick={onSubmit}>생성</Button>
+                    <Button color='secondary' onClick={() => props.onCancel()}>
+                        취소
+                    </Button>
+                    <Button color='primary' onClick={onSubmit}>
+                        생성
+                    </Button>
                 </DialogActions>
                 {imageSrc && (
                     <ImageEditor
                         src={imageSrc}
                         onClose={() => setImageSrc(null)}
-                        onComplete={(src) => {
+                        onComplete={src => {
                             setImageSrc(null);
                             setGroup({ ...group, group_pic: src });
                         }}
@@ -195,6 +218,6 @@ const GroupAdd = (props) => {
             {alert}
         </Dialog>
     );
-}
+};
 
 export default GroupAdd;
