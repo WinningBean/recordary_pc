@@ -13,7 +13,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     open-in-view: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
       use-new-id-generator-mappings: false
 
 
@@ -22,4 +22,4 @@ server:
     whitelabel:
       enabled: false
 
-  port: 8888
+  port: 8080
