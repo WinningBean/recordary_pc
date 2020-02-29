@@ -1,9 +1,9 @@
 import React from 'react';
 import './mainPage.css';
 
-import Timeline from './Timeline';
-import TimelineWeekSchedule from './TimelineWeekSchedule';
-import TimelineOnlySchedule from './TimelineOnlySchedule';
+import Timeline from 'Components/Timeline/Timeline';
+import TimelineWeekSchedule from 'Components/Timeline/TimelineWeekSchedule';
+import TimelineOnlySchedule from 'Components/Timeline/TimelineOnlySchedule';
 
 
 

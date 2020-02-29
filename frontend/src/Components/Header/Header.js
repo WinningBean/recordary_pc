@@ -6,7 +6,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Button from '@material-ui/core/Button';
 
-import SearchAppBar from '../Other/SearchField';
+import SearchAppBar from 'Components/Other/SearchField';
 import HeaderMenu from 'Containers/Header/HeaderMenu';
 import NotifyPopup from 'Components/UI/NotifyPopup';
 

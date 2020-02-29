@@ -4,7 +4,6 @@ import TabSearch from 'Components/UI/TabSearch'
 
 import { styled } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import HowToRegIcon from '@material-ui/icons/HowToReg';
 import Dialog from '@material-ui/core/Dialog';
 import AddIcon from '@material-ui/icons/Add';
@@ -13,11 +12,12 @@ import Paper from "@material-ui/core/Paper";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import GroupIcon from '@material-ui/icons/Group';
+import AlertDialog from 'Components/Other/AlertDialog';
+import Snackbar from 'Components/UI/Snackbar';
 import store from 'store';
 
 
 import axios from 'axios';
-
 
 class SearchFieldResult extends React.Component {
     constructor(props) {
@@ -26,6 +26,7 @@ class SearchFieldResult extends React.Component {
             data : props.data,
             followerIconClick : false,
             clickTab: 0,
+            alert: null,
         }
     }
 
@@ -70,6 +71,24 @@ class SearchFieldResult extends React.Component {
                                             const { data } = await axios.get(`http://localhost:8080/${value.user_id}/follow`);
                                             // .catch();
                                             console.log(data);
+                                            
+                                            if (data.isFollow) {
+                                                return(
+                                                    <AlertDialog
+                                                        severity='success'
+                                                        content='팔로우 되었습니다.'
+                                                        onAlertClose={() => this.setState({ alert : null})}
+                                                    />
+                                                )
+                                            }else{
+                                                return(
+                                                    <Snackbar 
+                                                    severity='error'
+                                                    content='서버 에러로 팔로우에 실패하였습니다.'
+                                                    onClose={() => this.setState({ alert : null})}
+                                                    />
+                                                )
+                                            }
                                         }}>
                                             <AddIcon style={{ fontSize: '20px;' }} />
                                         </FollowButton>)
@@ -83,6 +102,23 @@ class SearchFieldResult extends React.Component {
                                             const { data } = await axios.get(`http://localhost:8080/${value.user_id}/unFollow`);
                                             // .catch();
                                             console.log(data);
+                                            if (data.isUnFollow) {
+                                                return(
+                                                <AlertDialog
+                                                    severity='success'
+                                                    content='팔로우를 취소하였습니다.'
+                                                    onAlertClose={() => this.setState({ alert : null})}
+                                                />
+                                                )
+                                            }else{
+                                                return(
+                                                    <Snackbar 
+                                                    severity='error'
+                                                    content='서버에러로 팔로우 취소를 실패하였습니다.'
+                                                    onClose={() => this.setState({ alert : null})}
+                                                    />
+                                                )
+                                            }
                                         }}>
                                             <HowToRegIcon style={{ fontSize: '20px;' }} />
                                         </FollowButton>)

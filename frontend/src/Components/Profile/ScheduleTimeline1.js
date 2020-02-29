@@ -1,9 +1,9 @@
 import React from 'react';
 import './ProfilePage.css';
 import './TimelineModal.css';
-import Timeline from '../Main/Timeline';
-import TimelineWeekSchedule from '../Main/TimelineWeekSchedule';
-import TimelineOnlySchedule from '../Main/TimelineOnlySchedule';
+import Timeline from 'Components/Timeline/Timeline';
+import TimelineWeekSchedule from 'Components/Timeline/TimelineWeekSchedule';
+import TimelineOnlySchedule from 'Components/Timeline/TimelineOnlySchedule';
 
 import Dialog from '@material-ui/core/Dialog';
 import ThumbUpRoundedIcon from '@material-ui/icons/ThumbUpRounded';

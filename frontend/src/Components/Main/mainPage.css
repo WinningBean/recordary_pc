@@ -1,6 +1,7 @@
 #main-page{
     display: flex;
     flex-direction: column;
+    background-color: rgba(161, 159, 159, 0.02);
 }
 
 #main-wrap{
@@ -13,9 +14,7 @@ main{
     display: flex;
     flex-direction: column;
     align-self: center;
-    width: 900px;
     margin-top: 50px;
-    /* background-color: white; */
 }
 
 main #timeline-list{
@@ -29,206 +28,6 @@ main #timeline-list{
     margin-bottom: 50px;
 }
 
-/* 타임라인 일정+사진 */
-.timeline{
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    /* box-shadow: 0px 1px 5px rgb(161, 159, 159); */
-    border-radius: 10px;
-    border: 2px solid rgba(20, 81, 51, 0.3);
-
-}
-
-.timeline-profile{
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 100%;
-    height: 60px;
-}
-
-.profile-picture{
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 60px;
-    height: 60px;
-    padding: 5px;
-    border-radius: 10px;
-    border: 1px solid lightgray;
-
-    /* z-index: 2; */
-}
-
-.profile-picture>img{
-    width: 50px;
-    height: 50px;
-    border-radius: 20px; 
-    object-fit: cover;
-}
-
-.profile-name{
-    position: absolute;
-    left: 0px;
-    padding-left: 70px;
-    display: flex;
-    justify-content: left;
-    align-items: center;
-    width: 300px;
-    height: 60px;
-    border: 1px solid lightgray;
-}
-
-.profile-time{
-    position: absolute;
-    right:0px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    height: 60px;
-    border: 1px solid lightgray;
-    padding-left: 10px;
-    padding-right: 10px;
-    margin-right: 30px;}
-
-.profile-moreIcon{
-    position: absolute;
-    right: 0px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 30px;
-    height:60px;
-    cursor: pointer;
-}
-
-.timeline-info{
-    display: flex;
-    height: 490px;
-}
-
-
-.timeline-picture-info{
-    display: flex;
-    height: 440px;
-    flex-direction: column;
-    border: 1px solid lightgray;
-    border-radius: 10px;
-}
-
-
-.timeline-picture, .timeline-picture>img{
-    width: 500px;
-    height: 340px;
-}
-
-.timeline-picture>img{
-    object-fit: cover;
-    padding:10px;
-}
-
-.timeline-title{
-    height: 50px;
-    border: 1px solid lightgray;
-}
-
-.timeline-context{
-    height: 100px;
-    border: 1px solid lightgray;
-}
-
-.comment-context{
-    height: 490px;
-}
-
-.comment-title{
-    display:flex;
-    align-items: center;
-    padding-left: 10px;
-    height: 50px;
-    width: 360px;
-    /*넓이 애매함..*/
-    border: 1px solid lightgray;
-} 
-
-.comment-reply{
-    display:flex;
-    flex-direction: column;
-    height: 290px;
-    border: 1px solid lightgray;
-    padding: 10px;
-}
-.comment-context-icon{
-    display:flex;
-    justify-content: space-between;
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
-
-.comment-icon-left, .comment-icon-right{
-    display: flex;
-    align-items: center;
-    height: 50px;
-}
-
-.likeIcon, .followIcon, .commentIcon, .shareIcon{
-    margin: 5px;
-    cursor: pointer;
-}
-
-
-.comment-write{
-    height: 100px;
-    border: 1px solid lightgray;
-}
-
-/* 일정만 => Week일때 */
-
-.timeline-schedule{
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-    /* box-shadow: 0px 1px 5px rgb(161, 159, 159); */
-    border: 2px solid rgba(20, 81, 51, 0.3);
-}
-.timeline-schedule-shared{
-    display: flex;
-    flex-direction: column;
-}
-.timeline-schedule-title, .timeline-schedule-date{
-    height: 40px;
-    border: 1px solid lightgray;
-    display:flex;
-    align-items: center;
-    padding-left: 10px;
-}
-
-
-.timeline-schedule-info{
-    height: 190px;
-    width: 860px;
-
-    flex-direction: column;
-    border: 1px solid lightgray;
-}
-
-table{
-    width: 98%;
-    margin: 10px;
-    border-radius: 10px; 
-    box-shadow: 0px 1px 3px rgb(161, 159, 159);
-}
-th, td{
-    border: 1px solid lightgray;
-}
-td{
-    height: 90px;
-    text-align: center;
-}
 /* aside 프로필 */
 @media (max-width: 1300px) {
     aside{
@@ -245,16 +44,18 @@ aside{
     position: fixed;
     right: 50px;
     margin-top: 100px;
+
 }
 
 aside>.aside-profile{
-    height: 390px;
+    height: 400px;
     width: 220px;
-    border-radius: 10px;
-    /* box-shadow: 0px 1px 5px rgb(161, 159, 159); */
+    border-radius: 5px;
     padding-left: 10px;
     padding-top: 10px;
-    border: 2px solid rgba(20, 81, 51, 0.3);
+    box-shadow: 0px 1px 2px rgba(161, 159, 159, 0.8);
+    background-color: white;
+    padding: 10px;
 }
 
 .aside-profile .timeline-profile{
@@ -271,30 +72,32 @@ aside>.aside-profile{
     margin-top: 10px;
 }
 
-.aside-profile-name, .aside-profile-statusMsg{
+.aside-profile-name{
     text-align: center;
     width:200px;
     height: 30px;
-    /* border : 1px solid lightgray; */
+    font-weight: bold;
+    font-size: 16px;
+}
+.aside-profile-statusMsg{
+    text-align: center;
+    width:200px;
+    font-size: 14px;
+    margin-bottom: 10px;
 }
 .aside-profile-TodaySchedule{
     width:200px;
     height: 100px;
-    /* border : 1px solid lightgray; */
+}
+.aside-profile-TodaySchedule>div{
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: bold;
+}
+.aside-profile-TodaySchedule>ul>li{
+    padding: 2px;
+    margin-left: 5px;
 }
 
-
-.timeline-plus-button{
-    position: fixed;
-    bottom : 20px;
-    right: 115px;
-}
-.timeline-chatting-button{
-    position: fixed;
-    bottom : 27px;
-    right: 50px;
-}
-
-.MuiFab-primary{
-    background-color: rgba(20, 81, 51, 0.9) !important;
-}
