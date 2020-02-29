@@ -43,19 +43,18 @@ class ScheduleTimeline1 extends React.Component {
                                     <img src="profile-image.png" />
                                 </div>
                                 <div className="timeline-profile-name">
-                                    위성호
+                                    Water_Glasses
                                 </div>
                             </div>
                             <div className="timeline-profile-top">
                                 <div className="timeline-schedule-date">
-                                    2020-01-01 ~ 2020-03-03
+                                    3일전
                                 </div>
-                                <MoreVertIcon stype={{fontSize:'30px'}}></MoreVertIcon>
                             </div>
                         </div>
                         <div className="profile-schedule-info">
                             <div className="timeline-schedule-title">
-                                일정 제목
+                                게시물 제목이 되겠네요
                             </div>
                             <div className="timeline-schedule-weekTable">
                                 일정
