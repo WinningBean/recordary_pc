@@ -4,7 +4,6 @@ import TabSearch from 'Components/UI/TabSearch';
 
 import { styled } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import HowToRegIcon from '@material-ui/icons/HowToReg';
 import Dialog from '@material-ui/core/Dialog';
 import AddIcon from '@material-ui/icons/Add';
@@ -13,6 +12,8 @@ import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import GroupIcon from '@material-ui/icons/Group';
+import AlertDialog from 'Components/Other/AlertDialog';
+import Snackbar from 'Components/UI/Snackbar';
 import store from 'store';
 
 import axios from 'axios';

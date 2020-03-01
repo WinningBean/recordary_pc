@@ -4,11 +4,11 @@ import './header.css';
 import { styled } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import Button from '@material-ui/core/Button';
 
-import SearchAppBar from '../Other/SearchField';
+import SearchAppBar from 'Components/Other/SearchField';
 import HeaderMenu from 'Containers/Header/HeaderMenu';
+import NotifyPopup from 'Components/UI/NotifyPopup';
 import { Link } from 'react-router-dom';
 
 class Header extends React.Component {
@@ -97,13 +97,11 @@ class Header extends React.Component {
                         <SearchAppBar></SearchAppBar>
                     </div>
                     <div className='header-ring'>
-                        <NotificationsIcon
+                        <NotifyPopup
                             style={{ fontSize: 40, color: 'white' }}
-                        ></NotificationsIcon>
+                        ></NotifyPopup>
                     </div>
                     <div className='profile-icon'>
-                        {/* <
-                        <a href="profile.html">profile</a> */}
                         <Link to={`/${this.props.user_id}`}>
                             <AccountCircleIcon
                                 style={{ fontSize: 40, color: 'white' }}

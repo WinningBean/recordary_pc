@@ -4,7 +4,8 @@ import ChoosePostAppend from 'Components/Profile/ChoosePostAppend';
 import ChattingButton from 'Components/Other/ChattingButton';
 import SpeedDials from 'Components/UI/SimpleSpeedDial';
 
-class TimelinePlusButton extends React.Component {
+
+class SchedulePlusButton extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -44,4 +45,4 @@ class TimelinePlusButton extends React.Component {
     }
 }
 
-export default TimelinePlusButton;
+export default SchedulePlusButton;

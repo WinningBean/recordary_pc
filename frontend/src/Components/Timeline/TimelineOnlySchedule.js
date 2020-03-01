@@ -1,9 +1,13 @@
 import React from 'react';
-import './mainPage.css';
+import './Timeline.css';
 import ThumbUpRoundedIcon from '@material-ui/icons/ThumbUpRounded';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import ShareIcon from '@material-ui/icons/Share';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { styled } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+
+import CommentOnlySchedule from 'Components/Timeline/CommentOnlySchedule';
 
 class TimelineOnlySchedule extends React.Component {
     render() {
@@ -14,25 +18,35 @@ class TimelineOnlySchedule extends React.Component {
                     <div className='profile-picture'>
                         <img alt='profile-img' src='profile-image.png' />
                     </div>
-                    <div className='profile-name'>위성호</div>
+                    <div className='profile-name'>Wee_SungHo</div>
                     <div className='profile-time'>
                         <div className='profile-time-text'>3일 전</div>
                     </div>
                     <div className='profile-moreIcon'>
-                        <MoreVertIcon style={{ fontSize: 30 }}></MoreVertIcon>
+                        <MoreButton>
+                            <MoreVertIcon
+                                style={{ fontSize: 30 }}
+                            ></MoreVertIcon>
+                        </MoreButton>
                     </div>
                 </div>
-                <div className='timeline-schedule-info'>
+                <div className='timeline-onlyschedule-info'>
                     <div className='timeline-schedule-shared'>
                         <div className='timeline-schedule-title'>
-                            공유할 일정 제목
+                            내이름은 성호 탐정이지
                         </div>
-                        <div className='timeline-schedule-weekTable'>
-                            일정 하나
+                        <div className='timeline-schedule-only'>
+                            진실은 언제나 하나! 빠바바바
                         </div>
                     </div>
                 </div>
                 <div classNamee='comment-context'>
+                    <div className='comment-title'>
+                        <ThumbUpRoundedIcon
+                            style={{ fontSize: '20', paddingRight: '5px' }}
+                        />
+                        Wee_Seungbeen 님 외 5명이 좋아합니다
+                    </div>
                     <div className='comment-context-icon'>
                         <div className='comment-icon-left'>
                             <div className='likeIcon'>
@@ -54,11 +68,18 @@ class TimelineOnlySchedule extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div className='comment-write'>댓글 작성란</div>
+                    <div className='comment-write'>
+                        <CommentOnlySchedule />
+                    </div>
                 </div>
             </div>
         );
     }
 }
+
+const MoreButton = styled(Button)({
+    minWidth: '30px',
+    height: '60px'
+});
 
 export default TimelineOnlySchedule;

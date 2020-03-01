@@ -1,9 +1,9 @@
 import React from 'react';
 import './ProfilePage.css';
 import './TimelineModal.css';
-import Timeline from '../Main/Timeline';
-import TimelineWeekSchedule from '../Main/TimelineWeekSchedule';
-import TimelineOnlySchedule from '../Main/TimelineOnlySchedule';
+import Timeline from 'Components/Timeline/Timeline';
+import TimelineWeekSchedule from 'Components/Timeline/TimelineWeekSchedule';
+import TimelineOnlySchedule from 'Components/Timeline/TimelineOnlySchedule';
 
 import Dialog from '@material-ui/core/Dialog';
 import ThumbUpRoundedIcon from '@material-ui/icons/ThumbUpRounded';
@@ -49,22 +49,19 @@ class ScheduleTimeline1 extends React.Component {
                                 <div className='timeline-profile-picture'>
                                     <img src='profile-image.png' />
                                 </div>
-                                <div className='timeline-profile-name'>
-                                    위성호
+                                <div className="timeline-profile-name">
+                                    Water_Glasses
                                 </div>
                             </div>
-                            <div className='timeline-profile-top'>
-                                <div className='timeline-schedule-date'>
-                                    2020-01-01 ~ 2020-03-03
+                            <div className="timeline-profile-top">
+                                <div className="timeline-schedule-date">
+                                    3일전
                                 </div>
-                                <MoreVertIcon
-                                    stype={{ fontSize: '30px' }}
-                                ></MoreVertIcon>
                             </div>
                         </div>
-                        <div className='profile-schedule-info'>
-                            <div className='timeline-schedule-title'>
-                                일정 제목
+                        <div className="profile-schedule-info">
+                            <div className="timeline-schedule-title">
+                                게시물 제목이 되겠네요
                             </div>
                             <div className='timeline-schedule-weekTable'>
                                 일정

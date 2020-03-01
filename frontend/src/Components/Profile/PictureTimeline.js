@@ -2,9 +2,9 @@ import React from 'react';
 import './ProfilePage.css';
 import './TimelineModal.css';
 
-import Timeline from '../Main/Timeline';
-import TimelineWeekSchedule from '../Main/TimelineWeekSchedule';
-import TimelineOnlySchedule from '../Main/TimelineOnlySchedule';
+import Timeline from 'Components/Timeline/Timeline';
+import TimelineWeekSchedule from 'Components/Timeline/TimelineWeekSchedule';
+import TimelineOnlySchedule from 'Components/Timeline/TimelineOnlySchedule';
 
 import Dialog from '@material-ui/core/Dialog';
 
@@ -35,12 +35,9 @@ class PictureTimeline extends React.Component {
         };
         return (
             <article>
-                <div className='media-area'>
-                    <div
-                        className='media-box'
-                        onClick={() => this.setState({ TimelineClick: true })}
-                    >
-                        <img src='http://placehold.it/300x300'></img>
+                <div className="media-area">
+                    <div className="media-box" onClick={()=> this.setState({TimelineClick : true})}>
+                        <img src="1579501322063.jpg"></img>
                     </div>
                 </div>
                 {TimelineOpen()}

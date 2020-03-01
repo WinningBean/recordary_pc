@@ -1,5 +1,6 @@
 import React from 'react';
 import './ProfilePage.css';
+import 'Components/Main/mainPage.css'
 import SearchAppBar from '../Other/SearchField';
 import ScheduleTimeline1 from './ScheduleTimeline1';
 import PictureTimeline from './PictureTimeline';
@@ -106,7 +107,7 @@ class Profile extends React.Component {
                                 <div id='user-image'>
                                     <img
                                         alt='profile-img'
-                                        src='profile-image.png'
+                                        src="https://i.pinimg.com/originals/0d/e8/86/0de8869350e89fd300edaeef3b659674.jpg"
                                     />
                                 </div>
                                 <div id='userinfo-text'>
@@ -114,7 +115,7 @@ class Profile extends React.Component {
                                         <ul>
                                             <li>
                                                 <span className='name'>
-                                                    WaterGlasses
+                                                    Water_Glasses
                                                 </span>
                                             </li>
                                             <li>
@@ -148,15 +149,17 @@ class Profile extends React.Component {
                                                     }
                                                 >
                                                     <span className='followNum'>
-                                                        50
+                                                        18
                                                     </span>
                                                 </Link>
                                             </li>
                                         </ul>
                                         <div className='status-content'>
-                                            상태메시지입니담!
-                                            <br></br>
-                                            배고픕니담
+                                            <div>
+                                                #카르페디엠 
+                                                #현재를 즐겨라 
+                                                #OMG #새벽 5시 13분
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

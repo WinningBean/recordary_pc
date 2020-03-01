@@ -2,7 +2,7 @@ import React from 'react';
 import './mainPage.css';
 import Main from './Main';
 import Aside from './Aside';
-import TimelinePlusButton from 'Components/Main/TimelinePlusButton';
+import SchedulePlusButton from 'Components/Main/SchedulePlusButton'
 import Header from 'Containers/Header/Header';
 import { Redirect } from 'react-router-dom';
 
@@ -20,7 +20,7 @@ class MainPage extends React.Component {
                         <Main></Main>
                         <Aside></Aside>
                     </div>
-                    <TimelinePlusButton></TimelinePlusButton>
+                    <SchedulePlusButton></SchedulePlusButton>
                 </div>
             </>
         );
