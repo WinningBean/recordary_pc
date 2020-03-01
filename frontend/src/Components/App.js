@@ -3,19 +3,9 @@ import './default.css';
 import LoginPage from 'Containers/Login/LoginPage';
 import MainPage from 'Containers/Main/MainPage';
 import ProfilePage from 'Components/Profile/Profile';
+import Calendar from 'Components/Calendar/Calendar';
 import { Route, Switch, Redirect } from 'react-router-dom';
 class App extends React.Component {
-    // state = {
-    //   currPage : 0,
-    //   page : [
-    //     () => {
-    //       return (
-    //           <LoginPage onChangePage={() => this.setState({ currPage: 1 })}>
-    //           </LoginPage>
-    //       )},
-    //   ()=>{return <MainPage></MainPage>}
-    //   ]
-    // }
     render() {
         console.log('aa');
         return (
@@ -26,6 +16,7 @@ class App extends React.Component {
                     <Route path='/:userId' component={ProfilePage} />
                     <Redirect path='*' to='/' />
                 </Switch>
+                <Calendar />
             </div>
         );
     }
