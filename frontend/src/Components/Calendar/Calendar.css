@@ -50,7 +50,7 @@
     width: 85px;
     border-right: 1px solid #ddd;
     overflow: hidden;
-    cursor: pointer;
+    cursor: default;
 }
 
 /* .cell:hover .bg{

@@ -16,6 +16,8 @@ const Calendar = props => {
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(new Date());
 
+    var isHolding = false;
+
     const userDate = [
         {
             start: '2020-03-02',
@@ -121,7 +123,7 @@ const Calendar = props => {
             days = [];
         }
         return (
-            <div className='wrap-cells'>
+            <div className='wrap-cells' onMouseMove={MouseMoveHandler}>
                 {rows}
                 {Schedual()}
             </div>
@@ -137,7 +139,8 @@ const Calendar = props => {
                     width: '85px',
                     height: '0',
                     top: `${74 * 0 + 18}px`,
-                    left: `${85 * 3}px`
+                    left: `${85 * 3}px`,
+                    cursor: 'pointer'
                 }}
             >
                 <div
@@ -183,8 +186,12 @@ const Calendar = props => {
                     width: `${85 * 3}px`,
                     height: '0',
                     top: `${74 * 0 + 18}px`,
-                    left: `${85 * 4}px`
+                    left: `${85 * 4}px`,
+                    cursor: 'pointer',
+                    userSelect: 'none'
                 }}
+                onMouseDown={onScMouseDown}
+                onMouseUp={onScMouseUp}
             >
                 <div
                     style={{
@@ -213,8 +220,49 @@ const Calendar = props => {
                 </div>
             </div>
         );
-
         return sc;
+    };
+
+    var timer = null;
+    var x = null;
+    var y = null;
+
+    const onScMouseDown = e => {
+        const rect = e.target.getBoundingClientRect();
+        // if (isHolding) {
+        //     return;
+        // }
+        x = e.clientX - rect.left;
+        y = e.clientY - rect.top;
+        timer = setTimeout(() => holdingSc(), 400);
+        isHolding = true;
+        console.log('start holding');
+    };
+
+    const onScMouseUp = () => {
+        isHolding = false;
+        console.log('stop holding');
+    };
+
+    const holdingSc = () => {
+        if (timer) {
+            clearTimeout(timer);
+        }
+        if (isHolding) {
+            console.log('holding');
+        }
+    };
+
+    var moveLife = 20;
+    const MouseMoveHandler = e => {
+        if (isHolding) {
+            if (moveLife-- < 0) {
+                console.log('Moving');
+            }
+
+            return;
+        }
+        moveLife = 20;
     };
 
     return (
