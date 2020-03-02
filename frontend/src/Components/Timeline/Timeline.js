@@ -34,7 +34,7 @@ class Timeline extends React.Component {
                 <div className='timeline-info'>
                     <div className='time-line-picture-info'>
                         <div className='timeline-picture'>
-                            <img alt='timeline-img' src='1579501322063.jpg' />
+                            <img alt='timeline-img' src='img/1579501322063.jpg' />
                         </div>
                         <div className='timeline-title'>팔색조와 여행~^ㅡ^</div>
                         <div className='timeline-context'>
@@ -53,7 +53,7 @@ class Timeline extends React.Component {
                                 <div className='comment-reply-users-img'>
                                     <img
                                         alt='profile-img'
-                                        src='https://img.hani.co.kr/imgdb/resize/2018/0320/00501068_20180320.JPG'
+                                        src='https://ojsfile.ohmynews.com/STD_IMG_FILE/2012/0820/IE001479170_STD.jpg'
                                     />
                                 </div>
                                 <div className='comment-reply-users-name'>

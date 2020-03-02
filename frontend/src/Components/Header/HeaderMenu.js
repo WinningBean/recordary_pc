@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import './header.css';
-import UserEditor from './UserEditor';
 import GroupAdd from 'Containers/Group/GroupAdd';
 import LongMenu from '../Other/MoreMenu';
 import ProfileEditor from 'Components/Profile/ProfileEditor';
 import GroupSetting from 'Components/Group/GroupSetting';
 import GroupInfo from 'Components/Group/GroupInfo';
+import SettingMenu from 'Components/Header/SettingMenu'
 
 import { styled } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -21,7 +21,8 @@ import EditIcon from '@material-ui/icons/Edit';
 const HeaderMenu = (props) => {
     const data = props.data;
     const [profileEditForm, setProfileEditForm] = useState(null);
-    const [editor, setEditor] = useState(null);
+    // const [editor, setEditor] = useState(null);
+    const [setting, setSetting] = useState(null);
     const [open, setOpen] = useState({
         group: false,
         friend: false,
@@ -179,14 +180,24 @@ const HeaderMenu = (props) => {
             <span><ArrowDown style={{ fontSize: '30px' }} /></span>
         </GroupButton>;
     };
-    const showEditor = () => {
-        if (editor === null) {
-            setEditor(<UserEditor currentUser={data.currentUser} onCancel={()=>setEditor(null)} />)
+
+    const showSetting = () => {
+        if (setting === null) {
+            setSetting(<SettingMenu onClose={() => setSetting(null)} />);
             return;
         }
-        setEditor(null);
+        setSetting(null);
         return;
     }
+
+    // const showEditor = () => {
+    //     if (editor === null) {
+    //         setEditor(<UserEditor  currentUser={data.currentUser} onCancel={()=>setEditor(null)} />)
+    //         return;
+    //     }
+    //     setEditor(null);
+    //     return;
+    // }
 
     return (
         <Drawer
@@ -214,10 +225,11 @@ const HeaderMenu = (props) => {
                     {friendList()}
                 </div>
                 <div className="menu-bottom">
-                    <CustomIconButton onClick={showEditor}><SettingsIcon /></CustomIconButton>
+                    <CustomIconButton onClick={showSetting}><SettingsIcon /></CustomIconButton>
                     <CustomIconButton>로그아웃</CustomIconButton>
                 </div>
-                {editor}
+                {/* {editor} */}
+                {setting}
                 {groupAdd}
                 {menuDialog}
             </div>
