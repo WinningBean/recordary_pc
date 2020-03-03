@@ -13,6 +13,8 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import GroupIcon from '@material-ui/icons/Group';
 import AlertDialog from 'Components/Other/AlertDialog';
+import Alert from '@material-ui/lab/Alert';
+import AlertTitle from '@material-ui/lab/AlertTitle';
 import Snackbar from 'Components/UI/Snackbar';
 import store from 'store';
 
@@ -26,7 +28,8 @@ class SearchFieldResult extends React.Component {
             data : props.data,
             followerIconClick : false,
             clickTab: 0,
-            alert: null,
+            alert : ()=>{ },
+            alertDialog: ()=>{},
         }
     }
 
@@ -73,21 +76,25 @@ class SearchFieldResult extends React.Component {
                                             console.log(data);
                                             
                                             if (data.isFollow) {
-                                                return(
-                                                    <AlertDialog
-                                                        severity='success'
-                                                        content='팔로우 되었습니다.'
-                                                        onAlertClose={() => this.setState({ alert : null})}
-                                                    />
-                                                )
+                                                this.setState({
+                                                    alert : ()=>{
+                                                    return(
+                                                        <Alert severity='success'>
+                                                            <AlertTitle>Success</AlertTitle>
+                                                            팔로우 되었습니다
+                                                        </Alert>
+                                                        )
+                                                    }})
+                                                    return;
                                             }else{
-                                                return(
-                                                    <Snackbar 
-                                                    severity='error'
-                                                    content='서버 에러로 팔로우에 실패하였습니다.'
-                                                    onClose={() => this.setState({ alert : null})}
-                                                    />
-                                                )
+                                                this.setState({ 
+                                                    alert : () => {
+                                                        return (<Alert severity="error">
+                                                        <AlertTitle>Error</AlertTitle>
+                                                        서버 에러로 팔로우에 실패하였습니다
+                                                    </Alert>)
+                                                    }})
+                                                return;
                                             }
                                         }}>
                                             <AddIcon style={{ fontSize: '20px;' }} />
@@ -102,22 +109,33 @@ class SearchFieldResult extends React.Component {
                                             const { data } = await axios.get(`http://localhost:8080/${value.user_id}/unFollow`);
                                             // .catch();
                                             console.log(data);
+
                                             if (data.isUnFollow) {
-                                                return(
-                                                <AlertDialog
-                                                    severity='success'
-                                                    content='팔로우를 취소하였습니다.'
-                                                    onAlertClose={() => this.setState({ alert : null})}
-                                                />
-                                                )
+                                                this.setState({
+                                                    alertDialog:()=>{
+                                                    return(
+                                                        <AlertDialog
+                                                            severity='success'
+                                                            content='팔로우를 취소하였습니다.'
+                                                            onAlertClose={() => { this.setState({ alertDialog: () => { } }); }}
+                                                        />
+                                                        )
+                                                    }
+                                                })
+                                                return;
                                             }else{
-                                                return(
-                                                    <Snackbar 
-                                                    severity='error'
-                                                    content='서버에러로 팔로우 취소를 실패하였습니다.'
-                                                    onClose={() => this.setState({ alert : null})}
-                                                    />
-                                                )
+                                                this.setState({
+                                                    alertDialog:()=>{
+                                                    return(
+                                                        <Snackbar 
+                                                            severity='error'
+                                                            content='서버에러로 팔로우 취소를 실패하였습니다.'
+                                                            onClose={() => { this.setState({ alertDialog: () => { } }); }}
+                                                            />
+                                                        )
+                                                    }
+                                                })
+                                                return;
                                             }
                                         }}>
                                             <HowToRegIcon style={{ fontSize: '20px;' }} />

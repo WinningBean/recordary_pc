@@ -1,25 +1,27 @@
 import React from 'react';
-import './ProfilePage.css';
+import 'Components/Profile/ProfilePage.css';
+import 'Components/Group/group.css';
 import 'Components/Main/mainPage.css';
-import SearchAppBar from '../Other/SearchField';
-import ScheduleTimeline1 from './ScheduleTimeline1';
-import PictureTimeline from './PictureTimeline';
-import ScrollToTopOnMount from '../Other/ScrollToTopOnMount';
-import Follower from 'Components/Profile/Follower';
+
+import SearchAppBar from 'Components/Other/SearchField';
+import ScheduleTimeline1 from 'Components/Profile/ScheduleTimeline1';
+import PictureTimeline from 'Components/Profile/PictureTimeline';
+import ScrollToTopOnMount from 'Components/Other/ScrollToTopOnMount';
+import GroupMember from 'Components/Group/GroupMember';
 import Header from 'Containers/Header/Header';
 
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
 
-class Profile extends React.Component {
+class GroupProfile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             addScheduleClick: false,
             profileScheduleClick: false,
             profilePictureClick: false,
-            followerNumClick: false
+            GroupMemberNumClick: false
         };
     }
     setProfileScheduleOpen = () => {
@@ -79,19 +81,19 @@ class Profile extends React.Component {
             return null;
         };
 
-        const FollowerShow = () => {
-            if (this.state.followerNumClick === true) {
+        const GroupMemberShow = () => {
+            if (this.state.GroupMemberNumClick === true) {
                 return (
-                    <Follower
+                    <GroupMember
                         onCancel={() =>
-                            this.setState({ followerNumClick: false })
+                            this.setState({ GroupMemberNumClick: false })
                         }
-                    ></Follower>
+                    ></GroupMember>
                 );
             }
             return null;
         };
-        console.log(this.props.match.params.userId);
+        console.log(this.props.match.params.group_cd);
 
         return (
             <>
@@ -106,8 +108,8 @@ class Profile extends React.Component {
                             <div className='postIt'>
                                 <ul>
                                     <li className='postIt-1' />
-                                    <li className='postIt-2'  />
-                                    <li className='postIt-3'  />
+                                    <li className='postIt-2' />
+                                    <li className='postIt-3' />
                                 </ul>
                             </div>
                             <div id='main-profile-info'>
@@ -115,7 +117,7 @@ class Profile extends React.Component {
                                     <div id='user-image'>
                                         <img
                                             alt='profile-img'
-                                            src='https://i.pinimg.com/originals/0d/e8/86/0de8869350e89fd300edaeef3b659674.jpg'
+                                            src='https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS7qoQDLmju9spmaThXLUCgNgeSShNPU6U_76FFfAQ-XkbUTs8r'
                                         />
                                     </div>
                                     <div id='userinfo-text'>
@@ -123,43 +125,31 @@ class Profile extends React.Component {
                                             <ul>
                                                 <li>
                                                     <span className='name'>
-                                                        Water_Glasses
+                                                        Group_Title
                                                     </span>
                                                 </li>
                                                 <li>
                                                     <span className='followerName'>
-                                                        팔로워
+                                                        황수경
+                                                    </span>
+                                                </li>
+                                                <li>
+                                                    <span className='followerName'>
+                                                        멤버 수
                                                     </span>
                                                     <Link
                                                         component='button'
                                                         onClick={() =>
                                                             this.setState({
-                                                                followerNumClick: true
+                                                                GroupMemberNumClick: true
                                                             })
                                                         }
                                                     >
                                                         <span className='followerNum'>
-                                                            50
+                                                            20
                                                         </span>
                                                     </Link>
-                                                    {FollowerShow()}
-                                                </li>
-                                                <li>
-                                                    <span className='followerName'>
-                                                        팔로우
-                                                    </span>
-                                                    <Link
-                                                        component='button'
-                                                        onClick={() =>
-                                                            this.setState({
-                                                                followerNumClick: true
-                                                            })
-                                                        }
-                                                    >
-                                                        <span className='followNum'>
-                                                            18
-                                                        </span>
-                                                    </Link>
+                                                    {GroupMemberShow()}
                                                 </li>
                                             </ul>
                                             <div className='status-content'>
@@ -206,4 +196,4 @@ const NavButton = styled(Button)({
     fontStyle: 'bold'
 });
 
-export default Profile;
+export default GroupProfile;

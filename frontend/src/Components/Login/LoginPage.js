@@ -89,14 +89,16 @@ class Login extends React.Component {
                 },
                 userFriend: [
                     {
-                        friend_cd: 1,
-                        friend_nm: '친구1',
-                        friend_pic: 'http://placehold.it/40x40',
+                        friend_user_id: 1,
+                        friend_user_nm: '친구1',
+                        friend_user_pic: 'http://placehold.it/40x40',
+                        friend_user_ex : 'hi',
                     },
                     {
-                        friend_cd: 2,
-                        friend_nm: '친구2',
-                        friend_pic: 'http://placehold.it/40x40',
+                        friend_user_id: 2,
+                        friend_user_nm: '친구2',
+                        friend_user_pic: 'http://placehold.it/40x40',
+                        friend_user_ex : 'hi',
                     }
                 ],
                 userGroup: [

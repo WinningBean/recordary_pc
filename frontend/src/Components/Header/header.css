@@ -110,11 +110,7 @@ header{
 }
 
 
-.LongMenuOpen>div>.MuiButtonBase-root{
-    padding: 5px;
-    border-radius: none;
-    margin-bottom: 10px;
-}
+
 .notify-list{
     display: flex;
     flex-direction: column;

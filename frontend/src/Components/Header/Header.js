@@ -74,6 +74,7 @@ class Header extends React.Component {
                             open={this.state.openMenu}
                             onClose={() => this.setState({ openMenu: false })}
                         />
+                        
                     </div>
                     {/* <div className="title-icon">
                         <a href="profile.html"><img alt="icon" src="RIcon.png" /></a>
@@ -83,7 +84,7 @@ class Header extends React.Component {
                             <img
                                 className='title-image'
                                 alt='Recordary icon'
-                                src='Recordary.png'
+                                src='img/Recordary.png'
                                 style={{ height: '40px' }}
                             />
                         </a>

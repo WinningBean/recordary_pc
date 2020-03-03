@@ -32,7 +32,7 @@ class PictureTimeline extends React.Component {
             <article>
                 <div className="media-area">
                     <div className="media-box" onClick={()=> this.setState({TimelineClick : true})}>
-                        <img src="1579501322063.jpg"></img>
+                        <img alt='timeline-img' src='img/1579501322063.jpg' />
                     </div>
                 </div>
                 {TimelineOpen()}

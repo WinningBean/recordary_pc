@@ -40,7 +40,7 @@ class ScheduleTimeline1 extends React.Component {
                         <div className="timeline-profile-time">
                             <div className="timeline-profile-top">
                                 <div className="timeline-profile-picture">
-                                    <img src="profile-image.png" />
+                                    <img src="img/profile-image.png" />
                                 </div>
                                 <div className="timeline-profile-name">
                                     Water_Glasses

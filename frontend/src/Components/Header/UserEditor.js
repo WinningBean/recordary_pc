@@ -23,17 +23,8 @@ class UserEditor extends React.Component {
 
     changeHandel = (e) => {
         this.setState({
-            [e.target.name]: e.target.value
-        });
-    }
-
-    componentDidMount(){
-        const currentUser = this.props.currentUser;
-        this.setState({
-            ...this.state,
-            user_id: currentUser.user_id,
-            user_ex: currentUser.user_ex,
-            user_nm: currentUser.user_nm,
+            ...this.props.data,
+            currentUser: {...this.props.data, [e.target.name]: e.target.value}  
         });
     }
 
@@ -47,17 +38,13 @@ class UserEditor extends React.Component {
             return null;
         })();
         return (
-            <div>
-            {/* // <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}> */}
+            <div className="dialog-wrap">
                 <div className="user-editor">
-                    {/* <div className='editor-image'>
-                        <img alt="user img" src={this.state.userImage} />
-                    </div> */}
                     <div className="editor-info-text">
-                        <TextField name="user_nm" autoFocus label="이름" defaultValue={this.state.user_nm} onChange={this.changeHandel} />
-                        <TextField name="user_id" disabled label="아이디" defaultValue={this.state.user_id} />
-                        <TextField name="user_pw" type="password" required label="현재 패스워드" onChange={this.changeHandel} />
-                        <TextField name="user_change_pw" type="password" label="바꿀 패스워드"
+                        <UserEditTextField name="user_nm" autoFocus label="이름" defaultValue={this.state.user_nm} onChange={this.changeHandel} />
+                        <UserEditTextField name="user_id" disabled label="아이디" defaultValue={this.state.user_id} />
+                        <UserEditTextField name="user_pw" type="password" required label="현재 패스워드" onChange={this.changeHandel} />
+                        <UserEditTextField name="user_change_pw" type="password" label="바꿀 패스워드"
                             onChange={
                                 (e) => {
                                     this.changeHandel(e);
@@ -72,7 +59,7 @@ class UserEditor extends React.Component {
                                     this.setState({ isSamePw: false });
                                 }
                             } />
-                        <TextField name="user_change_pw_check" type="password" label="패스워드 확인"
+                        <UserEditTextField name="user_change_pw_check" type="password" label="패스워드 확인"
                             onChange={
                                 (e) => {
                                     this.changeHandel(e);
@@ -206,16 +193,21 @@ class UserEditor extends React.Component {
                     </div>
                 </div>
                 {this.state.alertDialog()}
-             {/* </Dialog> */}
             </div>
         );
     }
 }
 
 const EditorButton = styled(Button)({
-    width: '80px',
     height: '50px',
-    fontSize: '12px'
+    fontSize: '15px'
 });
+
+const UserEditTextField = styled(TextField)({
+    width: '560px',
+    height: '60px',
+    fontSize: '15px'
+});
+
 
 export default UserEditor;

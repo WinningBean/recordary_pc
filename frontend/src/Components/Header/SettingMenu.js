@@ -50,20 +50,14 @@ const useStyles = makeStyles(theme => ({
 const SettingMenu = (props) => {
 
     const classes = useStyles();
-    const [editor, setEditor] = useState(null);
     const [listIndex, setListIndex] = useState(0);
     const data = props.data;
     
-    // <CustomIconButton onClick={showEditor}><SettingsIcon /></CustomIconButton>
 
     const currPage = (() => {
         switch(listIndex){
             case 0:
-                return <UserEditor/>;
-            // case 1:
-            //     return <GroupApply data={data} />;
-            // case 2:
-            //     return <GroupDelete data={data} />;
+                return <UserEditor data={data}/>;
         }
     })();
 
@@ -98,7 +92,11 @@ const SettingMenu = (props) => {
                         <ListItem
                             button
                             selected={listIndex === 1}
-                            >
+                            onClick={()=>{
+                                if(listIndex !== 1 ){
+                                    setListIndex(1);
+                                }
+                            }}>
                             <ListItemIcon>
                                 <NotificationsNoneIcon />
                             </ListItemIcon>
@@ -107,7 +105,11 @@ const SettingMenu = (props) => {
                         <ListItem
                             button
                             selected={listIndex === 2}
-                            >
+                            onClick={()=>{
+                                if(listIndex !== 2 ){
+                                    setListIndex(2);
+                                }
+                            }}>
                             <ListItemIcon>
                                 <LockIcon />
                             </ListItemIcon>
@@ -115,22 +117,33 @@ const SettingMenu = (props) => {
                         </ListItem>
                         <ListItem
                             button
-                            selected={listIndex === 2}
-                            >
+                            selected={listIndex === 3}
+                            onClick={()=>{
+                                if(listIndex !== 3 ){
+                                    setListIndex(3);
+                                }
+                            }}>
                             <ListItemIcon>
                                 <SecurityIcon />
                             </ListItemIcon>
                             <ListItemText primary="보안" />
                         </ListItem><ListItem
                             button
-                            selected={listIndex === 2}
-                            >
+                            selected={listIndex === 4}
+                            onClick={()=>{
+                                if(listIndex !== 4 ){
+                                    setListIndex(4);
+                                }
+                            }}>
                             <ListItemIcon>
                                 <HelpOutlineIcon />
                             </ListItemIcon>
                             <ListItemText primary="도움말" />
                         </ListItem>
                     </List>
+                    <div className={classes.content}>
+                        {currPage}
+                    </div>
                 </div>
             </div>
         </Dialog>
