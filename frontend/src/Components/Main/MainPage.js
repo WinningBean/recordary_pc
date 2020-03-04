@@ -3,7 +3,6 @@ import './mainPage.css';
 import Main from './Main';
 import Aside from './Aside';
 import MainPageButton from 'Components/Main/MainPageButton'
-import TimelinePlusButton from 'Components/Main/TimelinePlusButton';
 import Header from 'Containers/Header/Header';
 import { Redirect } from 'react-router-dom';
 
