@@ -233,7 +233,7 @@ const HeaderMenu = props => {
     };
     const friendList = () => {
         if (open.friend === true) {
-            const friends = data.userFriend.map(value => {
+            const friends = data.friendList.map(value => {
                 return (
                     <li key={value.user_id}>
                         <GroupButton>
