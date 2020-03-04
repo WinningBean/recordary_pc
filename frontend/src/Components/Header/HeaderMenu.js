@@ -77,7 +77,7 @@ const HeaderMenu = props => {
 
     const onFriendMenuSelect = (selectedValue, code) => {
         const value = data.userFriend.filter(
-            value => value.friend_cd === code
+            value => value.user_id === code
         )[0];
         switch (selectedValue) {
             case '친구 관리':
@@ -235,7 +235,7 @@ const HeaderMenu = props => {
         if (open.friend === true) {
             const friends = data.userFriend.map(value => {
                 return (
-                    <li key={value.friend_user_id}>
+                    <li key={value.user_id}>
                         <GroupButton>
                             <div
                                 style={{
@@ -250,14 +250,14 @@ const HeaderMenu = props => {
                                         marginRight: '10px',
                                         borderRadius: '50%'
                                     }}
-                                    src={value.friend_user_pic}
+                                    src={value.user_pic}
                                 />
-                                {value.friend_user_nm}
+                                {value.user_nm}
                             </div>
                             <div className='LongMenuOpen'>
                                 <LongMenu
                                     options={['친구 관리']}
-                                    code={value.friend_user_id}
+                                    code={value.user_id}
                                     returnValue={onFriendMenuSelect}
                                 />
                             </div>
