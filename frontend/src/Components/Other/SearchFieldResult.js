@@ -1,6 +1,6 @@
 import React from 'react';
-import './SearchField.css' ;
-import TabSearch from 'Components/UI/TabSearch'
+import './SearchField.css';
+import TabSearch from 'Components/UI/TabSearch';
 
 import { styled } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -8,16 +8,15 @@ import HowToRegIcon from '@material-ui/icons/HowToReg';
 import Dialog from '@material-ui/core/Dialog';
 import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search';
-import Paper from "@material-ui/core/Paper";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+import Paper from '@material-ui/core/Paper';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import GroupIcon from '@material-ui/icons/Group';
 import AlertDialog from 'Components/Other/AlertDialog';
 import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
 import Snackbar from 'Components/UI/Snackbar';
 import store from 'store';
-
 
 import axios from 'axios';
 
@@ -34,30 +33,37 @@ class SearchFieldResult extends React.Component {
     }
 
     followerChange = (index, click) => {
-
         const array = this.state.data.searchedUser;
         array[index] = { ...array[index], user_click: click };
 
-        this.setState({ searchedUser : array });
+        this.setState({ searchedUser: array });
     };
 
     groupChange = (index, click) => {
-
         const array = this.state.data.searchedGroup;
         array[index] = { ...array[index], group_click: click };
 
-        this.setState({ searchedGroup : array });
+        this.setState({ searchedGroup: array });
     };
 
     exfollowList = () => {
-        return (this.state.data.searchedUser.map((value, index) => {
+        return this.state.data.searchedUser.map((value, index) => {
             return (
-                <li key={value.user_id} >
-                    <div className="follower_list">
-                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                <li key={value.user_id}>
+                    <div className='follower_list'>
+                        <div
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                marginBottom: '10px'
+                            }}
+                        >
                             <img
-                                alt="friend-img"
-                                style={{ marginRight: '10px', borderRadius: '50%' }}
+                                alt='friend-img'
+                                style={{
+                                    marginRight: '10px',
+                                    borderRadius: '50%'
+                                }}
                                 src={value.user_pic}
                             />
                             {value.user_nm}
@@ -145,20 +151,28 @@ class SearchFieldResult extends React.Component {
                         </div>
                     </div>
                 </li>
-            )
-        }
-        ))
+            );
+        });
     };
 
     exGroupList = () => {
-        return (this.state.data.searchedGroup.map((value, index) => {
+        return this.state.data.searchedGroup.map((value, index) => {
             return (
-                <li key={value.group_id} >
-                    <div className="follower_list">
-                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                <li key={value.group_id}>
+                    <div className='follower_list'>
+                        <div
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                marginBottom: '10px'
+                            }}
+                        >
                             <img
-                                alt="friend-img"
-                                style={{ marginRight: '10px', borderRadius: '50%' }}
+                                alt='friend-img'
+                                style={{
+                                    marginRight: '10px',
+                                    borderRadius: '50%'
+                                }}
                                 src={value.group_pic}
                             />
                             {value.group_nm}
@@ -210,39 +224,59 @@ class SearchFieldResult extends React.Component {
                         </div>
                     </div>
                 </li>
-            )
-        }
-        ))
+            );
+        });
     };
-    
-    render() {
-        
 
+    render() {
         return (
-            <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}  onClose={() => this.props.onCancel()} >
-                <div className="searchField-result">
-                    <div className="searchField-title">
-                        <SearchIcon style={{ fontSize: '30px;', color: 'white', marginTop: '5px'}}  />
-                    </div><hr/>
-                    <div className="searchField-result-list">
-                        <div className="group-follow_change">
+            <Dialog
+                open
+                style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}
+                onClose={() => this.props.onCancel()}
+            >
+                <div className='searchField-result'>
+                    <div className='searchField-title'>
+                        <SearchIcon
+                            style={{
+                                fontSize: '30px;',
+                                color: 'white',
+                                marginTop: '5px'
+                            }}
+                        />
+                    </div>
+                    <hr />
+                    <div className='searchField-result-list'>
+                        <div className='group-follow_change'>
                             <div>
                                 <Paper square style={{ marginBottom: '10px' }}>
                                     <Tabs
                                         value={this.state.clickTab}
-                                        indicatorColor="primary"
-                                        textColor="primary"
-                                        onChange={(e, newValue) => this.setState({ clickTab: newValue })}
-                                        aria-label="disabled tabs example"
+                                        indicatorColor='primary'
+                                        textColor='primary'
+                                        onChange={(e, newValue) =>
+                                            this.setState({
+                                                clickTab: newValue
+                                            })
+                                        }
+                                        aria-label='disabled tabs example'
                                     >
-                                        <Tab label="Follow" icon={<HowToRegIcon />} />
-                                        <Tab label="Group" icon={<GroupIcon />} />
+                                        <Tab
+                                            label='Follow'
+                                            icon={<HowToRegIcon />}
+                                        />
+                                        <Tab
+                                            label='Group'
+                                            icon={<GroupIcon />}
+                                        />
                                     </Tabs>
                                 </Paper>
                             </div>
-                            <div className="follower_list">
+                            <div className='follower_list'>
                                 <ul>
-                                    {this.state.clickTab === 0 ? this.exfollowList() : this.exGroupList()}
+                                    {this.state.clickTab === 0
+                                        ? this.exfollowList()
+                                        : this.exGroupList()}
                                 </ul>
                             </div>
                         </div>
@@ -255,8 +289,7 @@ class SearchFieldResult extends React.Component {
 
 const FollowButton = styled(Button)({
     minWidth: '30px',
-    height: '40px',
+    height: '40px'
 });
-
 
 export default SearchFieldResult;

@@ -37,6 +37,9 @@ class Header extends React.Component {
                             </IconButton>
                             {/* <HeaderMenu open={this.state.openMenu} onClose={()=>this.setState({openMenu : false})} /> */}
                         </div>
+                        {/* <div className="title-icon">
+                        <a href="profile.html"><img alt="icon" src="RIcon.png" /></a>
+                    </div> */}
                         <div className='title-name'>
                             <a href='http://localhost:3000/main'>
                                 <img

@@ -11,7 +11,7 @@ import CommentWeekSchedule from 'Components/Timeline/CommentWeekSchedule'
 
 class TimelineWeekSchedule extends React.Component {
     render() {
-        return(
+        return (
             // 타임라인스케쥴 => 공유하고싶은 주일때
             <div className="timeline-schedule">
                 <div className="timeline-profile">
@@ -66,13 +66,17 @@ class TimelineWeekSchedule extends React.Component {
                             <div className="likeIcon">
                                 <ThumbUpRoundedIcon style={{ fontSize: 30 }}>like</ThumbUpRoundedIcon>
                             </div>
-                            <div className="followIcon">
-                                <AddCircleIcon style={{ fontSize: 30 }}>follow</AddCircleIcon>
+                            <div className='followIcon'>
+                                <AddCircleIcon style={{ fontSize: 30 }}>
+                                    follow
+                                </AddCircleIcon>
                             </div>
                         </div>
-                        <div className="comment-icon-right">
-                            <div className="shareIcon">
-                                <ShareIcon style={{ fontSize: 30 }}>share</ShareIcon>
+                        <div className='comment-icon-right'>
+                            <div className='shareIcon'>
+                                <ShareIcon style={{ fontSize: 30 }}>
+                                    share
+                                </ShareIcon>
                             </div>
                         </div>
                     </div>

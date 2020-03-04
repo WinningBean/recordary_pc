@@ -1,5 +1,5 @@
 import React from 'react';
-import './UserEditor.css'
+import './UserEditor.css';
 import Dialog from '@material-ui/core/Dialog';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -17,11 +17,11 @@ class UserEditor extends React.Component {
             user_change_pw: '',
             user_change_pw_check: '',
             isSamePw: undefined,
-            alertDialog: ()=>{},
-        }
+            alertDialog: () => {}
+        };
     }
 
-    changeHandel = (e) => {
+    changeHandel = e => {
         this.setState({
             ...this.props.data,
             currentUser: {...this.props.data, [e.target.name]: e.target.value}  
@@ -31,9 +31,17 @@ class UserEditor extends React.Component {
     render() {
         const alertLabel = (() => {
             if (this.state.isSamePw === true) {
-                return <span style={{ color: '#2ecc71' }}>비밀번호가 같습니다.</span>
+                return (
+                    <span style={{ color: '#2ecc71' }}>
+                        비밀번호가 같습니다.
+                    </span>
+                );
             } else if (this.state.isSamePw === false) {
-                return <span style={{ color: '#e74c3c' }}>비밀번호가 다릅니다.</span>
+                return (
+                    <span style={{ color: '#e74c3c' }}>
+                        비밀번호가 다릅니다.
+                    </span>
+                );
             }
             return null;
         })();
@@ -73,123 +81,192 @@ class UserEditor extends React.Component {
                                     }
                                     this.setState({ isSamePw: false });
                                 }
-                            } />
-                            <br/>
+                            }
+                        />
+                        <br />
                         {alertLabel}
                     </div>
-                    <div className="editor-info-buttons">
-                        <EditorButton color="secondary" onClick={
-                            async () => {
+                    <div className='editor-info-buttons'>
+                        <EditorButton
+                            color='secondary'
+                            onClick={async () => {
                                 try {
                                     const form = new FormData();
-                                    form.append("user_nm", this.state.user_id);
-                                    form.append("user_pw", this.state.user_pw);
-                                    form.append("user_change_pw", this.state.user_change_pw);
-                                    await axios.post("http://localhost:8080/userUpdate", form);
+                                    form.append('user_nm', this.state.user_id);
+                                    form.append('user_pw', this.state.user_pw);
+                                    form.append(
+                                        'user_change_pw',
+                                        this.state.user_change_pw
+                                    );
+                                    await axios.post(
+                                        'http://localhost:8080/userUpdate',
+                                        form
+                                    );
                                 } catch (error) {
                                     console.error(error);
                                 }
-                            }}>회원정보 삭제</EditorButton>
-                        <EditorButton onClick={async () => {
-                            const nameRules = /^[가-힣]{2,4}|[a-zA-Z]{2,10}\s[a-zA-Z]{2,10}$/;
-                            if(!nameRules.test(this.state.user_nm)){
-                                this.setState({
-                                    alertDialog: () => {
-                                        return (
-                                            <AlertDialog 
-                                                severity="error" 
-                                                content="이름이 옳바르지않습니다 다시 작성해주세요."
-                                                onAlertClose={()=>{this.setState({ alertDialog: () => {} });}}/>
-                                        )
-                                    }
-                                })
-                                return;
-                            }
-                            if(this.state.user_pw === ""){
-                                this.setState({
-                                    alertDialog: () => {
-                                        return (
-                                            <AlertDialog 
-                                                severity="error" 
-                                                content="패스워드를 입력하세요."
-                                                onAlertClose={()=>{this.setState({ alertDialog: () => {} });}}/>
-                                        )
-                                    }
-                                })
-                                return;
-                            }
-                            if (this.state.user_change_pw !== "" || this.state.user_change_pw_check !== "") {
-                                if(!this.state.isSamePw){
-                                    this.setState({
-                                        alertDialog: () => {
-                                            return (
-                                                <AlertDialog 
-                                                    severity="error" 
-                                                    content="바꿀 패스워드가 같지않습니다."
-                                                    onAlertClose={()=>{this.setState({ alertDialog: () => {} });}}/>
-                                            )
-                                        }
-                                    })
-                                    return;
-                                }
-                                const passwordRules = /^[a-zA-Z0-9]{10,15}$/;
-                                if (!passwordRules.test(this.state.user_change_pw)) {
+                            }}
+                        >
+                            회원정보 삭제
+                        </EditorButton>
+                        <EditorButton
+                            onClick={async () => {
+                                const nameRules = /^[가-힣]{2,4}|[a-zA-Z]{2,10}\s[a-zA-Z]{2,10}$/;
+                                if (!nameRules.test(this.state.user_nm)) {
                                     this.setState({
                                         alertDialog: () => {
                                             return (
                                                 <AlertDialog
-                                                    severity="error"
-                                                    content="패스워드는 숫자와 영문자 조합으로 10~15자리를 사용해야 합니다."
-                                                    onAlertClose={() => { this.setState({ alertDialog: () => { } }); }} />
-                                            )
+                                                    severity='error'
+                                                    content='이름이 옳바르지않습니다 다시 작성해주세요.'
+                                                    onAlertClose={() => {
+                                                        this.setState({
+                                                            alertDialog: () => {}
+                                                        });
+                                                    }}
+                                                />
+                                            );
                                         }
-                                    })
+                                    });
                                     return;
                                 }
-                            }
-                            try {
-                                const form = new FormData();
-                                form.append("user_nm", this.state.user_id);
-                                form.append("user_pw", this.state.user_pw);
-                                form.append("user_change_pw", this.state.user_change_pw);
-                                const { data : { updateState } } = await axios.post("http://localhost:8080/userUpdate", form);
-                                if (updateState === true) {
+                                if (this.state.user_pw === '') {
                                     this.setState({
                                         alertDialog: () => {
                                             return (
-                                                <AlertDialog 
-                                                severity="success" 
-                                                content="회원정보가 수정되었습니다."
-                                                onAlertClose={()=>{this.setState({ alertDialog: () => {} });}}/>
-                                            )
+                                                <AlertDialog
+                                                    severity='error'
+                                                    content='패스워드를 입력하세요.'
+                                                    onAlertClose={() => {
+                                                        this.setState({
+                                                            alertDialog: () => {}
+                                                        });
+                                                    }}
+                                                />
+                                            );
                                         }
-                                    })
+                                    });
                                     return;
                                 }
-                                this.setState({
-                                    alertDialog: () => {
-                                        return (
-                                            <AlertDialog 
-                                                severity="error" 
-                                                content="비밀번호가 옳바르지 않습니다."
-                                                onAlertClose={()=>{this.setState({ alertDialog: () => {} });}}/>
-                                        )
+                                if (
+                                    this.state.user_change_pw !== '' ||
+                                    this.state.user_change_pw_check !== ''
+                                ) {
+                                    if (!this.state.isSamePw) {
+                                        this.setState({
+                                            alertDialog: () => {
+                                                return (
+                                                    <AlertDialog
+                                                        severity='error'
+                                                        content='바꿀 패스워드가 같지않습니다.'
+                                                        onAlertClose={() => {
+                                                            this.setState({
+                                                                alertDialog: () => {}
+                                                            });
+                                                        }}
+                                                    />
+                                                );
+                                            }
+                                        });
+                                        return;
                                     }
-                                })
-                                return;
-                            } catch (error) {
-                                console.error(error);
-                                this.setState({alertDialog: ()=>{
-                                    return (
-                                        <AlertDialog 
-                                                severity="error" 
-                                                content="서버 오류로 인해 회원정보 수정에 실패하였습니다."
-                                                onAlertClose={()=>{this.setState({ alertDialog: () => {} });}}/>
-                                    )
-                                }})
-                            }
-                        }}>수정</EditorButton>
-                        <EditorButton onClick={() => this.props.onCancel()}>취소</EditorButton>
+                                    const passwordRules = /^[a-zA-Z0-9]{10,15}$/;
+                                    if (
+                                        !passwordRules.test(
+                                            this.state.user_change_pw
+                                        )
+                                    ) {
+                                        this.setState({
+                                            alertDialog: () => {
+                                                return (
+                                                    <AlertDialog
+                                                        severity='error'
+                                                        content='패스워드는 숫자와 영문자 조합으로 10~15자리를 사용해야 합니다.'
+                                                        onAlertClose={() => {
+                                                            this.setState({
+                                                                alertDialog: () => {}
+                                                            });
+                                                        }}
+                                                    />
+                                                );
+                                            }
+                                        });
+                                        return;
+                                    }
+                                }
+                                try {
+                                    const form = new FormData();
+                                    form.append('user_nm', this.state.user_id);
+                                    form.append('user_pw', this.state.user_pw);
+                                    form.append(
+                                        'user_change_pw',
+                                        this.state.user_change_pw
+                                    );
+                                    const {
+                                        data: { updateState }
+                                    } = await axios.post(
+                                        'http://localhost:8080/userUpdate',
+                                        form
+                                    );
+                                    if (updateState === true) {
+                                        this.setState({
+                                            alertDialog: () => {
+                                                return (
+                                                    <AlertDialog
+                                                        severity='success'
+                                                        content='회원정보가 수정되었습니다.'
+                                                        onAlertClose={() => {
+                                                            this.setState({
+                                                                alertDialog: () => {}
+                                                            });
+                                                        }}
+                                                    />
+                                                );
+                                            }
+                                        });
+                                        return;
+                                    }
+                                    this.setState({
+                                        alertDialog: () => {
+                                            return (
+                                                <AlertDialog
+                                                    severity='error'
+                                                    content='비밀번호가 옳바르지 않습니다.'
+                                                    onAlertClose={() => {
+                                                        this.setState({
+                                                            alertDialog: () => {}
+                                                        });
+                                                    }}
+                                                />
+                                            );
+                                        }
+                                    });
+                                    return;
+                                } catch (error) {
+                                    console.error(error);
+                                    this.setState({
+                                        alertDialog: () => {
+                                            return (
+                                                <AlertDialog
+                                                    severity='error'
+                                                    content='서버 오류로 인해 회원정보 수정에 실패하였습니다.'
+                                                    onAlertClose={() => {
+                                                        this.setState({
+                                                            alertDialog: () => {}
+                                                        });
+                                                    }}
+                                                />
+                                            );
+                                        }
+                                    });
+                                }
+                            }}
+                        >
+                            수정
+                        </EditorButton>
+                        <EditorButton onClick={() => this.props.onCancel()}>
+                            취소
+                        </EditorButton>
                     </div>
                 </div>
                 {this.state.alertDialog()}

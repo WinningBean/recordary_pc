@@ -8,14 +8,14 @@ const StyledBadge = withStyles(theme => ({
         right: 5,
         top: 13,
         border: `2px solid ${theme.palette.background.paper}`,
-        padding: '0 4px',
-    },
+        padding: '0 4px'
+    }
 }))(Badge);
 
 export default function NotifyIconCount() {
-    return ( 
-        <StyledBadge badgeContent={4} color="secondary">
-            <NotificationsIcon  style={{fontSize : 38, color: 'white'}}/>
+    return (
+        <StyledBadge badgeContent={4} color='secondary'>
+            <NotificationsIcon style={{ fontSize: 38, color: 'white' }} />
         </StyledBadge>
     );
 }

@@ -1,6 +1,6 @@
 
 /* postMediaScheduleAppend css  */
-.Post-Media-Schedule-Append-Form{
+.Post-Media-Schedule-Append-Form {
     display: flex;
     flex-direction: column;
     padding: 10px 20px;
@@ -8,63 +8,61 @@
     height: 560px;
     font-size: 20px;
 }
-.Post-Append-titleName{
+.Post-Append-titleName {
     padding-top: 10px;
 }
-.post-Append{
+.post-Append {
     margin-bottom: 10px;
 }
 
-.Post-Append-Schedule{
+.Post-Append-Schedule {
     margin-top: 20px;
     padding: 5px;
 }
 
-#post_title{
+#post_title {
     width: 520px;
     height: 20px;
 }
-#post_text{
-    width: 520px;   
+#post_text {
+    width: 520px;
 }
 
-
-.Post-Append-Media{
+.Post-Append-Media {
     display: flex;
     height: 100px;
     width: 550px;
     border: 1px solid lightgray;
-    border-radius:5px;
-
+    border-radius: 5px;
 }
 
-.Post-Append-Tag-User{
+.Post-Append-Tag-User {
     display: flex;
     width: 550px;
     height: 50px;
     border: 1px solid lightgray;
-    border-radius:5px;
+    border-radius: 5px;
 }
-.Post-Append-Open-Choose{
+.Post-Append-Open-Choose {
     padding-top: 5px;
     padding-bottom: 5px;
 }
-.MuiFormGroup-root{
-    
+.MuiFormGroup-root {
     display: flex;
     flex-direction: row !important;
 }
 
-.Post-Upload-buttons{
+.Post-Upload-buttons {
     display: flex;
     justify-content: flex-end;
 }
-.Post-AppendP-Bottom{
+.Post-AppendP-Bottom {
     display: flex;
     justify-content: space-between;
 }
 /* postScheduleAppend css */
-.Post-Schedule-Append-Form, .Post-Share{
+.Post-Schedule-Append-Form,
+.Post-Share {
     display: flex;
     flex-direction: column;
     padding: 10px 20px;
@@ -73,10 +71,4 @@
     font-size: 20px;
 }
 
-
 /* postShareAppend css */
-
-
-
-
-

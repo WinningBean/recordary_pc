@@ -15,24 +15,28 @@ class ScheduleTimeline1 extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            TimelineClick : false,
-            TimelineOnlyScheduleClick : false,
-            TimelineWeekScheduleClick : false,
-        }
+            TimelineClick: false,
+            TimelineOnlyScheduleClick: false,
+            TimelineWeekScheduleClick: false
+        };
     }
-
 
     render() {
         const TimelineOpen = () => {
-            if(this.state.TimelineClick === true){
+            if (this.state.TimelineClick === true) {
                 return (
-                    <Dialog className="DialogTimeline" open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }} onClose={()=> this.setState({TimelineClick : false})}>
+                    <Dialog
+                        className='DialogTimeline'
+                        open
+                        style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}
+                        onClose={() => this.setState({ TimelineClick: false })}
+                    >
                         <TimelineWeekSchedule></TimelineWeekSchedule>
                     </Dialog>
-                )
+                );
             }
             return null;
-        }
+        };
         return (
             <article>
                 <div className="media-area">
@@ -56,23 +60,31 @@ class ScheduleTimeline1 extends React.Component {
                             <div className="timeline-schedule-title">
                                 게시물 제목이 되겠네요
                             </div>
-                            <div className="timeline-schedule-weekTable">
+                            <div className='timeline-schedule-weekTable'>
                                 일정
                             </div>
                         </div>
-                        <div classNamee="comment-context">
-                            <div className="comment-context-icon">
-                                <div className="comment-icon-left">
-                                    <div className="likeIcon">
-                                        <ThumbUpRoundedIcon style={{ fontSize: 30 }}>like</ThumbUpRoundedIcon>
+                        <div classNamee='comment-context'>
+                            <div className='comment-context-icon'>
+                                <div className='comment-icon-left'>
+                                    <div className='likeIcon'>
+                                        <ThumbUpRoundedIcon
+                                            style={{ fontSize: 30 }}
+                                        >
+                                            like
+                                        </ThumbUpRoundedIcon>
                                     </div>
-                                    <div className="commentIcon">
-                                        <SmsIcon style={{ fontSize: 30 }}>follow</SmsIcon>
+                                    <div className='commentIcon'>
+                                        <SmsIcon style={{ fontSize: 30 }}>
+                                            follow
+                                        </SmsIcon>
                                     </div>
                                 </div>
-                                <div className="comment-icon-right">
-                                    <div className="shareIcon">
-                                        <ShareIcon style={{ fontSize: 30 }}>share</ShareIcon>
+                                <div className='comment-icon-right'>
+                                    <div className='shareIcon'>
+                                        <ShareIcon style={{ fontSize: 30 }}>
+                                            share
+                                        </ShareIcon>
                                     </div>
                                 </div>
                             </div>

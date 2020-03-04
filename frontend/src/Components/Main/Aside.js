@@ -27,7 +27,6 @@ class Aside extends React.Component {
                             </ul>
                         </div>
                     </div>
-                    
                 </div>
             </aside>
         );

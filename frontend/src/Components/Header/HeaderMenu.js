@@ -61,6 +61,7 @@ const HeaderMenu = props => {
             case '그룹 관리':
                 setMenuDialog(
                     <GroupSetting
+                        onClose={() => setMenuDialog(null)}
                         data={{
                             user_id: data.currentUser.user_id,
                             group: value
@@ -309,7 +310,6 @@ const HeaderMenu = props => {
         setSetting(null);
         return;
     };
-
 
     return (
         <Drawer
