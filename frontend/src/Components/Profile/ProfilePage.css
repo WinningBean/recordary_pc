@@ -1,248 +1,260 @@
-#main-profile{
-    display: flex;
-    flex-direction: column;
-    height: 580px;
-    padding-top: 10px;
-    width: 900px;
-    align-self: center;
+#main-profile {
+  display: flex;
+  flex-direction: column;
+  height: 580px;
+  padding-top: 10px;
+  width: 890px;
+  align-self: center;
+}
+.main-profile-info-postIt {
+  display: flex;
+  position: relative;
+  margin-left: 20px;
+}
+.postIt {
+  display: flex;
+  height: 500px;
+  position: absolute;
+  left: -40px;
+}
+.postIt > ul {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.postIt > ul > li {
+  width: 20px;
+  height: 40px;
+  margin: 8px 0px;
+  float: right;
+}
+.postIt > ul > .postIt-1 {
+  background-color: rgba(20, 81, 51, 0.7);
+  /* border: 1px solid gray; */
+}
+.postIt > ul > .postIt-2 {
+  background-color: rgba(150, 100, 30, 0.3);
+}
+.postIt > ul > .postIt-3 {
+  background-color: rgba(200, 30, 10, 0.3);
 }
 
-.postIt>ul>.postIt-1{
-    position: absolute;
-    top : 120px;
-    width: 20px;
-    height: 40px;
-    background-color: rgba(200,20,20,0.3);
-}
-.postIt>ul>.postIt-2{
-    position: absolute;
-    top: 170px;
-    width: 20px;
-    height: 40px;
-    background-color: rgba(150,100,30,0.3);
-}
-.postIt>ul>.postIt-3{
-    position: absolute;
-    top: 220px;
-    width: 20px;
-    height: 40px;
-    background-color: rgba(20, 81, 51, 0.3);
+#main-profile .profile-search-schedule {
+  align-self: flex-end;
+  padding-bottom: 10px;
+  padding-right: 20px;
 }
 
-#main-profile .profile-search-schedule{
-    align-self: flex-end;
-    padding-bottom: 10px;
-    padding-right: 20px;
+.profile-search-schedule > div > div > div > input {
+  color: gray !important;
 }
 
-.profile-search-schedule>div>div>div>input{
-    color: gray !important;
+.profile-search-schedule > div > div > div > .MuiSvgIcon-root {
+  color: rgba(20, 81, 51, 0.5) !important;
 }
 
-.profile-search-schedule>div>div>div>.MuiSvgIcon-root{
-    color: rgba(20, 81, 51, 0.5) !important;
+.profile-search-schedule > div > div > .MuiInputBase-root {
+  border: 1px solid rgba(20, 81, 51, 0.2) !important;
+  border-radius: 5px;
+}
+#main-profile-info {
+  display: flex;
+  height: 500px;
+  margin-right: 20px;
+  box-shadow: 0px 1px 2px rgba(161, 159, 159, 0.8);
+  background-color: white;
+  padding: 5px;
 }
 
-.profile-search-schedule>div>div>.MuiInputBase-root{
-    border:1px solid rgba(20, 81, 51, 0.2) !important;
-    border-radius: 5px;
-}
-#main-profile-info{
-    display: flex;
-    height: 500px;
-    margin-left: 20px;
-    margin-right: 20px;
-    box-shadow: 0px 1px 2px rgba(161, 159, 159, 0.8);
-    background-color: white;
-    padding: 5px;
+#userinfo {
+  width: 240px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-#userinfo{
-    width: 240px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+#user-image {
+  padding-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
 }
 
-#user-image{
-    padding-top:10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 10px;
+#user-image > img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
-#user-image >img{
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 50%;
+#userinfo #userinfo-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
 }
 
-#userinfo #userinfo-text{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
+.info ul li {
+  font-size: 18px;
+  padding-bottom: 5px;
+  text-align: center;
+}
+.name {
+  font-weight: bold;
+}
+.followerName,
+.followName {
+  margin-right: 10px;
+  font-size: 16px;
 }
 
-.info ul li{
-    font-size: 18px;
-    padding-bottom: 5px;
-    text-align: center;
-}
-.name{
-    font-weight: bold;
-}
-.followerName, .followName{
-    margin-right: 10px;
-    font-size: 16px;
-}
-.followerNum, .followNum{
-    font-size: 17px;
-}
-li .MuiTypography-colorPrimary{
-    color: rgba(20, 81, 51, 0.9) !important;
-}
-link{
-    text-decoration: none;
+.followerNum,
+.followNum {
+  font-size: 17px;
 }
 
-.status-content{
-    display: flex;
-    align-items: center;
-    width: 200px;
-    height: 150px;
-    margin-top: 10px;
-    padding: 10px;;
-    font-size: 15px;
-    border-top: 1px solid lightgray;
-    border-bottom: 1px solid lightgray;
-
+.MuiLink-underlineHover:hover {
+  font-weight: bold !important;
 }
 
-#calender-area{
-    height: 100%;
-    width: 70%;
+li .MuiTypography-colorPrimary {
+  color: rgba(20, 81, 51, 0.9) !important;
+}
+link {
+  text-decoration: none;
 }
 
-
-nav{
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.status-content {
+  display: flex;
+  align-items: center;
+  width: 200px;
+  height: 150px;
+  margin-top: 10px;
+  padding: 10px;
+  font-size: 15px;
+  border-top: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
 }
 
-nav>div{
-    padding-left: 5px;
-    padding-right: 5px;
-    /* box-shadow: 0px 1px 5px rgb(161, 159, 159); */
+#calender-area {
+  height: 100%;
+  width: 70%;
 }
 
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
+nav > div {
+  padding-left: 5px;
+  padding-right: 5px;
+  /* box-shadow: 0px 1px 5px rgb(161, 159, 159); */
+}
 
 /* ScheduleTimeline부분 */
-.profile-ScheduleTimeLine, .profile-MediaTimeline{
-    display:flex;
-    flex-wrap: wrap;
-    align-self: center;
-    width: 900px;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top:10px;
+.profile-ScheduleTimeLine,
+.profile-MediaTimeline {
+  display: flex;
+  flex-wrap: wrap;
+  align-self: center;
+  width: 900px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 10px;
 }
 
-article{
-    display: flex;
+article {
+  display: flex;
 }
 
-.media-area{
-    margin-left:5px;
+.media-area {
+  margin-left: 5px;
 }
 
-.timeline-profile-schedule, .media-box{
-    width: 420px;
-    height: 290px;
-    margin: 10px;
-    background-color: white;
-
+.timeline-profile-schedule,
+.media-box {
+  width: 420px;
+  height: 290px;
+  margin: 10px;
+  background-color: white;
 }
-.timeline-profile-schedule:hover, .media-box:hover{
-    box-shadow: 0px 1px 5px rgba(161, 159, 159, 0.9)
-
-}
-
-.timeline-profile-time{
-    display: flex;
-    justify-content: space-between;
+.timeline-profile-schedule:hover,
+.media-box:hover {
+  box-shadow: 0px 1px 5px rgba(161, 159, 159, 0.9);
 }
 
-.timeline-profile-top{
-    display: flex;
-    align-items: center;
+.timeline-profile-time {
+  display: flex;
+  justify-content: space-between;
 }
 
-.timeline-profile-picture>img{
-    height: 40px;
-    margin-left: 5px;
-    margin-top:3px;
-}
-.timeline-profile-name{
-    padding-left: 10px;
-    font-size: 15px;
-}
-.timeline-schedule-date{
-    margin-right: 10px;
-    border: none;
-    font-weight: 400;
-    font-size: 15px;
-}
-.timeline-schedule-title{
-    font-weight: 400;
-    font-size: 15px;
-}
-.profile-schedule-info .timeline-schedule-weekTable{
-    height: 150px;
+.timeline-profile-top {
+  display: flex;
+  align-items: center;
 }
 
-.media-box{
-    display:flex;
-    align-content: center;
-    justify-content: center;
+.timeline-profile-picture > img {
+  height: 40px;
+  margin-left: 5px;
+  margin-top: 3px;
 }
-.media-box>img{
-    width: 400px;
-    height: 290px;
-    object-fit: cover ;
-    /* background-color: black; */
+.timeline-profile-name {
+  padding-left: 10px;
+  font-size: 15px;
+}
+.timeline-schedule-date {
+  margin-right: 10px;
+  border: none;
+  font-weight: 400;
+  font-size: 15px;
+}
+.timeline-schedule-title {
+  font-weight: 400;
+  font-size: 15px;
+}
+.profile-schedule-info .timeline-schedule-weekTable {
+  height: 150px;
 }
 
+.media-box {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+.media-box > img {
+  width: 400px;
+  height: 290px;
+  object-fit: cover;
+  /* background-color: black; */
+}
 
 /* 캘린더 css */
 
-.schedule-area{
-    display: flex;
-    flex-direction: column;
-    align-content: flex-end;
-    height: 480px;
-    box-shadow: 0px 1px 2px rgb(161, 159, 159);
-    border-radius: 10px;
+.schedule-area {
+  display: flex;
+  flex-direction: column;
+  align-content: flex-end;
+  height: 480px;
+  box-shadow: 0px 1px 2px rgb(161, 159, 159);
+  border-radius: 10px;
 }
 
-.schedule-append{
-    display: flex;
-    justify-content: flex-end;
-    align-content: center;
-    width: 610px;
-    margin-top: 10px;
+.schedule-append {
+  display: flex;
+  justify-content: flex-end;
+  align-content: center;
+  width: 610px;
+  margin-top: 10px;
 }
 
-.calender{
-    margin-top: 10px;
-    margin-left: 3px;
-    height: 475px;
-    WIDTH: 600px;
-    border: 1px solid lightgray;
-    border-radius: 10px;
+.calender {
+  margin-top: 10px;
+  margin-left: 3px;
+  height: 475px;
+  width: 600px;
+  border: 1px solid lightgray;
+  border-radius: 10px;
 }
-

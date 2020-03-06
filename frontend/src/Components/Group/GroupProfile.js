@@ -105,13 +105,6 @@ class GroupProfile extends React.Component {
                             <SearchAppBar></SearchAppBar>
                         </div>
                         <div>
-                            <div className='postIt'>
-                                <ul>
-                                    <li className='postIt-1' />
-                                    <li className='postIt-2' />
-                                    <li className='postIt-3' />
-                                </ul>
-                            </div>
                             <div id='main-profile-info'>
                                 <div id='userinfo'>
                                     <div id='user-image'>

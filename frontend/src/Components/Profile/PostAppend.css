@@ -1,74 +1,106 @@
-
 /* postMediaScheduleAppend css  */
 .Post-Media-Schedule-Append-Form {
-    display: flex;
-    flex-direction: column;
-    padding: 10px 20px;
-    width: 600px;
-    height: 560px;
-    font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 20px;
+  max-height: 500px;
+  font-size: 20px;
 }
 .Post-Append-titleName {
-    padding-top: 10px;
+  padding-top: 10px;
+  background-color: rgba(20, 81, 51, 0.8);
+  height: 60px;
+  display: flex;
+}
+.Post-Append-Group > div > .makeStyles-formControl {
+  margin: 10px !important;
+  min-width: 200px !important;
 }
 .post-Append {
-    margin-bottom: 10px;
+  margin-left: 10px;
+  padding: 5px 10px;
 }
-
+.PostAdd-title {
+  color: white;
+  font-size: 25px;
+  margin-top: 5px;
+  margin-left: 10px;
+}
 .Post-Append-Schedule {
-    margin-top: 20px;
-    padding: 5px;
+  padding: 5px;
 }
 
 #post_title {
-    width: 520px;
-    height: 20px;
+  width: 520px;
+  height: 20px;
 }
 #post_text {
-    width: 520px;
+  width: 520px;
 }
 
 .Post-Append-Media {
-    display: flex;
-    height: 100px;
-    width: 550px;
-    border: 1px solid lightgray;
-    border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  /* height: 100px; */
+  /* border-top: 1px solid lightgray;
+  border-bottom: 1px solid lightgray; */
+  width: 530px;
+  border: 1px solid lightgray;
+  margin: 5px 15px;
 }
-
+.schedule-media-button {
+  display: flex;
+  margin: 0px 10px;
+  margin-top: 10px;
+}
+.plus-button-design {
+  padding: 0px 10px;
+  margin: 0px 5px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0px 1px 3px rgba(161, 159, 159, 0.8);
+}
+.plus-button-design:hover {
+  background-color: rgba(161, 159, 159, 0.3);
+  cursor: pointer;
+}
+.plus-button-design:active:focus {
+  background-color: rgba(161, 159, 159, 0.3);
+  cursor: pointer;
+}
 .Post-Append-Tag-User {
-    display: flex;
-    width: 550px;
-    height: 50px;
-    border: 1px solid lightgray;
-    border-radius: 5px;
+  display: flex;
+  width: 550px;
+  height: 50px;
+  padding: 10px 0px;
 }
 .Post-Append-Open-Choose {
-    padding-top: 5px;
-    padding-bottom: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
 }
 .MuiFormGroup-root {
-    display: flex;
-    flex-direction: row !important;
+  display: flex;
+  flex-direction: row !important;
 }
 
 .Post-Upload-buttons {
-    display: flex;
-    justify-content: flex-end;
+  display: flex;
+  justify-content: flex-end;
 }
 .Post-AppendP-Bottom {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 /* postScheduleAppend css */
 .Post-Schedule-Append-Form,
 .Post-Share {
-    display: flex;
-    flex-direction: column;
-    padding: 10px 20px;
-    width: 600px;
-    height: 450px;
-    font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 20px;
+  width: 600px;
+  height: 450px;
+  font-size: 20px;
 }
 
 /* postShareAppend css */
