@@ -31,6 +31,10 @@ public class PostEntity {
     private PostEntity postOriginFK;
 
     @ManyToOne
+    @JoinColumn(name = "POST_SCHEDULE_FK")
+    private ScheduleEntity scheduleFK;
+
+    @ManyToOne
     @JoinColumn(name = "POST_MEDIA_FK")
     private MediaEntity mediaFK;
 
@@ -53,9 +57,6 @@ public class PostEntity {
     @Column(name = "POST_UPDATED_DT")
     @LastModifiedDate
     private LocalDateTime updatedDate;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postCodeFK")
-    private List<ScheduleEntity> postSchedules;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "postFK", cascade = {CascadeType.ALL})
     private List<PostTagEntity> postTagList;

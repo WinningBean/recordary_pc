@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -18,9 +19,6 @@ public class ScheduleEntity {
    @GeneratedValue(strategy = GenerationType.AUTO)
    @Column(name = "SCHEDULE_CD")
    private Long scheduleCd;
-
-   @ManyToOne
-   private PostEntity postCodeFK;
 
    @ManyToOne
    private ScheduleTabEntity TabCodeFK;
@@ -42,4 +40,6 @@ public class ScheduleEntity {
 
    //private String scheduleLocation;
 
+   @OneToMany(fetch = FetchType.LAZY, mappedBy = "scheduleFK")
+   private List<PostEntity> postList;
 }

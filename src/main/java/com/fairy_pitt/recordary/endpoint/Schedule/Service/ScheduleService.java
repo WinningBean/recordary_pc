@@ -30,7 +30,6 @@ public class ScheduleService { // 포스터가 있어야 일정이 생길 수있
         ScheduleEntity scheduleEntity = new ScheduleEntity();
         scheduleEntity.setScheduleNm((String)scheduleInfo.get("schedule_nm"));
         scheduleEntity.setScheduleEx((String)scheduleInfo.get("schedule_ex"));
-        scheduleEntity.setPostCodeFK(postEntity);
         scheduleEntity.setTabCodeFK(scheduleTabEntity);
         scheduleEntity.setScheduleStr((Date) scheduleInfo.get("schedule_str"));
         scheduleEntity.setScheduleStr((Date) scheduleInfo.get("schedule_end"));
