@@ -30,6 +30,10 @@ public class PostEntity {
     @JoinColumn(name = "POST_ORIGIN_FK")
     private PostEntity postOriginFK;
 
+    @ManyToOne
+    @JoinColumn(name = "POST_MEDIA_FK")
+    private MediaEntity mediaFK;
+
     @Column(name = "POST_EX")
     private String postEx;
 
