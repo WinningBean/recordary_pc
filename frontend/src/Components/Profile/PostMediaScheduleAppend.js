@@ -11,6 +11,7 @@ import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
+
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import PermMediaIcon from '@material-ui/icons/PermMedia';
 import { makeStyles } from '@material-ui/core/styles';
@@ -18,6 +19,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import axios from 'axios';
+import store from 'store';
 
 const useStyles = makeStyles(theme => ({
   content: {
@@ -42,10 +45,27 @@ const useStyles = makeStyles(theme => ({
 
 const PostMediaScheduleAppend = props => {
   const classes = useStyles();
-  const data = props.data;
   const [mediaOpen, setMediaOpen] = useState(null);
   const [scheduleOpen, setScheduleOpen] = useState(null);
   const [open, setOpen] = React.useState(false);
+
+  const [userPost, setUserPost] = useState({
+    user_id: store.getState().user.currentUser.user_id,
+    group_cd: store.getState().user.userGroup[0].group_cd,
+    inputPost: {
+      post_ex: '',
+      post_pb_st: '',
+      post_str_ymd: '',
+      post_end_ymd: ''
+    }
+  });
+
+  const changeHandle = e => {
+    setUserPost({
+      ...userPost,
+      inputPost: { ...userPost.inputPost, [e.target.name]: e.target.value }
+    });
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -53,6 +73,17 @@ const PostMediaScheduleAppend = props => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const onSubmit = async () => {
+    console.log(userPost);
+
+    const form = new FormData();
+    form.append('userPost', userPost);
+
+    const { data } = await axios.post('/post/write', form);
+
+    console.log(data);
   };
 
   const showMedia = () => {
@@ -109,18 +140,27 @@ const PostMediaScheduleAppend = props => {
         <div className='schedule-media-button'>
           <div className='plus-button-design' onClick={showSchedule}>
             <DateRangeIcon style={{ fontSize: '30px' }} />
-            <span style={{ fontSize: '15px' }}>일정추가</span>
+            <span style={{ fontSize: '15px', marginLeft: '5px' }}>
+              일정추가
+            </span>
           </div>
           <div className='plus-button-design' onClick={showMedia}>
             <PermMediaIcon style={{ fontSize: '30px' }} />
-            <span style={{ fontSize: '15px' }}>미디어</span>
+            <span style={{ fontSize: '15px', marginLeft: '10px' }}>미디어</span>
           </div>
         </div>
         <div clsaaName='Post-Append-Group' style={{ marginLeft: '12px' }}>
           <SelectGroup />
         </div>
         <div className='Post-Append-text post-Append'>
-          <TextField id='post_text' label='내용' multiline rowsMax='5' />
+          <TextField
+            id='post_text'
+            label='내용'
+            multiline
+            rowsMax='5'
+            name='post_ex'
+            onChange={changeHandle}
+          />
         </div>
         {mediaOpen}
         {scheduleOpen}
@@ -164,7 +204,7 @@ const PostMediaScheduleAppend = props => {
             </DialogContent>
             <DialogActions>
               <Button
-                onClick={(handleClose, () => props.onCancel())}
+                onClick={(handleClose, () => props.onCancel(), onSubmit)}
                 color='primary'
               >
                 확인
@@ -173,6 +213,7 @@ const PostMediaScheduleAppend = props => {
                 취소
               </Button>
             </DialogActions>
+            {alert}
           </Dialog>
         </div>
       </div>
