@@ -3,6 +3,7 @@
   width: 595px;
   height: 475px;
   background-color: #fff;
+  z-index: -1;
 }
 
 .calendar-header {
@@ -38,6 +39,8 @@
 }
 #wrap-cells {
   position: relative;
+  max-width: 595px;
+  max-height: 370px;
 }
 .cell-row {
   display: flex;
@@ -87,10 +90,24 @@
 .cell-row .disabled {
   color: #ddd;
 }
-.cell-row .selected {
-  border-left: 10px solid transparent;
-  border-image: linear-gradient(45deg, #43745c 0%, #8bb4a0 40%);
-  border-image-slice: 1;
+.selected {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: 20px;
+  height: 20px;
+  transform: skew(45deg, -45deg);
+  background-color: rgba(20, 81, 51, 0.8);
+}
+
+.more {
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  width: 20px;
+  height: 20px;
+  transform: skew(45deg, -45deg);
+  background-color: rgb(209, 209, 209);
 }
 
 .wrap-sc {

@@ -9,48 +9,50 @@ import { styled } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(theme => ({
-    margin: {
-        margin: theme.spacing(1),
-    },
-    width: {
-        width: '850px',
-    }
+  margin: {
+    margin: theme.spacing(1)
+  },
+  width: {
+    width: '850px'
+  }
 }));
 
 const SendButton = styled(Button)({
-    minWidth: '30px',
-    height: '40px',
+  minWidth: '30px',
+  height: '40px'
 });
 
 export default function CommentOnlySchedule() {
-    const classes = useStyles();
+  const classes = useStyles();
 
-    return (
-        <div>
-            <FormControl className={classes.margin}>
-                <TextField
-                    className={classes.margin, classes.width}
-                    id="input-with-icon-textfield"
-                    label="Comment"
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start" >
-                                <AccountCircle />
-                            </InputAdornment>
-                    ),
-                    endAdornment: (
-                        <InputAdornment position="end" >
-                            <SendButton> <EjectIcon /> </SendButton>
-                        </InputAdornment>
-                    )
-                    }}
-                    variant="outlined"
-                    multiline
-                    rowsMax="2"
-                    rows="2"
-                >
-                </TextField>
-            </FormControl>
-        </div>
-    );
+  return (
+    <div>
+      <FormControl className={classes.margin}>
+        <TextField
+          className={(classes.margin, classes.width)}
+          id='input-with-icon-textfield'
+          label='Comment'
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position='start'>
+                <AccountCircle />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position='end'>
+                <SendButton>
+                  {' '}
+                  <EjectIcon />{' '}
+                </SendButton>
+              </InputAdornment>
+            )
+          }}
+          variant='outlined'
+          multiline
+          rowsMax='2'
+          rows='2'
+        ></TextField>
+      </FormControl>
+    </div>
+  );
 }

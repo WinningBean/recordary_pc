@@ -15,201 +15,197 @@ import Backdrop from 'Components/UI/Backdrop';
 import axios from 'axios';
 
 const GroupModify = props => {
-    const [changeData, setChangeData] = useState(props.data);
-    const [changePic, setChangePic] = useState(props.pic);
-    const [openSwitch, setOpenSwitch] = useState({
-        open: props.data.group.group_open
+  const [changeData, setChangeData] = useState(props.data);
+  const [changePic, setChangePic] = useState(props.pic);
+  const [openSwitch, setOpenSwitch] = useState({
+    open: props.data.group.group_open
+  });
+  const [imageSrc, setImageSrc] = useState(null);
+  const [alert, setAlert] = useState(null);
+
+  let fileUpload = null;
+
+  const changeHandel = e => {
+    setChangeData({
+      ...changeData,
+      group: { ...changeData.group, [e.target.name]: e.target.value }
     });
-    const [imageSrc, setImageSrc] = useState(null);
-    const [alert, setAlert] = useState(null);
+  };
 
-    let fileUpload = null;
-
-    const changeHandel = e => {
-        setChangeData({
-            ...changeData,
-            group: { ...changeData.group, [e.target.name]: e.target.value }
+  const onSubmit = async () => {
+    setAlert(
+      // <Snackbar
+      //         severity='info'
+      //         content='Loading...'
+      //         onClose={()=>setAlert(null)}
+      //     />
+      <Backdrop />
+    );
+    if (changePic !== props.pic) {
+      var canvas = document.createElement('canvas');
+      var ctx = canvas.getContext('2d');
+      const cut = new Image();
+      cut.src = changePic;
+      let height = cut.height;
+      let width = cut.width;
+      height *= 250 / width;
+      width = 250;
+      canvas.width = width;
+      canvas.height = height;
+      // canvas에 변경된 크기의 이미지를 다시 그려줍니다.
+      ctx.drawImage(cut, 0, 0, width, height);
+      // canvas 에 있는 이미지를 img 태그로 넣어줍니다
+      var dataUrl = canvas.toDataURL('image/jpg');
+    } else {
+      var dataUrl = null;
+    }
+    try {
+      // const form = new FormData();
+      // form.append('group_nm', Changedata.group.group_nm);
+      // form.append('group_ex', Chagnedata.group.group_ex);
+      // form.append('group_pic', dataUrl);
+      // const { data } = await axios.post("/group/modify", form);
+      const data = { success: true };
+      if (data.success) {
+        props.onChange({
+          ...changeData.group,
+          group_pic: dataUrl
         });
-    };
-
-    const onSubmit = async () => {
         setAlert(
-            // <Snackbar
-            //         severity='info'
-            //         content='Loading...'
-            //         onClose={()=>setAlert(null)}
-            //     />
-            <Backdrop />
+          <AlertDialog
+            severity='success'
+            content='그룹정보를 변경하였습니다.'
+            onAlertClose={() => setAlert(null)}
+          />
         );
-        if (changePic !== props.pic) {
-            var canvas = document.createElement('canvas');
-            var ctx = canvas.getContext('2d');
-            const cut = new Image();
-            cut.src = changePic;
-            let height = cut.height;
-            let width = cut.width;
-            height *= 250 / width;
-            width = 250;
-            canvas.width = width;
-            canvas.height = height;
-            // canvas에 변경된 크기의 이미지를 다시 그려줍니다.
-            ctx.drawImage(cut, 0, 0, width, height);
-            // canvas 에 있는 이미지를 img 태그로 넣어줍니다
-            var dataUrl = canvas.toDataURL('image/jpg');
-        } else {
-            var dataUrl = null;
-        }
-        try {
-            // const form = new FormData();
-            // form.append('group_nm', Changedata.group.group_nm);
-            // form.append('group_ex', Chagnedata.group.group_ex);
-            // form.append('group_pic', dataUrl);
-            // const { data } = await axios.post("/group/modify", form);
-            const data = { success: true };
-            if (data.success) {
-                props.onChange({
-                    ...changeData.group,
-                    group_pic: dataUrl
-                });
-                setAlert(
-                    <AlertDialog
-                        severity='success'
-                        content='그룹정보를 변경하였습니다.'
-                        onAlertClose={() => setAlert(null)}
-                    />
-                );
-            } else {
-                setAlert(
-                    <Snackbar
-                        severity='error'
-                        content='그룹정보 변경에 실패하였습니다.'
-                        onClose={() => setAlert(null)}
-                    />
-                );
-            }
-        } catch (error) {
-            console.error(error);
-            setAlert(
-                <Snackbar
-                    severity='error'
-                    content='서버 에러로 그룹정보 변경에 실패하였습니다.'
-                    onClose={() => setAlert(null)}
-                />
-            );
-        }
-    };
+      } else {
+        setAlert(
+          <Snackbar
+            severity='error'
+            content='그룹정보 변경에 실패하였습니다.'
+            onClose={() => setAlert(null)}
+          />
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      setAlert(
+        <Snackbar
+          severity='error'
+          content='서버 에러로 그룹정보 변경에 실패하였습니다.'
+          onClose={() => setAlert(null)}
+        />
+      );
+    }
+  };
 
-    return (
-        <div className='dialog-wrap'>
-            {/* <div className='dialog-header'>
+  return (
+    <div className='dialog-wrap'>
+      {/* <div className='dialog-header'>
                     <div className='dialog-header-icon'><GroupAddIcon style={{ fontSize: '44px' }} /></div>
                     &nbsp;
                     <span>그룹 수정</span>
                 </div> */}
-            <DialogContent
-                style={{ display: 'flex', justifyContent: 'space-between' }}
-            >
-                <div className='dialog-content'>
-                    <div>
-                        <img
-                            style={{
-                                width: '250px',
-                                height: '250px',
-                                objectFit: 'cover',
-                                borderRadius: '50%'
-                            }}
-                            alt='profile-img'
-                            src={changePic}
-                        />
-                    </div>
-                    <Button
-                        startIcon={<CloudUploadIcon />}
-                        variant='outlined'
-                        onClick={() => fileUpload.click()}
-                        // onClick={()=>{
-                        //     setImageEditor(
-                        //         <ImageEditor
-                        //             src={user.user_pic}
-                        //             onClose={() => this.setState({ imageSrc: null })}
-                        //             onComplete={(src) => this.setState({ imageSrc: null, user_pic: src })}
-                        //         />
-                        //     )
-                        // }}
-                    >
-                        &nbsp;Upload
-                    </Button>
-                </div>
-                <input
-                    type='file'
-                    accept='image/*'
-                    style={{ display: 'none' }}
-                    ref={file => {
-                        fileUpload = file;
-                    }}
-                    onChange={e => {
-                        if (e.target.files && e.target.files.length > 0) {
-                            const reader = new FileReader();
-                            reader.addEventListener('load', () =>
-                                setImageSrc(reader.result)
-                            );
-                            reader.readAsDataURL(e.target.files[0]);
-                            e.target.value = null;
-                        }
-                    }}
-                />
-                <div className='dialog-content'>
-                    <TextField
-                        label='그룹명'
-                        name='group_nm'
-                        onChange={changeHandel}
-                        defaultValue={changeData.group.group_nm}
-                    />
-                    <TextField
-                        label='그룹 설명'
-                        name='group_ex'
-                        multiline={true}
-                        rows={10}
-                        rowsMax={10}
-                        onChange={changeHandel}
-                        defaultValue={changeData.group.group_ex}
-                    />
-                </div>
-            </DialogContent>
-            <DialogActions>
-                <Tooltip title='검색시 그룹이 보여집니다.'>
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={openSwitch.open}
-                                onChange={event =>
-                                    setOpenSwitch({
-                                        open: event.target.checked
-                                    })
-                                }
-                                color='primary'
-                            />
-                        }
-                        label='그룹 공개'
-                    />
-                </Tooltip>
-                <Button color='primary' onClick={onSubmit}>
-                    변경
-                </Button>
-            </DialogActions>
-            {imageSrc && (
-                <ImageEditor
-                    src={imageSrc}
-                    onClose={() => setImageSrc(null)}
-                    onComplete={src => {
-                        setImageSrc(null);
-                        // setChangeData({ ...changeData, group : {...changeData.group , group_pic: src} });
-                        setChangePic(src);
-                    }}
-                />
-            )}
-            {alert}
+      <DialogContent style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div className='dialog-content'>
+          <div>
+            <img
+              style={{
+                width: '250px',
+                height: '250px',
+                objectFit: 'cover',
+                borderRadius: '50%'
+              }}
+              alt='profile-img'
+              src={changePic}
+            />
+          </div>
+          <Button
+            startIcon={<CloudUploadIcon />}
+            variant='outlined'
+            onClick={() => fileUpload.click()}
+            // onClick={()=>{
+            //     setImageEditor(
+            //         <ImageEditor
+            //             src={user.user_pic}
+            //             onClose={() => this.setState({ imageSrc: null })}
+            //             onComplete={(src) => this.setState({ imageSrc: null, user_pic: src })}
+            //         />
+            //     )
+            // }}
+          >
+            &nbsp;Upload
+          </Button>
         </div>
-    );
+        <input
+          type='file'
+          accept='image/*'
+          style={{ display: 'none' }}
+          ref={file => {
+            fileUpload = file;
+          }}
+          onChange={e => {
+            if (e.target.files && e.target.files.length > 0) {
+              const reader = new FileReader();
+              reader.addEventListener('load', () => setImageSrc(reader.result));
+              reader.readAsDataURL(e.target.files[0]);
+              e.target.value = null;
+            }
+          }}
+        />
+        <div className='dialog-content'>
+          <TextField
+            label='그룹명'
+            name='group_nm'
+            onChange={changeHandel}
+            defaultValue={changeData.group.group_nm}
+          />
+          <TextField
+            label='그룹 설명'
+            name='group_ex'
+            multiline={true}
+            rows={10}
+            rowsMax={10}
+            onChange={changeHandel}
+            defaultValue={changeData.group.group_ex}
+          />
+        </div>
+      </DialogContent>
+      <DialogActions>
+        <Tooltip title='검색시 그룹이 보여집니다.'>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={openSwitch.open}
+                onChange={event =>
+                  setOpenSwitch({
+                    open: event.target.checked
+                  })
+                }
+                color='primary'
+              />
+            }
+            label='그룹 공개'
+          />
+        </Tooltip>
+        <Button color='primary' onClick={onSubmit}>
+          변경
+        </Button>
+      </DialogActions>
+      {imageSrc && (
+        <ImageEditor
+          src={imageSrc}
+          onClose={() => setImageSrc(null)}
+          onComplete={src => {
+            setImageSrc(null);
+            // setChangeData({ ...changeData, group : {...changeData.group , group_pic: src} });
+            setChangePic(src);
+          }}
+        />
+      )}
+      {alert}
+    </div>
+  );
 };
 
 export default GroupModify;

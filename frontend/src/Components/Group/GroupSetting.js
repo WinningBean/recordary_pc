@@ -18,148 +18,130 @@ import SearchIcon from '@material-ui/icons/Search';
 import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        width: '860px',
-        height: '600px'
-    },
-    list: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
-        // width: '200px',
-        width: '200px',
-        height: '540px',
-        boxShadow: '0px 1px 5px lightgray'
-    },
-    wrap: {
-        display: 'flex',
-        width: '100%',
-        height: '540px'
-    },
-    content: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '660px',
-        height: '540px',
-        padding: '30px 30px'
-    }
+  root: {
+    width: '860px',
+    height: '600px'
+  },
+  list: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    // width: '200px',
+    width: '200px',
+    height: '540px',
+    boxShadow: '0px 1px 5px lightgray'
+  },
+  wrap: {
+    display: 'flex',
+    width: '100%',
+    height: '540px'
+  },
+  content: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '660px',
+    height: '540px',
+    padding: '30px 30px'
+  }
 }));
 
 const GroupSetting = props => {
-    const classes = useStyles();
+  const classes = useStyles();
 
-    const [listIndex, setListIndex] = useState(0);
-    const [info, setInfo] = useState(undefined);
-    const data = props.data;
+  const [listIndex, setListIndex] = useState(0);
+  const [info, setInfo] = useState(undefined);
+  const data = props.data;
 
-    const currPage = (() => {
-        switch (listIndex) {
-            case 0:
-                return (
-                    <GroupModify
-                        data={data}
-                        pic={info !== undefined ? info.group_pic : null}
-                    />
-                );
-            case 1:
-                return (
-                    <GroupApply
-                        data={data}
-                        info={info !== undefined ? info : null}
-                    />
-                );
-            case 2:
-                return <GroupDelete data={data} />;
-        }
-    })();
-
-    useEffect(() => {
-        const form = new FormData();
-        form.append('group_cd', 2);
-        (async () => {
-            const groupData = await axios.post(
-                '/group/show',
-                form
-            );
-            console.log(groupData.data)
-            setInfo(groupData.data);
-        })();
-    }, []);
-
-    if (info === undefined) {
-        return <div></div>;
+  const currPage = (() => {
+    switch (listIndex) {
+      case 0:
+        return <GroupModify data={data} pic={info !== undefined ? info.group_pic : null} />;
+      case 1:
+        return <GroupApply data={data} info={info !== undefined ? info : null} />;
+      case 2:
+        return <GroupDelete data={data} />;
     }
+  })();
 
-    return (
-        <Dialog open onClose={() => props.onClose()}>
-            <div className={classes.root}>
-                <div className='dialog-header'>
-                    <div className='dialog-header-icon'>
-                        <GroupIcon style={{ fontSize: '44px' }} />
-                    </div>
-                    &nbsp; 그룹 관리
-                    <div
-                        className='dialog-header-icon'
-                        style={{ position: 'absolute', right: '5px' }}
-                    >
-                        <IconButton onClick={() => props.onClose()}>
-                            <CloseIcon
-                                style={{ color: '#ffffff', fontSize: '20px' }}
-                            />
-                        </IconButton>
-                    </div>
-                </div>
-                <div className={classes.wrap}>
-                    <List component='nav' className={classes.list}>
-                        <ListItem
-                            button
-                            selected={listIndex === 0}
-                            onClick={() => {
-                                if (listIndex !== 0) {
-                                    setListIndex(0);
-                                }
-                            }}
-                        >
-                            <ListItemIcon>
-                                <DescriptionIcon />
-                            </ListItemIcon>
-                            <ListItemText primary='프로필 수정' />
-                        </ListItem>
-                        <ListItem
-                            button
-                            selected={listIndex === 1}
-                            onClick={() => {
-                                if (listIndex !== 1) {
-                                    setListIndex(1);
-                                }
-                            }}
-                        >
-                            <ListItemIcon>
-                                <SearchIcon />
-                            </ListItemIcon>
-                            <ListItemText primary='그룹 초대' />
-                        </ListItem>
-                        <ListItem
-                            button
-                            selected={listIndex === 2}
-                            onClick={() => {
-                                if (listIndex !== 2) {
-                                    setListIndex(2);
-                                }
-                            }}
-                        >
-                            <ListItemIcon>
-                                <DeleteIcon />
-                            </ListItemIcon>
-                            <ListItemText primary='그룹 삭제' />
-                        </ListItem>
-                    </List>
-                    <div className={classes.content}>{currPage}</div>
-                </div>
-            </div>
-        </Dialog>
-    );
+  useEffect(() => {
+    const form = new FormData();
+    form.append('group_cd', 2);
+    (async () => {
+      const groupData = await axios.post('/group/show', form);
+      console.log(groupData.data);
+      setInfo(groupData.data);
+    })();
+  }, []);
+
+  if (info === undefined) {
+    return <div></div>;
+  }
+
+  return (
+    <Dialog open onClose={() => props.onClose()}>
+      <div className={classes.root}>
+        <div className='dialog-header'>
+          <div className='dialog-header-icon'>
+            <GroupIcon style={{ fontSize: '44px' }} />
+          </div>
+          &nbsp; 그룹 관리
+          <div className='dialog-header-icon' style={{ position: 'absolute', right: '5px' }}>
+            <IconButton onClick={() => props.onClose()}>
+              <CloseIcon style={{ color: '#ffffff', fontSize: '20px' }} />
+            </IconButton>
+          </div>
+        </div>
+        <div className={classes.wrap}>
+          <List component='nav' className={classes.list}>
+            <ListItem
+              button
+              selected={listIndex === 0}
+              onClick={() => {
+                if (listIndex !== 0) {
+                  setListIndex(0);
+                }
+              }}
+            >
+              <ListItemIcon>
+                <DescriptionIcon />
+              </ListItemIcon>
+              <ListItemText primary='프로필 수정' />
+            </ListItem>
+            <ListItem
+              button
+              selected={listIndex === 1}
+              onClick={() => {
+                if (listIndex !== 1) {
+                  setListIndex(1);
+                }
+              }}
+            >
+              <ListItemIcon>
+                <SearchIcon />
+              </ListItemIcon>
+              <ListItemText primary='그룹 초대' />
+            </ListItem>
+            <ListItem
+              button
+              selected={listIndex === 2}
+              onClick={() => {
+                if (listIndex !== 2) {
+                  setListIndex(2);
+                }
+              }}
+            >
+              <ListItemIcon>
+                <DeleteIcon />
+              </ListItemIcon>
+              <ListItemText primary='그룹 삭제' />
+            </ListItem>
+          </List>
+          <div className={classes.content}>{currPage}</div>
+        </div>
+      </div>
+    </Dialog>
+  );
 };
 
 export default GroupSetting;
