@@ -53,11 +53,10 @@ const PostMediaScheduleAppend = props => {
   const [open, setOpen] = React.useState(false);
   const [alert, setAlert] = useState(null);
 
-  // const [userPost,   UserPost] = useState({
-  const [post, setPost] = useState({
-    // user_id: store.getState().user.currentUser.user_id,
-    // // group_cd: store.getState().user.userGroup[0].group_cd,
-    // group_cd: null,
+  const [userPost, setUserPost] = useState({
+    user_id: store.getState().user.currentUser.user_id,
+    // group_cd: store.getState().user.userGroup[0].group_cd,
+    group_cd: null,
     inputPost: {
       post_ex: null,
       post_pb_st: null,
@@ -67,9 +66,9 @@ const PostMediaScheduleAppend = props => {
   });
 
   const changeHandle = e => {
-    setPost({
-      ...post,
-      inputPost: { [e.target.name]: e.target.value }
+    setUserPost({
+      ...userPost,
+      inputPost: { ...userPost.inputPost, [e.target.name]: e.target.value }
     });
   };
 
@@ -84,14 +83,12 @@ const PostMediaScheduleAppend = props => {
   const onSubmit = async () => {
     setAlert(<Backdrop />);
     try {
-      console.log(post);
+      console.log(userPost);
 
-      const form = new FormData();
-      form.append('user_id', store.getState().user.currentUser.user_id);
-      form.append('group_cd', null);
-      form.append('inputPost', post.inputPost);
+      // const form = new FormData();
+      // form.append('userPost', userPost);
 
-      const { data } = await axios.post('/post/write', form);
+      const { data } = await axios.post('/post/write', userPost);
       console.log(data);
 
       if (data.isWrite) {
@@ -116,7 +113,7 @@ const PostMediaScheduleAppend = props => {
       setAlert(
         <Snackbar
           severity='error'
-          content='서버 에러로 게시물을 추가하지 못했습니다.'
+          content='서버 에러로 게시물을 추가하지 못했습니다..'
           onClose={() => setAlert(null)}
         />
       );
