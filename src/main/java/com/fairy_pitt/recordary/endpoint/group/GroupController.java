@@ -119,35 +119,48 @@ public class GroupController {
             groupEntity.setGState(false);
         }
         Map<String,Boolean> result = new HashMap<>();
-        result.put("isUdate", groupService.groupUpdate(groupEntity,id));
+        result.put("isUpdate", groupService.groupUpdate(groupEntity,id));
 
         return result;
     }
 
     //그룹 자세히보기 - 그룹 정보와, 그룹의 맴버 정보 전달
+    @CrossOrigin
     @ResponseBody
-    @PostMapping("show/{id}")
-    public Map<String, Object> ShowGroup(@PathVariable("id") long groupId)
+    @PostMapping("show")
+    public Map<String, Object> ShowGroup(@RequestParam Map<String, String> groupId)
     {
-        GroupEntity groupValue = groupService.findGroupId(groupId);
-        Map<String, Object> value = new HashMap<>();
+        System.out.print(groupId.get("group_cd"));
+        GroupEntity groupValue = groupService.findGroupId(Long.parseLong(groupId.get("group_cd")));
         List<GroupMemberEntity> members = groupMemberService.readGroupUser(groupValue);
 
+        Map<String, Object> groupInfo = new HashMap<>();
         List groupMemberInfoList = new ArrayList();
+
+        groupInfo.put("group_nm",groupValue.getGName());
+        groupInfo.put("group_ex",groupValue.getGEx());
+        groupInfo.put("group_pic",groupValue.getGPic());
+
+        UserEntity groupAdmin = groupValue.getGMstUserFK();
+        groupInfo.put("user_id", groupAdmin.getUserId());
+        groupInfo.put("user_nm", groupAdmin.getUserNm());
+        groupInfo.put("user_ex", groupAdmin.getUserEx());
+        groupInfo.put("user_pic", null);
+
         for(GroupMemberEntity groupMember : members)
         {
-            Map<String, Object> groupMemberInfoMap = new HashMap<>();
             UserEntity user =  userService.find(groupMember.getUserCodeFK().getUserCd());
-            groupMemberInfoMap.put("userId", user.getUserId());
-            groupMemberInfoMap.put("userNm", user.getUserNm());
-            groupMemberInfoMap.put("userEx", user.getUserEx());
-            groupMemberInfoList.add( groupMemberInfoMap);
+            if(!groupAdmin.getUserId().equals(user.getUserId())){
+                Map<String, Object> groupMemberInfoMap = new HashMap<>();
+                groupMemberInfoMap.put("user_id", user.getUserId());
+                groupMemberInfoMap.put("user_nm", user.getUserNm());
+                groupMemberInfoMap.put("user_ex", user.getUserEx());
+                groupMemberInfoMap.put("user_pic", null);
+                groupMemberInfoList.add(groupMemberInfoMap);
+            }
         }
-        value.put("groupNm",groupValue.getGName());
-        value.put("groupEx",groupValue.getGEx());
-        value.put("groupPic",groupValue.getGPic());
-        value.put("groupMember",groupMemberInfoList);
-        return value;
+        groupInfo.put("group_member",groupMemberInfoList);
+        return groupInfo;
     }
 
     @ResponseBody
@@ -173,7 +186,6 @@ public class GroupController {
             resultMap.put("group",null);
             return resultMap;
         }
-
         return resultMap;
     }
 

@@ -31,7 +31,6 @@ public class GroupApplyController {
     private final GroupApplyService groupApplyService;
     private  final GroupMemberService groupMemberService;
 
-    @CrossOrigin
     @ResponseBody
     @PostMapping("apply")// 초대 ,신청
     public Map<String, Boolean> apply(@RequestParam Map<String, String> applyInfo)
@@ -123,7 +122,6 @@ public class GroupApplyController {
         return applyFindResult;
     }
 
-    @CrossOrigin
     @ResponseBody
     @PostMapping("apply/delete")
     public Map<String, Object> applyDelete(@RequestParam Map<String, String> applyInfo)

@@ -35,10 +35,9 @@ public class GroupService {
     public void GroupDelete(long id){
 
         GroupEntity groupEntity = groupRepository.findByGroupCd(id);
-        GroupMemberEntity groupMemberEntity = new GroupMemberEntity();
-        groupMemberEntity.setUserCodeFK(groupEntity.getGMstUserFK());
-        groupMemberEntity.setGroupCodeFK(groupEntity);
-        groupMemverService.deleteMember(groupMemberEntity);
+
+
+
         groupRepository.deleteById(id);
     }
 

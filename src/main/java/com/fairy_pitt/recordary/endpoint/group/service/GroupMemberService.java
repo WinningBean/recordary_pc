@@ -61,9 +61,10 @@ public class GroupMemberService {
     }
 
     //그룹 탈퇴
-    public void deleteMember(GroupMemberEntity groupMemberEntity)
+    public Boolean deleteMember(GroupMemberPK groupMemberEntity)
     {
-        groupMemberRepository.delete(groupMemberEntity);
+        groupMemberRepository.deleteById(groupMemberEntity);
+        return true;
     }
 
 

@@ -26,6 +26,9 @@ import java.util.Map;
 @Controller
 public class MainController {
 
+    @Autowired private GroupService groupService;
+    @Autowired private GroupMemberService groupmemberService;
+    @Autowired private FollowerService followerService;
     @Autowired private HttpSession session;
 
     @GetMapping(value = "/")
@@ -72,10 +75,7 @@ public class MainController {
         return "index";
     }
 
-    @Autowired private GroupService groupService;
-    @Autowired private GroupMemberService groupmemberService;
-    @Autowired private FollowerService followerService;
-
+    @CrossOrigin
     @ResponseBody
     @GetMapping("/mainPage")
     public Map<String, Object> profileRequest(){
@@ -108,6 +108,14 @@ public class MainController {
                 groupMap.put("group_cd",groupEntityResult.getGroupCd());
                 groupMap.put("group_pic",groupEntityResult.getGPic());
                 groupMap.put("group_state", groupEntityResult.getGState());
+
+                String master = groupEntityResult.getGMstUserFK().getUserId();
+                boolean checkMaster;
+                checkMaster = master.equals(currentUser.getUserId());
+
+                groupMap.put("adminCheck", checkMaster);
+                groupMap.put("group_admin", master);
+
                 groupMapList.add(groupMap);
             }
             map.put("userGroup", groupMapList);
@@ -123,6 +131,7 @@ public class MainController {
                 friendMapList.add(friendDetailMap);
             }
             map.put("friendList", friendMapList);
+
 //            List<UserEntity> friendList = followerService.friends(currentUser.getUserCd());
 //
 //            List friendMapList = new ArrayList();
