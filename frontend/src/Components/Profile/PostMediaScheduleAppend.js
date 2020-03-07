@@ -51,12 +51,13 @@ const PostMediaScheduleAppend = props => {
 
   const [userPost, setUserPost] = useState({
     user_id: store.getState().user.currentUser.user_id,
-    group_cd: store.getState().user.userGroup[0].group_cd,
+    // group_cd: store.getState().user.userGroup[0].group_cd,
+    group_cd: null,
     inputPost: {
-      post_ex: '',
-      post_pb_st: '',
-      post_str_ymd: '',
-      post_end_ymd: ''
+      post_ex: null,
+      post_pb_st: null,
+      post_str_ymd: null,
+      post_end_ymd: null
     }
   });
 
@@ -87,15 +88,9 @@ const PostMediaScheduleAppend = props => {
   };
 
   const showMedia = () => {
-    if (mediaOpen === null && scheduleOpen === null) {
+    if (mediaOpen === null) {
       setMediaOpen(
         <div onClose={() => setMediaOpen(null)}>
-          <div className='Post-Append-title post-Append'>
-            <TextField id='post_title' label='제목' />
-          </div>
-          <div className='Post-Append-Schedule'>
-            <DTP />
-          </div>
           <div className='Post-Append-Media post-Append'>
             <AddPhotoAlternateIcon
               style={{ fontSize: '50px' }}
@@ -110,7 +105,7 @@ const PostMediaScheduleAppend = props => {
   };
 
   const showSchedule = () => {
-    if (scheduleOpen === null && mediaOpen === null) {
+    if (scheduleOpen === null) {
       setScheduleOpen(
         <div onClose={() => setScheduleOpen(null)}>
           <div className='Post-Append-title post-Append'>
@@ -162,8 +157,8 @@ const PostMediaScheduleAppend = props => {
             onChange={changeHandle}
           />
         </div>
-        {mediaOpen}
         {scheduleOpen}
+        {mediaOpen}
         <div className='Post-Append-Tag-User post-Append'>
           {/* <Link to={`/${info.user_id}`}> */}
           <Chip
