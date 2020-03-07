@@ -47,6 +47,9 @@ public class UserEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = {CascadeType.ALL})
     private List<PostTagEntity> postTagList;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = {CascadeType.ALL})
+    private List<PostLikeEntity> postLikeList;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tabUserFk")
     private  List<ScheduleTabEntity> userTab;
 

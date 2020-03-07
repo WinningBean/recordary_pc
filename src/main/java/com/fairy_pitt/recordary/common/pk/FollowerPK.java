@@ -13,9 +13,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FollowerPK implements Serializable {
-//    @Column(name = "FOLLOWER_USER_FK")
     private Long userFK;
-
-//    @Column(name = "FOLLOWER_TARGET_FK")
     private Long targetFK;
 }

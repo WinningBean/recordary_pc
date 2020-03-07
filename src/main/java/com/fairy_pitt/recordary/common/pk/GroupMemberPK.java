@@ -12,8 +12,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GroupMemberPK implements Serializable {
-
     private Long groupCodeFK;
     private Long userCodeFK;
-
 }

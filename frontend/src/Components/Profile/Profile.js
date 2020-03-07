@@ -1,11 +1,12 @@
 import React from 'react';
 import './ProfilePage.css';
+import 'Components/Main/mainPage.css';
 import SearchAppBar from '../Other/SearchField';
 import ScheduleTimeline1 from './ScheduleTimeline1';
 import PictureTimeline from './PictureTimeline';
 import ScrollToTopOnMount from '../Other/ScrollToTopOnMount';
 import Follower from 'Components/Profile/Follower';
-import Header from 'Components/Header/Header';
+import Header from 'Containers/Header/Header';
 
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/core/styles';
@@ -18,8 +19,8 @@ class Profile extends React.Component {
             addScheduleClick: false,
             profileScheduleClick: false,
             profilePictureClick: false,
-            followerNumClick: false,
-        }
+            followerNumClick: false
+        };
     }
     setProfileScheduleOpen = () => {
         if (this.state.profileScheduleClick === true) {
@@ -44,101 +45,151 @@ class Profile extends React.Component {
         return this.setState({
             profilePictureClick: true,
             profileScheduleClick: false
-
         });
     };
 
-
     render() {
-
-
         const ProfileDownTimeLine = () => {
-            if (this.state.profileScheduleClick === true && this.state.profilePictureClick === false) {
-
+            if (
+                this.state.profileScheduleClick === true &&
+                this.state.profilePictureClick === false
+            ) {
                 return (
-                    <div className="profile-ScheduleTimeLine">
+                    <div className='profile-ScheduleTimeLine'>
                         <ScheduleTimeline1></ScheduleTimeline1>
                         <ScheduleTimeline1></ScheduleTimeline1>
                         <ScheduleTimeline1></ScheduleTimeline1>
                         <ScheduleTimeline1></ScheduleTimeline1>
                     </div>
-                )
+                );
             }
-            if (this.state.profilePictureClick === true && this.state.profileScheduleClick === false) {
+            if (
+                this.state.profilePictureClick === true &&
+                this.state.profileScheduleClick === false
+            ) {
                 return (
-                    <div className="profile-MediaTimeline">
+                    <div className='profile-MediaTimeline'>
                         <PictureTimeline></PictureTimeline>
                         <PictureTimeline></PictureTimeline>
                         <PictureTimeline></PictureTimeline>
                         <PictureTimeline></PictureTimeline>
                     </div>
-                )
+                );
             }
             return null;
-        }
+        };
 
         const FollowerShow = () => {
             if (this.state.followerNumClick === true) {
-                return <Follower onCancel={() => this.setState({ followerNumClick: false })}></Follower>
+                return (
+                    <Follower
+                        onCancel={() =>
+                            this.setState({ followerNumClick: false })
+                        }
+                    ></Follower>
+                );
             }
             return null;
-        }
+        };
         console.log(this.props.match.params.userId);
 
         return (
             <>
-                {/* <Header /> */}
+                <Header />
                 <main>
                     <ScrollToTopOnMount />
-                    <div id="main-profile">
-                        <div className="search-user">
+                    <div id='main-profile'>
+                        <div className='profile-search-schedule'>
                             <SearchAppBar></SearchAppBar>
                         </div>
-                        <div id="main-profile-info">
-                            <div id="userinfo">
-                                <div id="user-image">
-                                    <img alt="profile-img" src="profile-image.png" />
-                                </div>
-                                <div id="userinfo-text">
-                                    <div className="info">
-                                        <ul>
-                                            <li><span className="name">WaterGlasses</span></li>
-                                            <li>
-                                                <span className="followerName">팔로워</span>
-                                                <Link component="button" onClick={() => this.setState({ followerNumClick: true })}>
-                                                    <span className="followerNum">50</span>
-                                                </Link>
-                                                {FollowerShow()}
-                                            </li>
-                                            <li>
-                                                <span className="followerName">팔로우</span>
-                                                <Link component="button" onClick={() => this.setState({ followerNumClick: true })}>
-                                                    <span className="followNum">50</span>
-                                                </Link>
-                                            </li>
-                                        </ul>
-                                        <div className="status-content">
-                                            상태메시지입니담!
-                                        <br></br>
-                                            배고픕니담
-                                    </div>
-                                    </div>
-                                </div>
+                        <div>
+                            <div className='postIt'>
+                                <ul>
+                                    <li className='postIt-1' />
+                                    <li className='postIt-2'  />
+                                    <li className='postIt-3'  />
+                                </ul>
                             </div>
-                            <div id="schedule-area">
-                                <div className="calender">
-                                    {/* 캘린더 추가 */}
-                                    달력
-                            </div>
+                            <div id='main-profile-info'>
+                                <div id='userinfo'>
+                                    <div id='user-image'>
+                                        <img
+                                            alt='profile-img'
+                                            src='https://i.pinimg.com/originals/0d/e8/86/0de8869350e89fd300edaeef3b659674.jpg'
+                                        />
+                                    </div>
+                                    <div id='userinfo-text'>
+                                        <div className='info'>
+                                            <ul>
+                                                <li>
+                                                    <span className='name'>
+                                                        Water_Glasses
+                                                    </span>
+                                                </li>
+                                                <li>
+                                                    <span className='followerName'>
+                                                        팔로워
+                                                    </span>
+                                                    <Link
+                                                        component='button'
+                                                        onClick={() =>
+                                                            this.setState({
+                                                                followerNumClick: true
+                                                            })
+                                                        }
+                                                    >
+                                                        <span className='followerNum'>
+                                                            50
+                                                        </span>
+                                                    </Link>
+                                                    {FollowerShow()}
+                                                </li>
+                                                <li>
+                                                    <span className='followerName'>
+                                                        팔로우
+                                                    </span>
+                                                    <Link
+                                                        component='button'
+                                                        onClick={() =>
+                                                            this.setState({
+                                                                followerNumClick: true
+                                                            })
+                                                        }
+                                                    >
+                                                        <span className='followNum'>
+                                                            18
+                                                        </span>
+                                                    </Link>
+                                                </li>
+                                            </ul>
+                                            <div className='status-content'>
+                                                <div>
+                                                    #카르페디엠 #현재를 즐겨라
+                                                    #OMG #새벽 5시 13분
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id='schedule-area'>
+                                    <div className='calender'>
+                                        {/* 캘린더 추가 */}
+                                        달력
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <nav>
-                        <div id="tap-1" >
-                            <NavButton onClick={this.setProfileScheduleOpen}><span>일정</span></NavButton>
+                        <div id='tap-1'>
+                            <NavButton onClick={this.setProfileScheduleOpen}>
+                                <span>일정</span>
+                            </NavButton>
                         </div>
-                        <div id="tap-2">
-                            <NavButton onClick={this.setProfilePictureOpen}><span>사진</span></NavButton>
+                        <div id='tap-2'>
+                            <NavButton onClick={this.setProfilePictureOpen}>
+                                <span>사진</span>
+                            </NavButton>
                         </div>
                     </nav>
                     {ProfileDownTimeLine()}
@@ -152,7 +203,7 @@ const NavButton = styled(Button)({
     minWidth: '430px',
     height: '60px',
     fontSize: '18px',
-    fontStyle: 'bold',
-})
+    fontStyle: 'bold'
+});
 
 export default Profile;

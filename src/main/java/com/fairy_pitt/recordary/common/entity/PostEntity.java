@@ -53,12 +53,15 @@ public class PostEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "postCodeFK")
     private List<ScheduleEntity> postSchedules;
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = {CascadeType.ALL})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postFK", cascade = {CascadeType.ALL})
     private List<PostTagEntity> postTagList;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = {CascadeType.ALL})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postOriginFK", cascade = {CascadeType.ALL})
     private List<PostEntity> postOriginList;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "commentPostFK")
     private List<CommentEntity> postComments;
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postFK", cascade = {CascadeType.ALL})
+    private List<PostLikeEntity> postLikList;
 }

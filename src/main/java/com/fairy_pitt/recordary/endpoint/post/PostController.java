@@ -21,7 +21,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("post")
 public class PostController {
-
     @Autowired private PostService postService;
     @Autowired private HttpSession session;
     @Autowired private PostRepository postRepository;
@@ -30,17 +29,33 @@ public class PostController {
 
     @PostMapping("/write")
     public Map<String, Boolean> write(@RequestParam Map<String, Object> paramMap){
-        Long userCd = (Long)paramMap.get("user_cd");
+        String userId = (String) paramMap.get("user_id");
         Long groupCd = (Long) paramMap.get("group_cd");
 
-        UserEntity userEntity = userRepository.findByUserCd(userCd);
+        UserEntity userEntity = userRepository.findByUserId(userId);
         GroupEntity groupEntity = groupRepository.findByGroupCd(groupCd);
 
-        Map<String, Object> postMap = (Map)paramMap.get("input_post");
+        Map<String, Object> postMap = (Map)paramMap.get("inputPost");
         Boolean writeState = postService.create(userEntity, groupEntity, postMap);
 
         Map<String, Boolean> map = new HashMap<>();
         map.put("isWrite", writeState);
+        return map;
+    }
+
+    @PostMapping("/share")
+    public  Map<String, Boolean> share(@RequestParam Map<String, Object> paramMap){
+        String  userId = (String) paramMap.get("user_id");
+        Long groupCd = (Long) paramMap.get("group_cd");
+
+        UserEntity userEntity = userRepository.findByUserId(userId);
+        GroupEntity groupEntity = groupRepository.findByGroupCd(groupCd);
+
+        Map<String, Object> postMap = (Map)paramMap.get("sharePost");
+        Boolean writeState = postService.share(userEntity, groupEntity, postMap);
+
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("isShare", writeState);
         return map;
     }
 
@@ -59,8 +74,8 @@ public class PostController {
 
     @GetMapping("/")
     public Map<String, Object> userPost(@RequestParam Map<String, Object> paramMap){
-        Long userCd = (Long)paramMap.get("user_cd");
-        UserEntity userEntity = userRepository.findByUserCd(userCd);
+        String  userId = (String)paramMap.get("user_id");
+        UserEntity userEntity = userRepository.findByUserId(userId);
         List<PostEntity> postList;
 
         Long groupCd = (Long)paramMap.get("group_cd");
@@ -77,6 +92,7 @@ public class PostController {
             Map<String, Object> postDetailMap = new HashMap<>();
             postDetailMap.put("post_cd", postEntity.getPostCd());
             postDetailMap.put("post_group_fk", postEntity.getGroupFK().getGroupCd());
+            postDetailMap.put("post_origin_fk", postEntity.getPostOriginFK().getPostCd());
             postDetailMap.put("post_ex", postEntity.getPostEx());
             postDetailMap.put("post_pb_st", postEntity.getPostPublicState());
             postDetailMap.put("post_str_ymd", postEntity.getPostStrYMD());
@@ -100,8 +116,8 @@ public class PostController {
     @GetMapping("/search")
     public Map<String, Object> search(@RequestParam Map<String, Object> paramMap){
         String searchContent = (String)paramMap.get("searchContent");
-        Long userCd = (Long)paramMap.get("user_cd");
-        UserEntity userEntity = userRepository.findByUserCd(userCd);
+        String userId = (String) paramMap.get("user_id");
+        UserEntity userEntity = userRepository.findByUserId(userId);
         List<PostEntity> postList;
 
         Long groupCd = (Long)paramMap.get("group_cd");
@@ -117,6 +133,7 @@ public class PostController {
             Map<String, Object> postDetailMap = new HashMap<>();
             postDetailMap.put("post_cd", postEntity.getPostCd());
             postDetailMap.put("post_group_fk", postEntity.getGroupFK().getGroupCd());
+            postDetailMap.put("post_origin_fk", postEntity.getPostOriginFK().getPostCd());
             postDetailMap.put("post_ex", postEntity.getPostEx());
             postDetailMap.put("post_pb_st", postEntity.getPostPublicState());
             postDetailMap.put("post_str_ymd", postEntity.getPostStrYMD());

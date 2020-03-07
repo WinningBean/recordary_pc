@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
 import MainPage from 'Components/Main/MainPage';
-import { withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom';
 
-const mapStateToProps = (state)=>{
+const mapStateToProps = state => {
     return {
-        isLogin : state.isLogin,
-    }
-}
+        isLogin: state.isLogin
+    };
+};
 
 export default withRouter(connect(mapStateToProps)(MainPage));
