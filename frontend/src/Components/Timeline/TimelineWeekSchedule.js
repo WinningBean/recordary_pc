@@ -15,41 +15,9 @@ import Button from '@material-ui/core/Button';
 import axios from 'axios';
 
 const TimelineWeekSchedule = () => {
-  const [alert, setAlert] = useState(null);
-
-  const showPostEx = async e => {
-    setAlert(<Backdrop />);
-    try {
-      const { data } = await axios.get(`http://localhost:8080/post/write`);
-      if (data.isWrite) {
-        setAlert(
-          <AlertDialog
-            severity='success'
-            content='게시물이 추가되었습니다.'
-            onAlertClose={() => setAlert(null)}
-          />
-        );
-      } else {
-        setAlert(
-          <Snackbar
-            severity='error'
-            content='게시물을 추가하지 못했습니다.'
-            onClose={() => setAlert(null)}
-          />
-        );
-      }
-    } catch (error) {
-      console.log(error);
-      setAlert(
-        <Snackbar
-          severity='error'
-          content='서버 에러로 게시물을 추가하지 못했습니다..'
-          onClose={() => setAlert(null)}
-        />
-      );
-    }
-  };
-
+  // const showPostEx = async e => {
+  //     const { data } = await axios.get(`http://localhost:8080/post/write`);
+  // }
   return (
     // 타임라인스케쥴 => 공유하고싶은 주일때
     <div className='timeline-schedule'>

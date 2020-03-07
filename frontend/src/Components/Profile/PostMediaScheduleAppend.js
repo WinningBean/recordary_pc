@@ -3,6 +3,9 @@ import './PostAppend.css';
 import SwitchLabels from '../UI/Switch';
 import DTP from 'Components/UI/DTP';
 import SelectGroup from 'Components/UI/SelectGroup';
+import Backdrop from 'Components/UI/Backdrop';
+import AlertDialog from 'Components/Other/AlertDialog';
+import Snackbar from 'Components/UI/Snackbar';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -48,6 +51,7 @@ const PostMediaScheduleAppend = props => {
   const [mediaOpen, setMediaOpen] = useState(null);
   const [scheduleOpen, setScheduleOpen] = useState(null);
   const [open, setOpen] = React.useState(false);
+  const [alert, setAlert] = useState(null);
 
   const [userPost, setUserPost] = useState({
     user_id: store.getState().user.currentUser.user_id,
@@ -77,14 +81,43 @@ const PostMediaScheduleAppend = props => {
   };
 
   const onSubmit = async () => {
-    console.log(userPost);
+    setAlert(<Backdrop />);
+    try {
+      console.log(userPost);
 
-    const form = new FormData();
-    form.append('userPost', userPost);
+      const form = new FormData();
+      form.append('userPost', userPost);
 
-    const { data } = await axios.post('/post/write', form);
+      const { data } = await axios.post('/post/write', form);
 
-    console.log(data);
+      console.log(data);
+      if (data.isWrite) {
+        setAlert(
+          <AlertDialog
+            severity='success'
+            content='게시물이 추가되었습니다.'
+            onAlertClose={() => setAlert(null)}
+          />
+        );
+      } else {
+        setAlert(
+          <Snackbar
+            severity='error'
+            content='게시물을 추가하지 못했습니다.'
+            onClose={() => setAlert(null)}
+          />
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      setAlert(
+        <Snackbar
+          severity='error'
+          content='서버 에러로 게시물을 추가하지 못했습니다..'
+          onClose={() => setAlert(null)}
+        />
+      );
+    }
   };
 
   const showMedia = () => {
@@ -113,6 +146,24 @@ const PostMediaScheduleAppend = props => {
           </div>
           <div className='Post-Append-Schedule'>
             <DTP />
+          </div>
+          <div className='Post-Append-Tag-User post-Append'>
+            {/* <Link to={`/${info.user_id}`}> */}
+            <Chip
+              avatar={
+                // <Avatar alt={`${info.user_id} img`} src={info.user_pic} />
+                <Avatar alt='이미지' src='img/RIcon.png' />
+              }
+              className={classes.chip}
+              // label={info.user_nm}
+              label='성호'
+              style={{
+                backgroundColor: 'rgba(20, 81, 51, 0.8)',
+                color: '#ffffff'
+              }}
+              clickable
+            />
+            {/* </Link> */}
           </div>
         </div>
       );
@@ -159,24 +210,7 @@ const PostMediaScheduleAppend = props => {
         </div>
         {scheduleOpen}
         {mediaOpen}
-        <div className='Post-Append-Tag-User post-Append'>
-          {/* <Link to={`/${info.user_id}`}> */}
-          <Chip
-            avatar={
-              // <Avatar alt={`${info.user_id} img`} src={info.user_pic} />
-              <Avatar alt='이미지' src='img/RIcon.png' />
-            }
-            className={classes.chip}
-            // label={info.user_nm}
-            label='성호'
-            style={{
-              backgroundColor: 'rgba(20, 81, 51, 0.8)',
-              color: '#ffffff'
-            }}
-            clickable
-          />
-          {/* </Link> */}
-        </div>
+
         <div className='Post-AppendP-Bottom'>
           <div className='Post-Append-Open-Choose'>
             <SwitchLabels></SwitchLabels>
