@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Timeline.css';
-import AlertDialog from 'Components/Other/AlertDialog';
-import Snackbar from 'Components/UI/Snackbar';
 import CommentWeekSchedule from 'Components/Timeline/CommentWeekSchedule';
-import Backdrop from 'Components/UI/Backdrop';
 
 import ThumbUpRoundedIcon from '@material-ui/icons/ThumbUpRounded';
 import AddCircleIcon from '@material-ui/icons/AddCircle';

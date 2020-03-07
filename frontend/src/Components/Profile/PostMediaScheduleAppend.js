@@ -43,6 +43,9 @@ const useStyles = makeStyles(theme => ({
   chip: {
     marginRight: '4px',
     marginBottom: '4px'
+  },
+  backGround: {
+    backGroundColor: 'rgba(161, 159, 159, 0.3)'
   }
 }));
 
@@ -82,11 +85,14 @@ const PostMediaScheduleAppend = props => {
 
   const onSubmit = async () => {
     setAlert(<Backdrop />);
+
     try {
       console.log(userPost);
 
       const form = new FormData();
-      form.append('userPost', userPost);
+      form.append('user_id', userPost.user_id);
+      form.append('group_cd', userPost.group_cd);
+      form.append('inputPost', userPost.inputPost);
 
       const { data } = await axios.post('/post/write', form);
 
@@ -183,29 +189,35 @@ const PostMediaScheduleAppend = props => {
         />
         <div className='PostAdd-title'>게시물 추가</div>
       </div>
-
       <div className='Post-Media-Schedule-Append-Form '>
-        <div className='schedule-media-button'>
-          <div className='plus-button-design' onClick={showSchedule}>
-            <DateRangeIcon style={{ fontSize: '30px' }} />
-            <span style={{ fontSize: '15px', marginLeft: '5px' }}>
-              일정추가
-            </span>
+        <div className='Post-Append-Group' style={{ marginLeft: '12px' }}>
+          <div>
+            <SelectGroup />
           </div>
-          <div className='plus-button-design' onClick={showMedia}>
-            <PermMediaIcon style={{ fontSize: '30px' }} />
-            <span style={{ fontSize: '15px', marginLeft: '10px' }}>미디어</span>
+
+          <div className='schedule-media-button '>
+            <div className='plus-button-design' onClick={showSchedule}>
+              <DateRangeIcon style={{ fontSize: '30px' }} />
+              <span style={{ fontSize: '15px', marginLeft: '5px' }}>
+                일정추가
+              </span>
+            </div>
+            <div className='plus-button-design' onClick={showMedia}>
+              <PermMediaIcon style={{ fontSize: '30px' }} />
+              <span style={{ fontSize: '15px', marginLeft: '10px' }}>
+                미디어
+              </span>
+            </div>
           </div>
         </div>
-        <div clsaaName='Post-Append-Group' style={{ marginLeft: '12px' }}>
-          <SelectGroup />
-        </div>
+
         <div className='Post-Append-text post-Append'>
           <TextField
             id='post_text'
             label='내용'
             multiline
             rowsMax='5'
+            rows='3'
             name='post_ex'
             onChange={changeHandle}
           />
@@ -213,10 +225,7 @@ const PostMediaScheduleAppend = props => {
         {scheduleOpen}
         {mediaOpen}
 
-        <div className='Post-AppendP-Bottom'>
-          <div className='Post-Append-Open-Choose'>
-            <SwitchLabels></SwitchLabels>
-          </div>
+        <div className='Post-Append-Bottom'>
           <div className='Post-Upload-buttons'>
             <Button onClick={handleClickOpen}>게시</Button>
             <Button onClick={() => props.onCancel()}>취소</Button>
@@ -235,7 +244,7 @@ const PostMediaScheduleAppend = props => {
             </DialogContent>
             <DialogActions>
               <Button
-                onClick={(() => props.onCancel(), onSubmit)}
+                onClick={(handleClose, () => props.onCancel(), onSubmit)}
                 color='primary'
               >
                 확인

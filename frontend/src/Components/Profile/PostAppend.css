@@ -3,7 +3,6 @@
   display: flex;
   flex-direction: column;
   padding: 10px 20px;
-  max-height: 500px;
   font-size: 20px;
 }
 .Post-Append-titleName {
@@ -15,6 +14,11 @@
 .Post-Append-Group > div > .makeStyles-formControl {
   margin: 10px !important;
   min-width: 200px !important;
+}
+.Post-Append-Group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .post-Append {
   margin-left: 10px;
@@ -41,17 +45,13 @@
 .Post-Append-Media {
   display: flex;
   justify-content: center;
-  /* height: 100px; */
-  /* border-top: 1px solid lightgray;
-  border-bottom: 1px solid lightgray; */
   width: 530px;
   border: 1px solid lightgray;
   margin: 5px 15px;
 }
 .schedule-media-button {
   display: flex;
-  margin: 0px 10px;
-  margin-top: 10px;
+  height: 40px;
 }
 .plus-button-design {
   padding: 0px 10px;
@@ -64,20 +64,12 @@
   background-color: rgba(161, 159, 159, 0.3);
   cursor: pointer;
 }
-.plus-button-design:active:focus {
-  background-color: rgba(161, 159, 159, 0.3);
-  cursor: pointer;
-}
+
 .Post-Append-Tag-User {
   display: flex;
   width: 550px;
   height: 50px;
   padding: 10px 0px;
-}
-.Post-Append-Open-Choose {
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 10px;
 }
 .MuiFormGroup-root {
   display: flex;
@@ -87,10 +79,6 @@
 .Post-Upload-buttons {
   display: flex;
   justify-content: flex-end;
-}
-.Post-AppendP-Bottom {
-  display: flex;
-  justify-content: space-between;
 }
 /* postScheduleAppend css */
 .Post-Schedule-Append-Form,

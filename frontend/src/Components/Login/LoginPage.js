@@ -59,64 +59,64 @@ class Login extends React.Component {
       const Form = new FormData();
       Form.append('user_id', this.state.user_id);
       Form.append('user_pw', this.state.user_pw);
-      const { isLogin } = (await axios.post('/user/loginRequest', Form)).data;
-      // .catch();
-      console.log(isLogin);
+      // const { isLogin } = (await axios.post('/user/loginRequest', Form)).data;
+      // // .catch();
+      // console.log(isLogin);
 
-      if (isLogin === false) {
-        this.setState({
-          failedLogin: () => {
-            return (
-              <AlertDialog
-                severity='error'
-                content='로그인에 실패하였습니다.'
-                onAlertClose={() => {
-                  this.setState({ failedLogin: () => {} });
-                }}
-              />
-            );
-          }
-        });
-        return;
-      }
+      // if (isLogin === false) {
+      //   this.setState({
+      //     failedLogin: () => {
+      //       return (
+      //         <AlertDialog
+      //           severity='error'
+      //           content='로그인에 실패하였습니다.'
+      //           onAlertClose={() => {
+      //             this.setState({ failedLogin: () => {} });
+      //           }}
+      //         />
+      //       );
+      //     }
+      //   });
+      //   return;
+      // }
       this.setState({ isLoading: true });
       // 유저에 대한 정보를 가져오고 그 결과값을 state 에 저장
-      const { data } = await axios.get('/mainPage');
-      // const data = {
-      //     currentUser: {
-      //         user_ex: null,
-      //         user_id: 'ffff3311',
-      //         user_nm: '홍길동'
-      //     },
-      //     friendList: [
-      //         {
-      //             friend_user_id: 1,
-      //             friend_user_nm: '친구1',
-      //             friend_user_pic: 'http://placehold.it/40x40',
-      //             friend_user_ex : 'hi',
-      //         },
-      //         {
-      //             friend_user_id: 2,
-      //             friend_user_nm: '친구2',
-      //             friend_user_pic: 'http://placehold.it/40x40',
-      //             friend_user_ex : 'hi',
-      //         }
-      //     ],
-      //     userGroup: [
-      //         {
-      //             group_cd: 1,
-      //             group_nm: '그룹1',
-      //             group_pic: 'http://placehold.it/40x40',
-      //             group_open: true,
-      //         },
-      //         {
-      //             group_cd: 2,
-      //             group_nm: '그룹2',
-      //             group_pic: 'http://placehold.it/40x40',
-      //             group_open: true,
-      //         }
-      //     ]
-      // }
+      // const { data } = await axios.get('/mainPage');
+      const data = {
+        currentUser: {
+          user_ex: null,
+          user_id: 'ffff3311',
+          user_nm: '홍길동'
+        },
+        friendList: [
+          {
+            friend_user_id: 1,
+            friend_user_nm: '친구1',
+            friend_user_pic: 'http://placehold.it/40x40',
+            friend_user_ex: 'hi'
+          },
+          {
+            friend_user_id: 2,
+            friend_user_nm: '친구2',
+            friend_user_pic: 'http://placehold.it/40x40',
+            friend_user_ex: 'hi'
+          }
+        ],
+        userGroup: [
+          {
+            group_cd: 1,
+            group_nm: '그룹1',
+            group_pic: 'http://placehold.it/40x40',
+            group_open: true
+          },
+          {
+            group_cd: 2,
+            group_nm: '그룹2',
+            group_pic: 'http://placehold.it/40x40',
+            group_open: true
+          }
+        ]
+      };
       this.props.onLogin();
       this.props.onSavaUserData(data);
       this.props.history.push('/main'); //페이지 이동
