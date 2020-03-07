@@ -85,10 +85,11 @@ const PostMediaScheduleAppend = props => {
     try {
       console.log(userPost);
 
-      // const form = new FormData();
-      // form.append('userPost', userPost);
+      const form = new FormData();
+      form.append('userPost', userPost);
 
-      const { data } = await axios.post('/post/write', userPost);
+      const { data } = await axios.post('/post/write', form);
+
       console.log(data);
 
       if (data.isWrite) {
@@ -159,7 +160,8 @@ const PostMediaScheduleAppend = props => {
               label='성호'
               style={{
                 backgroundColor: 'rgba(20, 81, 51, 0.8)',
-                color: '#ffffff'
+                color: '#ffffff',
+                marginLeft: '5px'
               }}
               clickable
             />
@@ -233,7 +235,7 @@ const PostMediaScheduleAppend = props => {
             </DialogContent>
             <DialogActions>
               <Button
-                onClick={(handleClose, () => props.onCancel(), onSubmit)}
+                onClick={(() => props.onCancel(), onSubmit)}
                 color='primary'
               >
                 확인
