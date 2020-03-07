@@ -53,7 +53,7 @@ const PostMediaScheduleAppend = props => {
   const [open, setOpen] = React.useState(false);
   const [alert, setAlert] = useState(null);
 
-  // const [userPost, setUserPost] = useState({
+  // const [userPost,   UserPost] = useState({
   const [post, setPost] = useState({
     // user_id: store.getState().user.currentUser.user_id,
     // // group_cd: store.getState().user.userGroup[0].group_cd,
@@ -67,7 +67,7 @@ const PostMediaScheduleAppend = props => {
   });
 
   const changeHandle = e => {
-    setUserPost({
+    setPost({
       ...post,
       inputPost: { [e.target.name]: e.target.value }
     });
@@ -89,7 +89,7 @@ const PostMediaScheduleAppend = props => {
       const form = new FormData();
       form.append('user_id', store.getState().user.currentUser.user_id);
       form.append('group_cd', null);
-      from.append('inputPost', post.inputPost);
+      form.append('inputPost', post.inputPost);
 
       const { data } = await axios.post('/post/write', form);
       console.log(data);
