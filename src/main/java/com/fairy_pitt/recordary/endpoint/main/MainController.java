@@ -31,6 +31,7 @@ public class MainController {
     @Autowired private GroupMemberService groupmemberService;
     @Autowired private FollowerService followerService;
     @Autowired private HttpSession session;
+    @Autowired private UserService userService;
 
     @GetMapping(value = "/")
     public String Index(){
