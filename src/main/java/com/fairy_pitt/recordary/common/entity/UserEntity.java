@@ -49,4 +49,10 @@ public class UserEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tabUserFk")
     private  List<ScheduleTabEntity> userTab;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userCodeFK")
+    private List<ScheduleMemberEntity> scheduleMembers;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "commentUserFK")
+    private List<CommentEntity> userComments;
 }

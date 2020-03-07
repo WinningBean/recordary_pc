@@ -2,6 +2,7 @@ package com.fairy_pitt.recordary.endpoint.Schedule.Service;
 
 import com.fairy_pitt.recordary.common.entity.PostEntity;
 import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
+import com.fairy_pitt.recordary.common.entity.ScheduleMemberEntity;
 import com.fairy_pitt.recordary.common.entity.ScheduleTabEntity;
 import com.fairy_pitt.recordary.common.repository.ScheduleRepository;
 import com.fairy_pitt.recordary.common.repository.ScheduleTabRepository;
@@ -51,7 +52,6 @@ public class ScheduleService { // 포스터가 있어야 일정이 생길 수있
         return scheduleRepository.findByScheduleStrBetween(fromData, ToData);
     }
 
-    @PostMapping("update")
     public Boolean updateSchedule(long PostId, ScheduleEntity scheduleEntity)
     {
         ScheduleEntity schedule = scheduleRepository.findById(PostId).get();
@@ -61,6 +61,11 @@ public class ScheduleService { // 포스터가 있어야 일정이 생길 수있
         schedule.setScheduleNm(scheduleEntity.getScheduleNm());
 
         return true;
+    }
+
+    public List<ScheduleMemberEntity> getScheduleMember(long scheduleCode)
+    {
+        return scheduleRepository.findById(scheduleCode).get().getScheduleMembers();
     }
 
 }

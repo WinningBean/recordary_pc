@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -39,6 +40,9 @@ public class ScheduleEntity {
 
    @Column(name = "SCHEDULE_COLOR")
    private String scheduleCol;
+
+   @OneToMany(fetch = FetchType.LAZY, mappedBy = "scheduleCodeFK")
+   private List<ScheduleMemberEntity> scheduleMembers;
 
    //private String scheduleLocation;
 
