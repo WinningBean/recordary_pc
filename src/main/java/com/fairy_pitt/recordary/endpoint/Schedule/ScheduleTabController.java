@@ -1,8 +1,8 @@
-package com.fairy_pitt.recordary.endpoint.ScheduleTab;
+package com.fairy_pitt.recordary.endpoint.Schedule;
 
 import com.fairy_pitt.recordary.common.entity.ScheduleTabEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
-import com.fairy_pitt.recordary.endpoint.ScheduleTab.Service.ScheduleTabService;
+import com.fairy_pitt.recordary.endpoint.Schedule.Service.ScheduleTabService;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
-import java.io.ObjectStreamClass;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
