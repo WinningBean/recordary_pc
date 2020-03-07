@@ -38,7 +38,7 @@ export default function LongMenu(props) {
         PaperProps={{
           style: {
             maxHeight: ITEM_HEIGHT * 4.5,
-            width: 150
+            width: 120
           }
         }}
       >

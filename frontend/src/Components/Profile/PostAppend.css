@@ -1,40 +1,36 @@
-/* ChoosePostAppend css */
-.Choose-Upload-Content {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  width: 300px;
-  height: 220px;
-}
-.Choose-Post-select {
-  margin-bottom: 20px;
-}
-
-.Choose-buttons {
-  display: flex;
-  height: 50px;
-  justify-content: flex-end;
-  margin-top: 10px;
-}
-
 /* postMediaScheduleAppend css  */
 .Post-Media-Schedule-Append-Form {
   display: flex;
   flex-direction: column;
   padding: 10px 20px;
-  width: 600px;
-  height: 560px;
   font-size: 20px;
 }
 .Post-Append-titleName {
   padding-top: 10px;
+  background-color: rgba(20, 81, 51, 0.8);
+  height: 60px;
+  display: flex;
+}
+.Post-Append-Group > div > .makeStyles-formControl {
+  margin: 10px !important;
+  min-width: 200px !important;
+}
+.Post-Append-Group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .post-Append {
-  margin-bottom: 10px;
+  margin-left: 10px;
+  padding: 5px 10px;
 }
-
+.PostAdd-title {
+  color: white;
+  font-size: 25px;
+  margin-top: 5px;
+  margin-left: 10px;
+}
 .Post-Append-Schedule {
-  margin-top: 20px;
   padding: 5px;
 }
 
@@ -48,22 +44,32 @@
 
 .Post-Append-Media {
   display: flex;
-  height: 100px;
-  width: 550px;
+  justify-content: center;
+  width: 530px;
   border: 1px solid lightgray;
-  border-radius: 5px;
+  margin: 5px 15px;
+}
+.schedule-media-button {
+  display: flex;
+  height: 40px;
+}
+.plus-button-design {
+  padding: 0px 10px;
+  margin: 0px 5px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0px 1px 3px rgba(161, 159, 159, 0.8);
+}
+.plus-button-design:hover {
+  background-color: rgba(161, 159, 159, 0.3);
+  cursor: pointer;
 }
 
 .Post-Append-Tag-User {
   display: flex;
   width: 550px;
   height: 50px;
-  border: 1px solid lightgray;
-  border-radius: 5px;
-}
-.Post-Append-Open-Choose {
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding: 10px 0px;
 }
 .MuiFormGroup-root {
   display: flex;
@@ -73,10 +79,6 @@
 .Post-Upload-buttons {
   display: flex;
   justify-content: flex-end;
-}
-.Post-AppendP-Bottom {
-  display: flex;
-  justify-content: space-between;
 }
 /* postScheduleAppend css */
 .Post-Schedule-Append-Form,

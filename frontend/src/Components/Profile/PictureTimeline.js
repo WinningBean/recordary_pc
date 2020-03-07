@@ -21,14 +21,14 @@ class PictureTimeline extends React.Component {
     const TimelineOpen = () => {
       if (this.state.TimelineClick === true) {
         return (
-          <Dialog
-            className='DialogTimeline'
-            open
-            style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}
-            onClose={() => this.setState({ TimelineClick: false })}
-          >
-            <Timeline></Timeline>
-          </Dialog>
+          <article>
+            <div className='media-area'>
+              <div className='media-box' onClick={() => this.setState({ TimelineClick: true })}>
+                <img alt='timeline-img' src='img/1579501322063.jpg' />
+              </div>
+            </div>
+            {TimelineOpen()}
+          </article>
         );
       }
       return null;

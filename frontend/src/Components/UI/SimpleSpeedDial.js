@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
-import FileCopyIcon from '@material-ui/icons/FileCopyOutlined';
+import PostAddIcon from '@material-ui/icons/PostAdd';
 import ShareIcon from '@material-ui/icons/Share';
+import PostMediaScheduleAppend from 'Components/Profile/PostMediaScheduleAppend';
+import PostShare from 'Components/Profile/PostShare';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,15 +34,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const actions = [
-  { icon: <FileCopyIcon />, name: 'Copy' },
-  { icon: <ShareIcon />, name: 'Share' }
-];
-
 export default function SpeedDials() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [hidden, setHidden] = React.useState(false);
+  const [postMediaScheduleClick, setPostMediaScheduleClick] = React.useState(null);
+  const [postShareClick, setPostShareClick] = React.useState(null);
 
   const handleClose = () => {
     setOpen(false);
@@ -48,6 +47,25 @@ export default function SpeedDials() {
 
   const handleOpen = () => {
     setOpen(true);
+  };
+
+  const PostMediaScheduleWrite = () => {
+    if (postMediaScheduleClick === null) {
+      setPostMediaScheduleClick(
+        <PostMediaScheduleAppend onCancel={() => setPostMediaScheduleClick(null)} />
+      );
+      return;
+    }
+    setPostMediaScheduleClick(null);
+    return null;
+  };
+  const PostShareForm = () => {
+    if (postShareClick === null) {
+      setPostShareClick(<PostShare onCancel={() => setPostShareClick(null)} />);
+      return;
+    }
+    setPostShareClick(null);
+    return null;
   };
 
   return (
@@ -62,14 +80,20 @@ export default function SpeedDials() {
           onOpen={handleOpen}
           open={open}
         >
-          {actions.map(action => (
-            <SpeedDialAction
-              key={action.name}
-              icon={action.icon}
-              tooltipTitle={action.name}
-              onClick={handleClose}
-            />
-          ))}
+          <SpeedDialAction
+            key={'PostAppend'}
+            icon={<PostAddIcon />}
+            tooltipTitle={'PostAppend'}
+            onClick={PostMediaScheduleWrite}
+          />
+          <SpeedDialAction
+            key={'PosShared'}
+            icon={<ShareIcon />}
+            tooltipTitle={'PosShared'}
+            onClick={PostShareForm}
+          />
+          {postMediaScheduleClick}
+          {postShareClick}
         </SpeedDial>
       </div>
     </div>

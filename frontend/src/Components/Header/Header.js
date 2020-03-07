@@ -39,7 +39,7 @@ class Header extends React.Component {
                 <img
                   className='title-image'
                   alt='Recordary icon'
-                  src='Recordary.png'
+                  src='img/Recordary.png'
                   style={{ height: '40px' }}
                 />
               </a>
@@ -76,7 +76,7 @@ class Header extends React.Component {
               <img
                 className='title-image'
                 alt='Recordary icon'
-                src='Recordary.png'
+                src='img/Recordary.png'
                 style={{ height: '40px' }}
               />
             </a>

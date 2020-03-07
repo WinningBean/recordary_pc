@@ -2,13 +2,20 @@ package com.fairy_pitt.recordary.endpoint.user.service;
 
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //@RequiredArgsConstructor
+@Slf4j
+@Transactional
 @Service
 public class UserService {
     @Autowired private UserRepository userRepository;
@@ -41,8 +48,19 @@ public class UserService {
         if (user == null) return false;
 
         session.setAttribute("loginUser", user);
+        log.info("set userId = {}", user.getUserId());
 
         return true;
+    }
+
+    public Map<String, Object> userInfo(String userId){
+        UserEntity user = userRepository.findByUserId(userId);
+        Map<String, Object> userMap = new HashMap<>();
+        userMap.put("user_id", user.getUserId());
+        userMap.put("user_nm", user.getUserNm());
+        userMap.put("user_pic", null);
+        userMap.put("user_ex", user.getUserEx());
+        return userMap;
     }
 
     public Boolean checkPw(UserEntity user, String userPw){
@@ -66,7 +84,6 @@ public class UserService {
     }
 
     public void delete(UserEntity user) {
-//        if (user == null) return;
         userRepository.delete(user);
     }
 

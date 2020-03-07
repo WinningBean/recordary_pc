@@ -3,20 +3,63 @@
   flex-direction: column;
   height: 580px;
   padding-top: 10px;
-  width: 900px;
+  width: 890px;
   align-self: center;
 }
+.main-profile-info-postIt {
+  display: flex;
+  position: relative;
+  margin-left: 20px;
+}
+.postIt {
+  display: flex;
+  height: 500px;
+  position: absolute;
+  left: -40px;
+}
+.postIt > ul {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.postIt > ul > li {
+  width: 20px;
+  height: 40px;
+  margin: 8px 0px;
+  float: right;
+}
+.postIt > ul > .postIt-1 {
+  background-color: rgba(20, 81, 51, 0.7);
+  /* border: 1px solid gray; */
+}
+.postIt > ul > .postIt-2 {
+  background-color: rgba(150, 100, 30, 0.3);
+}
+.postIt > ul > .postIt-3 {
+  background-color: rgba(200, 30, 10, 0.3);
+}
 
-#main-profile .search-user {
+#main-profile .profile-search-schedule {
   align-self: flex-end;
   padding-bottom: 10px;
   padding-right: 20px;
 }
 
+.profile-search-schedule > div > div > div > input {
+  color: gray !important;
+}
+
+.profile-search-schedule > div > div > div > .MuiSvgIcon-root {
+  color: rgba(20, 81, 51, 0.5) !important;
+}
+
+.profile-search-schedule > div > div > .MuiInputBase-root {
+  border: 1px solid rgba(20, 81, 51, 0.2) !important;
+  border-radius: 5px;
+}
 #main-profile-info {
   display: flex;
   height: 500px;
-  margin-left: 20px;
   margin-right: 20px;
   box-shadow: 0px 1px 2px rgba(161, 159, 159, 0.8);
   background-color: white;
@@ -43,7 +86,6 @@
   height: 200px;
   object-fit: cover;
   border-radius: 50%;
-  box-shadow: 0px 1px 3px rgba(161, 159, 159, 0.8);
 }
 
 #userinfo #userinfo-text {
@@ -66,10 +108,16 @@
   margin-right: 10px;
   font-size: 16px;
 }
+
 .followerNum,
 .followNum {
   font-size: 17px;
 }
+
+.MuiLink-underlineHover:hover {
+  font-weight: bold !important;
+}
+
 li .MuiTypography-colorPrimary {
   color: rgba(20, 81, 51, 0.9) !important;
 }

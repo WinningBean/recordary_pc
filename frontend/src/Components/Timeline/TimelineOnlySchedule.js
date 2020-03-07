@@ -16,7 +16,7 @@ class TimelineOnlySchedule extends React.Component {
       <div className='timeline-schedule'>
         <div className='timeline-profile'>
           <div className='profile-picture'>
-            <img alt='profile-img' src='profile-image.png' />
+            <img alt='profile-img' src='img/profile-image.png' />
           </div>
           <div className='profile-name'>Wee_SungHo</div>
           <div className='profile-time'>

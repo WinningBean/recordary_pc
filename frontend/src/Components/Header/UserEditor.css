@@ -1,17 +1,17 @@
-.editor {
+.user-editor {
   display: flex;
   flex-direction: column;
-  padding: 25px;
-  width: 300px;
-  height: 400px;
+  justify-content: center;
 }
 
 .editor-info-text {
-  width: 250px;
-  height: 350px;
+  display: flex;
+  flex-direction: column;
 }
 
 .editor-info-buttons {
   display: flex;
+  justify-content: flex-end;
   height: 50px;
+  margin-top: 30px;
 }

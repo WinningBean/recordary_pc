@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import './header.css';
-import UserEditor from './UserEditor';
 import GroupAdd from 'Containers/Group/GroupAdd';
-import LongMenu from '../Other/MoreMenu';
+import LongMenu from 'Components/Other/MoreMenu';
 import ProfileEditor from 'Components/Profile/ProfileEditor';
 import GroupSetting from 'Components/Group/GroupSetting';
 import GroupInfo from 'Components/Group/GroupInfo';
+import SettingMenu from 'Components/Header/SettingMenu';
+import GroupProfile from 'Components/Group/GroupProfile';
 
 import { styled } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -15,19 +16,21 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import ArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import ArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import AddIcon from '@material-ui/icons/Add';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import EditIcon from '@material-ui/icons/Edit';
+import { Link } from 'react-router-dom';
 
 const HeaderMenu = props => {
   const data = props.data;
   const [profileEditForm, setProfileEditForm] = useState(null);
-  const [editor, setEditor] = useState(null);
+  // const [editor, setEditor] = useState(null);
+  const [setting, setSetting] = useState(null);
   const [open, setOpen] = useState({
     group: false,
     friend: false
   });
   const [groupAdd, setGroupAdd] = useState(null);
   const [menuDialog, setMenuDialog] = useState(null);
+  const [groupProfileOpen, setGroupProfileOpen] = useState(null);
 
   const showOpen = isGroup => {
     if (isGroup) {
@@ -61,12 +64,22 @@ const HeaderMenu = props => {
               user_id: data.currentUser.user_id,
               group: value
             }}
+            onClose={() => setMenuDialog(null)}
           />
         );
+        break;
+      case '그룹 삭제':
         break;
     }
   };
 
+  const onFriendMenuSelect = (selectedValue, code) => {
+    const value = data.userFriend.filter(value => value.user_id === code)[0];
+    switch (selectedValue) {
+      case '친구 관리':
+        break;
+    }
+  };
   const showGroupAdd = () => {
     if (groupAdd === null) {
       setGroupAdd(<GroupAdd onCancel={() => setGroupAdd(null)} />);
@@ -87,54 +100,49 @@ const HeaderMenu = props => {
 
   const GroupList = () => {
     if (open.group === true) {
-      const gruops = data.userGroup.map(value => {
+      const groups = data.userGroup.map(value => {
         return (
           <li key={value.group_cd}>
             <div className='button-wrap'>
-              <GroupButton>
-                <div
-                  style={{
-                    display: 'flex',
-                    width: '250px',
-                    justifyContent: 'space-between'
-                  }}
-                >
+              <Link to={`/groupProfile/${value.group_cd}`}>
+                <GroupButton>
                   <div
                     style={{
                       display: 'flex',
-                      alignItems: 'center',
-                      marginBottom: '10px'
+                      width: '250px',
+                      justifyContent: 'space-between'
                     }}
                   >
-                    <img
-                      alt='group-img'
+                    <div
                       style={{
-                        marginRight: '10px',
-                        borderRadius: '50%',
-                        width: '40px',
-                        height: '40px',
-                        objectFit: 'cover'
+                        display: 'flex',
+                        alignItems: 'center',
+                        marginBottom: '10px'
                       }}
-                      src={value.group_pic}
-                    />
-                    {value.group_nm}
+                    >
+                      <img
+                        alt='group-img'
+                        style={{
+                          marginRight: '10px',
+                          borderRadius: '50%',
+                          width: '40px',
+                          height: '40px',
+                          objectFit: 'cover'
+                        }}
+                        src={value.group_pic}
+                      />
+                      {value.group_nm}
+                    </div>
+                    <div className='LongMenuOpen'>
+                      <LongMenu
+                        options={['그룹 정보', '그룹 관리', '그룹 삭제']}
+                        code={value.group_cd}
+                        returnValue={onGroupMenuSelect}
+                      />
+                    </div>
                   </div>
-                  {/* <div className="LongMenuOpen">
-                                        <LongMenu
-                                            options={['그룹 정보', '그룹 관리', '그룹 삭제']}
-                                            code={value.group_cd}
-                                            returnValue={onGroupMenuSelect}
-                                        />
-                                    </div> */}
-                </div>
-              </GroupButton>
-              <div className='LongMenuOpen'>
-                <LongMenu
-                  options={['그룹 정보', '그룹 관리']}
-                  code={value.group_cd}
-                  returnValue={onGroupMenuSelect}
-                />
-              </div>
+                </GroupButton>
+              </Link>
             </div>
           </li>
         );
@@ -164,7 +172,7 @@ const HeaderMenu = props => {
             </IconButton>
           </div>
           <div>
-            <ul>{gruops}</ul>
+            <ul>{groups}</ul>
           </div>
         </div>
       );
@@ -187,11 +195,12 @@ const HeaderMenu = props => {
       </div>
     );
   };
+
   const friendList = () => {
     if (open.friend === true) {
-      const friends = data.userFriend.map(value => {
+      const friends = data.friendList.map(value => {
         return (
-          <li key={value.friend_cd}>
+          <li key={value.user_id}>
             <GroupButton>
               <div
                 style={{
@@ -206,16 +215,18 @@ const HeaderMenu = props => {
                     marginRight: '10px',
                     borderRadius: '50%'
                   }}
-                  src={value.friend_pic}
+                  src={value.user_pic}
                 />
-                {value.friend_nm}
+                {value.user_nm}
+              </div>
+              <div className='LongMenuOpen'>
+                <LongMenu
+                  options={['친구 관리']}
+                  code={value.user_id}
+                  returnValue={onFriendMenuSelect}
+                />
               </div>
             </GroupButton>
-            <div>
-              <CustomIconButton>
-                <MoreVertIcon />
-              </CustomIconButton>
-            </div>
           </li>
         );
       });
@@ -249,12 +260,13 @@ const HeaderMenu = props => {
       </GroupButton>
     );
   };
-  const showEditor = () => {
-    if (editor === null) {
-      setEditor(<UserEditor currentUser={data.currentUser} onCancel={() => setEditor(null)} />);
+
+  const showSetting = () => {
+    if (setting === null) {
+      setSetting(<SettingMenu currentUser={data.currentUser} onClose={() => setSetting(null)} />);
       return;
     }
-    setEditor(null);
+    setSetting(null);
     return;
   };
 
@@ -285,12 +297,13 @@ const HeaderMenu = props => {
           {friendList()}
         </div>
         <div className='menu-bottom'>
-          <CustomIconButton onClick={showEditor}>
+          <CustomIconButton onClick={showSetting}>
             <SettingsIcon />
           </CustomIconButton>
-          <CustomIconButton>로그아웃</CustomIconButton>
+          <CustomIconButton>Logout</CustomIconButton>
         </div>
-        {editor}
+        {/* {editor} */}
+        {setting}
         {groupAdd}
         {menuDialog}
       </div>

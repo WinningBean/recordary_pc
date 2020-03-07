@@ -56,12 +56,12 @@ class Login extends React.Component {
     //     return;
     // }
     try {
-      const Form = new FormData();
-      Form.append('user_id', this.state.user_id);
-      Form.append('user_pw', this.state.user_pw);
-      const { isLogin } = (await axios.post('/user/loginRequest', Form)).data;
-      // .catch();
-      console.log(isLogin);
+      // const Form = new FormData();
+      // Form.append('user_id', this.state.user_id);
+      // Form.append('user_pw', this.state.user_pw);
+      // const { isLogin } = (await axios.post('/user/loginRequest', Form)).data;
+      // // .catch();
+      // console.log(isLogin);
 
       // if(isLogin === false){
       //     this.setState({
@@ -86,16 +86,18 @@ class Login extends React.Component {
           user_id: 'ffff3311',
           user_nm: '홍길동'
         },
-        userFriend: [
+        friendList: [
           {
-            friend_cd: 1,
-            friend_nm: '친구1',
-            friend_pic: 'http://placehold.it/40x40'
+            friend_user_id: 1,
+            friend_user_nm: '친구1',
+            friend_user_pic: 'http://placehold.it/40x40',
+            friend_user_ex: 'hi'
           },
           {
-            friend_cd: 2,
-            friend_nm: '친구2',
-            friend_pic: 'http://placehold.it/40x40'
+            friend_user_id: 2,
+            friend_user_nm: '친구2',
+            friend_user_pic: 'http://placehold.it/40x40',
+            friend_user_ex: 'hi'
           }
         ],
         userGroup: [
@@ -186,7 +188,7 @@ class Login extends React.Component {
                         </a> */}
             <Link to='/main'>
               {/* <img className="title-image" alt="Recordary icon" src="http://localhost:8080/Recodary.png"/> */}
-              <img className='title-image' alt='Recordary icon' src='Recordary.png' />
+              <img className='title-image' alt='Recordary icon' src='img/Recordary.png' />
             </Link>
           </div>
           {this.state.successRegister()}

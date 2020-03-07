@@ -87,61 +87,70 @@ class Profile extends React.Component {
         <main>
           <ScrollToTopOnMount />
           <div id='main-profile'>
-            <div className='search-user'>
+            <div className='profile-search-schedule'>
               <SearchAppBar></SearchAppBar>
             </div>
-            <div id='main-profile-info'>
-              <div id='userinfo'>
-                <div id='user-image'>
-                  <img
-                    alt='profile-img'
-                    src='https://i.pinimg.com/originals/0d/e8/86/0de8869350e89fd300edaeef3b659674.jpg'
-                  />
-                </div>
-                <div id='userinfo-text'>
-                  <div className='info'>
-                    <ul>
-                      <li>
-                        <span className='name'>Water_Glasses</span>
-                      </li>
-                      <li>
-                        <span className='followerName'>팔로워</span>
-                        <Link
-                          component='button'
-                          onClick={() =>
-                            this.setState({
-                              followerNumClick: true
-                            })
-                          }
-                        >
-                          <span className='followerNum'>50</span>
-                        </Link>
-                        {FollowerShow()}
-                      </li>
-                      <li>
-                        <span className='followerName'>팔로우</span>
-                        <Link
-                          component='button'
-                          onClick={() =>
-                            this.setState({
-                              followerNumClick: true
-                            })
-                          }
-                        >
-                          <span className='followNum'>18</span>
-                        </Link>
-                      </li>
-                    </ul>
-                    <div className='status-content'>
-                      <div>#카르페디엠 #현재를 즐겨라 #OMG #새벽 5시 13분</div>
+            <div className='main-profile-info-postIt'>
+              <div className='postIt'>
+                <ul style={{ width: '40px' }}>
+                  <li className='postIt-1' style={{ width: '40px' }} />
+                  <li className='postIt-2' />
+                  <li className='postIt-3' />
+                </ul>
+              </div>
+              <div id='main-profile-info'>
+                <div id='userinfo'>
+                  <div id='user-image'>
+                    <img
+                      alt='profile-img'
+                      src='https://i.pinimg.com/originals/0d/e8/86/0de8869350e89fd300edaeef3b659674.jpg'
+                    />
+                  </div>
+                  <div id='userinfo-text'>
+                    <div className='info'>
+                      <ul>
+                        <li>
+                          <span className='name'>Water_Glasses</span>
+                        </li>
+                        <li>
+                          <span className='followerName'>팔로워</span>
+                          <Link
+                            component='button'
+                            onClick={() =>
+                              this.setState({
+                                followerNumClick: true
+                              })
+                            }
+                          >
+                            <span className='followerNum'>50</span>
+                          </Link>
+                          {FollowerShow()}
+                        </li>
+                        <li>
+                          <span className='followerName'>팔로우</span>
+                          <Link
+                            component='button'
+                            onClick={() =>
+                              this.setState({
+                                followerNumClick: true
+                              })
+                            }
+                          >
+                            <span className='followNum'>18</span>
+                          </Link>
+                        </li>
+                      </ul>
+                      <div className='status-content'>
+                        <div>#카르페디엠 #현재를 즐겨라 #OMG #새벽 5시 13분</div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div id='schedule-area'>
-                <div className='calender'>
-                  {/* 캘린더 추가 */}
-                  달력
+                <div id='schedule-area'>
+                  <div className='calender'>
+                    {/* 캘린더 추가 */}
+                    달력
+                  </div>
                 </div>
               </div>
             </div>
