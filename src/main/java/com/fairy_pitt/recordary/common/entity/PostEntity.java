@@ -58,4 +58,7 @@ public class PostEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = {CascadeType.ALL})
     private List<PostEntity> postOriginList;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "commentPostFK")
+    private List<CommentEntity> postComments;
 }
