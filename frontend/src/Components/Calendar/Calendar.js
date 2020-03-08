@@ -73,6 +73,11 @@ const Calendar = props => {
 
     const rows = [];
 
+    const removeMore = document.querySelectorAll('.more');
+    for (let i = 0; i < removeMore.length; i++) {
+      removeMore[i].parentNode.removeChild(removeMore[i]);
+    }
+
     let days = [];
     let day = startDate;
     let formattedDate = '';
@@ -84,13 +89,14 @@ const Calendar = props => {
         formattedDate = dateFns.format(day, 'd');
         days.push(
           <div
+            id={`cell-index-${dateFns.format(day, 'MMdd')}`}
             className={`cell ${!dateFns.isSameMonth(day, monthStart) ? 'disabled' : ''}`}
             key={day}
             onClick={() => console.log(userDate)}
           >
             {dateFns.isSameDay(day, selectedDate) ? <div className='selected' /> : null}
-            <div className='more' />
             <span className='bg'>{formattedDate}</span>
+            <span className='number'>{formattedDate}</span>
           </div>
         );
         day = dateFns.addDays(day, 1);
@@ -196,7 +202,7 @@ const Calendar = props => {
     </div>
   );
 
-  // longSC = (스케줄코드, 가로, x, y, 설명, 첫 div인지 여부, 몇번째 div인지)
+  // longSC = (스케줄코드, 가로, x, y, 설명, start Date , end Date, 몇번째 div인지)
   const longSC = (cd, width, x, y, ex, index) => {
     const borderLeft = index === 0 ? '2px solid #9e5fff' : '';
     return (
@@ -252,14 +258,15 @@ const Calendar = props => {
     const sc = [];
     userDate.map(value => {
       if (
+        // 데이트가 해당 캘린더 안에 속하는지 확인
         !(
           dateFns.isWithinInterval(value.start, {
             start: dayLocation[0].day,
-            end: dayLocation[dayLocation.length - 1].day
+            end: dateFns.addDays(dayLocation[dayLocation.length - 1].day, 1)
           }) ||
           dateFns.isWithinInterval(value.end, {
             start: dayLocation[0].day,
-            end: dayLocation[dayLocation.length - 1].day
+            end: dateFns.addDays(dayLocation[dayLocation.length - 1].day, 1)
           })
         )
       ) {
@@ -267,13 +274,36 @@ const Calendar = props => {
       }
       var index = null;
       var secondBlock = false;
-      for (let i = 0; i < dayLocation.length; i++) {
-        if (dateFns.isSameDay(dayLocation[i].day, value.start)) {
-          index = i;
-          break;
+      var beforeStartDay = false;
+      if (
+        !dateFns.isWithinInterval(value.start, {
+          start: dayLocation[0].day,
+          end: dateFns.addDays(dayLocation[dayLocation.length - 1].day, 1)
+        })
+      ) {
+        index = 0;
+        beforeStartDay = true;
+        console.log('ispass');
+      } else {
+        for (let i = 0; i < dayLocation.length; i++) {
+          if (dateFns.isSameDay(dayLocation[i].day, value.start)) {
+            index = i;
+            break;
+          }
         }
       }
-      console.log(index);
+      if (dayLocation[index].overlap === 2) {
+        const currDom = document.getElementById(
+          `cell-index-${dateFns.format(dayLocation[index].day, 'MMdd')}`
+        );
+        var moreDiv = document.createElement('div');
+        moreDiv.className = 'more';
+        currDom.appendChild(moreDiv);
+        return;
+      } else if (dayLocation[index].overlap > 2) {
+        return;
+      } else {
+      }
       if (dateFns.isSameDay(value.start, value.end)) {
         if (dayLocation[index].isSecondBlock) {
           sc.push(shortSC(value.cd, dayLocation[index].x, dayLocation[index].y + 20, value.ex));
@@ -283,47 +313,44 @@ const Calendar = props => {
         }
         dayLocation[index].overlap = ++dayLocation[index].overlap;
         dayLocation[index].isSecondBlock = true;
-      } else if (
-        dateFns.isWithinInterval(value.start, {
-          start: dayLocation[0].day,
-          end: dateFns.addDays(dayLocation[dayLocation.length - 1].day, 1)
-        })
-      ) {
+      } else {
         if (dateFns.differenceInCalendarWeeks(value.end, value.start) > 0) {
-          if (dayLocation[index].isSecondBlock === true) {
-            secondBlock = true;
-            sc.push(
-              longSC(
-                value.cd,
-                595 - dayLocation[index].x,
-                dayLocation[index].x,
-                dayLocation[index].y + 25,
-                value.ex,
-                0
-              )
-            );
-          } else {
-            dayLocation[index].isSecondBlock = true;
-            sc.push(
-              longSC(
-                value.cd,
-                595 - dayLocation[index].x,
-                dayLocation[index].x,
-                dayLocation[index].y,
-                value.ex,
-                0
-              )
-            );
-          }
+          if (!beforeStartDay) {
+            if (dayLocation[index].isSecondBlock === true) {
+              secondBlock = true;
+              sc.push(
+                longSC(
+                  value.cd,
+                  595 - dayLocation[index].x,
+                  dayLocation[index].x,
+                  dayLocation[index].y + 25,
+                  value.ex,
+                  0
+                )
+              );
+            } else {
+              dayLocation[index].isSecondBlock = true;
+              sc.push(
+                longSC(
+                  value.cd,
+                  595 - dayLocation[index].x,
+                  dayLocation[index].x,
+                  dayLocation[index].y,
+                  value.ex,
+                  0
+                )
+              );
+            }
 
-          for (
-            let k = 0;
-            k < dateFns.differenceInDays(dateFns.endOfWeek(value.start), value.start) + 1;
-            k++
-          ) {
-            dayLocation[index].isSecondBlock = true;
-            dayLocation[index].overlap = ++dayLocation[index].overlap;
-            index++;
+            for (
+              let k = 0;
+              k < dateFns.differenceInDays(dateFns.endOfWeek(value.start), value.start) + 1;
+              k++
+            ) {
+              dayLocation[index].isSecondBlock = true;
+              dayLocation[index].overlap = ++dayLocation[index].overlap;
+              index++;
+            }
           }
 
           var i = 0;
@@ -331,6 +358,17 @@ const Calendar = props => {
           for (; i < weekGap - 1; i++) {
             // middle sc
             if (index >= dayLocation.length) {
+              const cloneElement = React.cloneElement(
+                sc[sc.length - 1],
+                { style: sc[sc.length - 1].props.style },
+                React.Children.map(sc[sc.length - 1].props.children, child =>
+                  React.cloneElement(child, {
+                    style: { ...child.props.style, marginRight: 0, borderRight: '3px solid gray' }
+                  })
+                )
+              );
+              sc.pop();
+              sc.push(cloneElement);
               return sc;
             }
             if (secondBlock) {
@@ -341,17 +379,27 @@ const Calendar = props => {
             // const currWeek = dateFns.addWeeks(value.start, i + 1);
             // const currWeekFisrtDay = dateFns.startOfWeek(currWeek);
             for (let j = 0; j < 7; ++j) {
-              console.log(index, dayLocation[index], j);
               dayLocation[index].isSecondBlock = true;
               dayLocation[index].overlap = ++dayLocation[index].overlap;
               index++;
             }
-            console.log('pass by');
           }
+
           if (
             dateFns.addDays(dayLocation[dayLocation.length - 1].day, 1) <=
             dateFns.addWeeks(value.start, i + 1)
           ) {
+            const cloneElement = React.cloneElement(
+              sc[sc.length - 1],
+              { style: sc[sc.length - 1].props.style },
+              React.Children.map(sc[sc.length - 1].props.children, child =>
+                React.cloneElement(child, {
+                  style: { ...child.props.style, marginRight: 0, borderRight: '3px solid gray' }
+                })
+              )
+            );
+            sc.pop();
+            sc.push(cloneElement);
             return sc;
           }
           if (secondBlock) {
@@ -365,6 +413,9 @@ const Calendar = props => {
                 i + 1
               )
             );
+          } else {
+            const diffDay = dateFns.differenceInDays(value.end, dayLocation[index].day) + 1;
+            sc.push(longSC(value.cd, 85 * diffDay, 0, dayLocation[index].y, value.ex, i + 1));
           }
 
           // const currWeek = dateFns.addWeeks(value.start, i + 1);
@@ -378,8 +429,7 @@ const Calendar = props => {
           }
           return;
         }
-        const diffDay = dateFns.differenceInDays(value.end, value.start) + 1;
-        console.log(dayLocation[index], dayLocation[index].isSecondBlock);
+        const diffDay = dateFns.differenceInDays(value.end, dayLocation[index].day) + 1;
         if (dayLocation[index].isSecondBlock) {
           sc.push(
             longSC(
@@ -417,7 +467,6 @@ const Calendar = props => {
     const rect = e.currentTarget.getBoundingClientRect();
     x = e.clientX - rect.left;
     y = e.clientY - rect.top;
-    console.log();
   };
   const onScMouseDown = e => {
     id = e.currentTarget.className;
@@ -467,7 +516,7 @@ const Calendar = props => {
     id = undefined;
   };
 
-  var moveLife = 10;
+  var moveLife = 5;
   var isMove = false;
 
   const MouseMoveHandler = e => {
@@ -508,8 +557,9 @@ const Calendar = props => {
       }
       return;
     }
-    moveLife = 10;
+    moveLife = 5;
   };
+  console.log(userDate);
   return (
     <div className='calendar'>
       <Header

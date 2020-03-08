@@ -5,6 +5,7 @@ import MainPage from 'Containers/Main/MainPage';
 import ProfilePage from 'Components/Profile/Profile';
 import GroupProfile from 'Components/Group/GroupProfile';
 import { Route, Switch, Redirect } from 'react-router-dom';
+import Calendar from 'Components/Calendar/Calendar';
 
 class App extends React.Component {
   render() {
@@ -18,6 +19,7 @@ class App extends React.Component {
           <Route path='/:userId' component={ProfilePage} />
           <Redirect path='*' to='/' />
         </Switch>
+        <Calendar />
       </div>
     );
   }
