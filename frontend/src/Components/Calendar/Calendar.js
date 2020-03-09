@@ -73,11 +73,6 @@ const Calendar = props => {
 
     const rows = [];
 
-    const removeMore = document.querySelectorAll('.more');
-    for (let i = 0; i < removeMore.length; i++) {
-      removeMore[i].parentNode.removeChild(removeMore[i]);
-    }
-
     let days = [];
     let day = startDate;
     let formattedDate = '';
@@ -97,6 +92,7 @@ const Calendar = props => {
             {dateFns.isSameDay(day, selectedDate) ? <div className='selected' /> : null}
             <span className='bg'>{formattedDate}</span>
             <span className='number'>{formattedDate}</span>
+            <div className='more' onClick={e => setPopover(e.currentTarget)} />
           </div>
         );
         day = dateFns.addDays(day, 1);
@@ -133,17 +129,20 @@ const Calendar = props => {
           open={open}
           anchorEl={popover}
           anchorOrigin={{
-            vertical: 'center',
-            horizontal: 'center'
+            vertical: 'top',
+            horizontal: 'left'
           }}
           transformOrigin={{
-            vertical: 'center',
-            horizontal: 'right'
+            vertical: 'top',
+            horizontal: 'left'
           }}
           disableRestoreFocus
           onClose={() => setPopover(null)}
         >
-          <div style={{ width: '250px', height: '250px' }}></div>
+          <div style={{ width: '250px', height: '250px' }}>
+            {(() => (popover === null ? null : popover.id))()}
+            asdfsdf
+          </div>
         </Popover>
       </div>
     );
@@ -191,9 +190,6 @@ const Calendar = props => {
             whiteSpace: 'nowrap',
             fontWeight: 'bold',
             fontSize: '12px'
-          }}
-          onClick={e => {
-            setPopover(e.currentTarget);
           }}
         >
           {ex}
@@ -256,6 +252,13 @@ const Calendar = props => {
   //<span className='number'>{formattedDate}</span>
   const Schedual = () => {
     const sc = [];
+    console.log('pass sc');
+
+    const moreList = document.querySelectorAll('.more');
+    for (let i = 0; i < moreList.length; i++) {
+      moreList[i].style.display = 'none';
+    }
+
     userDate.map(value => {
       if (
         // 데이트가 해당 캘린더 안에 속하는지 확인
@@ -296,9 +299,8 @@ const Calendar = props => {
         const currDom = document.getElementById(
           `cell-index-${dateFns.format(dayLocation[index].day, 'MMdd')}`
         );
-        var moreDiv = document.createElement('div');
-        moreDiv.className = 'more';
-        currDom.appendChild(moreDiv);
+        const moreList = document.querySelectorAll('.more');
+        moreList[index].style.display = 'block';
         return;
       } else if (dayLocation[index].overlap > 2) {
         return;
