@@ -5,37 +5,22 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
 const options = [
-  'Color',
-  <span
-    className='selectColorChange'
-    style={{
-      backgroundColor: 'red'
-    }}
-  />,
-  <span
-    className='selectColorChange'
-    style={{
-      backgroundColor: 'orange'
-    }}
-  />,
-  <span
-    className='selectColorChange'
-    style={{
-      backgroundColor: 'yellow'
-    }}
-  />,
-  <span
-    className='selectColorChange'
-    style={{
-      backgroundColor: 'green'
-    }}
-  />,
-  <span
-    className='selectColorChange'
-    style={{
-      backgroundColor: 'blue'
-    }}
-  />
+  'color',
+  <span className='colorChange' style={{ backgroundColor: 'red' }}>
+    r
+  </span>,
+  <span className='colorChange' style={{ backgroundColor: 'orange' }}>
+    o
+  </span>,
+  <span className='colorChange' style={{ backgroundColor: 'yellow' }}>
+    y
+  </span>,
+  <span className='colorChange' style={{ backgroundColor: 'blue' }}>
+    b
+  </span>,
+  <span className='colorChange' style={{ backgroundColor: 'purple' }}>
+    p
+  </span>
 ];
 
 export default function SelectColor() {
@@ -58,7 +43,7 @@ export default function SelectColor() {
   return (
     <>
       <div className='selectColor' onClick={handleClickListItem}>
-        <span>{options[selectedIndex]}</span>
+        {options[selectedIndex]}
       </div>
       <Menu
         id='lock-menu'

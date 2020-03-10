@@ -180,13 +180,16 @@ const PostMediaScheduleAppend = props => {
 
   return (
     <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
-      <div className='Post-Append-titleName'>
-        <PostAddIcon
-          style={{ fontSize: '40px', color: 'white', marginLeft: '10px' }}
-        />
-        <div className='PostAdd-title'>게시물 추가</div>
+      <div className='post-append-header'>
+        <div className='Post-Append-titleName'>
+          <PostAddIcon
+            style={{ fontSize: '40px', color: 'white', marginLeft: '10px' }}
+          />
+          <div className='PostAdd-title'>게시물 추가</div>
+        </div>
         <SelectColor />
       </div>
+
       <div className='Post-Media-Schedule-Append-Form '>
         <div className='Post-Append-Group' style={{ marginLeft: '12px' }}>
           <div>
