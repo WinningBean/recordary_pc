@@ -115,3 +115,22 @@
   position: absolute;
   top: 106px;
 }
+
+.calendar-popover {
+  padding: 10px 5px;
+  width: 200px;
+  max-height: 250px;
+}
+
+.calendar-popover-header {
+  height: 50px;
+  /* padding: 10px 0; */
+  border-bottom: 1px solid #ddd;
+}
+
+.calendar-popover-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding-top: 5px;
+}

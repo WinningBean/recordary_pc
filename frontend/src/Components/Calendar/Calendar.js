@@ -27,6 +27,12 @@ const Calendar = props => {
       end: new Date('2020-03-14'),
       ex: 'ex3'
     },
+    // {
+    //   cd: '05',
+    //   start: new Date('2020-03-02'),
+    //   end: new Date('2020-03-02'),
+    //   ex: 'ex4'
+    // },
     {
       cd: '02',
       start: new Date('2020-03-18'),
@@ -78,10 +84,12 @@ const Calendar = props => {
     let formattedDate = '';
     let y = 18;
     let x = 0;
+    let count = 0;
     while (day <= endDate) {
       for (let i = 0; i < 7; i++) {
         dayLocation.push({ day: day, overlap: 0, isSecondBlock: false, x: x, y: y });
         formattedDate = dateFns.format(day, 'd');
+        const currDay = day; // 클로저
         days.push(
           <div
             id={`cell-index-${dateFns.format(day, 'MMdd')}`}
@@ -92,11 +100,15 @@ const Calendar = props => {
             {dateFns.isSameDay(day, selectedDate) ? <div className='selected' /> : null}
             <span className='bg'>{formattedDate}</span>
             <span className='number'>{formattedDate}</span>
-            <div className='more' onClick={e => setPopover(e.currentTarget)} />
+            <div
+              className='more'
+              onClick={e => setPopover({ event: e.currentTarget, date: currDay })}
+            />
           </div>
         );
         day = dateFns.addDays(day, 1);
         x += 85;
+        count++;
       }
       rows.push(
         <div className='cell-row' key={day}>
@@ -125,25 +137,6 @@ const Calendar = props => {
       >
         {rows}
         {Schedual()}
-        <Popover
-          open={open}
-          anchorEl={popover}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'left'
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'left'
-          }}
-          disableRestoreFocus
-          onClose={() => setPopover(null)}
-        >
-          <div style={{ width: '250px', height: '250px' }}>
-            {(() => (popover === null ? null : popover.id))()}
-            asdfsdf
-          </div>
-        </Popover>
       </div>
     );
   };
@@ -237,9 +230,6 @@ const Calendar = props => {
               backgroundColor: '#9e5fff80',
               paddingLeft: '2px',
               borderLeft: borderLeft
-            }}
-            onClick={e => {
-              setPopover(e.currentTarget);
             }}
           >
             {ex}
@@ -462,8 +452,6 @@ const Calendar = props => {
   var id = undefined;
   var x = null;
   var y = null;
-  var popoverX = null;
-  var popoverY = null;
 
   const onMouseDownCell = e => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -571,7 +559,116 @@ const Calendar = props => {
       />
       <Days currentMonth={currentMonth} />
       {Cells()}
-
+      <Popover
+        open={open}
+        anchorEl={popover === null ? null : popover.event}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'left'
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left'
+        }}
+        disableRestoreFocus
+        onClose={() => setPopover(null)}
+      >
+        <div className='calendar-popover'>
+          <div className='calendar-popover-header'>
+            {popover === null ? null : (
+              <>
+                <div style={{ fontSize: '24px', textAlign: 'center' }}>
+                  {dateFns.format(popover.date, 'd일')}
+                </div>
+                <div style={{ fontSize: '12px', textAlign: 'center', textTransform: 'uppercase' }}>
+                  {dateFns.format(popover.date, 'EEE')}
+                </div>
+              </>
+            )}
+          </div>
+          <div className='calendar-popover-content'>
+            {popover === null
+              ? null
+              : (() => {
+                  return userDate.map(value => {
+                    if (
+                      dateFns.isWithinInterval(popover.date, {
+                        start: dateFns.startOfDay(value.start),
+                        end: dateFns.endOfDay(value.end)
+                      })
+                    ) {
+                      console.log('skip');
+                      return (
+                        <div
+                          className={`sc${value.cd}`}
+                          key={value.cd}
+                          style={{
+                            position: 'relative',
+                            width: '190px',
+                            height: '30px',
+                            cursor: 'pointer',
+                            userSelect: 'none'
+                          }}
+                          // onMouseDown={onScMouseDown}
+                        >
+                          <div
+                            style={{
+                              position: 'absolute',
+                              lineHeight: '24px',
+                              margin: '0 5px'
+                            }}
+                          >
+                            <span
+                              style={{
+                                position: 'absolute',
+                                left: '0',
+                                top: '7px',
+                                backgroundColor: '#9e5fff',
+                                width: '6px',
+                                height: '6px',
+                                borderRadius: '50%'
+                              }}
+                            />
+                            <span
+                              style={{
+                                paddingLeft: '10px',
+                                display: 'block',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                                fontWeight: 'bold',
+                                fontSize: '14px'
+                              }}
+                            >
+                              {value.ex}
+                            </span>
+                            <span
+                              style={{
+                                position: 'absolute',
+                                left: '10px',
+                                top: '12px',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                                fontWeight: 'bold',
+                                fontSize: '8px',
+                                color: 'gray'
+                              }}
+                            >
+                              {dateFns.format(value.start, 'a ') === 'AM' ? '오전' : '오후'}
+                              {dateFns.format(value.start, 'h -')}
+                              {dateFns.format(value.end, 'a ') === 'AM' ? '오전' : '오후'}
+                              {dateFns.format(value.end, 'h')}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    }
+                  });
+                })()}
+          </div>
+        </div>
+      </Popover>
       {/* <div className='wrap-sc'>{}</div> */}
     </div>
   );
