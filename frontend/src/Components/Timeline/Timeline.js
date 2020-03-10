@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './Timeline.css';
 import LongMenu from 'Components/Other/MoreMenu';
+import PostShare from 'Components/Profile/PostShare';
 
 import ThumbUpRoundedIcon from '@material-ui/icons/ThumbUpRounded';
 import ShareIcon from '@material-ui/icons/Share';
@@ -11,9 +12,13 @@ import CommentTimeline from 'Components/Timeline/CommentTimeline';
 const Timeline = props => {
   const data = props.data;
   const [commentOpen, setCommentOpen] = useState(false);
+  const [menuDialog, setMenuDialog] = useState(null);
 
   const userPostMoreButtonClick = selectedValue => {
     switch (selectedValue) {
+      case '나에게 공유':
+        setMenuDialog(<PostShare onCancel={() => setMenuDialog(null)} />);
+        break;
       case '수정':
         break;
       case '삭제':
@@ -89,7 +94,7 @@ const Timeline = props => {
         </div>
         <div className='profile-moreIcon'>
           <LongMenu
-            options={[' 수정 ', ' 삭제 ']}
+            options={['나에게 공유', ' 수정 ', ' 삭제 ']}
             returnValue={userPostMoreButtonClick}
           />
         </div>
@@ -167,6 +172,7 @@ const Timeline = props => {
           </div>
         </div>
       </div>
+      {menuDialog}
     </div>
   );
 };

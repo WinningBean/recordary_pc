@@ -3,6 +3,7 @@ import './PostAppend.css';
 import DTP from 'Components/UI/DTP';
 import SelectGroup from 'Components/UI/SelectGroup';
 import PublicRange from 'Components/UI/PublicRange';
+import SelectColor from 'Components/UI/SelectColor';
 import Backdrop from 'Components/UI/Backdrop';
 import AlertDialog from 'Components/Other/AlertDialog';
 import Snackbar from 'Components/UI/Snackbar';
@@ -14,7 +15,6 @@ import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
-import PublicIcon from '@material-ui/icons/Public';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import PermMediaIcon from '@material-ui/icons/PermMedia';
 import { makeStyles } from '@material-ui/core/styles';
@@ -185,6 +185,7 @@ const PostMediaScheduleAppend = props => {
           style={{ fontSize: '40px', color: 'white', marginLeft: '10px' }}
         />
         <div className='PostAdd-title'>게시물 추가</div>
+        <SelectColor />
       </div>
       <div className='Post-Media-Schedule-Append-Form '>
         <div className='Post-Append-Group' style={{ marginLeft: '12px' }}>

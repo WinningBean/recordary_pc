@@ -3,17 +3,42 @@ import 'Components/Profile/PostAppend.css';
 
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import PublicIcon from '@material-ui/icons/Public';
 
 const options = [
-  '공개 범위',
-  '전체 공개',
-  '나만 보기',
-  '친구만',
-  '선택한 그룹만'
+  'Color',
+  <span
+    className='selectColorChange'
+    style={{
+      backgroundColor: 'red'
+    }}
+  />,
+  <span
+    className='selectColorChange'
+    style={{
+      backgroundColor: 'orange'
+    }}
+  />,
+  <span
+    className='selectColorChange'
+    style={{
+      backgroundColor: 'yellow'
+    }}
+  />,
+  <span
+    className='selectColorChange'
+    style={{
+      backgroundColor: 'green'
+    }}
+  />,
+  <span
+    className='selectColorChange'
+    style={{
+      backgroundColor: 'blue'
+    }}
+  />
 ];
 
-export default function PublicRange() {
+export default function SelectColor() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(1);
 
@@ -32,13 +57,8 @@ export default function PublicRange() {
 
   return (
     <>
-      <div className='plus-button-design' onClick={handleClickListItem}>
-        <div className='plus-button-design-2'>
-          <PublicIcon style={{ fontSize: '30px' }} />
-          <span style={{ fontSize: '15px', marginLeft: '5px' }}>
-            {options[selectedIndex]}
-          </span>
-        </div>
+      <div className='selectColor' onClick={handleClickListItem}>
+        <span>{options[selectedIndex]}</span>
       </div>
       <Menu
         id='lock-menu'
