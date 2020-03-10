@@ -127,7 +127,7 @@
   padding-left: 10px;
   line-height: 150%;
 }
-.comment-reply-users-name > span {
+.comment-reply-users-name > .reply-name {
   font-weight: bold;
   font-size: 12px;
   margin-right: 5px;
@@ -195,6 +195,22 @@ fieldset {
   padding-bottom: 18.5px;
   padding-left: 14px;
   padding-right: 8px;
+}
+
+/*더 많은 댓글 보기 */
+.more-comment-reply-users {
+  margin-left: 50px;
+}
+
+.show-more-comment {
+  margin-left: 50px;
+  font-size: 12px;
+  display: flex;
+  align-content: center;
+}
+.show-more-comment > div:hover {
+  background-color: rgba(161, 159, 159, 0.1);
+  cursor: pointer;
 }
 
 /* 일정만 => Week일때 */
