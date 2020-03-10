@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './PostAppend.css';
 import DTP from 'Components/UI/DTP';
 import SelectGroup from 'Components/UI/SelectGroup';
+import PublicRange from 'Components/UI/PublicRange';
 import Backdrop from 'Components/UI/Backdrop';
 import AlertDialog from 'Components/Other/AlertDialog';
 import Snackbar from 'Components/UI/Snackbar';
@@ -13,7 +14,7 @@ import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
-
+import PublicIcon from '@material-ui/icons/Public';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import PermMediaIcon from '@material-ui/icons/PermMedia';
 import { makeStyles } from '@material-ui/core/styles';
@@ -42,9 +43,6 @@ const useStyles = makeStyles(theme => ({
   chip: {
     marginRight: '4px',
     marginBottom: '4px'
-  },
-  backGround: {
-    backGroundColor: 'rgba(161, 159, 159, 0.3)'
   }
 }));
 
@@ -195,17 +193,52 @@ const PostMediaScheduleAppend = props => {
           </div>
 
           <div className='schedule-media-button '>
+            <PublicRange />
             <div className='plus-button-design' onClick={showSchedule}>
-              <DateRangeIcon style={{ fontSize: '30px' }} />
-              <span style={{ fontSize: '15px', marginLeft: '5px' }}>
-                일정추가
-              </span>
+              {(() => {
+                if (scheduleOpen === null) {
+                  return (
+                    <div className='plus-button-design-2'>
+                      <DateRangeIcon style={{ fontSize: '30px' }} />
+                      <span style={{ fontSize: '15px', marginLeft: '5px' }}>
+                        일정추가
+                      </span>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div className='plus-button-design-2 selected'>
+                      <DateRangeIcon style={{ fontSize: '30px' }} />
+                      <span style={{ fontSize: '15px', marginLeft: '5px' }}>
+                        일정추가
+                      </span>
+                    </div>
+                  );
+                }
+              })()}
             </div>
             <div className='plus-button-design' onClick={showMedia}>
-              <PermMediaIcon style={{ fontSize: '30px' }} />
-              <span style={{ fontSize: '15px', marginLeft: '10px' }}>
-                미디어
-              </span>
+              {(() => {
+                if (mediaOpen === null) {
+                  return (
+                    <div className='plus-button-design-2'>
+                      <PermMediaIcon style={{ fontSize: '30px' }} />
+                      <span style={{ fontSize: '15px', marginLeft: '10px' }}>
+                        미디어
+                      </span>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div className='plus-button-design-2 selected'>
+                      <PermMediaIcon style={{ fontSize: '30px' }} />
+                      <span style={{ fontSize: '15px', marginLeft: '10px' }}>
+                        미디어
+                      </span>
+                    </div>
+                  );
+                }
+              })()}
             </div>
           </div>
         </div>
