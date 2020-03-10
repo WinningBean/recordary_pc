@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
@@ -38,7 +38,9 @@ export default function SpeedDials() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [hidden, setHidden] = React.useState(false);
-  const [postMediaScheduleClick, setPostMediaScheduleClick] = React.useState(null);
+  const [postMediaScheduleClick, setPostMediaScheduleClick] = React.useState(
+    null
+  );
   const [postShareClick, setPostShareClick] = React.useState(null);
 
   const handleClose = () => {
@@ -52,7 +54,9 @@ export default function SpeedDials() {
   const PostMediaScheduleWrite = () => {
     if (postMediaScheduleClick === null) {
       setPostMediaScheduleClick(
-        <PostMediaScheduleAppend onCancel={() => setPostMediaScheduleClick(null)} />
+        <PostMediaScheduleAppend
+          onCancel={() => setPostMediaScheduleClick(null)}
+        />
       );
       return;
     }

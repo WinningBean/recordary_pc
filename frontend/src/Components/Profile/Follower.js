@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import 'Components/Other/SearchField.css';
 
 import { styled } from '@material-ui/core/styles';
@@ -68,13 +68,21 @@ class Follower extends React.Component {
               {(() => {
                 if (value.follower_click) {
                   return (
-                    <FollowButton onClick={() => this.followerChange(index, !value.follower_click)}>
+                    <FollowButton
+                      onClick={() =>
+                        this.followerChange(index, !value.follower_click)
+                      }
+                    >
                       <AddIcon style={{ fontSize: '20px;' }} />
                     </FollowButton>
                   );
                 } else {
                   return (
-                    <FollowButton onClick={() => this.followerChange(index, !value.follower_click)}>
+                    <FollowButton
+                      onClick={() =>
+                        this.followerChange(index, !value.follower_click)
+                      }
+                    >
                       <HowToRegIcon style={{ fontSize: '20px;' }} />
                     </FollowButton>
                   );

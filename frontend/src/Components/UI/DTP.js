@@ -7,6 +7,7 @@ import {
   KeyboardTimePicker,
   KeyboardDatePicker
 } from '@material-ui/pickers';
+import AccessAlarmsIcon from '@material-ui/icons/AccessAlarms';
 
 export default function DTP() {
   // The first commit of Material-UI
@@ -18,16 +19,11 @@ export default function DTP() {
   const [selectedFinishDate, setSelectedFinishDate] = React.useState(
     new Date(today)
   );
-  const [close, setClose] = React.useState(false);
-
   const handleStartDateChange = date => {
     setSelectedStartDate(date);
   };
   const handleFinishDateChange = date => {
     setSelectedFinishDate(date);
-  };
-  const handleClose = () => {
-    setClose(true);
   };
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -43,7 +39,6 @@ export default function DTP() {
           KeyboardButtonProps={{
             'aria-label': 'change date'
           }}
-          onClose={handleClose}
         />
 
         <KeyboardTimePicker
@@ -56,6 +51,7 @@ export default function DTP() {
           KeyboardButtonProps={{
             'aria-label': 'change time'
           }}
+          keyboardIcon={<AccessAlarmsIcon>Icon</AccessAlarmsIcon>}
         />
       </Grid>
       <Grid container justify='space-around'>
@@ -82,6 +78,7 @@ export default function DTP() {
           KeyboardButtonProps={{
             'aria-label': 'change time'
           }}
+          keyboardIcon={<AccessAlarmsIcon>Icon</AccessAlarmsIcon>}
         />
       </Grid>
     </MuiPickersUtilsProvider>

@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './PostAppend.css';
-import SwitchLabels from '../UI/Switch';
 import DTP from 'Components/UI/DTP';
 import SelectGroup from 'Components/UI/SelectGroup';
 import Backdrop from 'Components/UI/Backdrop';
@@ -132,7 +131,9 @@ const PostMediaScheduleAppend = props => {
       setMediaOpen(
         <div onClose={() => setMediaOpen(null)}>
           <div className='Post-Append-Media post-Append'>
-            <AddPhotoAlternateIcon style={{ fontSize: '50px' }}></AddPhotoAlternateIcon>
+            <AddPhotoAlternateIcon
+              style={{ fontSize: '50px' }}
+            ></AddPhotoAlternateIcon>
           </div>
         </div>
       );
@@ -182,7 +183,9 @@ const PostMediaScheduleAppend = props => {
   return (
     <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
       <div className='Post-Append-titleName'>
-        <PostAddIcon style={{ fontSize: '40px', color: 'white', marginLeft: '10px' }} />
+        <PostAddIcon
+          style={{ fontSize: '40px', color: 'white', marginLeft: '10px' }}
+        />
         <div className='PostAdd-title'>게시물 추가</div>
       </div>
       <div className='Post-Media-Schedule-Append-Form '>
@@ -194,11 +197,15 @@ const PostMediaScheduleAppend = props => {
           <div className='schedule-media-button '>
             <div className='plus-button-design' onClick={showSchedule}>
               <DateRangeIcon style={{ fontSize: '30px' }} />
-              <span style={{ fontSize: '15px', marginLeft: '5px' }}>일정추가</span>
+              <span style={{ fontSize: '15px', marginLeft: '5px' }}>
+                일정추가
+              </span>
             </div>
             <div className='plus-button-design' onClick={showMedia}>
               <PermMediaIcon style={{ fontSize: '30px' }} />
-              <span style={{ fontSize: '15px', marginLeft: '10px' }}>미디어</span>
+              <span style={{ fontSize: '15px', marginLeft: '10px' }}>
+                미디어
+              </span>
             </div>
           </div>
         </div>
@@ -235,7 +242,10 @@ const PostMediaScheduleAppend = props => {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={(handleClose, () => props.onCancel(), onSubmit)} color='primary'>
+              <Button
+                onClick={(handleClose, () => props.onCancel(), onSubmit)}
+                color='primary'
+              >
                 확인
               </Button>
               <Button onClick={handleClose} color='primary' autoFocus>

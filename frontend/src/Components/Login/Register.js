@@ -8,7 +8,6 @@ import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
 import Spinner from '@material-ui/core/CircularProgress';
 import axios from 'axios';
-import AlertDialog from '../Other/AlertDialog';
 
 class Register extends React.Component {
   state = {
@@ -163,7 +162,8 @@ class Register extends React.Component {
                   return (
                     <Alert severity='error'>
                       <AlertTitle>Error</AlertTitle>
-                      서버 문제로 인해 회원가입에 실패하였습니다. 다시 한번 시도해주세요.
+                      서버 문제로 인해 회원가입에 실패하였습니다. 다시 한번
+                      시도해주세요.
                     </Alert>
                   );
                 }
@@ -171,10 +171,22 @@ class Register extends React.Component {
             }
           }}
         >
-          <div className='register-text' style={{ position: 'relative', paddingLeft: '100px' }}>
-            <TextField name='user_nm' autoFocus label='이름' onChange={this.changeHandel} />
+          <div
+            className='register-text'
+            style={{ position: 'relative', paddingLeft: '100px' }}
+          >
+            <TextField
+              name='user_nm'
+              autoFocus
+              label='이름'
+              onChange={this.changeHandel}
+            />
             <br />
-            <TextField name='user_id' label='아이디' onChange={this.changeHandel} />
+            <TextField
+              name='user_id'
+              label='아이디'
+              onChange={this.changeHandel}
+            />
             <br />
             <TextField
               name='user_pw'

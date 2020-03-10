@@ -1,7 +1,6 @@
 import React from 'react';
 import './PostAppend.css';
 import Button from '@material-ui/core/Button';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Dialog from '@material-ui/core/Dialog';
 
 class PostShare extends React.Component {

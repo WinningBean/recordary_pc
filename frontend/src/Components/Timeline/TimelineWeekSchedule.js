@@ -1,35 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './Timeline.css';
 import CommentWeekSchedule from 'Components/Timeline/CommentWeekSchedule';
+import LongMenu from 'Components/Other/MoreMenu';
 
 import ThumbUpRoundedIcon from '@material-ui/icons/ThumbUpRounded';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
 import ShareIcon from '@material-ui/icons/Share';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { styled } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 
-import axios from 'axios';
+const TimelineWeekSchedule = props => {
+  const userPostMoreButtonClick = selectedValue => {
+    switch (selectedValue) {
+      case '수정':
+        break;
+      case '삭제':
+        break;
+    }
+  };
 
-const TimelineWeekSchedule = () => {
-  // const showPostEx = async e => {
-  //     const { data } = await axios.get(`http://localhost:8080/post/write`);
-  // }
   return (
     // 타임라인스케쥴 => 공유하고싶은 주일때
     <div className='timeline-schedule'>
       <div className='timeline-profile'>
         <div className='profile-picture'>
-          <img alt='profile-img' src='img/profile-image.png' />
+          <img
+            alt='profile-img'
+            src='https://pds.joins.com/news/component/htmlphoto_mmdata/201608/21/htm_20160821132446783592.jpg'
+          />
         </div>
         <div className='profile-name'>Choi_JuEun</div>
         <div className='profile-time'>
           <div className='profile-time-text'>2일 전</div>
         </div>
         <div className='profile-moreIcon'>
-          <MoreButton>
-            <MoreVertIcon style={{ fontSize: 30 }}></MoreVertIcon>
-          </MoreButton>
+          <LongMenu
+            options={[' 수정 ', ' 삭제 ']}
+            returnValue={userPostMoreButtonClick}
+          />
         </div>
       </div>
       <div className='timeline-schedule-info'>
@@ -65,17 +70,19 @@ const TimelineWeekSchedule = () => {
         <div className='comment-context-icon'>
           <div className='comment-icon-left'>
             <div className='likeIcon'>
-              <ThumbUpRoundedIcon style={{ fontSize: 30 }}>like</ThumbUpRoundedIcon>
+              <ThumbUpRoundedIcon style={{ fontSize: 30 }}>
+                like
+              </ThumbUpRoundedIcon>
             </div>
-            <div className='followIcon'>
-              <AddCircleIcon style={{ fontSize: 30 }}>follow</AddCircleIcon>
-            </div>
-          </div>
-          <div className='comment-icon-right'>
             <div className='shareIcon'>
               <ShareIcon style={{ fontSize: 30 }}>share</ShareIcon>
             </div>
           </div>
+          {/* <div className='comment-icon-right'>
+            <div className='shareIcon'>
+              <ShareIcon style={{ fontSize: 30 }}>share</ShareIcon>
+            </div>
+          </div> */}
         </div>
         <div className='comment-write'>
           <CommentWeekSchedule style={{ marginLeft: '10px' }} />
@@ -84,13 +91,5 @@ const TimelineWeekSchedule = () => {
     </div>
   );
 };
-const MoreButton = styled(Button)({
-  minWidth: '30px',
-  height: '60px'
-});
-const CommentButton = styled(Button)({
-  minWidth: '50px',
-  height: '50px'
-});
 
 export default TimelineWeekSchedule;
