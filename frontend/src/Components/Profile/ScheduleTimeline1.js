@@ -1,14 +1,8 @@
 import React from 'react';
 import './ProfilePage.css';
 import './TimelineModal.css';
-import Timeline from 'Components/Timeline/Timeline';
-import TimelineWeekSchedule from 'Components/Timeline/TimelineWeekSchedule';
-import TimelineOnlySchedule from 'Components/Timeline/TimelineOnlySchedule';
-
-import Dialog from '@material-ui/core/Dialog';
 import ThumbUpRoundedIcon from '@material-ui/icons/ThumbUpRounded';
 import ShareIcon from '@material-ui/icons/Share';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import SmsIcon from '@material-ui/icons/Sms';
 
 class ScheduleTimeline1 extends React.Component {
@@ -43,14 +37,18 @@ class ScheduleTimeline1 extends React.Component {
                   </div>
                 </div>
                 <div className='profile-schedule-info'>
-                  <div className='timeline-schedule-title'>게시물 제목이 되겠네요</div>
+                  <div className='timeline-schedule-title'>
+                    게시물 제목이 되겠네요
+                  </div>
                   <div className='timeline-schedule-weekTable'>일정</div>
                 </div>
                 <div classNamee='comment-context'>
                   <div className='comment-context-icon'>
                     <div className='comment-icon-left'>
                       <div className='likeIcon'>
-                        <ThumbUpRoundedIcon style={{ fontSize: 30 }}>like</ThumbUpRoundedIcon>
+                        <ThumbUpRoundedIcon style={{ fontSize: 30 }}>
+                          like
+                        </ThumbUpRoundedIcon>
                       </div>
                       <div className='commentIcon'>
                         <SmsIcon style={{ fontSize: 30 }}>follow</SmsIcon>
@@ -90,14 +88,18 @@ class ScheduleTimeline1 extends React.Component {
               </div>
             </div>
             <div className='profile-schedule-info'>
-              <div className='timeline-schedule-title'>게시물 제목이 되겠네요</div>
+              <div className='timeline-schedule-title'>
+                게시물 제목이 되겠네요
+              </div>
               <div className='timeline-schedule-weekTable'>일정</div>
             </div>
             <div classNamee='comment-context'>
               <div className='comment-context-icon'>
                 <div className='comment-icon-left'>
                   <div className='likeIcon'>
-                    <ThumbUpRoundedIcon style={{ fontSize: 30 }}>like</ThumbUpRoundedIcon>
+                    <ThumbUpRoundedIcon style={{ fontSize: 30 }}>
+                      like
+                    </ThumbUpRoundedIcon>
                   </div>
                   <div className='commentIcon'>
                     <SmsIcon style={{ fontSize: 30 }}>follow</SmsIcon>

@@ -6,7 +6,6 @@ import ProfileEditor from 'Components/Profile/ProfileEditor';
 import GroupSetting from 'Components/Group/GroupSetting';
 import GroupInfo from 'Components/Group/GroupInfo';
 import SettingMenu from 'Components/Header/SettingMenu';
-import GroupProfile from 'Components/Group/GroupProfile';
 
 import { styled } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -30,7 +29,6 @@ const HeaderMenu = props => {
   });
   const [groupAdd, setGroupAdd] = useState(null);
   const [menuDialog, setMenuDialog] = useState(null);
-  const [groupProfileOpen, setGroupProfileOpen] = useState(null);
 
   const showOpen = isGroup => {
     if (isGroup) {
@@ -91,7 +89,9 @@ const HeaderMenu = props => {
 
   const ShowProfileEditForm = () => {
     if (profileEditForm === null) {
-      setProfileEditForm(<ProfileEditor onCancel={() => setProfileEditForm(null)} />);
+      setProfileEditForm(
+        <ProfileEditor onCancel={() => setProfileEditForm(null)} />
+      );
       return;
     }
     setProfileEditForm(null);
@@ -154,7 +154,9 @@ const HeaderMenu = props => {
             onClick={() => showOpen(true)}
           >
             <div>
-              <span style={{ fontSize: '18px', paddingTop: '5px' }}>Groups</span>
+              <span style={{ fontSize: '18px', paddingTop: '5px' }}>
+                Groups
+              </span>
             </div>
             <span>
               <ArrowUp style={{ fontSize: '30px' }} />
@@ -237,7 +239,9 @@ const HeaderMenu = props => {
             onClick={() => showOpen(false)}
           >
             <div>
-              <span style={{ fontSize: '18px', paddingTop: '5px' }}>Friends</span>
+              <span style={{ fontSize: '18px', paddingTop: '5px' }}>
+                Friends
+              </span>
             </div>
             <span>
               <ArrowUp style={{ fontSize: '30px' }} />
@@ -263,7 +267,12 @@ const HeaderMenu = props => {
 
   const showSetting = () => {
     if (setting === null) {
-      setSetting(<SettingMenu currentUser={data.currentUser} onClose={() => setSetting(null)} />);
+      setSetting(
+        <SettingMenu
+          currentUser={data.currentUser}
+          onClose={() => setSetting(null)}
+        />
+      );
       return;
     }
     setSetting(null);
@@ -281,7 +290,11 @@ const HeaderMenu = props => {
         <div className='menu-profile'>
           <div className='menu-profile-pic-nm'>
             <div style={{ marginRight: '10px' }}>
-              <img alt='user img' src='http://placehold.it/40x40' style={{ borderRadius: '50%' }} />
+              <img
+                alt='user img'
+                src='http://placehold.it/40x40'
+                style={{ borderRadius: '50%' }}
+              />
             </div>
             <span>{data.currentUser.user_id}</span>
           </div>

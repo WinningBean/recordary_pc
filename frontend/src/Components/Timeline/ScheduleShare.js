@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import './PostAppend.css';
+import 'Components/Profile/PostAppend.css';
 import SelectGroup from 'Components/UI/SelectGroup';
 import PublicRange from 'Components/UI/PublicRange';
 import Backdrop from 'Components/UI/Backdrop';
 import AlertDialog from 'Components/Other/AlertDialog';
 import Snackbar from 'Components/UI/Snackbar';
+import Calendar from 'Components/Calendar/Calendar';
+
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -13,12 +15,14 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import axios from 'axios';
 import store from 'store';
 
-const PostShare = props => {
+const ScheduleShare = props => {
   const [open, setOpen] = React.useState(false);
   const [alert, setAlert] = useState(null);
+  const [calendarOpen, setCalendarOpen] = useState(null);
 
   const [userPost, setUserPost] = useState({
     user_id: store.getState().user.currentUser.user_id,
@@ -31,6 +35,33 @@ const PostShare = props => {
       post_end_ymd: null
     }
   });
+
+  const showCalendar = () => {
+    if (calendarOpen === null) {
+      setCalendarOpen(
+        <Dialog
+          onClose={() => setCalendarOpen(null)}
+          open
+          style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}
+        >
+          <div className='post-append-header'>
+            <div className='Post-Append-titleName'>
+              <PostAddIcon
+                style={{ fontSize: '40px', color: 'white', marginLeft: '10px' }}
+              />
+              <div className='PostAdd-title'>내 일정 공유</div>
+            </div>
+          </div>
+          <div style={{ margin: '20px' }}>
+            <Calendar />
+          </div>
+        </Dialog>
+      );
+      return;
+    }
+    setCalendarOpen(null);
+    return;
+  };
 
   const changeHandle = e => {
     setUserPost({
@@ -93,12 +124,12 @@ const PostShare = props => {
 
   return (
     <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
-      <div className='post-append-header'>
+      <div className='post-append-header' style={{ width: '600px' }}>
         <div className='Post-Append-titleName'>
           <PostAddIcon
             style={{ fontSize: '40px', color: 'white', marginLeft: '10px' }}
           />
-          <div className='PostAdd-title'>내 게시물에 공유</div>
+          <div className='PostAdd-title'>내 일정 공유</div>
         </div>
       </div>
       <div className='Post-Media-Schedule-Append-Form '>
@@ -106,23 +137,19 @@ const PostShare = props => {
           <div>
             <SelectGroup />
           </div>
-
           <div className='schedule-media-button '>
+            <div className='plus-button-design' onClick={showCalendar}>
+              <div className='plus-button-design-2'>
+                <EventAvailableIcon style={{ fontSize: '30px' }} />
+                <span style={{ fontSize: '15px', marginLeft: '5px' }}>
+                  일정찾기
+                </span>
+              </div>
+            </div>
             <PublicRange />
           </div>
         </div>
-
-        <div className='Post-Append-text post-Append'>
-          <TextField
-            id='post_text'
-            label='내용'
-            multiline
-            rowsMax='5'
-            rows='3'
-            name='post_ex'
-            onChange={changeHandle}
-          />
-        </div>
+        {calendarOpen}
 
         <div className='Post-Append-Bottom'>
           <div className='Post-Upload-buttons'>
@@ -135,9 +162,7 @@ const PostShare = props => {
             aria-labelledby='alert-dialog-title'
             aria-describedby='alert-dialog-description'
           >
-            <DialogTitle id='alert-dialog-title'>
-              {'내 게시물로 공유'}
-            </DialogTitle>
+            <DialogTitle id='alert-dialog-title'> {'내 일정 공유'}</DialogTitle>
             <DialogContent>
               <DialogContentText id='alert-dialog-description'>
                 게시물을 공유하시겠습니까?
@@ -154,7 +179,7 @@ const PostShare = props => {
                 취소
               </Button>
             </DialogActions>
-            {/* {alert} */}
+            {{ alert }}
           </Dialog>
         </div>
       </div>
@@ -162,4 +187,4 @@ const PostShare = props => {
   );
 };
 
-export default PostShare;
+export default ScheduleShare;

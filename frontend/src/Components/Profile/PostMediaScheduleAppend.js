@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { ChromePicker } from 'react-color';
+
 import './PostAppend.css';
-import SwitchLabels from '../UI/Switch';
 import DTP from 'Components/UI/DTP';
 import SelectGroup from 'Components/UI/SelectGroup';
+import PublicRange from 'Components/UI/PublicRange';
 import Backdrop from 'Components/UI/Backdrop';
 import AlertDialog from 'Components/Other/AlertDialog';
 import Snackbar from 'Components/UI/Snackbar';
@@ -14,7 +16,6 @@ import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
-
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import PermMediaIcon from '@material-ui/icons/PermMedia';
 import { makeStyles } from '@material-ui/core/styles';
@@ -43,9 +44,6 @@ const useStyles = makeStyles(theme => ({
   chip: {
     marginRight: '4px',
     marginBottom: '4px'
-  },
-  backGround: {
-    backGroundColor: 'rgba(161, 159, 159, 0.3)'
   }
 }));
 
@@ -55,6 +53,7 @@ const PostMediaScheduleAppend = props => {
   const [scheduleOpen, setScheduleOpen] = useState(null);
   const [open, setOpen] = React.useState(false);
   const [alert, setAlert] = useState(null);
+  const [color, setColor] = useState(null);
 
   const [userPost, setUserPost] = useState({
     user_id: store.getState().user.currentUser.user_id,
@@ -132,7 +131,9 @@ const PostMediaScheduleAppend = props => {
       setMediaOpen(
         <div onClose={() => setMediaOpen(null)}>
           <div className='Post-Append-Media post-Append'>
-            <AddPhotoAlternateIcon style={{ fontSize: '50px' }}></AddPhotoAlternateIcon>
+            <AddPhotoAlternateIcon
+              style={{ fontSize: '50px' }}
+            ></AddPhotoAlternateIcon>
           </div>
         </div>
       );
@@ -148,6 +149,10 @@ const PostMediaScheduleAppend = props => {
         <div onClose={() => setScheduleOpen(null)}>
           <div className='Post-Append-title post-Append'>
             <TextField id='post_title' label='제목' />
+            <div className='selectColor-form'>
+              <span>일정 색상 설정</span>
+              <div className='selectColor'></div>
+            </div>
           </div>
           <div className='Post-Append-Schedule'>
             <DTP />
@@ -181,10 +186,15 @@ const PostMediaScheduleAppend = props => {
 
   return (
     <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
-      <div className='Post-Append-titleName'>
-        <PostAddIcon style={{ fontSize: '40px', color: 'white', marginLeft: '10px' }} />
-        <div className='PostAdd-title'>게시물 추가</div>
+      <div className='post-append-header' style={{ width: '600px' }}>
+        <div className='Post-Append-titleName'>
+          <PostAddIcon
+            style={{ fontSize: '40px', color: 'white', marginLeft: '10px' }}
+          />
+          <div className='PostAdd-title'>게시물 추가</div>
+        </div>
       </div>
+
       <div className='Post-Media-Schedule-Append-Form '>
         <div className='Post-Append-Group' style={{ marginLeft: '12px' }}>
           <div>
@@ -192,13 +202,52 @@ const PostMediaScheduleAppend = props => {
           </div>
 
           <div className='schedule-media-button '>
+            <PublicRange />
             <div className='plus-button-design' onClick={showSchedule}>
-              <DateRangeIcon style={{ fontSize: '30px' }} />
-              <span style={{ fontSize: '15px', marginLeft: '5px' }}>일정추가</span>
+              {(() => {
+                if (scheduleOpen === null) {
+                  return (
+                    <div className='plus-button-design-2'>
+                      <DateRangeIcon style={{ fontSize: '30px' }} />
+                      <span style={{ fontSize: '15px', marginLeft: '5px' }}>
+                        일정추가
+                      </span>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div className='plus-button-design-2 clicked'>
+                      <DateRangeIcon style={{ fontSize: '30px' }} />
+                      <span style={{ fontSize: '15px', marginLeft: '5px' }}>
+                        일정추가
+                      </span>
+                    </div>
+                  );
+                }
+              })()}
             </div>
             <div className='plus-button-design' onClick={showMedia}>
-              <PermMediaIcon style={{ fontSize: '30px' }} />
-              <span style={{ fontSize: '15px', marginLeft: '10px' }}>미디어</span>
+              {(() => {
+                if (mediaOpen === null) {
+                  return (
+                    <div className='plus-button-design-2'>
+                      <PermMediaIcon style={{ fontSize: '30px' }} />
+                      <span style={{ fontSize: '15px', marginLeft: '10px' }}>
+                        미디어
+                      </span>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div className='plus-button-design-2 clicked'>
+                      <PermMediaIcon style={{ fontSize: '30px' }} />
+                      <span style={{ fontSize: '15px', marginLeft: '10px' }}>
+                        미디어
+                      </span>
+                    </div>
+                  );
+                }
+              })()}
             </div>
           </div>
         </div>
@@ -235,7 +284,10 @@ const PostMediaScheduleAppend = props => {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={(handleClose, () => props.onCancel(), onSubmit)} color='primary'>
+              <Button
+                onClick={(handleClose, () => props.onCancel(), onSubmit)}
+                color='primary'
+              >
                 확인
               </Button>
               <Button onClick={handleClose} color='primary' autoFocus>

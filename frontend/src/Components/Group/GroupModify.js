@@ -106,7 +106,9 @@ const GroupModify = props => {
                     &nbsp;
                     <span>그룹 수정</span>
                 </div> */}
-      <DialogContent style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <DialogContent
+        style={{ display: 'flex', justifyContent: 'space-between' }}
+      >
         <div className='dialog-content'>
           <div>
             <img

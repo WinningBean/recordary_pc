@@ -1,8 +1,9 @@
 import React from 'react';
-import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { styled } from '@material-ui/core/styles';
 
 const ITEM_HEIGHT = 48;
 
@@ -21,14 +22,14 @@ export default function LongMenu(props) {
 
   return (
     <>
-      <IconButton
+      <MoreIconButton
         aria-label='more'
         aria-controls='long-menu'
         aria-haspopup='true'
         onClick={handleClick}
       >
         <MoreVertIcon />
-      </IconButton>
+      </MoreIconButton>
       <Menu
         id='long-menu'
         anchorEl={anchorEl}
@@ -56,3 +57,8 @@ export default function LongMenu(props) {
     </>
   );
 }
+
+const MoreIconButton = styled(Button)({
+  minWidth: '30px',
+  height: '50px'
+});

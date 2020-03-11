@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
@@ -6,7 +6,7 @@ import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import ShareIcon from '@material-ui/icons/Share';
 import PostMediaScheduleAppend from 'Components/Profile/PostMediaScheduleAppend';
-import PostShare from 'Components/Profile/PostShare';
+import ScheduleShare from 'Components/Timeline/ScheduleShare';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,8 +38,10 @@ export default function SpeedDials() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [hidden, setHidden] = React.useState(false);
-  const [postMediaScheduleClick, setPostMediaScheduleClick] = React.useState(null);
-  const [postShareClick, setPostShareClick] = React.useState(null);
+  const [postMediaScheduleClick, setPostMediaScheduleClick] = React.useState(
+    null
+  );
+  const [scheduleShareClick, setScheduleShareClick] = React.useState(null);
 
   const handleClose = () => {
     setOpen(false);
@@ -52,19 +54,23 @@ export default function SpeedDials() {
   const PostMediaScheduleWrite = () => {
     if (postMediaScheduleClick === null) {
       setPostMediaScheduleClick(
-        <PostMediaScheduleAppend onCancel={() => setPostMediaScheduleClick(null)} />
+        <PostMediaScheduleAppend
+          onCancel={() => setPostMediaScheduleClick(null)}
+        />
       );
       return;
     }
     setPostMediaScheduleClick(null);
     return null;
   };
-  const PostShareForm = () => {
-    if (postShareClick === null) {
-      setPostShareClick(<PostShare onCancel={() => setPostShareClick(null)} />);
+  const ScheduleShareForm = () => {
+    if (scheduleShareClick === null) {
+      setScheduleShareClick(
+        <ScheduleShare onCancel={() => setScheduleShareClick(null)} />
+      );
       return;
     }
-    setPostShareClick(null);
+    setScheduleShareClick(null);
     return null;
   };
 
@@ -90,10 +96,10 @@ export default function SpeedDials() {
             key={'PosShared'}
             icon={<ShareIcon />}
             tooltipTitle={'PosShared'}
-            onClick={PostShareForm}
+            onClick={ScheduleShareForm}
           />
           {postMediaScheduleClick}
-          {postShareClick}
+          {scheduleShareClick}
         </SpeedDial>
       </div>
     </div>

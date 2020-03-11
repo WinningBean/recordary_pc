@@ -1,6 +1,5 @@
 import React from 'react';
 import './UserEditor.css';
-import Dialog from '@material-ui/core/Dialog';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/core';
@@ -67,7 +66,10 @@ class UserEditor extends React.Component {
               label='바꿀 패스워드'
               onChange={e => {
                 this.changeHandel(e);
-                if (e.target.value === '' || this.state.user_change_pw_check === '') {
+                if (
+                  e.target.value === '' ||
+                  this.state.user_change_pw_check === ''
+                ) {
                   this.setState({ isSamePw: undefined });
                   return;
                 }
@@ -154,7 +156,10 @@ class UserEditor extends React.Component {
                   });
                   return;
                 }
-                if (this.state.user_change_pw !== '' || this.state.user_change_pw_check !== '') {
+                if (
+                  this.state.user_change_pw !== '' ||
+                  this.state.user_change_pw_check !== ''
+                ) {
                   if (!this.state.isSamePw) {
                     this.setState({
                       alertDialog: () => {
@@ -200,7 +205,10 @@ class UserEditor extends React.Component {
                   form.append('user_change_pw', this.state.user_change_pw);
                   const {
                     data: { updateState }
-                  } = await axios.post('http://localhost:8080/userUpdate', form);
+                  } = await axios.post(
+                    'http://localhost:8080/userUpdate',
+                    form
+                  );
                   if (updateState === true) {
                     this.setState({
                       alertDialog: () => {

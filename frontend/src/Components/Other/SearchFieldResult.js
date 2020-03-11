@@ -1,6 +1,5 @@
 import React from 'react';
 import './SearchField.css';
-import TabSearch from 'Components/UI/TabSearch';
 
 import { styled } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -206,10 +205,16 @@ class SearchFieldResult extends React.Component {
                         this.groupChange(index, !value.group_click);
 
                         const form = new FormData();
-                        form.append('user_id', store.getState().user.currentUser.user_id);
+                        form.append(
+                          'user_id',
+                          store.getState().user.currentUser.user_id
+                        );
                         form.append('group_cd', value.group_cd);
                         form.append('apply_state', 1);
-                        const { data } = await axios.post('http://localhost:8080/apply', form);
+                        const { data } = await axios.post(
+                          'http://localhost:8080/apply',
+                          form
+                        );
                         if (data.isSuccess) {
                           console.log('완료');
                           return;
@@ -229,7 +234,10 @@ class SearchFieldResult extends React.Component {
                         this.groupChange(index, !value.group_click);
 
                         const form = new FormData();
-                        form.append('user_id', store.getState().user.currentUser.user_id);
+                        form.append(
+                          'user_id',
+                          store.getState().user.currentUser.user_id
+                        );
                         form.append('group_cd', value.group_cd);
                         const { data } = await axios.post(
                           'http://localhost:8080/apply/delete',
@@ -294,7 +302,11 @@ class SearchFieldResult extends React.Component {
                 </Paper>
               </div>
               <div className='follower_list'>
-                <ul>{this.state.clickTab === 0 ? this.exfollowList() : this.exGroupList()}</ul>
+                <ul>
+                  {this.state.clickTab === 0
+                    ? this.exfollowList()
+                    : this.exGroupList()}
+                </ul>
               </div>
             </div>
           </div>
