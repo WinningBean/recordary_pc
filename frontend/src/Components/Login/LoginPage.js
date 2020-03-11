@@ -116,7 +116,7 @@ class Login extends React.Component {
         ],
         post: [
           {
-            postForm: 0,
+            postForm: 1,
             post_cd: 4,
             user_id: 'HwangSG',
             user_pic: 'http://placehold.it/40x40',

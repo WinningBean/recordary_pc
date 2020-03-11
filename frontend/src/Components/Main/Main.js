@@ -19,13 +19,13 @@ class Main extends React.Component {
             );
           case 1:
             return (
-              <div className='timeline-Margin'>
-                <TimelineWeekSchedule></TimelineWeekSchedule>
+              <div className='timeline-Margin' key={value.post_cd}>
+                <TimelineWeekSchedule data={value}></TimelineWeekSchedule>
               </div>
             );
           case 2:
             return (
-              <div className='timeline-Margin'>
+              <div className='timeline-Margin' key={value.post_cd}>
                 <TimelineOnlySchedule></TimelineOnlySchedule>
               </div>
             );
