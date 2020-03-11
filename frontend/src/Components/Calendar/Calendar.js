@@ -104,10 +104,15 @@ const Calendar = props => {
         dayLocation.push({ day: day, overlap: 0, isSecondBlock: false, x: x, y: y });
         formattedDate = dateFns.format(day, 'd');
         const currDay = day; // 클로저
+        var isBorderLeft = false;
+        if (i === 0) isBorderLeft = true;
+
         days.push(
           <div
             id={`cell-index-${dateFns.format(day, 'MMdd')}`}
-            className={`cell ${!dateFns.isSameMonth(day, monthStart) ? 'disabled' : ''}`}
+            className={`cell ${!dateFns.isSameMonth(day, monthStart) ? 'disabled' : ''} ${
+              isBorderLeft === true ? 'borderLeft' : ''
+            }`}
             key={day}
             onClick={() => console.log('click days')}
           >

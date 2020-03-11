@@ -7,19 +7,36 @@ import TimelineOnlySchedule from 'Components/Timeline/TimelineOnlySchedule';
 
 class Main extends React.Component {
   render() {
+    var data = this.props.data;
+    const timelineList = (() => {
+      return data.post.map(value => {
+        switch (value.postForm) {
+          case 0:
+            return (
+              <div className='timeline-Margin' key={value.post_cd}>
+                <Timeline data={value} />
+              </div>
+            );
+          case 1:
+            return (
+              <div className='timeline-Margin'>
+                <TimelineWeekSchedule></TimelineWeekSchedule>
+              </div>
+            );
+          case 2:
+            return (
+              <div className='timeline-Margin'>
+                <TimelineOnlySchedule></TimelineOnlySchedule>
+              </div>
+            );
+          default:
+            return;
+        }
+      });
+    })();
     return (
       <main>
-        <div id='timeline-list'>
-          <div className='timeline-Margin'>
-            <Timeline></Timeline>
-          </div>
-          <div className='timeline-Margin'>
-            <TimelineWeekSchedule></TimelineWeekSchedule>
-          </div>
-          <div className='timeline-Margin'>
-            <TimelineOnlySchedule></TimelineOnlySchedule>
-          </div>
-        </div>
+        <div id='timeline-list'>{timelineList}</div>
       </main>
     );
   }

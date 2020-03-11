@@ -105,6 +105,7 @@
 }
 
 .timeline-context {
+  max-width: 490px;
   height: 100px;
   padding-left: 10px;
   padding-top: 5px;
@@ -150,6 +151,7 @@
   flex-direction: column;
   height: 340px;
   padding-left: 10px;
+  overflow: hidden;
 }
 
 .comment-context-icon {
@@ -197,7 +199,7 @@ fieldset {
   padding-right: 8px;
 }
 
-/*더 많은 댓글 보기 */
+/* 더 많은 댓글 보기 */
 .more-comment-reply-users {
   margin-left: 50px;
 }

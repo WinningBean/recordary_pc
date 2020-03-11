@@ -31,17 +31,14 @@ const TimelineWeekSchedule = props => {
           <div className='profile-time-text'>2일 전</div>
         </div>
         <div className='profile-moreIcon'>
-          <LongMenu
-            options={[' 수정 ', ' 삭제 ']}
-            returnValue={userPostMoreButtonClick}
-          />
+          <LongMenu options={[' 수정 ', ' 삭제 ']} returnValue={userPostMoreButtonClick} />
         </div>
       </div>
       <div className='timeline-schedule-info'>
         <div className='timeline-schedule-shared'>
           <div className='timeline-schedule-context'>개강두두두두두두둥</div>
           <div className='timeline-schedule-weekTable'>
-            <table border='1'>
+            {/* <table border='1'>
               <th>2 / 27</th>
               <th>2 / 28</th>
               <th>2 / 29</th>
@@ -58,16 +55,14 @@ const TimelineWeekSchedule = props => {
                 <td>금요일입니담</td>
                 <td>졸작 하는 날</td>
               </tr>
-            </table>
+            </table> */}
           </div>
         </div>
       </div>
       <div className='comment-context-icon'>
         <div className='comment-icon-left'>
           <div className='likeIcon'>
-            <ThumbUpRoundedIcon style={{ fontSize: 30 }}>
-              like
-            </ThumbUpRoundedIcon>
+            <ThumbUpRoundedIcon style={{ fontSize: 30 }}>like</ThumbUpRoundedIcon>
           </div>
           <div className='comment-title'>
             {/* <ThumbUpRoundedIcon

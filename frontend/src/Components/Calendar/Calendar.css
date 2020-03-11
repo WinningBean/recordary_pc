@@ -55,6 +55,10 @@
   cursor: default;
 }
 
+.borderLeft {
+  border-left: 1px solid #ddd;
+}
+
 /* .cell:hover .bg{
     text-decoration: overline;
 } */
