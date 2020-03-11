@@ -3,6 +3,9 @@ import * as dateFns from 'date-fns';
 import Header from 'Components/Calendar/CalendarHeader';
 import Days from 'Components/Calendar/CalendarDays';
 import Popover from '@material-ui/core/Popover';
+import PersonIcon from '@material-ui/icons/Person';
+import CreateIcon from '@material-ui/icons/Create';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import './Calendar.css';
 
@@ -67,7 +70,18 @@ const Calendar = props => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [popover, setPopover] = useState(null);
+  const [detailedSC, setDetailedSC] = useState(null);
   const open = Boolean(popover);
+  const selectedDetailedSC = (() => {
+    if (detailedSC !== null) {
+      for (let i = 0; i < userDate.length; i++) {
+        if (userDate[i].cd === detailedSC.cd) {
+          return userDate[i];
+        }
+      }
+    }
+    return null;
+  })();
 
   var dayLocation = [];
   //85x74
@@ -95,7 +109,7 @@ const Calendar = props => {
             id={`cell-index-${dateFns.format(day, 'MMdd')}`}
             className={`cell ${!dateFns.isSameMonth(day, monthStart) ? 'disabled' : ''}`}
             key={day}
-            onClick={() => console.log(userDate)}
+            onClick={() => console.log('click days')}
           >
             {dateFns.isSameDay(day, selectedDate) ? <div className='selected' /> : null}
             <span className='bg'>{formattedDate}</span>
@@ -155,6 +169,7 @@ const Calendar = props => {
         backgroundColor: '#9e5fff80'
       }}
       onMouseDown={onScMouseDown}
+      onClick={e => setDetailedSC({ event: e.currentTarget, cd: cd })}
     >
       <div
         style={{
@@ -209,13 +224,14 @@ const Calendar = props => {
           backgroundColor: '#9e5fff80'
         }}
         onMouseDown={onScMouseDown}
+        onClick={e => setDetailedSC({ event: e.currentTarget, cd: cd })}
       >
         <div
           style={{
             position: 'relative',
             // width: '69px',
             // height: '24px',
-            lineHeight: '24px',
+            lineHeight: '20px',
             margin: '0 5px'
           }}
         >
@@ -604,12 +620,14 @@ const Calendar = props => {
                           key={value.cd}
                           style={{
                             position: 'relative',
+                            marginTop: '5px',
                             width: '190px',
                             height: '30px',
                             cursor: 'pointer',
                             userSelect: 'none'
                           }}
                           // onMouseDown={onScMouseDown}
+                          onClick={e => setDetailedSC({ event: e.currentTarget, cd: value.cd })}
                         >
                           <div
                             style={{
@@ -646,12 +664,12 @@ const Calendar = props => {
                               style={{
                                 position: 'absolute',
                                 left: '10px',
-                                top: '12px',
+                                top: '15px',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
                                 whiteSpace: 'nowrap',
                                 fontWeight: 'bold',
-                                fontSize: '8px',
+                                fontSize: '10px',
                                 color: 'gray'
                               }}
                             >
@@ -669,7 +687,80 @@ const Calendar = props => {
           </div>
         </div>
       </Popover>
-      {/* <div className='wrap-sc'>{}</div> */}
+      <Popover
+        open={detailedSC === null ? false : true}
+        anchorEl={detailedSC === null ? null : detailedSC.event}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center'
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left'
+        }}
+        disableRestoreFocus
+        onClose={() => setDetailedSC(null)}
+      >
+        <div
+          className='calendar-detailedsc'
+          style={{ borderTop: '5px solid rgba(158, 95, 255, 0.5)' }}
+        >
+          <div className='calendar-detailedsc-content'>
+            <div
+              style={{
+                position: 'relative',
+                display: 'flex',
+                justifyContent: 'space-between',
+                fontSize: '16px'
+              }}
+            >
+              <strong>{selectedDetailedSC !== null ? selectedDetailedSC.ex : null}</strong>
+              <div>
+                <PersonIcon fontSize='small' />
+                <span style={{ position: 'absolute', fontSize: '18px' }}>4</span>
+              </div>
+            </div>
+            <div style={{ marginTop: '5px', fontSize: '12px', color: 'gray' }}>
+              {selectedDetailedSC !== null
+                ? dateFns.format(selectedDetailedSC.start, 'yyyy.MM.dd hh:mm') +
+                  ' - ' +
+                  dateFns.format(selectedDetailedSC.end, 'yyyy.MM.dd hh:mm')
+                : null}
+            </div>
+            <div
+              style={{ marginTop: '5px', fontSize: '14px', width: '220px', whiteSpace: 'normal' }}
+            >
+              {selectedDetailedSC !== null ? selectedDetailedSC.ex : null}
+            </div>
+          </div>
+          <div className='calendar-detailedsc-buttons'>
+            <div className='calendar-detailedsc-buttons-button'>
+              <CreateIcon fontSize='small' />
+              수정
+            </div>
+            <div
+              style={{
+                background: '#e5e5e5',
+                width: '1px',
+                height: '14px',
+                verticalAlign: 'middle',
+                display: 'inline-block',
+                marginTop: '7px'
+              }}
+            />
+            <div
+              className='calendar-detailedsc-buttons-button'
+              onClick={() => {
+                setUserDate(userDate.filter(value => value.cd !== selectedDetailedSC.cd));
+                setDetailedSC(null);
+              }}
+            >
+              <DeleteIcon fontSize='small' />
+              삭제
+            </div>
+          </div>
+        </div>
+      </Popover>
     </div>
   );
 };

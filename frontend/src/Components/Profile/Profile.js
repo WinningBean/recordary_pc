@@ -7,6 +7,7 @@ import PictureTimeline from './PictureTimeline';
 import ScrollToTopOnMount from '../Other/ScrollToTopOnMount';
 import Follower from 'Components/Profile/Follower';
 import Header from 'Containers/Header/Header';
+import Calendar from 'Components/Calendar/Calendar';
 
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/core/styles';
@@ -147,10 +148,7 @@ class Profile extends React.Component {
                   </div>
                 </div>
                 <div id='schedule-area'>
-                  <div className='calender'>
-                    {/* 캘린더 추가 */}
-                    달력
-                  </div>
+                  <Calendar />
                 </div>
               </div>
             </div>
