@@ -5,17 +5,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import PublicIcon from '@material-ui/icons/Public';
 
-const options = [
-  '공개 범위',
-  '전체 공개',
-  '나만 보기',
-  '친구만',
-  '선택한 그룹만'
-];
+const options = ['전체공개', '나만보기', '친구만', '팔로워만'];
 
 export default function PublicRange() {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   const handleClickListItem = event => {
     setAnchorEl(event.currentTarget);
@@ -50,7 +44,6 @@ export default function PublicRange() {
         {options.map((option, index) => (
           <MenuItem
             key={option}
-            disabled={index === 0}
             selected={index === selectedIndex}
             onClick={event => handleMenuItemClick(event, index)}
             onChange={handleClose}

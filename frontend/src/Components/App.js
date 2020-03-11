@@ -14,7 +14,11 @@ class App extends React.Component {
         <Switch>
           <Route exact path='/' component={LoginPage} />
           <Route exact path='/main' component={MainPage} />
-          <Route exact path='/groupProfile/:group_cd' component={GroupProfile} />
+          <Route
+            exact
+            path='/groupProfile/:group_cd'
+            component={GroupProfile}
+          />
           <Route path='/:userId' component={ProfilePage} />
           <Redirect path='*' to='/' />
         </Switch>

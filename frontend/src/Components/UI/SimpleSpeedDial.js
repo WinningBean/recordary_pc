@@ -6,7 +6,7 @@ import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import ShareIcon from '@material-ui/icons/Share';
 import PostMediaScheduleAppend from 'Components/Profile/PostMediaScheduleAppend';
-import PostShare from 'Components/Profile/PostShare';
+import ScheduleShare from 'Components/Timeline/ScheduleShare';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -41,7 +41,7 @@ export default function SpeedDials() {
   const [postMediaScheduleClick, setPostMediaScheduleClick] = React.useState(
     null
   );
-  const [postShareClick, setPostShareClick] = React.useState(null);
+  const [scheduleShareClick, setScheduleShareClick] = React.useState(null);
 
   const handleClose = () => {
     setOpen(false);
@@ -63,12 +63,14 @@ export default function SpeedDials() {
     setPostMediaScheduleClick(null);
     return null;
   };
-  const PostShareForm = () => {
-    if (postShareClick === null) {
-      setPostShareClick(<PostShare onCancel={() => setPostShareClick(null)} />);
+  const ScheduleShareForm = () => {
+    if (scheduleShareClick === null) {
+      setScheduleShareClick(
+        <ScheduleShare onCancel={() => setScheduleShareClick(null)} />
+      );
       return;
     }
-    setPostShareClick(null);
+    setScheduleShareClick(null);
     return null;
   };
 
@@ -94,10 +96,10 @@ export default function SpeedDials() {
             key={'PosShared'}
             icon={<ShareIcon />}
             tooltipTitle={'PosShared'}
-            onClick={PostShareForm}
+            onClick={ScheduleShareForm}
           />
           {postMediaScheduleClick}
-          {postShareClick}
+          {scheduleShareClick}
         </SpeedDial>
       </div>
     </div>

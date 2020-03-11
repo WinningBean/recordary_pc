@@ -46,31 +46,23 @@ const TimelineOnlySchedule = props => {
           </div>
         </div>
       </div>
-      <div classNamee='comment-context'>
-        <div className='comment-title'>
-          <ThumbUpRoundedIcon style={{ fontSize: '20', paddingRight: '5px' }} />
-          Wee_Seungbeen 님 외 5명이 좋아합니다
-        </div>
-        <div className='comment-context-icon'>
-          <div className='comment-icon-left'>
-            <div className='likeIcon'>
-              <ThumbUpRoundedIcon style={{ fontSize: 30 }}>
-                like
-              </ThumbUpRoundedIcon>
-            </div>
-            <div className='shareIcon'>
-              <ShareIcon style={{ fontSize: 30 }}>share</ShareIcon>
-            </div>
+      <div className='comment-context-icon'>
+        <div className='comment-icon-left'>
+          <div className='likeIcon'>
+            <ThumbUpRoundedIcon style={{ fontSize: 30 }}>
+              like
+            </ThumbUpRoundedIcon>
           </div>
-          {/* <div className='comment-icon-right'> */}
-          {/* <div className='shareIcon'>
-              <ShareIcon style={{ fontSize: 30 }}>share</ShareIcon>
-            </div> */}
-          {/* </div> */}
+          <div className='comment-title'>
+            {/* <ThumbUpRoundedIcon
+                  style={{ fontSize: '25', paddingRight: '5px' }}
+                /> */}
+            Wee_Seungbeen 님 외 5명이 좋아합니다
+          </div>
         </div>
-        <div className='comment-write'>
-          <CommentOnlySchedule />
-        </div>
+      </div>
+      <div className='comment-write'>
+        <CommentOnlySchedule />
       </div>
     </div>
   );

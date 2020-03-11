@@ -125,7 +125,7 @@ const Timeline = props => {
                 />
               </div>
               <div className='comment-reply-users-name'>
-                <span className='reply-name'>Wee_SungHo</span>
+                <span className='reply-name'>Wi_SungHo</span>
                 <span>가나다라마바사아자차카타파하</span>
                 <div>
                   <ThumbUpRoundedIcon
@@ -146,12 +146,6 @@ const Timeline = props => {
             {showMoreComment()}
           </div>
 
-          <div className='comment-title'>
-            <ThumbUpRoundedIcon
-              style={{ fontSize: '20', paddingRight: '5px' }}
-            />
-            Wee_SungHo 님 외 5명이 좋아합니다
-          </div>
           <div className='comment-context-icon'>
             <div className='comment-icon-left'>
               <div className='likeIcon'>
@@ -159,13 +153,13 @@ const Timeline = props => {
                   like
                 </ThumbUpRoundedIcon>
               </div>
-              <div className='shareIcon'>
-                <ShareIcon style={{ fontSize: 30 }}>share</ShareIcon>
+              <div className='comment-title'>
+                {/* <ThumbUpRoundedIcon
+                  style={{ fontSize: '25', paddingRight: '5px' }}
+                /> */}
+                Wi_SungHo 님 외 5명이 좋아합니다
               </div>
             </div>
-            {/* <div className='comment-icon-right'>
-              <div className='shareIcon'></div>
-            </div> */}
           </div>
           <div className='comment-write'>
             <CommentTimeline />

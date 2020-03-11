@@ -39,30 +39,34 @@
 }
 
 #post_title {
-  width: 520px;
+  display: flex;
+  width: 250px;
   height: 20px;
 }
-
+.Post-Append-title.post-Append {
+  display: flex;
+  align-items: center;
+}
+.selectColor-form {
+  margin-left: 20px;
+  padding-top: 20px;
+  display: flex;
+  align-items: center;
+}
+.selectColor-form > span {
+  font-size: 15px;
+  color: gray;
+}
 .selectColor {
   border-radius: 50px;
-  display: flex;
-  align-self: center;
-  margin-right: 20px;
-  margin-bottom: 10px;
+  margin: 0px 15px;
+  width: 30px;
+  height: 30px;
+  background-color: rgba(20, 81, 51, 0.8);
 }
 .selectColor:hover {
   cursor: pointer;
 }
-.colorChange {
-  width: 30px;
-  height: 30px;
-  border-radius: 50px;
-  display: flex;
-  justify-content: center;
-  font-size: 0px;
-  border: 2px solid white;
-}
-
 #post_text {
   width: 520px;
 }
@@ -77,6 +81,7 @@
 .schedule-media-button {
   display: flex;
   height: 40px;
+  margin-top: 5px;
 }
 .plus-button-design {
   margin: 0px 5px;
@@ -86,7 +91,7 @@
   background-color: rgba(161, 159, 159, 0.3);
   cursor: pointer;
 }
-.selected {
+.clicked {
   width: 100%;
   height: 100%;
   background-color: rgba(161, 159, 159, 0.2);
@@ -97,6 +102,8 @@
   padding: 0px 10px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 115px;
 }
 .Post-Append-Tag-User {
   display: flex;
@@ -121,7 +128,7 @@
   flex-direction: column;
   padding: 10px 20px;
   width: 600px;
-  height: 450px;
+  min-height: 450px;
   font-size: 20px;
 }
 
