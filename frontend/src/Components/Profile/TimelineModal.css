@@ -1,7 +1,7 @@
 /* Timeline-Modal(Dialog) */
-.MuiDialog-paperWidthSm{
-    max-width: 1000px !important;
+.MuiDialog-paperWidthSm {
+  max-width: 1000px !important;
 }
-.MuiDialog-paper{
-    border-radius: 0% !important;
+.MuiDialog-paper {
+  border-radius: 0% !important;
 }

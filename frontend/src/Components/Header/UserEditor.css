@@ -1,18 +1,17 @@
-.user-editor{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.user-editor {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.editor-info-text{
-    display: flex;
-    flex-direction: column;
+.editor-info-text {
+  display: flex;
+  flex-direction: column;
 }
 
-.editor-info-buttons{
-    display: flex;
-    justify-content: flex-end;
-    height: 50px;
-    margin-top: 30px;
-
+.editor-info-buttons {
+  display: flex;
+  justify-content: flex-end;
+  height: 50px;
+  margin-top: 30px;
 }
