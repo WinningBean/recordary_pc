@@ -23,6 +23,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Popover from '@material-ui/core/Popover';
 import axios from 'axios';
 import store from 'store';
 
@@ -53,8 +54,13 @@ const PostMediaScheduleAppend = props => {
   const [scheduleOpen, setScheduleOpen] = useState(null);
   const [open, setOpen] = React.useState(false);
   const [alert, setAlert] = useState(null);
-  const [color, setColor] = useState(null);
-
+  const [colorClick, setColorClick] = useState(false);
+  const [scheduleColor, setScheduleColor] = useState({
+    r: '20',
+    g: '81',
+    b: '51',
+    a: '1'
+  });
   const [userPost, setUserPost] = useState({
     user_id: store.getState().user.currentUser.user_id,
     // group_cd: store.getState().user.userGroup[0].group_cd,
@@ -151,7 +157,13 @@ const PostMediaScheduleAppend = props => {
             <TextField id='post_title' label='제목' />
             <div className='selectColor-form'>
               <span>일정 색상 설정</span>
-              <div className='selectColor'></div>
+              <div
+                className='selectColor'
+                onClick={() => setColorClick(true)}
+                style={{
+                  backgroundColor: `rgba(${scheduleColor.r}, ${scheduleColor.g}, ${scheduleColor.b}, ${scheduleColor.a})`
+                }}
+              />
             </div>
           </div>
           <div className='Post-Append-Schedule'>
@@ -263,9 +275,28 @@ const PostMediaScheduleAppend = props => {
             onChange={changeHandle}
           />
         </div>
+        {colorClick === true ? (
+          <Popover
+            open={colorClick}
+            anchorOrigin={{
+              vertical: 'center',
+              horizontal: 'center'
+            }}
+            transformOrigin={{
+              vertical: 'center',
+              horizontal: 'left'
+            }}
+            onClose={() => setColorClick(false)}
+          >
+            <ChromePicker
+              color={scheduleColor}
+              onChange={color => setScheduleColor(color.rgb)}
+            />
+          </Popover>
+        ) : null}
         {scheduleOpen}
         {mediaOpen}
-
+        {alert}
         <div className='Post-Append-Bottom'>
           <div className='Post-Upload-buttons'>
             <Button onClick={handleClickOpen}>게시</Button>
@@ -294,7 +325,6 @@ const PostMediaScheduleAppend = props => {
                 취소
               </Button>
             </DialogActions>
-            {alert}
           </Dialog>
         </div>
       </div>

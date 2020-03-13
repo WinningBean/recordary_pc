@@ -116,7 +116,7 @@ class Login extends React.Component {
         ],
         post: [
           {
-            postForm: 1,
+            postForm: 0,
             post_cd: 4,
             user_id: 'HwangSG',
             user_pic: 'http://placehold.it/40x40',
@@ -266,14 +266,23 @@ class Login extends React.Component {
                         </a> */}
             <Link to='/main'>
               {/* <img className="title-image" alt="Recordary icon" src="http://localhost:8080/Recodary.png"/> */}
-              <img className='title-image' alt='Recordary icon' src='img/Recordary.png' />
+              <img
+                className='title-image'
+                alt='Recordary icon'
+                src='img/Recordary.png'
+              />
             </Link>
           </div>
           {this.state.successRegister()}
           {this.state.failedLogin()}
           <div className='login-form'>
             <div className='login-text'>
-              <TextField name='user_id' autoFocus label='아이디' onChange={this.changeHandel} />
+              <TextField
+                name='user_id'
+                autoFocus
+                label='아이디'
+                onChange={this.changeHandel}
+              />
               <br />
               <TextField
                 name='user_pw'
@@ -284,7 +293,9 @@ class Login extends React.Component {
               <br />
             </div>
             <div className='login-button'>
-              <MyButton onClick={() => this.setState({ isRegister: true })}>회원가입</MyButton>
+              <MyButton onClick={() => this.setState({ isRegister: true })}>
+                회원가입
+              </MyButton>
               <MyButton type='submit'>로그인</MyButton>
             </div>
           </div>

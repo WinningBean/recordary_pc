@@ -116,7 +116,9 @@ const TimelineWeekSchedule = props => {
           </div>
         </div>
         {isClickList[index] === true ? MoreComment(value.recommentList) : null}
-        {value.recommentList.length > 0 ? showMoreComment(value.recommentList, index) : null}
+        {value.recommentList.length > 0
+          ? showMoreComment(value.recommentList, index)
+          : null}
       </>
     ));
   };
@@ -140,11 +142,14 @@ const TimelineWeekSchedule = props => {
           />
         </div>
       </div>
-      <div className='timeline-info' style={{ height: 'auto', alignItems: 'center' }}>
+      <div
+        className='timeline-info'
+        style={{ height: 'auto', alignItems: 'center' }}
+      >
         <div className='timeline-week-info'>
           <div
             style={{
-              flex: 1,
+              // flex: 1,
               fontSize: '18px',
               display: 'flex',
               alignItems: 'center',
@@ -195,13 +200,18 @@ const TimelineWeekSchedule = props => {
           </div>
         </div>
         <div className='comment-context'>
-          <div className='comment-reply' style={{ height: 'auto', maxHeight: '180px' }}>
+          <div
+            className='comment-reply'
+            style={{ height: 'auto', maxHeight: '180px', overflowY: 'auto' }}
+          >
             {commentList()}
           </div>
           <div className='comment-context-icon'>
             <div className='comment-icon-left'>
               <div className='likeIcon'>
-                <ThumbUpRoundedIcon style={{ fontSize: 30 }}>like</ThumbUpRoundedIcon>
+                <ThumbUpRoundedIcon style={{ fontSize: 30 }}>
+                  like
+                </ThumbUpRoundedIcon>
               </div>
               <div className='comment-title'>
                 {/* <ThumbUpRoundedIcon

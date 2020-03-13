@@ -46,6 +46,7 @@ const TimelineOnlySchedule = props => {
           </div>
         </div>
       </div>
+      <div></div>
       <div className='comment-context-icon'>
         <div className='comment-icon-left'>
           <div className='likeIcon'>

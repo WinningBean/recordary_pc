@@ -62,7 +62,6 @@
   margin: 0px 15px;
   width: 30px;
   height: 30px;
-  background-color: rgba(20, 81, 51, 0.8);
 }
 .selectColor:hover {
   cursor: pointer;
