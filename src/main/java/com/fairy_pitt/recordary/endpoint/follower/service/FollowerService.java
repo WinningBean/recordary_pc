@@ -1,7 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.follower.service;
 
 import com.fairy_pitt.recordary.common.entity.FollowerEntity;
-import com.fairy_pitt.recordary.common.entity.PostEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.FollowerRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
@@ -9,16 +8,17 @@ import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
 public class FollowerService {
 
-    @Autowired private UserService userService;
-    @Autowired private FollowerRepository followerRepository;
-    @Autowired private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private FollowerRepository followerRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public Boolean create(UserEntity currentUser, String targetId){
         FollowerEntity follower = new FollowerEntity();

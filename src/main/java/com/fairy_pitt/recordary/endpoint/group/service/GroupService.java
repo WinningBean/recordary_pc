@@ -1,11 +1,10 @@
 package com.fairy_pitt.recordary.endpoint.group.service;
 
+import com.fairy_pitt.recordary.common.entity.GroupEntity;
 import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
-import com.fairy_pitt.recordary.common.repository.UserRepository;
-import com.fairy_pitt.recordary.common.entity.GroupEntity;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
-
+import com.fairy_pitt.recordary.common.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,7 @@ import java.util.Optional;
 public class GroupService {
 
     @Autowired
-    private final GroupRepository  groupRepository;
+    private final GroupRepository groupRepository;
     private final UserRepository usersRepository;
     private final GroupMemberService groupMemverService;
 
@@ -62,7 +61,7 @@ public class GroupService {
     }
 
     public Boolean groupUpdate(GroupEntity groupEntity, long id){
-        GroupEntity  thisBoardEntity = this.findGroupId(id);
+        GroupEntity thisBoardEntity = this.findGroupId(id);
 
         //GroupEntity updateGroupEntity = thisBoardEntity.get();
 

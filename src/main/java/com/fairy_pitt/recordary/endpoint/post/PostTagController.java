@@ -2,8 +2,6 @@ package com.fairy_pitt.recordary.endpoint.post;
 
 import com.fairy_pitt.recordary.common.entity.PostEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
-import com.fairy_pitt.recordary.common.repository.PostRepository;
-import com.fairy_pitt.recordary.common.repository.PostTagRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.post.service.PostTagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +15,10 @@ import java.util.Map;
 @RestController
 //@RequestMapping("post")
 public class PostTagController {
-    @Autowired private PostTagService postTagService;
-    @Autowired private UserRepository userRepository;
+    @Autowired
+    private PostTagService postTagService;
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping("/post/tagList/create")
     public Map<String, Boolean> createTagList(@RequestParam Map<String,Object> paramMap){
@@ -85,7 +85,7 @@ public class PostTagController {
             postDetailMap.put("post_str_ymd", postEntity.getPostStrYMD());
             postDetailMap.put("post_end_ymd", postEntity.getPostEndYMD());
             postDetailMap.put("post_created_dt", postEntity.getCreatedDate());
-            postDetailMap.put("post_updated_dt", postEntity.getUpdatedDate());
+            postDetailMap.put("post_updated_dt", postEntity.getModifiedDate());
             postMapList.add(postDetailMap);
         }
         map.put("userTagPostList", postMapList);

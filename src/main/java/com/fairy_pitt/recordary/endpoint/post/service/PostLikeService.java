@@ -14,9 +14,12 @@ import java.util.Optional;
 
 @Service
 public class PostLikeService {
-    @Autowired PostLikeRepository postLikeRepository;
-    @Autowired PostRepository postRepository;
-    @Autowired UserRepository userRepository;
+    @Autowired
+    PostLikeRepository postLikeRepository;
+    @Autowired
+    PostRepository postRepository;
+    @Autowired
+    UserRepository userRepository;
 
     public Boolean create(Long postCd, String userId){
         PostEntity post = postRepository.findByPostCd(postCd);

@@ -13,7 +13,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("post")
 public class PostLikeController {
-    @Autowired PostLikeService postLikeService;
+    @Autowired
+    PostLikeService postLikeService;
 
     @GetMapping("/like")
     public Map<String, Boolean> like(@RequestParam Map<String, Object> paramMap){
