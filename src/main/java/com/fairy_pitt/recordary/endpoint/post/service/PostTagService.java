@@ -14,9 +14,12 @@ import java.util.Optional;
 
 @Service
 public class PostTagService {
-    @Autowired private PostTagRepository postTagRepository;
-    @Autowired private PostRepository postRepository;
-    @Autowired private UserRepository userRepository;
+    @Autowired
+    private PostTagRepository postTagRepository;
+    @Autowired
+    private PostRepository postRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public Boolean create(Long postFK, Long userFK){
         PostEntity post = postRepository.findByPostCd(postFK);

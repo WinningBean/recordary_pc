@@ -2,9 +2,7 @@ package com.fairy_pitt.recordary.endpoint.group;
 
 import com.fairy_pitt.recordary.common.entity.GroupApplyEntity;
 import com.fairy_pitt.recordary.common.entity.GroupEntity;
-import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
-import com.fairy_pitt.recordary.common.pk.GroupMemberPK;
 import com.fairy_pitt.recordary.common.pk.GroupMemberPK;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupApplyService;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
@@ -13,7 +11,6 @@ import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -103,27 +100,27 @@ public class GroupApplyController {
         return applyFindResult;
     }
 
-    //유저가 그룹한테 신청보넨 정보 찾기
-    @ResponseBody
-    @PostMapping
-    public Map<String, Object> findGroupApply(@RequestParam Map<String, Object> groupInfo)
-    {
-        Map<String, Object> applyFindResult = new HashMap<>();
-        GroupEntity groupEntity  = groupService.findGroupId((long)groupInfo.get("groupCd"));
-        List<GroupApplyEntity> apply = groupApplyService.findUserAppliesToGroup(groupEntity);
-
-        List applyUserInfoLIst = new ArrayList<>();
-        for(GroupApplyEntity temp : apply)
-        {
-            Map<String, Object> userInfoMap = new HashMap<>();
-            UserEntity userEntity = userService.find(temp.getUserCodeFK().getUserCd());
-            userInfoMap.put("userNM",userEntity.getUserNm());
-            userInfoMap.put("userEx",userEntity.getUserEx());
-            userInfoMap.put("userId",userEntity.getUserId());
-            applyUserInfoLIst.add(userInfoMap);
-        }
-        applyFindResult.put("user",applyUserInfoLIst );
-
-        return applyFindResult;
-    }
+//    //유저가 그룹한테 신청보넨 정보 찾기
+//    @ResponseBody
+//    @PostMapping
+//    public Map<String, Object> findGroupApply(@RequestParam Map<String, Object> groupInfo)
+//    {
+//        Map<String, Object> applyFindResult = new HashMap<>();
+//        GroupEntity groupEntity  = groupService.findGroupId((long)groupInfo.get("groupCd"));
+//        List<GroupApplyEntity> apply = groupApplyService.findUserAppliesToGroup(groupEntity);
+//
+//        List applyUserInfoLIst = new ArrayList<>();
+//        for(GroupApplyEntity temp : apply)
+//        {
+//            Map<String, Object> userInfoMap = new HashMap<>();
+//            UserEntity userEntity = userService.find(temp.getUserCodeFK().getUserCd());
+//            userInfoMap.put("userNM",userEntity.getUserNm());
+//            userInfoMap.put("userEx",userEntity.getUserEx());
+//            userInfoMap.put("userId",userEntity.getUserId());
+//            applyUserInfoLIst.add(userInfoMap);
+//        }
+//        applyFindResult.put("user",applyUserInfoLIst );
+//
+//        return applyFindResult;
+//    }
 }

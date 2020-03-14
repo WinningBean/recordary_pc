@@ -1,6 +1,7 @@
 package com.fairy_pitt.recordary.endpoint.user.service;
 
 import org.springframework.stereotype.Service;
+
 import java.security.MessageDigest;
 
 @Service
