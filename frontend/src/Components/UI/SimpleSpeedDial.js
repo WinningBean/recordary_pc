@@ -38,9 +38,7 @@ export default function SpeedDials() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [hidden, setHidden] = React.useState(false);
-  const [postMediaScheduleClick, setPostMediaScheduleClick] = React.useState(
-    null
-  );
+  const [postMediaScheduleClick, setPostMediaScheduleClick] = React.useState(null);
   const [scheduleShareClick, setScheduleShareClick] = React.useState(null);
 
   const handleClose = () => {
@@ -54,9 +52,7 @@ export default function SpeedDials() {
   const PostMediaScheduleWrite = () => {
     if (postMediaScheduleClick === null) {
       setPostMediaScheduleClick(
-        <PostMediaScheduleAppend
-          onCancel={() => setPostMediaScheduleClick(null)}
-        />
+        <PostMediaScheduleAppend onCancel={() => setPostMediaScheduleClick(null)} />
       );
       return;
     }
@@ -66,7 +62,7 @@ export default function SpeedDials() {
   const ScheduleShareForm = () => {
     if (scheduleShareClick === null) {
       setScheduleShareClick(
-        <ScheduleShare onCancel={() => setScheduleShareClick(null)} />
+        <ScheduleShare isMyCalendar={false} onCancel={() => setScheduleShareClick(null)} />
       );
       return;
     }

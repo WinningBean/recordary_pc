@@ -17,14 +17,12 @@ class Main extends React.Component {
                 <Timeline data={value} />
               </div>
             );
-          case 1:
+          default:
             return (
               <div className='timeline-Margin' key={value.post_cd}>
                 <TimelineWeekSchedule data={value}></TimelineWeekSchedule>
               </div>
             );
-          default:
-            return;
         }
       });
     })();

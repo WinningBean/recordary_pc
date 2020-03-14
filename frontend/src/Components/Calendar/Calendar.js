@@ -13,6 +13,8 @@ import './Calendar.css';
 
 // 600x475
 const Calendar = props => {
+  const isMyCalendar = props.isMyCalendar; // false
+  const choiceDate = props.choiceDate;
   const [userDate, setUserDate] = useState([
     {
       cd: '01',
@@ -119,22 +121,36 @@ const Calendar = props => {
         days.push(
           <div
             id={`cell-index-${dateFns.format(day, 'MMdd')}`}
-            className={`cell ${
-              !dateFns.isSameMonth(day, monthStart) ? 'disabled' : ''
-            } ${isBorderLeft === true ? 'borderLeft' : ''}`}
+            className={`cell ${!dateFns.isSameMonth(day, monthStart) ? 'disabled' : ''} ${
+              isBorderLeft === true ? 'borderLeft' : ''
+            }`}
             key={day}
-            onClick={() => console.log('click days')}
+            onClick={isMyCalendar === true ? null : () => props.onChoice(currDay, userDate)}
+            style={(() => {
+              if (props.choiceSharedStartDate !== null && props.choiceSharedEndDate === null) {
+                if (dateFns.differenceInCalendarDays(currDay, props.choiceSharedStartDate) === 0)
+                  return { border: '2px solid green' };
+              } else if (
+                props.choiceSharedStartDate !== null &&
+                props.choiceSharedEndDate !== null
+              ) {
+                if (
+                  dateFns.isWithinInterval(currDay, {
+                    start: props.choiceSharedStartDate,
+                    end: props.choiceSharedEndDate
+                  })
+                ) {
+                  return { backgroundColor: 'rgba(20,81,51,.2)' };
+                }
+              }
+            })()}
           >
-            {dateFns.isSameDay(day, selectedDate) ? (
-              <div className='selected' />
-            ) : null}
+            {dateFns.isSameDay(day, selectedDate) ? <div className='selected' /> : null}
             <span className='bg'>{formattedDate}</span>
             <span className='number'>{formattedDate}</span>
             <div
               className='more'
-              onClick={e =>
-                setPopover({ event: e.currentTarget, date: currDay })
-              }
+              onClick={e => setPopover({ event: e.currentTarget, date: currDay })}
             />
           </div>
         );
@@ -160,17 +176,26 @@ const Calendar = props => {
       }
       return dateFns.differenceInDays(a.start, b.start);
     });
-    return (
-      <div
-        id='wrap-cells'
-        onMouseDown={onMouseDownCell}
-        onMouseMove={MouseMoveHandler}
-        onMouseUp={onScMouseUp}
-      >
-        {rows}
-        {Schedual()}
-      </div>
-    );
+    if (isMyCalendar === true) {
+      return (
+        <div
+          id='wrap-cells'
+          onMouseDown={onMouseDownCell}
+          onMouseMove={MouseMoveHandler}
+          onMouseUp={onScMouseUp}
+        >
+          {rows}
+          {Schedual()}
+        </div>
+      );
+    } else {
+      return (
+        <div id='wrap-cells'>
+          {rows}
+          {Schedual()}
+        </div>
+      );
+    }
   };
   const shortSC = (cd, x, y, ex) => (
     <div
@@ -186,7 +211,7 @@ const Calendar = props => {
         userSelect: 'none',
         backgroundColor: '#9e5fff80'
       }}
-      onMouseDown={onScMouseDown}
+      onMouseDown={isMyCalendar === true ? onScMouseDown : null}
       onClick={e => setDetailedSC({ event: e.currentTarget, cd: cd })}
     >
       <div
@@ -241,7 +266,7 @@ const Calendar = props => {
           userSelect: 'none',
           backgroundColor: '#9e5fff80'
         }}
-        onMouseDown={onScMouseDown}
+        onMouseDown={isMyCalendar === true ? onScMouseDown : null}
         onClick={e => setDetailedSC({ event: e.currentTarget, cd: cd })}
       >
         <div
@@ -276,7 +301,6 @@ const Calendar = props => {
   //<span className='number'>{formattedDate}</span>
   const Schedual = () => {
     const sc = [];
-    console.log('pass sc');
 
     const moreList = document.querySelectorAll('.more');
     for (let i = 0; i < moreList.length; i++) {
@@ -332,24 +356,10 @@ const Calendar = props => {
       }
       if (dateFns.isSameDay(value.start, value.end)) {
         if (dayLocation[index].isSecondBlock) {
-          sc.push(
-            shortSC(
-              value.cd,
-              dayLocation[index].x,
-              dayLocation[index].y + 20,
-              value.ex
-            )
-          );
+          sc.push(shortSC(value.cd, dayLocation[index].x, dayLocation[index].y + 20, value.ex));
         } else {
           dayLocation[index].isSecondBlock = true;
-          sc.push(
-            shortSC(
-              value.cd,
-              dayLocation[index].x,
-              dayLocation[index].y,
-              value.ex
-            )
-          );
+          sc.push(shortSC(value.cd, dayLocation[index].x, dayLocation[index].y, value.ex));
         }
         dayLocation[index].overlap = ++dayLocation[index].overlap;
         dayLocation[index].isSecondBlock = true;
@@ -384,12 +394,7 @@ const Calendar = props => {
 
             for (
               let k = 0;
-              k <
-              dateFns.differenceInDays(
-                dateFns.endOfWeek(value.start),
-                value.start
-              ) +
-                1;
+              k < dateFns.differenceInDays(dateFns.endOfWeek(value.start), value.start) + 1;
               k++
             ) {
               dayLocation[index].isSecondBlock = true;
@@ -399,10 +404,7 @@ const Calendar = props => {
           }
 
           var i = 0;
-          const weekGap = dateFns.differenceInCalendarWeeks(
-            value.end,
-            value.start
-          );
+          const weekGap = dateFns.differenceInCalendarWeeks(value.end, value.start);
           for (; i < weekGap - 1; i++) {
             // middle sc
             if (index >= dayLocation.length) {
@@ -424,20 +426,9 @@ const Calendar = props => {
               return sc;
             }
             if (secondBlock) {
-              sc.push(
-                longSC(
-                  value.cd,
-                  595,
-                  0,
-                  dayLocation[index].y + 25,
-                  value.ex,
-                  i + 1
-                )
-              );
+              sc.push(longSC(value.cd, 595, 0, dayLocation[index].y + 25, value.ex, i + 1));
             } else {
-              sc.push(
-                longSC(value.cd, 595, 0, dayLocation[index].y, value.ex, i + 1)
-              );
+              sc.push(longSC(value.cd, 595, 0, dayLocation[index].y, value.ex, i + 1));
             }
             // const currWeek = dateFns.addWeeks(value.start, i + 1);
             // const currWeekFisrtDay = dateFns.startOfWeek(currWeek);
@@ -481,28 +472,14 @@ const Calendar = props => {
               )
             );
           } else {
-            const diffDay =
-              dateFns.differenceInDays(value.end, dayLocation[index].day) + 1;
-            sc.push(
-              longSC(
-                value.cd,
-                85 * diffDay,
-                0,
-                dayLocation[index].y,
-                value.ex,
-                i + 1
-              )
-            );
+            const diffDay = dateFns.differenceInDays(value.end, dayLocation[index].day) + 1;
+            sc.push(longSC(value.cd, 85 * diffDay, 0, dayLocation[index].y, value.ex, i + 1));
           }
 
           // const currWeek = dateFns.addWeeks(value.start, i + 1);
           // const currWeekFisrtDay = dateFns.startOfWeek(currWeek);
 
-          const countDays =
-            dateFns.differenceInDays(
-              value.end,
-              dateFns.startOfWeek(value.end)
-            ) + 1;
+          const countDays = dateFns.differenceInDays(value.end, dateFns.startOfWeek(value.end)) + 1;
           for (let j = 0; j < countDays; j++) {
             dayLocation[index].isSecondBlock = true;
             dayLocation[index].overlap = ++dayLocation[index].overlap;
@@ -510,8 +487,7 @@ const Calendar = props => {
           }
           return;
         }
-        const diffDay =
-          dateFns.differenceInDays(value.end, dayLocation[index].day) + 1;
+        const diffDay = dateFns.differenceInDays(value.end, dayLocation[index].day) + 1;
         if (dayLocation[index].isSecondBlock) {
           sc.push(
             longSC(
@@ -525,22 +501,11 @@ const Calendar = props => {
           );
         } else {
           sc.push(
-            longSC(
-              value.cd,
-              85 * diffDay,
-              dayLocation[index].x,
-              dayLocation[index].y,
-              value.ex,
-              0
-            )
+            longSC(value.cd, 85 * diffDay, dayLocation[index].x, dayLocation[index].y, value.ex, 0)
           );
         }
 
-        for (
-          let i = 0;
-          i < dateFns.differenceInDays(value.end, value.start) + 1;
-          i++
-        ) {
+        for (let i = 0; i < dateFns.differenceInDays(value.end, value.start) + 1; i++) {
           dayLocation[index].isSecondBlock = true;
           dayLocation[index].overlap = ++dayLocation[index].overlap;
           index++;
@@ -583,22 +548,14 @@ const Calendar = props => {
       } else {
         moveBlockY = -(parseInt(y / 74) - parseInt(moveY / 74));
       }
-      const moveObjDate = userDate.filter(
-        value => value.cd === id.substring(2)
-      )[0];
+      const moveObjDate = userDate.filter(value => value.cd === id.substring(2))[0];
       setUserDate(
         userDate.map(value => {
           if (moveObjDate.cd === value.cd) {
             return {
               ...value,
-              start: dateFns.addWeeks(
-                dateFns.addDays(value.start, moveBlockX),
-                moveBlockY
-              ),
-              end: dateFns.addWeeks(
-                dateFns.addDays(value.end, moveBlockX),
-                moveBlockY
-              )
+              start: dateFns.addWeeks(dateFns.addDays(value.start, moveBlockX), moveBlockY),
+              end: dateFns.addWeeks(dateFns.addDays(value.end, moveBlockX), moveBlockY)
             };
           }
           return value;
@@ -658,7 +615,7 @@ const Calendar = props => {
     }
     moveLife = 5;
   };
-  console.log(userDate);
+  console.log('this is render');
   return (
     <div className='calendar'>
       <Header
@@ -777,13 +734,9 @@ const Calendar = props => {
                                 color: 'gray'
                               }}
                             >
-                              {dateFns.format(value.start, 'a ') === 'AM'
-                                ? '오전'
-                                : '오후'}
+                              {dateFns.format(value.start, 'a ') === 'AM' ? '오전' : '오후'}
                               {dateFns.format(value.start, 'h -')}
-                              {dateFns.format(value.end, 'a ') === 'AM'
-                                ? '오전'
-                                : '오후'}
+                              {dateFns.format(value.end, 'a ') === 'AM' ? '오전' : '오후'}
                               {dateFns.format(value.end, 'h')}
                             </span>
                           </div>
@@ -822,14 +775,10 @@ const Calendar = props => {
                 fontSize: '16px'
               }}
             >
-              <strong>
-                {selectedDetailedSC !== null ? selectedDetailedSC.ex : null}
-              </strong>
+              <strong>{selectedDetailedSC !== null ? selectedDetailedSC.ex : null}</strong>
               <div>
                 <PersonIcon fontSize='small' />
-                <span style={{ position: 'absolute', fontSize: '18px' }}>
-                  4
-                </span>
+                <span style={{ position: 'absolute', fontSize: '18px' }}>4</span>
               </div>
             </div>
             <div style={{ marginTop: '5px', fontSize: '12px', color: 'gray' }}>
@@ -850,42 +799,40 @@ const Calendar = props => {
               {selectedDetailedSC !== null ? selectedDetailedSC.ex : null}
             </div>
           </div>
-          <div className='calendar-detailedsc-buttons'>
-            <div
-              className='calendar-detailedsc-buttons-button'
-              onClick={(userDate) => setScheduleEditOpen(true)}
-            >
-              <CreateIcon fontSize='small' />
-              수정
-            </div>
-            {scheduleEditOpen === true ? (
-              <CalendarScheduleEdit
-                onCancel={() => setScheduleEditOpen(false)}
+          {isMyCalendar === true ? (
+            <div className='calendar-detailedsc-buttons'>
+              <div
+                className='calendar-detailedsc-buttons-button'
+                onClick={userDate => setScheduleEditOpen(true)}
+              >
+                <CreateIcon fontSize='small' />
+                수정
+              </div>
+              {scheduleEditOpen === true ? (
+                <CalendarScheduleEdit onCancel={() => setScheduleEditOpen(false)} />
+              ) : null}
+              <div
+                style={{
+                  background: '#e5e5e5',
+                  width: '1px',
+                  height: '14px',
+                  verticalAlign: 'middle',
+                  display: 'inline-block',
+                  marginTop: '7px'
+                }}
               />
-            ) : null}
-            <div
-              style={{
-                background: '#e5e5e5',
-                width: '1px',
-                height: '14px',
-                verticalAlign: 'middle',
-                display: 'inline-block',
-                marginTop: '7px'
-              }}
-            />
-            <div
-              className='calendar-detailedsc-buttons-button'
-              onClick={() => {
-                setUserDate(
-                  userDate.filter(value => value.cd !== selectedDetailedSC.cd)
-                );
-                setDetailedSC(null);
-              }}
-            >
-              <DeleteIcon fontSize='small' />
-              삭제
+              <div
+                className='calendar-detailedsc-buttons-button'
+                onClick={() => {
+                  setUserDate(userDate.filter(value => value.cd !== selectedDetailedSC.cd));
+                  setDetailedSC(null);
+                }}
+              >
+                <DeleteIcon fontSize='small' />
+                삭제
+              </div>
             </div>
-          </div>
+          ) : null}
         </div>
       </Popover>
     </div>
