@@ -17,8 +17,10 @@ import java.util.Map;
 @RestController
 @RequestMapping("user")
 public class UserController {
-    @Autowired private UserService userService;
-    @Autowired private HttpSession session;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private HttpSession session;
 
     @PostMapping("/joinRequest")
     public Map<String, Boolean> joinRequest(@RequestParam Map<String, String> paramMap){

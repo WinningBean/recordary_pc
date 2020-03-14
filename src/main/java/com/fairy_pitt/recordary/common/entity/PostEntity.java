@@ -1,18 +1,18 @@
 package com.fairy_pitt.recordary.common.entity;
 
-import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
-@Data
+@Getter
+@NoArgsConstructor
 @Entity
 @Table(name = "POST_TB")
-public class PostEntity {
+public class PostEntity extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "POST_CD")
@@ -31,9 +31,10 @@ public class PostEntity {
     private PostEntity postOriginFK;
 
     @Column(name = "POST_EX")
+    @Type(type = "text")
     private String postEx;
 
-    @Column(name = "POST_PB_ST")
+    @Column(name = "POST_PB_ST", nullable = false)
     private int postPublicState;
 
     @Column(name = "POST_STR_YMD")
@@ -41,14 +42,6 @@ public class PostEntity {
 
     @Column(name = "POST_END_YMD")
     private String postEndYMD;
-
-    @Column(name = "POST_CREATED_DT")
-    @CreatedDate
-    private LocalDateTime createdDate;
-
-    @Column(name = "POST_UPDATED_DT")
-    @LastModifiedDate
-    private LocalDateTime updatedDate;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "postCodeFK")
     private List<ScheduleEntity> postSchedules;
@@ -64,4 +57,17 @@ public class PostEntity {
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "postFK", cascade = {CascadeType.ALL})
     private List<PostLikeEntity> postLikList;
+
+    @Builder
+    public PostEntity(String postEx, int postPublicState, String postStrYMD, String postEndYMD){
+        this.postEx = postEx;
+        this.postPublicState = postPublicState;
+        this.postStrYMD = postStrYMD;
+        this.postEndYMD = postEndYMD;
+    }
+
+    public void update(String postEx, int postPublicState) {
+        this.postEx = postEx;
+        this.postPublicState = postPublicState;
+    }
 }

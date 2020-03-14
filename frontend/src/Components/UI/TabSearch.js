@@ -6,24 +6,24 @@ import GroupIcon from '@material-ui/icons/Group';
 import HowToRegIcon from '@material-ui/icons/HowToReg';
 
 export default function TabSearch() {
-    const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(0);
 
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
-    return (
-        <Paper square>
-            <Tabs
-                value={value}
-                indicatorColor='primary'
-                textColor='primary'
-                onChange={handleChange}
-                aria-label='disabled tabs example'
-            >
-                <Tab label='Follow' icon={<HowToRegIcon />} />
-                <Tab label='Group' icon={<GroupIcon />} />
-            </Tabs>
-        </Paper>
-    );
+  return (
+    <Paper square>
+      <Tabs
+        value={value}
+        indicatorColor='primary'
+        textColor='primary'
+        onChange={handleChange}
+        aria-label='disabled tabs example'
+      >
+        <Tab label='Follow' icon={<HowToRegIcon />} />
+        <Tab label='Group' icon={<GroupIcon />} />
+      </Tabs>
+    </Paper>
+  );
 }

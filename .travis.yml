@@ -1,10 +1,15 @@
 language: java
+
+before_install:
+  - chmod +x gradlew
+
 jdk:
   - openjdk8
 
 branches:
   only:
     - master
+    - try-ci
 
 # Travis CI 서버의 Home
 cache:

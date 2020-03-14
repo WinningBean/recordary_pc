@@ -1,8 +1,6 @@
 package com.fairy_pitt.recordary.common.repository;
 
 import com.fairy_pitt.recordary.common.entity.UserEntity;
-import com.fairy_pitt.recordary.endpoint.user.service.UserPasswordHashService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
