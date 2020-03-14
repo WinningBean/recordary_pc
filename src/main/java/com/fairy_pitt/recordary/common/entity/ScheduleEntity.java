@@ -40,6 +40,6 @@ public class ScheduleEntity {
 
    //private String scheduleLocation;
 
-   @OneToMany(fetch = FetchType.LAZY, mappedBy = "scheduleFK")
-   private List<PostEntity> postList;
+//   @OneToOne(fetch = FetchType.LAZY, mappedBy = "scheduleFK")
+//   private List<PostEntity> postList;
 }

@@ -30,7 +30,7 @@ public class PostEntity extends BaseTimeEntity{
     @JoinColumn(name = "POST_ORIGIN_FK")
     private PostEntity postOriginFK;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "POST_SCHEDULE_FK")
     private ScheduleEntity scheduleFK;
 
@@ -50,9 +50,6 @@ public class PostEntity extends BaseTimeEntity{
 
     @Column(name = "POST_END_YMD")
     private String postEndYMD;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postCodeFK")
-    private List<ScheduleEntity> postSchedules;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "postFK", cascade = {CascadeType.ALL})
     private List<PostTagEntity> postTagList;
