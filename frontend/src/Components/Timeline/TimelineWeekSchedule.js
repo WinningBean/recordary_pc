@@ -121,22 +121,27 @@ const TimelineWeekSchedule = props => {
   };
 
   const timelineInfo = (() => {
-    return (
-      // 하루일정
-      <TimelineOneday
-        title={data.post_title}
-        ex={data.post_ex}
-        startDay={data.post_str_ymd}
-        endDay={data.post_end_ymd}
-      />
-
-      // <TimelineMultiDay
-      //   title={data.post_title}
-      //   ex={data.post_ex}
-      //   startDay={data.post_str_ymd}
-      //   endDay={data.post_end_ymd}
-      // />
-    );
+    switch (data.postForm) {
+      case 0:
+        return (
+          <TimelineOneday
+            title={data.post_title}
+            ex={data.post_ex}
+            startDay={data.post_str_ymd}
+            endDay={data.post_end_ymd}
+          />
+        );
+      case 1:
+        return (
+          <TimelineMultiDay
+            title={data.post_title}
+            ex={data.post_ex}
+            sharedSchedual={data.sharedSchedual}
+            sharedStartDay={data.sharedStartDay}
+            sharedEndDay={data.sharedEndDay}
+          />
+        );
+    }
   })();
 
   return (

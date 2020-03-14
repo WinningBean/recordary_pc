@@ -193,91 +193,34 @@ class Login extends React.Component {
           },
           {
             postForm: 1,
-            post_cd: 4,
+            post_cd: 5,
             user_id: 'HwangSG',
             user_pic: 'http://placehold.it/40x40',
             group_cd: null,
             uploadDate: new Date(),
             post_pic: 'img/1579501322063.jpg',
-            post_title: 'Hello World',
-            post_ex: '하루 일정만',
-            post_str_ymd: new Date(),
-            post_end_ymd: new Date(),
-            comment: [
+            sharedStartDay: new Date(),
+            sharedEndDay: new Date('2020-03-25'),
+            sharedSchedual: [
               {
-                user_id: 'wi_sungho',
-                user_pic: 'http://placehold.it/40x40',
-                user_comment: '가나다라바사',
-                commentLike: false,
-                recommentList: [
-                  {
-                    user_id: '위승빈',
-                    user_pic: 'http://placehold.it/40x40',
-                    user_comment: '배고프다',
-                    commentLike: false
-                  },
-                  {
-                    user_id: '위승빈',
-                    user_pic: 'http://placehold.it/40x40',
-                    user_comment: '배고프다',
-                    commentLike: false
-                  },
-                  {
-                    user_id: '위승빈',
-                    user_pic: 'http://placehold.it/40x40',
-                    user_comment: '배고프다',
-                    commentLike: false
-                  },
-                  {
-                    user_id: '위승빈',
-                    user_pic: 'http://placehold.it/40x40',
-                    user_comment: '배고프다',
-                    commentLike: false
-                  },
-                  {
-                    user_id: '위승빈',
-                    user_pic: 'http://placehold.it/40x40',
-                    user_comment: '배고프다',
-                    commentLike: false
-                  }
-                ]
+                cd: '01',
+                start: new Date('2020-03-18'),
+                end: new Date('2020-03-20'),
+                ex: '발닦고 잠자기'
               },
               {
-                user_id: 'hsg',
-                user_pic: 'http://placehold.it/40x40',
-                user_comment: 'abcd',
-                commentLike: false,
-                recommentList: [
-                  {
-                    user_id: '위승빈',
-                    user_pic: 'http://placehold.it/40x40',
-                    user_comment: '배고프다',
-                    commentLike: false
-                  },
-                  {
-                    user_id: '위승빈',
-                    user_pic: 'http://placehold.it/40x40',
-                    user_comment: '배고프다',
-                    commentLike: false
-                  }
-                ]
+                cd: '02',
+                start: new Date('2020-03-21'),
+                end: new Date('2020-03-23'),
+                ex: 'ex2'
+              },
+              {
+                cd: '03',
+                start: new Date('2020-03-25'),
+                end: new Date('2020-03-25'),
+                ex: 'ex3'
               }
             ],
-            postLikeCount: 5,
-            postLikePerson: 'WiSungho'
-          },
-          {
-            postForm: 1,
-            post_cd: 4,
-            user_id: 'HwangSG',
-            user_pic: 'http://placehold.it/40x40',
-            group_cd: null,
-            uploadDate: new Date(),
-            post_pic: 'img/1579501322063.jpg',
-            post_title: '팔색조와 여행😁',
-            post_ex: '몇일간 이어지는 일정',
-            post_str_ymd: new Date(),
-            post_end_ymd: new Date('2020-04-02'),
             comment: [
               {
                 user_id: 'wi_sungho',
@@ -416,23 +359,14 @@ class Login extends React.Component {
                         </a> */}
             <Link to='/main'>
               {/* <img className="title-image" alt="Recordary icon" src="http://localhost:8080/Recodary.png"/> */}
-              <img
-                className='title-image'
-                alt='Recordary icon'
-                src='img/Recordary.png'
-              />
+              <img className='title-image' alt='Recordary icon' src='img/Recordary.png' />
             </Link>
           </div>
           {this.state.successRegister()}
           {this.state.failedLogin()}
           <div className='login-form'>
             <div className='login-text'>
-              <TextField
-                name='user_id'
-                autoFocus
-                label='아이디'
-                onChange={this.changeHandel}
-              />
+              <TextField name='user_id' autoFocus label='아이디' onChange={this.changeHandel} />
               <br />
               <TextField
                 name='user_pw'
@@ -443,9 +377,7 @@ class Login extends React.Component {
               <br />
             </div>
             <div className='login-button'>
-              <MyButton onClick={() => this.setState({ isRegister: true })}>
-                회원가입
-              </MyButton>
+              <MyButton onClick={() => this.setState({ isRegister: true })}>회원가입</MyButton>
               <MyButton type='submit'>로그인</MyButton>
             </div>
           </div>
