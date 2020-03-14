@@ -116,7 +116,7 @@ class Login extends React.Component {
         ],
         post: [
           {
-            postForm: 0,
+            postForm: 1,
             post_cd: 4,
             user_id: 'HwangSG',
             user_pic: 'http://placehold.it/40x40',
@@ -127,7 +127,7 @@ class Login extends React.Component {
             post_ex:
               '1일차 : 천사곱창에서 1차😍 보드게임방 2차🐱‍👤\n2일차 : 치치에서 1차~ 오술차에서 2차!!🍺🍻\n3일차 : 김밥천국에서 냠냠🍳🍱🍜\n4일차 : 본캠 카페!~~!~!🥛☕',
             post_str_ymd: new Date(),
-            post_end_ymd: new Date(),
+            post_end_ymd: new Date('2020-03-14'),
             comment: [
               {
                 user_id: 'wi_sungho',
@@ -192,14 +192,107 @@ class Login extends React.Component {
             postLikePerson: 'WiSungho'
           },
           {
-            postForm: 1,
+            postForm: 2,
             post_cd: 5,
             user_id: 'HwangSG',
             user_pic: 'http://placehold.it/40x40',
             group_cd: null,
             uploadDate: new Date(),
             post_pic: 'img/1579501322063.jpg',
-            sharedStartDay: new Date(),
+            sharedStartDay: new Date('2020-03-25'),
+            sharedEndDay: new Date('2020-03-25'),
+            sharedSchedual: [
+              {
+                cd: '01',
+                start: new Date('2020-03-18'),
+                end: new Date('2020-03-20'),
+                ex: '발닦고 잠자기'
+              },
+              {
+                cd: '02',
+                start: new Date('2020-03-21'),
+                end: new Date('2020-03-23'),
+                ex: 'ex2'
+              },
+              {
+                cd: '03',
+                start: new Date('2020-03-25'),
+                end: new Date('2020-03-25'),
+                ex: 'ex3'
+              }
+            ],
+            comment: [
+              {
+                user_id: 'wi_sungho',
+                user_pic: 'http://placehold.it/40x40',
+                user_comment: '가나다라바사',
+                commentLike: false,
+                recommentList: [
+                  {
+                    user_id: '위승빈',
+                    user_pic: 'http://placehold.it/40x40',
+                    user_comment: '배고프다',
+                    commentLike: false
+                  },
+                  {
+                    user_id: '위승빈',
+                    user_pic: 'http://placehold.it/40x40',
+                    user_comment: '배고프다',
+                    commentLike: false
+                  },
+                  {
+                    user_id: '위승빈',
+                    user_pic: 'http://placehold.it/40x40',
+                    user_comment: '배고프다',
+                    commentLike: false
+                  },
+                  {
+                    user_id: '위승빈',
+                    user_pic: 'http://placehold.it/40x40',
+                    user_comment: '배고프다',
+                    commentLike: false
+                  },
+                  {
+                    user_id: '위승빈',
+                    user_pic: 'http://placehold.it/40x40',
+                    user_comment: '배고프다',
+                    commentLike: false
+                  }
+                ]
+              },
+              {
+                user_id: 'hsg',
+                user_pic: 'http://placehold.it/40x40',
+                user_comment: 'abcd',
+                commentLike: false,
+                recommentList: [
+                  {
+                    user_id: '위승빈',
+                    user_pic: 'http://placehold.it/40x40',
+                    user_comment: '배고프다',
+                    commentLike: false
+                  },
+                  {
+                    user_id: '위승빈',
+                    user_pic: 'http://placehold.it/40x40',
+                    user_comment: '배고프다',
+                    commentLike: false
+                  }
+                ]
+              }
+            ],
+            postLikeCount: 5,
+            postLikePerson: 'WiSungho'
+          },
+          {
+            postForm: 2,
+            post_cd: 5,
+            user_id: 'HwangSG',
+            user_pic: 'http://placehold.it/40x40',
+            group_cd: null,
+            uploadDate: new Date(),
+            post_pic: 'img/1579501322063.jpg',
+            sharedStartDay: new Date('2020-05-25'),
             sharedEndDay: new Date('2020-03-25'),
             sharedSchedual: [
               {

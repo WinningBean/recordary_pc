@@ -148,7 +148,7 @@ class Profile extends React.Component {
                   </div>
                 </div>
                 <div id='schedule-area'>
-                  <Calendar />
+                  <Calendar isMyCalendar={true} />
                 </div>
               </div>
             </div>

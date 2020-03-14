@@ -115,16 +115,14 @@ const TimelineWeekSchedule = props => {
           </div>
         </div>
         {isClickList[index] === true ? MoreComment(value.recommentList) : null}
-        {value.recommentList.length > 0
-          ? showMoreComment(value.recommentList, index)
-          : null}
+        {value.recommentList.length > 0 ? showMoreComment(value.recommentList, index) : null}
       </>
     ));
   };
 
   const timelineInfo = (() => {
     switch (data.postForm) {
-      case 0:
+      case 1:
         return (
           <TimelineOneday
             title={data.post_title}
@@ -133,7 +131,7 @@ const TimelineWeekSchedule = props => {
             endDay={data.post_end_ymd}
           />
         );
-      case 1:
+      case 2:
         return (
           <TimelineMultiDay
             title={data.post_title}
@@ -167,20 +165,25 @@ const TimelineWeekSchedule = props => {
         </div>
       </div>
       <div className='timeline-info' style={{ height: 'auto' }}>
-        <div className='timeline-week-info'>{timelineInfo}</div>
+        <div
+          className='timeline-week-info'
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: '340px',
+            overflow: 'auto'
+          }}
+        >
+          {timelineInfo}
+        </div>
         <div className='comment-context'>
-          <div
-            className='comment-reply'
-            style={{ height: '200px', overflowY: 'auto' }}
-          >
+          <div className='comment-reply' style={{ height: '200px', overflowY: 'auto' }}>
             {commentList()}
           </div>
           <div className='comment-context-icon'>
             <div className='comment-icon-left'>
               <div className='likeIcon'>
-                <ThumbUpRoundedIcon style={{ fontSize: 25 }}>
-                  like
-                </ThumbUpRoundedIcon>
+                <ThumbUpRoundedIcon style={{ fontSize: 25 }}>like</ThumbUpRoundedIcon>
               </div>
               <div className='comment-title'>
                 {`${data.postLikePerson} 님 외 ${data.postLikeCount}명이 좋아합니다`}

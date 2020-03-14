@@ -33,6 +33,12 @@
   font-size: 25px;
   margin-top: 5px;
   margin-left: 10px;
+  position: relative;
+}
+
+.transition-width {
+  transition-property: width;
+  transition-duration: 0.5s;
 }
 .Post-Append-Schedule {
   padding: 5px;
