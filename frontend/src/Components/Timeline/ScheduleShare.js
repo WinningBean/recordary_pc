@@ -49,7 +49,7 @@ const ScheduleShare = props => {
               <PostAddIcon
                 style={{ fontSize: '40px', color: 'white', marginLeft: '10px' }}
               />
-              <div className='PostAdd-title'>내 일정 공유</div>
+              <div className='PostAdd-title'>시작날짜를 선택하세요</div>
             </div>
           </div>
           <div style={{ margin: '20px' }}>

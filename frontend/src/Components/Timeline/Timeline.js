@@ -3,7 +3,8 @@ import * as dateFns from 'date-fns';
 import './Timeline.css';
 import LongMenu from 'Components/Other/MoreMenu';
 import PostShare from 'Components/Profile/PostShare';
-
+import Avatar from '@material-ui/core/Avatar';
+import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import ThumbUpRoundedIcon from '@material-ui/icons/ThumbUpRounded';
 import ShareIcon from '@material-ui/icons/Share';
 import CommentIcon from '@material-ui/icons/Comment';
@@ -141,13 +142,31 @@ const Timeline = props => {
           <div className='timeline-picture'>
             <img alt='timeline-img' src='img/1579501322063.jpg' />
           </div>
-          <div className='timeline-title'>{data.post_title}</div>
+          <div className='timeline-title'>
+            <div>{data.post_title}</div>
+            <div
+              style={{
+                flex: 1,
+                marginLeft: '6px',
+                display: 'flex',
+                justifyContent: 'flex-end'
+              }}
+            >
+              <AvatarGroup>
+                <Avatar alt='Remy Sharp' src='http://placehold.it/40x40' />
+                <Avatar alt='Travis Howard' src='http://placehold.it/40x40' />
+                <Avatar alt='Cindy Baker' src='http://placehold.it/40x40' />
+                <Avatar>+3</Avatar>
+              </AvatarGroup>
+            </div>
+          </div>
           <div className='timeline-context'>{data.post_ex}</div>
         </div>
         <div className='comment-context'>
           <div className='comment-reply' style={{ overflowY: 'auto' }}>
             {commentList()}
           </div>
+
           <div className='comment-context-icon'>
             <div className='comment-icon-left'>
               <div className='likeIcon'>
@@ -156,9 +175,6 @@ const Timeline = props => {
                 </ThumbUpRoundedIcon>
               </div>
               <div className='comment-title'>
-                {/* <ThumbUpRoundedIcon
-                  style={{ fontSize: '25', paddingRight: '5px' }}
-                /> */}
                 {`${data.postLikePerson} 님 외 ${data.postLikeCount}명이 좋아합니다`}
               </div>
             </div>

@@ -30,8 +30,8 @@
 }
 
 .profile-picture > img {
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   object-fit: cover;
   border-radius: 50%;
   box-shadow: 0px 1px 3px rgba(161, 159, 159, 0.8);
@@ -74,7 +74,7 @@
 
 .timeline-info {
   display: flex;
-  height: 490px;
+  height: 470px;
 }
 
 .timeline-picture-info {
@@ -97,16 +97,18 @@
 }
 
 .timeline-title {
+  margin-top: 5px;
   height: 40px;
-  padding-left: 10px;
-  padding-top: 10px;
   font-size: 18px;
   font-weight: bold;
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
 }
 
 .timeline-context {
   max-width: 490px;
-  height: 100px;
+  max-height: 80px;
   padding-left: 10px;
   padding-top: 5px;
   font-size: 16px;
@@ -157,7 +159,7 @@
 .comment-context-icon {
   display: flex;
   justify-content: space-between;
-  padding-left: 5px;
+  padding-left: 10px;
 }
 
 .comment-icon-left,
@@ -190,9 +192,6 @@
 
 fieldset {
   border-color: rgba(20, 81, 51, 0.9) !important;
-}
-.comment-write {
-  margin-top: 10px;
 }
 .comment-write > div > div > div > .MuiOutlinedInput-multiline {
   padding-top: 18.5px;
