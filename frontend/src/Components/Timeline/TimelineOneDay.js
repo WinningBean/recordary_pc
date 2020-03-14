@@ -19,7 +19,11 @@ function TimelineOneDay({ title, ex, startDay, endDay }) {
       >
         {title}
       </div>
-      <div style={{ flex: 3, display: 'flex', paddingTop: '8px' }}>{ex}</div>
+      <div
+        style={{ flex: 3, height: '150px', display: 'flex', paddingTop: '8px' }}
+      >
+        {ex}
+      </div>
       <div style={{ flex: 2 }}>
         <div
           style={{
@@ -32,7 +36,9 @@ function TimelineOneDay({ title, ex, startDay, endDay }) {
           }}
         >
           <span style={{ fontWeight: 'bold' }}>시작</span>
-          <span style={{ fontWeight: 'bold' }}>{format(startDay, 'yyyy.M.d EEE h:mm a')}</span>
+          <span style={{ fontWeight: 'bold' }}>
+            {format(startDay, 'yyyy.M.d EEE h:mm a')}
+          </span>
         </div>
         <div
           style={{
@@ -45,7 +51,9 @@ function TimelineOneDay({ title, ex, startDay, endDay }) {
           }}
         >
           <span style={{ fontWeight: 'bold' }}>종료</span>
-          <span style={{ fontWeight: 'bold' }}>{format(endDay, 'yyyy.M.d EEE h:mm a')}</span>
+          <span style={{ fontWeight: 'bold' }}>
+            {format(endDay, 'yyyy.M.d EEE h:mm a')}
+          </span>
         </div>
       </div>
       <div style={{ flex: 1, marginTop: '6px', marginLeft: '6px' }}>

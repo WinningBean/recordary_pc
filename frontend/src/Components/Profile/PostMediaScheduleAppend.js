@@ -51,7 +51,7 @@ const useStyles = makeStyles(theme => ({
 const PostMediaScheduleAppend = props => {
   const classes = useStyles();
   const [mediaOpen, setMediaOpen] = useState(null);
-  const [scheduleOpen, setScheduleOpen] = useState(null);
+  const [scheduleOpen, setScheduleOpen] = useState(false);
   const [open, setOpen] = React.useState(false);
   const [alert, setAlert] = useState(null);
   const [colorClick, setColorClick] = useState(false);
@@ -149,56 +149,18 @@ const PostMediaScheduleAppend = props => {
     return;
   };
 
-  const showSchedule = () => {
-    if (scheduleOpen === null) {
-      setScheduleOpen(
-        <div onClose={() => setScheduleOpen(null)}>
-          <div className='Post-Append-title post-Append'>
-            <TextField id='post_title' label='제목' />
-            <div className='selectColor-form'>
-              <span>일정 색상 설정</span>
-              <div
-                className='selectColor'
-                onClick={() => setColorClick(true)}
-                style={{
-                  backgroundColor: `rgba(${scheduleColor.r}, ${scheduleColor.g}, ${scheduleColor.b}, ${scheduleColor.a})`
-                }}
-              />
-            </div>
-          </div>
-          <div className='Post-Append-Schedule'>
-            <DTP />
-          </div>
-          <div className='Post-Append-Tag-User post-Append'>
-            {/* <Link to={`/${info.user_id}`}> */}
-            <Chip
-              avatar={
-                // <Avatar alt={`${info.user_id} img`} src={info.user_pic} />
-                <Avatar alt='이미지' src='img/RIcon.png' />
-              }
-              className={classes.chip}
-              // label={info.user_nm}
-              label='성호'
-              style={{
-                backgroundColor: 'rgba(20, 81, 51, 0.8)',
-                color: '#ffffff',
-                marginLeft: '5px'
-              }}
-              clickable
-            />
-            {/* </Link> */}
-          </div>
-        </div>
-      );
-      return;
-    }
-    setScheduleOpen(null);
-    return;
-  };
-
   return (
     <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
-      <div className='post-append-header' style={{ width: '600px' }}>
+      <div
+        className='post-append-header'
+        style={{
+          width: '600px',
+          transitionProperty: 'background-color',
+          transitionDuration: '0.3s',
+          transitionTimingFunction: 'ease-out',
+          backgroundColor: `rgba(${scheduleColor.r}, ${scheduleColor.g}, ${scheduleColor.b}, ${scheduleColor.a})`
+        }}
+      >
         <div className='Post-Append-titleName'>
           <PostAddIcon
             style={{ fontSize: '40px', color: 'white', marginLeft: '10px' }}
@@ -215,9 +177,12 @@ const PostMediaScheduleAppend = props => {
 
           <div className='schedule-media-button '>
             <PublicRange />
-            <div className='plus-button-design' onClick={showSchedule}>
+            <div
+              className='plus-button-design'
+              onClick={() => setScheduleOpen(true)}
+            >
               {(() => {
-                if (scheduleOpen === null) {
+                if (scheduleOpen === false) {
                   return (
                     <div className='plus-button-design-2'>
                       <DateRangeIcon style={{ fontSize: '30px' }} />
@@ -294,7 +259,45 @@ const PostMediaScheduleAppend = props => {
             />
           </Popover>
         ) : null}
-        {scheduleOpen}
+        {scheduleOpen === false ? null : (
+          <div onClose={() => setScheduleOpen(null)}>
+            <div className='Post-Append-title post-Append'>
+              <TextField id='post_title' label='제목' />
+              <div className='selectColor-form'>
+                <span>일정 색상 설정</span>
+                <div
+                  className='selectColor'
+                  onClick={() => setColorClick(true)}
+                  style={{
+                    backgroundColor: `rgba(${scheduleColor.r}, ${scheduleColor.g}, ${scheduleColor.b}, ${scheduleColor.a})`
+                  }}
+                />
+              </div>
+            </div>
+            <div className='Post-Append-Schedule'>
+              <DTP />
+            </div>
+            <div className='Post-Append-Tag-User post-Append'>
+              {/* <Link to={`/${info.user_id}`}> */}
+              <Chip
+                avatar={
+                  // <Avatar alt={`${info.user_id} img`} src={info.user_pic} />
+                  <Avatar alt='이미지' src='img/RIcon.png' />
+                }
+                className={classes.chip}
+                // label={info.user_nm}
+                label='성호'
+                style={{
+                  backgroundColor: 'rgba(20, 81, 51, 0.8)',
+                  color: '#ffffff',
+                  marginLeft: '5px'
+                }}
+                clickable
+              />
+              {/* </Link> */}
+            </div>
+          </div>
+        )}
         {mediaOpen}
         {alert}
         <div className='Post-Append-Bottom'>

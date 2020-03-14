@@ -52,7 +52,7 @@ const Timeline = props => {
         {isClickList[index] === false ? (
           <span>{`댓글 ${list.length}개 모두 보기`}</span>
         ) : (
-          <span>{`대댓글 접기`}</span>
+          <span>{`댓글 접기`}</span>
         )}
       </div>
     </div>
@@ -75,12 +75,6 @@ const Timeline = props => {
                   paddingRight: '5px'
                 }}
               />
-              {/* <CommentIcon
-                style={{
-                  fontSize: '20',
-                  paddingRight: '5px'
-                }}
-              /> */}
             </div>
           </div>
         </div>
@@ -157,7 +151,7 @@ const Timeline = props => {
           <div className='comment-context-icon'>
             <div className='comment-icon-left'>
               <div className='likeIcon'>
-                <ThumbUpRoundedIcon style={{ fontSize: 30 }}>
+                <ThumbUpRoundedIcon style={{ fontSize: 25 }}>
                   like
                 </ThumbUpRoundedIcon>
               </div>

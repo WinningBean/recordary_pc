@@ -4,15 +4,15 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import EjectIcon from '@material-ui/icons/Eject';
 import { styled } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import SubdirectoryArrowLeftIcon from '@material-ui/icons/SubdirectoryArrowLeft';
 
 const useStyles = makeStyles(theme => ({
   margin: {
     margin: theme.spacing(1)
   },
-  width: {
+  textStyle: {
     width: '350px'
   }
 }));
@@ -29,9 +29,10 @@ export default function Comment() {
     <div>
       <FormControl className={classes.margin}>
         <TextField
-          className={(classes.margin, classes.width)}
+          className={(classes.margin, classes.textStyle)}
           id='input-with-icon-textfield'
           label='Comment'
+          size='small'
           InputProps={{
             startAdornment: (
               <InputAdornment position='start'>
@@ -42,15 +43,15 @@ export default function Comment() {
               <InputAdornment position='end'>
                 <SendButton>
                   {' '}
-                  <EjectIcon />{' '}
+                  <SubdirectoryArrowLeftIcon />{' '}
                 </SendButton>
               </InputAdornment>
             )
           }}
           variant='outlined'
           multiline
-          rowsMax='3'
-          rows='3'
+          rowsMax='2'
+          rows='2'
         ></TextField>
       </FormControl>
     </div>
