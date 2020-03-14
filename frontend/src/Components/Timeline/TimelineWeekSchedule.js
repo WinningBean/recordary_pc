@@ -52,7 +52,7 @@ const TimelineWeekSchedule = props => {
         {isClickList[index] === false ? (
           <span>{`댓글 ${list.length}개 모두 보기`}</span>
         ) : (
-          <span>{`대댓글 접기`}</span>
+          <span>{`댓글 접기`}</span>
         )}
       </div>
     </div>
@@ -115,7 +115,9 @@ const TimelineWeekSchedule = props => {
           </div>
         </div>
         {isClickList[index] === true ? MoreComment(value.recommentList) : null}
-        {value.recommentList.length > 0 ? showMoreComment(value.recommentList, index) : null}
+        {value.recommentList.length > 0
+          ? showMoreComment(value.recommentList, index)
+          : null}
       </>
     ));
   };
@@ -145,7 +147,7 @@ const TimelineWeekSchedule = props => {
   })();
 
   return (
-    <div className='timeline'>
+    <div className='timeline' style={{ minHeight: '391px' }}>
       <div className='timeline-profile'>
         <div className='profile-picture'>
           <img alt={`${data.user_id} img`} src={data.user_pic} />
@@ -164,24 +166,23 @@ const TimelineWeekSchedule = props => {
           />
         </div>
       </div>
-      <div className='timeline-info' style={{ height: 'auto', alignItems: 'center' }}>
+      <div className='timeline-info' style={{ height: 'auto' }}>
         <div className='timeline-week-info'>{timelineInfo}</div>
         <div className='comment-context'>
           <div
             className='comment-reply'
-            style={{ height: 'auto', maxHeight: '180px', overflowY: 'auto' }}
+            style={{ height: '200px', overflowY: 'auto' }}
           >
             {commentList()}
           </div>
           <div className='comment-context-icon'>
             <div className='comment-icon-left'>
               <div className='likeIcon'>
-                <ThumbUpRoundedIcon style={{ fontSize: 30 }}>like</ThumbUpRoundedIcon>
+                <ThumbUpRoundedIcon style={{ fontSize: 25 }}>
+                  like
+                </ThumbUpRoundedIcon>
               </div>
               <div className='comment-title'>
-                {/* <ThumbUpRoundedIcon
-                  style={{ fontSize: '25', paddingRight: '5px' }}
-                /> */}
                 {`${data.postLikePerson} 님 외 ${data.postLikeCount}명이 좋아합니다`}
               </div>
             </div>

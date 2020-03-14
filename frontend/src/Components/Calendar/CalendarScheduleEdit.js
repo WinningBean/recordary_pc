@@ -40,7 +40,16 @@ const CalendarScheduleEdit = props => {
 
   return (
     <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
-      <div className='post-append-header' style={{ width: '600px' }}>
+      <div
+        className='post-append-header'
+        style={{
+          width: '600px',
+          transitionProperty: 'background-color',
+          transitionDuration: '0.3s',
+          transitionTimingFunction: 'ease-out',
+          backgroundColor: `rgba(${scheduleColor.r}, ${scheduleColor.g}, ${scheduleColor.b}, ${scheduleColor.a})`
+        }}
+      >
         <div className='Post-Append-titleName'>
           <CreateIcon
             style={{ fontSize: '40px', color: 'white', marginLeft: '10px' }}
@@ -83,8 +92,6 @@ const CalendarScheduleEdit = props => {
               className={classes.chip}
               label='성호'
               style={{
-                backgroundColor: 'rgba(20, 81, 51, 0.8)',
-                color: '#ffffff',
                 marginLeft: '5px'
               }}
               clickable

@@ -191,7 +191,9 @@
 fieldset {
   border-color: rgba(20, 81, 51, 0.9) !important;
 }
-
+.comment-write {
+  margin-top: 10px;
+}
 .comment-write > div > div > div > .MuiOutlinedInput-multiline {
   padding-top: 18.5px;
   padding-bottom: 18.5px;
@@ -221,7 +223,6 @@ fieldset {
   flex-direction: column;
   width: 500px;
   padding: 5px 10px;
-  height: 280px;
 }
 
 /* 일정하나 */
@@ -247,4 +248,18 @@ fieldset {
 
 .MuiFab-primary {
   background-color: rgba(20, 81, 51, 0.9) !important;
+}
+
+/* 스크롤 css */
+.comment-reply::-webkit-scrollbar-track {
+  border-radius: 8px;
+}
+
+.comment-reply::-webkit-scrollbar {
+  width: 8px;
+}
+
+.comment-reply::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: lightgray;
 }
