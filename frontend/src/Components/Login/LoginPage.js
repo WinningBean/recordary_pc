@@ -116,7 +116,7 @@ class Login extends React.Component {
         ],
         post: [
           {
-            postForm: 1,
+            postForm: 0,
             post_cd: 4,
             user_id: 'HwangSG',
             user_pic: 'http://placehold.it/40x40',
@@ -128,6 +128,156 @@ class Login extends React.Component {
               '1일차 : 천사곱창에서 1차😍 보드게임방 2차🐱‍👤\n2일차 : 치치에서 1차~ 오술차에서 2차!!🍺🍻\n3일차 : 김밥천국에서 냠냠🍳🍱🍜\n4일차 : 본캠 카페!~~!~!🥛☕',
             post_str_ymd: new Date(),
             post_end_ymd: new Date(),
+            comment: [
+              {
+                user_id: 'wi_sungho',
+                user_pic: 'http://placehold.it/40x40',
+                user_comment: '가나다라바사',
+                commentLike: false,
+                recommentList: [
+                  {
+                    user_id: '위승빈',
+                    user_pic: 'http://placehold.it/40x40',
+                    user_comment: '배고프다',
+                    commentLike: false
+                  },
+                  {
+                    user_id: '위승빈',
+                    user_pic: 'http://placehold.it/40x40',
+                    user_comment: '배고프다',
+                    commentLike: false
+                  },
+                  {
+                    user_id: '위승빈',
+                    user_pic: 'http://placehold.it/40x40',
+                    user_comment: '배고프다',
+                    commentLike: false
+                  },
+                  {
+                    user_id: '위승빈',
+                    user_pic: 'http://placehold.it/40x40',
+                    user_comment: '배고프다',
+                    commentLike: false
+                  },
+                  {
+                    user_id: '위승빈',
+                    user_pic: 'http://placehold.it/40x40',
+                    user_comment: '배고프다',
+                    commentLike: false
+                  }
+                ]
+              },
+              {
+                user_id: 'hsg',
+                user_pic: 'http://placehold.it/40x40',
+                user_comment: 'abcd',
+                commentLike: false,
+                recommentList: [
+                  {
+                    user_id: '위승빈',
+                    user_pic: 'http://placehold.it/40x40',
+                    user_comment: '배고프다',
+                    commentLike: false
+                  },
+                  {
+                    user_id: '위승빈',
+                    user_pic: 'http://placehold.it/40x40',
+                    user_comment: '배고프다',
+                    commentLike: false
+                  }
+                ]
+              }
+            ],
+            postLikeCount: 5,
+            postLikePerson: 'WiSungho'
+          },
+          {
+            postForm: 1,
+            post_cd: 4,
+            user_id: 'HwangSG',
+            user_pic: 'http://placehold.it/40x40',
+            group_cd: null,
+            uploadDate: new Date(),
+            post_pic: 'img/1579501322063.jpg',
+            post_title: 'Hello World',
+            post_ex: '하루 일정만',
+            post_str_ymd: new Date(),
+            post_end_ymd: new Date(),
+            comment: [
+              {
+                user_id: 'wi_sungho',
+                user_pic: 'http://placehold.it/40x40',
+                user_comment: '가나다라바사',
+                commentLike: false,
+                recommentList: [
+                  {
+                    user_id: '위승빈',
+                    user_pic: 'http://placehold.it/40x40',
+                    user_comment: '배고프다',
+                    commentLike: false
+                  },
+                  {
+                    user_id: '위승빈',
+                    user_pic: 'http://placehold.it/40x40',
+                    user_comment: '배고프다',
+                    commentLike: false
+                  },
+                  {
+                    user_id: '위승빈',
+                    user_pic: 'http://placehold.it/40x40',
+                    user_comment: '배고프다',
+                    commentLike: false
+                  },
+                  {
+                    user_id: '위승빈',
+                    user_pic: 'http://placehold.it/40x40',
+                    user_comment: '배고프다',
+                    commentLike: false
+                  },
+                  {
+                    user_id: '위승빈',
+                    user_pic: 'http://placehold.it/40x40',
+                    user_comment: '배고프다',
+                    commentLike: false
+                  }
+                ]
+              },
+              {
+                user_id: 'hsg',
+                user_pic: 'http://placehold.it/40x40',
+                user_comment: 'abcd',
+                commentLike: false,
+                recommentList: [
+                  {
+                    user_id: '위승빈',
+                    user_pic: 'http://placehold.it/40x40',
+                    user_comment: '배고프다',
+                    commentLike: false
+                  },
+                  {
+                    user_id: '위승빈',
+                    user_pic: 'http://placehold.it/40x40',
+                    user_comment: '배고프다',
+                    commentLike: false
+                  }
+                ]
+              }
+            ],
+            postLikeCount: 5,
+            postLikePerson: 'WiSungho'
+          },
+          {
+            postForm: 1,
+            post_cd: 4,
+            user_id: 'HwangSG',
+            user_pic: 'http://placehold.it/40x40',
+            group_cd: null,
+            uploadDate: new Date(),
+            post_pic: 'img/1579501322063.jpg',
+            post_title: '팔색조와 여행😁',
+            post_ex: '몇일간 이어지는 일정',
+            post_str_ymd: new Date(),
+            post_end_ymd: new Date('2020-04-02'),
             comment: [
               {
                 user_id: 'wi_sungho',
