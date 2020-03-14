@@ -162,7 +162,10 @@ const TimelineWeekSchedule = props => {
       <div className='timeline-info' style={{ height: 'auto', alignItems: 'center' }}>
         <div className='timeline-week-info'>{timelineInfo}</div>
         <div className='comment-context'>
-          <div className='comment-reply' style={{ height: 'auto', maxHeight: '180px' }}>
+          <div
+            className='comment-reply'
+            style={{ height: 'auto', maxHeight: '180px', overflowY: 'auto' }}
+          >
             {commentList()}
           </div>
           <div className='comment-context-icon'>

@@ -115,7 +115,9 @@ const Timeline = props => {
           </div>
         </div>
         {isClickList[index] === true ? MoreComment(value.recommentList) : null}
-        {value.recommentList.length > 0 ? showMoreComment(value.recommentList, index) : null}
+        {value.recommentList.length > 0
+          ? showMoreComment(value.recommentList, index)
+          : null}
       </>
     ));
   };
@@ -149,11 +151,15 @@ const Timeline = props => {
           <div className='timeline-context'>{data.post_ex}</div>
         </div>
         <div className='comment-context'>
-          <div className='comment-reply'>{commentList()}</div>
+          <div className='comment-reply' style={{ overflowY: 'auto' }}>
+            {commentList()}
+          </div>
           <div className='comment-context-icon'>
             <div className='comment-icon-left'>
               <div className='likeIcon'>
-                <ThumbUpRoundedIcon style={{ fontSize: 30 }}>like</ThumbUpRoundedIcon>
+                <ThumbUpRoundedIcon style={{ fontSize: 30 }}>
+                  like
+                </ThumbUpRoundedIcon>
               </div>
               <div className='comment-title'>
                 {/* <ThumbUpRoundedIcon
