@@ -24,17 +24,8 @@ apply plugin: 'com.moowork.node'
 group 'com.fairy_pitt'
 version '1.0-SNAPSHOT'
 
+mainClassName = 'com.fairy_pitt.recordary'
 sourceCompatibility = 1.8
-
-configurations {
-    developmentOnly
-    runtimeClasspath {
-        extendsFrom developmentOnly
-    }
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
 
 repositories {
     mavenCentral()
@@ -68,7 +59,7 @@ node {
 
 task appNpmInstall(type: NpmTask) {
     workingDir = file("${webappDir}")
-    args = ["install"]
+    args = ['run-script', 'build']
 }
 
 task yarnBuild(type: YarnTask) {
@@ -87,6 +78,5 @@ task copyHtmlApp(type: Copy) {
 }
 
 yarnBuild.dependsOn appNpmInstall
-copyWebApp.dependsOn yarnBuild
 compileJava.dependsOn copyWebApp
 compileJava.dependsOn copyHtmlApp
