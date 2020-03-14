@@ -20,6 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GroupMemberService {
 
+/*
     @Autowired
     private final GroupRepository groupRepository;
     @Autowired
@@ -47,7 +48,8 @@ public class GroupMemberService {
     public Boolean insertMember(GroupEntity groupEntity)
     {
        // System.out.print(groupMemberEntity.getUserCodeFK());
-        UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
+*/
+/*        UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
         GroupMemberEntity insertGroupMember = new GroupMemberEntity();
         insertGroupMember.setGroupCodeFK(groupEntity);
         insertGroupMember.setUserCodeFK(currentUser);
@@ -57,25 +59,30 @@ public class GroupMemberService {
             return true;
         } else {
             return false;
-        }
+        }*//*
+
+        return false;
     }
 
     //그룹 탈퇴
     public Boolean deleteMember(GroupMemberPK groupMemberEntity)
     {
-        groupMemberRepository.deleteById(groupMemberEntity);
+//        groupMemberRepository.deleteById(groupMemberEntity);
         return true;
     }
 
 
-    public  Optional<GroupMemberEntity> findMember(GroupMemberPK groupMemberID)
+*/
+/*    public  Optional<GroupMemberEntity> findMember(GroupMemberPK groupMemberID)
     {
         return groupMemberRepository.findById(groupMemberID);
-    }
+    }*//*
+
 
 //    public Boolean deleteGroup()
 //    {
 //
 //    }
+*/
 
 }

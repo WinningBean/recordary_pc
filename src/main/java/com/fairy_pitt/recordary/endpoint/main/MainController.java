@@ -82,7 +82,7 @@ public class MainController {
     public Map<String, Object> profileRequest(){
         Map<String, Object> map = new HashMap<>();
 
-        UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
+       /* UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
 
         if (currentUser == null) map.put("currentUser",null);
         else {
@@ -99,11 +99,11 @@ public class MainController {
             for (Optional<GroupEntity> groupEntity :userGroup) {
                 Map<String, Object> groupMap = new HashMap<>();
                 GroupEntity groupEntityResult = groupEntity.get();
-                groupMap.put("group_ex",groupEntityResult.getGEx());
+             *//*   groupMap.put("group_ex",groupEntityResult.getGEx());
                 groupMap.put("group_nm",groupEntityResult.getGName());
                 groupMap.put("group_cd",groupEntityResult.getGroupCd());
                 groupMap.put("group_pic",groupEntityResult.getGPic());
-                groupMap.put("group_state", groupEntityResult.getGState());
+                groupMap.put("group_state", groupEntityResult.getGState());*//*
 
                 String master = groupEntityResult.getGMstUserFK().getUserId();
                 boolean checkMaster;
@@ -122,7 +122,7 @@ public class MainController {
                 friendMapList.add(userService.userInfo(friend.getUserId()));
             }
             map.put("friendList", friendMapList);
-        }
+        }*/
         return map;
     }
 

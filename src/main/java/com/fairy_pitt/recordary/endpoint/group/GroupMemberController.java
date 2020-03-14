@@ -18,7 +18,7 @@ import java.util.Optional;
 @RequestMapping("groupMember")
 public class GroupMemberController {
 
-    @Autowired
+/*    @Autowired
     private GroupService groupService;
     @Autowired
     private GroupMemberService groupMemberService ;
@@ -39,7 +39,7 @@ public class GroupMemberController {
         groupMemberPK.setGroupCodeFK(Long.parseLong(memberDeleteInfo.get("group_cd")));
         groupMemberPK.setUserCodeFK(memberCd);
 
-        Optional<GroupMemberEntity> groupMemberEntity = groupMemberService.findMember(groupMemberPK);
+        *//*Optional<GroupMemberEntity> groupMemberEntity = groupMemberService.findMember(groupMemberPK);*//*
         result.put("isDelete",groupMemberService.deleteMember(groupMemberPK));
         return result;
     }
@@ -63,5 +63,5 @@ public class GroupMemberController {
 //           return "fail";
 //       }
 //
-//    }
+//    }*/
 }

@@ -22,7 +22,7 @@ import java.util.Map;
 @RequestMapping("group")
 public class GroupController {
 
-    @Autowired
+/*    @Autowired
     private HttpSession session;
 
     @Autowired
@@ -41,7 +41,7 @@ public class GroupController {
     public Map<String,Boolean> CreateGroup(@RequestParam Map<String, Object> groupInfo) {
         //UserEntity currUser = (UserEntity) session.getAttribute("loginUser");
 
-        GroupEntity groupEntity = new GroupEntity();
+*//*        GroupEntity groupEntity = new GroupEntity();
         GroupMemberEntity groupMemberEntity = new GroupMemberEntity();
 
         groupEntity.setGName((String)groupInfo.get("group_nm"));
@@ -59,9 +59,9 @@ public class GroupController {
         groupMemberEntity.setUserCodeFK(groupCreate.getGMstUserFK());
         groupMemberEntity.setGroupCodeFK(groupCreate);
 
-        boolean groupCreateComplete = groupMemberService.insertMember(groupCreate);
+        boolean groupCreateComplete = groupMemberService.insertMember(groupCreate);*//*
         Map<String, Boolean> result = new HashMap<>();
-        result.put("isCreate", groupCreateComplete );
+   *//*     result.put("isCreate", groupCreateComplete );*//*
 
         return result;
     }
@@ -76,12 +76,12 @@ public class GroupController {
 
         List GroupMapList = new ArrayList();
         for (GroupEntity groupEntity:searchResult) {
-            if(groupEntity.getGState() == true)
+            if(groupEntity.getGroupState() == true)
             {
                 Map<String,Object> groupMapTemp = new HashMap<>();
-                groupMapTemp.put("group_nm",groupEntity.getGName());
-                groupMapTemp.put("group_ex",groupEntity.getGEx());
-                groupMapTemp.put("group_pic",groupEntity.getGPic());
+                groupMapTemp.put("group_nm",groupEntity.getGroupName());
+                groupMapTemp.put("group_ex",groupEntity.getGroupEx());
+                groupMapTemp.put("group_pic",groupEntity.getGroupPic());
                 groupMapTemp.put("group_cd", groupEntity.getGroupCd());
                 GroupMapList.add(groupMapTemp);
             }
@@ -108,8 +108,8 @@ public class GroupController {
     @PostMapping("update/{id}")
     public Map<String,Boolean> UpdateGroup(@PathVariable("id") long id, @RequestParam Map<String,Object> groupInfo)
     {
-        GroupEntity groupEntity = new GroupEntity();
-        groupEntity.setGName((String)groupInfo.get("group_nm"));
+*//*        GroupEntity groupEntity = new GroupEntity();
+        groupEntity.setGroupName((String)groupInfo.get("group_nm"));
         groupEntity.setGEx((String) groupInfo.get("group_ex"));
 
         if((String) groupInfo.get("group_state") == "true")
@@ -117,9 +117,9 @@ public class GroupController {
             groupEntity.setGState(true);
         }else {
             groupEntity.setGState(false);
-        }
+        }*//*
         Map<String,Boolean> result = new HashMap<>();
-        result.put("isUpdate", groupService.groupUpdate(groupEntity,id));
+     *//*   result.put("isUpdate", groupService.groupUpdate(groupEntity,id));*//*
 
         return result;
     }
@@ -137,9 +137,9 @@ public class GroupController {
         Map<String, Object> groupInfo = new HashMap<>();
         List groupMemberInfoList = new ArrayList();
 
-        groupInfo.put("group_nm",groupValue.getGName());
+  *//*      groupInfo.put("group_nm",groupValue.getGName());
         groupInfo.put("group_ex",groupValue.getGEx());
-        groupInfo.put("group_pic",groupValue.getGPic());
+        groupInfo.put("group_pic",groupValue.getGPic());*//*
 
         UserEntity groupAdmin = groupValue.getGMstUserFK();
         groupInfo.put("user_id", groupAdmin.getUserId());
@@ -169,7 +169,7 @@ public class GroupController {
     {
         List<GroupEntity> group =  groupService.findAllPublicGroup();
         Map<String, Object> resultMap = new HashMap<>();
-        List resultList = new ArrayList();
+*//*        List resultList = new ArrayList();
       //  System.out.println(group);
         if(group != null)
         {
@@ -185,8 +185,8 @@ public class GroupController {
         }else {
             resultMap.put("group",null);
             return resultMap;
-        }
+        }*//*
         return resultMap;
-    }
+    }*/
 
 }

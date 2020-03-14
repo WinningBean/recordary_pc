@@ -16,11 +16,11 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor// 검색해보기
 public class GroupService {
-
+/*
     @Autowired
     private final GroupRepository  groupRepository;
     private final UserRepository usersRepository;
-    private final GroupMemberService groupMemverService;
+    private final GroupMemberService groupMemberService;
 
     public GroupEntity groupCreate(GroupEntity groupEntity){
         GroupEntity resultGroupEntity = groupRepository.save(groupEntity);
@@ -61,22 +61,22 @@ public class GroupService {
     }
 
     public Boolean groupUpdate(GroupEntity groupEntity, long id){
-        GroupEntity  thisBoardEntity = this.findGroupId(id);
-
-        //GroupEntity updateGroupEntity = thisBoardEntity.get();
-
-        thisBoardEntity.setGEx(groupEntity.getGEx());
-        thisBoardEntity.setGName(groupEntity.getGName());
-        thisBoardEntity.setGPic(groupEntity.getGPic());
-        thisBoardEntity.setGState(groupEntity.getGState());
-
-        groupRepository.save(thisBoardEntity);
-        return  true;
+//        GroupEntity  thisBoardEntity = this.findGroupId(id);
+//
+//        //GroupEntity updateGroupEntity = thisBoardEntity.get();
+//
+//        thisBoardEntity.(groupEntity.getGEx());
+//        thisBoardEntity.setGName(groupEntity.getGName());
+//        thisBoardEntity.setGPic(groupEntity.getGPic());
+//        thisBoardEntity.setGState(groupEntity.getGState());
+//
+//        groupRepository.save(thisBoardEntity);
+         return  true;
     }
 
     //모든 공개그룹
     public List<GroupEntity> findAllPublicGroup()
     {
         return groupRepository.findAllBygState(true);
-    }
+    }*/
 }

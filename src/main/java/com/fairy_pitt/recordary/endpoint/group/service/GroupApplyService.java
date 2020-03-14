@@ -21,7 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GroupApplyService {
 
-    @Autowired
+/*    @Autowired
     private  final  GroupApplyRepository groupApplyRepository;
     private final UserService userInfoService;
     private final  GroupService groupService;
@@ -29,15 +29,15 @@ public class GroupApplyService {
     public  Boolean applyInsert(GroupApplyEntity groupApplyInfo)
     {
 
-        Optional<GroupApplyEntity> resultPostTag = Optional.of(groupApplyRepository.save(groupApplyInfo));
+    *//*    Optional<GroupApplyEntity> resultPostTag = Optional.of(groupApplyRepository.save(groupApplyInfo));
         if (resultPostTag.isPresent()) return true;
-        else return false;
+        else*//* return false;
     }
 
     public Boolean applyDelete(GroupMemberPK groupApplyInfoID)
     {
        // groupApplyRepository.delete(groupApplyInfo);
-        groupApplyRepository.deleteById(groupApplyInfoID);
+//        groupApplyRepository.deleteById(groupApplyInfoID);
         return true;
     }
 
@@ -55,5 +55,5 @@ public class GroupApplyService {
         List<GroupApplyEntity> groupApplyEntity = groupApplyRepository.findAllByGroupCodeFKAndApplyState(groupCd, 2);
 
         return groupApplyEntity;
-    }
+    }*/
 }

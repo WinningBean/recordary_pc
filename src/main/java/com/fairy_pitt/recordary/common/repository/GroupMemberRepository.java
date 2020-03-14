@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface GroupMemberRepository extends JpaRepository<GroupMemberEntity, GroupMemberPK> {
+public interface GroupMemberRepository extends JpaRepository<GroupMemberEntity, Long> {
     List<GroupEntity> findAllByUserCodeFK(UserEntity userEntity);
     List<UserEntity> findAllByGroupCodeFK(GroupEntity groupEntity);
 }

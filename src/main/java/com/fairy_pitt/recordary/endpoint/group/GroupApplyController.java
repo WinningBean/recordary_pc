@@ -25,7 +25,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class GroupApplyController {
 
-    @Autowired
+ /*   @Autowired
     private final UserService userService;
     private final GroupService groupService;
     private final GroupApplyService groupApplyService;
@@ -35,15 +35,14 @@ public class GroupApplyController {
     @PostMapping("apply")// 초대 ,신청
     public Map<String, Boolean> apply(@RequestParam Map<String, String> applyInfo)
     {
-        GroupApplyEntity groupApplyEntity = new GroupApplyEntity();
-        System.out.print(applyInfo.get("user_id") +"\n" + applyInfo.get("group_cd") +"\n" + applyInfo.get("apply_state") +"\n");
+       *//* GroupApplyEntity groupApplyEntity = new GroupApplyEntity();
         groupApplyEntity.setUserCodeFK(userService.findById(applyInfo.get("user_id")));
         groupApplyEntity.setGroupCodeFK(groupService.findGroupId(Long.parseLong(applyInfo.get("group_cd"))));
         groupApplyEntity.setApplyState(Integer.parseInt(applyInfo.get("apply_state")));
 
-        boolean applyResult = groupApplyService.applyInsert(groupApplyEntity);
+        boolean applyResult = groupApplyService.applyInsert(groupApplyEntity);*//*
         Map<String, Boolean> result = new HashMap<>();
-        result.put("isSuccess", applyResult );
+//        result.put("isSuccess", applyResult );
 
         return result;
     }
@@ -88,9 +87,9 @@ public class GroupApplyController {
         {
             Map<String, Object> groupInfoMap = new HashMap<>();
             GroupEntity groupEntity = groupService.findGroupId(temp.getGroupCodeFK().getGroupCd());
-            groupInfoMap.put("groupNN",groupEntity.getGName());
-            groupInfoMap.put("groupEx",groupEntity.getGEx());
-            groupInfoMap.put("groupPic",groupEntity.getGPic());
+            groupInfoMap.put("groupNN",groupEntity.getGroupName());
+            groupInfoMap.put("groupEx",groupEntity.getGroupEx());
+            groupInfoMap.put("groupPic",groupEntity.getGroupPic());
             applyGroupInfoLIst.add(groupInfoMap);
         }
         applyFindResult.put("group",applyGroupInfoLIst );
@@ -134,5 +133,5 @@ public class GroupApplyController {
 
         result.put("isDelete",groupApplyService.applyDelete(groupMemberPK));
         return result;
-    }
+    }*/
 }

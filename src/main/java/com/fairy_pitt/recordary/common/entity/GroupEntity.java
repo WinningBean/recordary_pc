@@ -7,13 +7,11 @@ import javax.persistence.*;
 import java.util.List;
 
 @Getter
-@Setter
 @ToString
-@Builder
-@Entity
 @Table(name = "GROUP_TB")
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class GroupEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,17 +22,17 @@ public class GroupEntity {
     private UserEntity gMstUserFK;
 
     @Column(name = "GROUP_NM")
-    private String gName;
+    private String groupName;
 
     @Column(name = "GROUP_PB_ST" )
     @ColumnDefault("true")
-    private Boolean gState;
+    private Boolean groupState;
 
     @Column(name = "GROUP_PIC" )
-    private String gPic;
+    private String groupPic;
 
     @Column(name = "GROUP_EX")
-    private String  gEx;
+    private String  groupEx;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupCodeFK")
     private List<GroupMemberEntity> members;
@@ -44,4 +42,14 @@ public class GroupEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK")
     private List<PostEntity> postEntityList;
+
+    @Builder
+    public GroupEntity(UserEntity gMstUserFK, String groupName,Boolean groupState,String groupPic,String  groupEx)
+    {
+        this.gMstUserFK = gMstUserFK;
+        this.groupName = groupName;
+        this.groupState = groupState;
+        this.groupPic = groupPic;
+        this.groupEx = groupEx;
+    }
 }
