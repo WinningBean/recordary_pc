@@ -300,7 +300,7 @@ const HeaderMenu = props => {
           </div>
           <div className='profile-edit-icon'>
             <CustomIconButton onClick={ShowProfileEditForm}>
-              <EditIcon />
+              <EditIcon style={{ color: 'white' }} />
             </CustomIconButton>
           </div>
           {profileEditForm}

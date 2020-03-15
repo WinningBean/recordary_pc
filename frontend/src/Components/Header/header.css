@@ -1,120 +1,126 @@
-header{
-    display: flex;
-    justify-content: space-between;
-    position: fixed;
-    top:0;
-    width: 100%;
-    min-width: 1300px;
-    height: 50px;
-    /* background: no-repeat fixed linear-gradient(-225deg, RGB(255, 223, 75, 0.5), RGB(0, 168, 255, 0.5)); */
-    border-bottom: 1.2px solid lightgray;
-    z-index: 10;
-    box-shadow: 0px 1px 5px lightgray;
-    background-color: rgba(20, 81, 51, 0.8);
+header {
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  min-width: 1300px;
+  height: 50px;
+  /* background: no-repeat fixed linear-gradient(-225deg, RGB(255, 223, 75, 0.5), RGB(0, 168, 255, 0.5)); */
+  border-bottom: 1.2px solid lightgray;
+  z-index: 10;
+  box-shadow: 0px 1px 5px lightgray;
+  background-color: rgba(20, 81, 51, 0.8);
 }
 
-#header-left{
-    display: flex;
-    align-items: center;
-    margin-left: 10px;
+#header-left {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
 }
 
-#header-left>div{
-    margin-right: 10px;
-    width: 40px;
-    height: 40px;
+#header-left > div {
+  margin-right: 10px;
+  width: 40px;
+  height: 40px;
 }
-.title-icon>a>img{
-    height:40px;
-    object-fit: cover;
-    border: 1px solid white;
-    border-radius: 5px;
-}
-
-#header-right{
-    display: flex;
-    align-items: center;
-    margin-right: 10px;
+.title-icon > a > img {
+  height: 40px;
+  object-fit: cover;
+  border: 1px solid white;
+  border-radius: 5px;
 }
 
-#header-right>.search-user>.makeStyles-search-155>.makeStyles-searchIcon-156>.MuiSvgIcon-root{
-    color: white;
+#header-right {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
 }
 
-#header-right>.search-user>.makeStyles-search-155>div>.makeStyles-inputInput-158{
-    color: white !important;
+#header-right
+  > .search-user
+  > .makeStyles-search-155
+  > .makeStyles-searchIcon-156
+  > .MuiSvgIcon-root {
+  color: white;
 }
 
-#header-right .header-ring{
-    margin-left: 12px;
+#header-right
+  > .search-user
+  > .makeStyles-search-155
+  > div
+  > .makeStyles-inputInput-158 {
+  color: white !important;
 }
 
-#header-right .profile-icon{
-    margin-left: 10px;
-    width: 40px;
-    height: 40px;
-    cursor:pointer;
+#header-right .header-ring {
+  margin-left: 12px;
 }
 
-
-
-.menu-wrap{
-    display: flex;
-    flex-direction: column;
-    background-color: RGBA(249, 249, 249, 1.0);
-    width: 250px;
-    height: 100%;
-}
-.menu-profile{
-    display: flex;
-    justify-content: space-between;
-    padding-top: 5px;
-    padding-left: 10px;
-    width: 250px;
-    height: 50px;
-    font-size: 15px;
-    background-color: rgba(245, 246, 250,1.0);
-    border-bottom: 3px solid   rgba(20, 81, 51, 0.9);
-
-}
-.menu-profile-pic-nm{
-    display: flex;
-    align-items: center;
-}
-.profile-edit-icon{
-    margin-right: 3px;
-    margin-bottom: 2px;
+#header-right .profile-icon {
+  margin-left: 10px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
 }
 
-.menu-bottom{
-    display: flex;
-    justify-content: space-between;
-    position: fixed;
-    bottom: 0;
-    width: 250px;
-    height: 40px;
-    background-color: rgba(209, 204, 192,0.4);
-    border-top: 1px solid rgba(209, 204, 192,0.8);
+.menu-wrap {
+  display: flex;
+  flex-direction: column;
+  background-color: RGBA(249, 249, 249, 1);
+  width: 250px;
+  height: 100%;
+}
+.menu-profile {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 5px;
+  padding-left: 10px;
+  width: 250px;
+  height: 50px;
+  font-size: 15px;
+  background-color: rgba(20, 81, 51, 0.8);
+
+  /* border-bottom: 1px solid rgba(20, 81, 51, 0.9); */
+}
+.menu-profile-pic-nm {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: white;
+}
+.profile-edit-icon {
+  margin-right: 3px;
+  margin-bottom: 2px;
 }
 
-.button-wrap{
-    position: relative;
+.menu-bottom {
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  bottom: 0;
+  width: 250px;
+  height: 40px;
+  background-color: rgba(209, 204, 192, 0.4);
+  border-top: 1px solid rgba(209, 204, 192, 0.8);
 }
 
-.LongMenuOpen{
-    display: flex !important;
-    align-content: center !important;
-    position: absolute;
-    top: 0;
-    right: 10px;
+.button-wrap {
+  position: relative;
 }
 
-
-
-.notify-list{
-    display: flex;
-    flex-direction: column;
+.LongMenuOpen {
+  display: flex !important;
+  align-content: center !important;
+  position: absolute;
+  top: 0;
+  right: 10px;
 }
-.notify-list-time{
-    color: rgb(209, 204, 192);
+
+.notify-list {
+  display: flex;
+  flex-direction: column;
+}
+.notify-list-time {
+  color: rgb(209, 204, 192);
 }

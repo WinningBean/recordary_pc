@@ -7,15 +7,16 @@ import AlertDialog from 'Components/Other/AlertDialog';
 import Snackbar from 'Components/UI/Snackbar';
 import Calendar from 'Components/Calendar/Calendar';
 
-import PostAddIcon from '@material-ui/icons/PostAdd';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import TextField from '@material-ui/core/TextField';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
+import ShareIcon from '@material-ui/icons/Share';
+import Checkbox from '@material-ui/core/Checkbox';
+import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 import axios from 'axios';
 import store from 'store';
 import * as dateFns from 'date-fns';
@@ -106,7 +107,25 @@ const ScheduleShare = props => {
     const sc = userDate.filter(
       value => choiceDate.start <= value.start && choiceDate.end >= value.end
     );
-    setScheduleList(sc.map(value => <div key={value.cd}>{value.ex}</div>));
+    setScheduleList(
+      sc.map(value => (
+        <div key={value.cd} style={{ display: 'flex' }}>
+          <div>
+            <Checkbox defaultChecked color='default' />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span style={{ fontSize: '18px', marginTop: '10px' }}>
+              {value.ex}
+            </span>
+            <span style={{ fontSize: '13px', color: 'gray', marginTop: '3px' }}>
+              {dateFns.format(value.start, 'yyyy.MM.dd hh:mm') +
+                ' ~ ' +
+                dateFns.format(value.end, 'yyyy.MM.dd hh:mm')}
+            </span>
+          </div>
+        </div>
+      ))
+    );
   };
 
   console.log(scheduleList);
@@ -114,7 +133,7 @@ const ScheduleShare = props => {
     <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
       <div className='post-append-header' style={{ width: '600px' }}>
         <div className='Post-Append-titleName'>
-          <PostAddIcon
+          <ShareIcon
             style={{ fontSize: '40px', color: 'white', marginLeft: '10px' }}
           />
           <div className='PostAdd-title'>내 일정 공유</div>
@@ -149,22 +168,41 @@ const ScheduleShare = props => {
             open
             style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}
           >
-            <div className='post-append-header'>
-              <div className='Post-Append-titleName'>
-                <PostAddIcon
-                  style={{
-                    fontSize: '40px',
-                    color: 'white',
-                    marginLeft: '10px'
-                  }}
-                />
-                {choiceDate.start === null ? (
-                  <div className='PostAdd-title'>시작날짜를 선택하세요.</div>
-                ) : (
-                  <div className='PostAdd-title'>종료날짜를 선택하세요.</div>
-                )}
+            {choiceDate.start === null ? (
+              <div className='post-append-header'>
+                <div className='Post-Append-titleName'>
+                  <PlaylistAddCheckIcon
+                    style={{
+                      fontSize: '40px',
+                      color: 'white',
+                      marginLeft: '10px'
+                    }}
+                  />
+                  <div className='PostAdd-title'>시작날짜를 선택하세요.</div>{' '}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div
+                className='post-append-header'
+                style={{
+                  transitionProperty: 'background-color',
+                  transitionDuration: '0.7s',
+                  transitionTimingFunction: 'ease-out',
+                  backgroundColor: 'rgba(7,65,115,1)'
+                }}
+              >
+                <div className='Post-Append-titleName' style={{}}>
+                  <PlaylistAddCheckIcon
+                    style={{
+                      fontSize: '40px',
+                      color: 'white',
+                      marginLeft: '10px'
+                    }}
+                  />
+                  <div className='PostAdd-title'>종료날짜를 선택하세요.</div>
+                </div>
+              </div>
+            )}
             <div style={{ margin: '20px' }}>
               <Calendar
                 isMyCalendar={false}
@@ -208,7 +246,6 @@ const ScheduleShare = props => {
             </div>
           </Dialog>
         )}
-
         {scheduleList}
         <div className='Post-Append-Bottom'>
           <div className='Post-Upload-buttons'>
