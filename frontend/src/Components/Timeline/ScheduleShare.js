@@ -154,7 +154,7 @@ const ScheduleShare = props => {
             </div>
             <div style={{ margin: '20px' }}>
               <Calendar
-                isMyCalendar={false}
+                type={3}
                 choiceSharedStartDate={choiceDate.start}
                 choiceSharedEndDate={choiceDate.end}
                 onChoice={(date, userDate) => {

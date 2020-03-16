@@ -13,7 +13,11 @@ import './Calendar.css';
 
 // 600x475
 const Calendar = props => {
-  const isMyCalendar = props.isMyCalendar; // false
+  const type = props.type;
+  // 0 : 내 캘린더
+  // 1 : 내 그룹 캘린더
+  // 2 : 남의 캘린더 (그룹도 포함)
+  // 3 : 나의 일정 공유 캘린더
   const choiceDate = props.choiceDate;
   const [userDate, setUserDate] = useState([
     {
@@ -125,8 +129,11 @@ const Calendar = props => {
               isBorderLeft === true ? 'borderLeft' : ''
             }`}
             key={day}
-            onClick={isMyCalendar === true ? null : () => props.onChoice(currDay, userDate)}
+            onClick={type !== 3 ? null : () => props.onChoice(currDay, userDate)}
             style={(() => {
+              if (type !== 3) {
+                return null;
+              }
               if (props.choiceSharedStartDate !== null && props.choiceSharedEndDate === null) {
                 if (dateFns.differenceInCalendarDays(currDay, props.choiceSharedStartDate) === 0)
                   return { border: '2px solid green' };
@@ -176,7 +183,7 @@ const Calendar = props => {
       }
       return dateFns.differenceInDays(a.start, b.start);
     });
-    if (isMyCalendar === true) {
+    if (type === 0) {
       return (
         <div
           id='wrap-cells'
@@ -211,7 +218,7 @@ const Calendar = props => {
         userSelect: 'none',
         backgroundColor: '#9e5fff80'
       }}
-      onMouseDown={isMyCalendar === true ? onScMouseDown : null}
+      onMouseDown={type === 0 ? onScMouseDown : null}
       onClick={e => setDetailedSC({ event: e.currentTarget, cd: cd })}
     >
       <div
@@ -266,7 +273,7 @@ const Calendar = props => {
           userSelect: 'none',
           backgroundColor: '#9e5fff80'
         }}
-        onMouseDown={isMyCalendar === true ? onScMouseDown : null}
+        onMouseDown={type === 0 ? onScMouseDown : null}
         onClick={e => setDetailedSC({ event: e.currentTarget, cd: cd })}
       >
         <div
@@ -799,7 +806,7 @@ const Calendar = props => {
               {selectedDetailedSC !== null ? selectedDetailedSC.ex : null}
             </div>
           </div>
-          {isMyCalendar === true ? (
+          {type === 0 ? (
             <div className='calendar-detailedsc-buttons'>
               <div
                 className='calendar-detailedsc-buttons-button'
