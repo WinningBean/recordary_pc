@@ -140,7 +140,7 @@ const Timeline = props => {
       <div className='timeline-info'>
         <div className='time-line-picture-info'>
           <div className='timeline-picture'>
-            <img alt='timeline-img' src='img/1579501322063.jpg' />
+            <img alt='timeline-img' src={data.post_pic} />
           </div>
           <div className='timeline-title'>
             <div>{data.post_title}</div>
