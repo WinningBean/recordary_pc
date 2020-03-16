@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
@@ -72,7 +69,6 @@ public class UserControllerTest {
     @Test
     public void User_회원가입() throws Exception{
         //given
-//        String userId = "testUser";
         String userPw = "testPassword";
         String userNm = "테스트 유저";
 
@@ -101,4 +97,40 @@ public class UserControllerTest {
         assertThat(all.get(0).getUserNm()).isEqualTo(userNm);
     }
 
+//    @Test
+//    public void User_수정된다() throws Exception{
+//        //given
+//        UserEntity saveUser = userRepository.save(UserEntity.builder()
+//                .userId(staticUserId)
+//                .userPw(userPasswordHashService.getSHA256("testPassword"))
+//                .userNm("테스트 유저")
+//                .build());
+//
+//        String updateId = saveUser.getUserId();
+//        String expectedUserPw = "testPassword2";
+//        String expectedUserNm = "테스트 유저2";
+//        String expectedUserEx = "상태 메세지";
+//
+//        UserUpdateRequestDto requestDto = UserUpdateRequestDto.builder()
+//                .userPw(expectedUserPw)
+//                .userNm(expectedUserNm)
+//                .userEx(expectedUserEx)
+//                .build();
+//
+//        String url = "http://localhost:" + port + "/user/ " + updateId;
+//
+//        HttpEntity<UserUpdateRequestDto> requestDtoHttpEntity = new HttpEntity<>(requestDto);
+//
+//        //when
+//        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.PUT, requestDtoHttpEntity, String.class);
+//
+//        //then
+//        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+//        assertThat(responseEntity.getBody()).isEqualTo(staticUserId);
+//
+//        List<UserEntity> all = userRepository.findAll();
+//        assertThat(all.get(0).getUserPw()).isEqualTo(userPasswordHashService.getSHA256(expectedUserPw));
+//        assertThat(all.get(0).getUserNm()).isEqualTo(expectedUserNm);
+//        assertThat(all.get(0).getUserEx()).isEqualTo(expectedUserEx);
+//    }
 }

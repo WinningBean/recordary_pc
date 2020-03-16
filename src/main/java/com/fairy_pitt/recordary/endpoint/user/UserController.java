@@ -3,13 +3,9 @@ package com.fairy_pitt.recordary.endpoint.user;
 import com.fairy_pitt.recordary.endpoint.user.dto.*;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
-import java.util.HashMap;
 import java.util.List;
 
 @Transactional
@@ -27,6 +23,11 @@ public class UserController {
     @PostMapping("/login")
     public UserResponseDto login(@RequestBody UserLoginRequestDto requestDto){
         return userService.login(requestDto);
+    }
+
+    @GetMapping("/logout")
+    public Boolean logout(){
+        return userService.logout();
     }
 
     @PutMapping("/{userId}")
@@ -55,4 +56,8 @@ public class UserController {
         return userService.possibleId(userId);
     }
 
+    @GetMapping("/current")
+    public String currentUser(){
+        return userService.currentUser();
+    }
 }

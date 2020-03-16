@@ -90,9 +90,20 @@ public class UserService {
 
         Boolean userState = checkPw(requestDto);
         if (userState){
-            session.setAttribute("loginUser", userEntity);
-            log.info("set userId = {}", userEntity.getUserId());
+            session.setAttribute("loginUser", userEntity.getUserId());
+            log.info("set userId = {}", session.getAttribute("loginUser"));
         }
         return new UserResponseDto(userEntity);
+    }
+
+    @Transactional(readOnly = true)
+    public String currentUser(){
+        return String.valueOf(session.getAttribute("loginUser"));
+    }
+
+    @Transactional(readOnly = true)
+    public Boolean logout(){
+        session.removeAttribute("loginUser");
+        return  (session.getAttribute("loginUser") == null);
     }
 }
