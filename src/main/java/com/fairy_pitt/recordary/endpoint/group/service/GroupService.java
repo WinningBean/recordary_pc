@@ -20,9 +20,9 @@ public class GroupService {
     private final GroupMemberService groupMemberService;
 
     @Transactional
-    public Long save(GroupSaveRequestDto groupSaveRequestDto)
+    public Long save(GroupSaveRequestDto requestDto)
     {
-        return groupRepository.save(groupSaveRequestDto.toEntity())
+        return groupRepository.save(requestDto.toEntity())
                 .getGroupCd();
     }
 

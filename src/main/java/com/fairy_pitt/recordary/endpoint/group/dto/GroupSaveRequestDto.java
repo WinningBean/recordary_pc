@@ -17,7 +17,7 @@ public class GroupSaveRequestDto {
     private String groupEx;
     private String groupPic;
 
-   @Builder
+   @Builder(builderClassName = "createGroupBuilder", builderMethodName = "createGroupBuilder")
    public GroupSaveRequestDto(UserEntity gMstUserFK, String groupName, Boolean groupState, String groupPic, String  groupEx)
    {
       this.gMstUserFK = gMstUserFK;
@@ -29,7 +29,7 @@ public class GroupSaveRequestDto {
 
    public GroupEntity toEntity(){
     return GroupEntity.builder()
-            //.gMstUserFK(gMstUserFK)
+            .gMstUserFK(gMstUserFK)
             .groupEx(groupEx)
             .groupName(groupName)
             .groupState(groupState)

@@ -1,11 +1,28 @@
 spring:
 
+  datasource:
+    url: jdbc:h2:mem:h2_jpa_sample;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    platform: h2
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+
   jpa:
-    show-sql: false
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
     properties:
-      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+      hibernate:
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
     open-in-view: false
+
 
   h2:
     console:
       enabled: true
+      path: /console
+      settings:
+        trace: false
+        web-allow-others: false
