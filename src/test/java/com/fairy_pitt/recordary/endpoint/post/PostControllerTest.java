@@ -30,7 +30,6 @@ public class PostControllerTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
-
     @Autowired
     private PostRepository postRepository;
 
@@ -54,7 +53,7 @@ public class PostControllerTest {
                 .postEndYMD(postEndYMD)
                 .build();
 
-        String url = "http://localhost:" + port + "/api/post";
+        String url = "http://localhost:" + port + "/post/";
 
         //when
         ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url, requestDto, Long.class);
@@ -89,7 +88,7 @@ public class PostControllerTest {
                 .postPublicState(expectedPostPublicState)
                 .build();
 
-        String url = "http://localhost:" + port + "/api/post/" + updateCd;
+        String url = "http://localhost:" + port + "/post/" + updateCd;
 
         HttpEntity<PostUpdateRequestDto> requestDtoHttpEntity = new HttpEntity<>(requestDto);
 
