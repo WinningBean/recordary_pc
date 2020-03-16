@@ -131,10 +131,10 @@ public class GroupController {
         for(GroupMemberEntity groupMember : members)
         {
             Map<String, Object> groupMemberInfoMap = new HashMap<>();
-            UserEntity user =  userService.find(groupMember.getUserCodeFK().getUserCd());
-            groupMemberInfoMap.put("userId", user.getUserId());
-            groupMemberInfoMap.put("userNm", user.getUserNm());
-            groupMemberInfoMap.put("userEx", user.getUserEx());
+//            UserEntity user =  userService.find(groupMember.getUserCodeFK().getUserCd());
+//            groupMemberInfoMap.put("userId", user.getUserId());
+//            groupMemberInfoMap.put("userNm", user.getUserNm());
+//            groupMemberInfoMap.put("userEx", user.getUserEx());
             groupMemberInfoList.add( groupMemberInfoMap);
         }
         value.put("groupNm",groupValue.getGName());

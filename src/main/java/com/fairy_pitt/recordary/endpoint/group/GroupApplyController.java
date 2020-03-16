@@ -36,8 +36,8 @@ public class GroupApplyController {
     {
         GroupApplyEntity groupApplyEntity = new GroupApplyEntity();
         System.out.print((String)applyInfo.get("user_id")+"\n");
-        groupApplyEntity.setUserCodeFK(userService.findById((String)applyInfo.get("user_id")));
-        System.out.print(userService.findById((String)applyInfo.get("user_id")).getUserCd()+" \n");
+//        groupApplyEntity.setUserCodeFK(userService.findById((String)applyInfo.get("user_id")));
+//        System.out.print(userService.findById((String)applyInfo.get("user_id")).getUserCd()+" \n");
         groupApplyEntity.setGroupCodeFK(groupService.findGroupId(Long.parseLong((String)applyInfo.get("group_cd"))));
         System.out.print(groupService.findGroupId(Long.parseLong((String)applyInfo.get("group_cd"))).getGroupCd()+ "\n");
         groupApplyEntity.setApplyState(Integer.parseInt((String)applyInfo.get("apply_user")));
@@ -76,29 +76,29 @@ public class GroupApplyController {
         return "success";
     }
 
-    // 그룹이 유저한테 초대보낸 것을 찾기
-    @ResponseBody
-    @PostMapping("apply/find")
-    public Map<String, Object> findApply(@RequestParam Map<String, Object> userInfo)
-    {
-        Map<String, Object> applyFindResult = new HashMap<>();
-        UserEntity userEntity = userService.find((long)userInfo.get("userCd"));
-        List<GroupApplyEntity> apply = groupApplyService.findGroupAppliesToUser(userEntity);
-        List applyGroupInfoLIst = new ArrayList<>();
-
-        for(GroupApplyEntity temp : apply)
-        {
-            Map<String, Object> groupInfoMap = new HashMap<>();
-            GroupEntity groupEntity = groupService.findGroupId(temp.getGroupCodeFK().getGroupCd());
-            groupInfoMap.put("groupNN",groupEntity.getGName());
-            groupInfoMap.put("groupEx",groupEntity.getGEx());
-            groupInfoMap.put("groupPic",groupEntity.getGPic());
-            applyGroupInfoLIst.add(groupInfoMap);
-        }
-        applyFindResult.put("group",applyGroupInfoLIst );
-
-        return applyFindResult;
-    }
+//    // 그룹이 유저한테 초대보낸 것을 찾기
+//    @ResponseBody
+//    @PostMapping("apply/find")
+//    public Map<String, Object> findApply(@RequestParam Map<String, Object> userInfo)
+//    {
+//        Map<String, Object> applyFindResult = new HashMap<>();
+//        UserEntity userEntity = userService.find((long)userInfo.get("userCd"));
+//        List<GroupApplyEntity> apply = groupApplyService.findGroupAppliesToUser(userEntity);
+//        List applyGroupInfoLIst = new ArrayList<>();
+//
+//        for(GroupApplyEntity temp : apply)
+//        {
+//            Map<String, Object> groupInfoMap = new HashMap<>();
+//            GroupEntity groupEntity = groupService.findGroupId(temp.getGroupCodeFK().getGroupCd());
+//            groupInfoMap.put("groupNN",groupEntity.getGName());
+//            groupInfoMap.put("groupEx",groupEntity.getGEx());
+//            groupInfoMap.put("groupPic",groupEntity.getGPic());
+//            applyGroupInfoLIst.add(groupInfoMap);
+//        }
+//        applyFindResult.put("group",applyGroupInfoLIst );
+//
+//        return applyFindResult;
+//    }
 
 //    //유저가 그룹한테 신청보넨 정보 찾기
 //    @ResponseBody

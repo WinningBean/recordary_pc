@@ -30,11 +30,11 @@ public class ScheduleTabController {
     @GetMapping("create")
     public String insertTab(@RequestParam Map<String, Object> tabInfo)
     {
-        UserEntity currUser = userService.find((long)tabInfo.get("tab_cd"));
+//        UserEntity currUser = userService.find((long)tabInfo.get("tab_cd"));
         ScheduleTabEntity scheduleTabEntity = new ScheduleTabEntity();
         scheduleTabEntity.setTabNm((String) tabInfo.get("tab_nm"));
         scheduleTabEntity.setTabCol((String) tabInfo.get("tab_col"));
-        scheduleTabEntity.setTabUserFk(currUser);
+//        scheduleTabEntity.setTabUserFk(currUser);
 
         if(scheduleTabService.insertTab(scheduleTabEntity))
         {
@@ -63,14 +63,14 @@ public class ScheduleTabController {
         return "seccess";
     }
 
-    // read 어떤식으로??
-    @GetMapping("read")
-    public Map<String, Object> readTab(long id) // 요청을 어떤식으로??
-    {
-        //UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
-        Map<String , Object> resultMap = new HashMap<>();
-        List<ScheduleTabEntity> resultList = scheduleTabService.readTab(id);
-        return resultMap;
-    }
+//    // read 어떤식으로??
+//    @GetMapping("read")
+//    public Map<String, Object> readTab(long id) // 요청을 어떤식으로??
+//    {
+//        //UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
+//        Map<String , Object> resultMap = new HashMap<>();
+//        List<ScheduleTabEntity> resultList = scheduleTabService.readTab(id);
+//        return resultMap;
+//    }
 
 }

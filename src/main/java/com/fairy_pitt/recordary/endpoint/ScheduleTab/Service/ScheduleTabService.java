@@ -48,11 +48,11 @@ public class ScheduleTabService {
         return true;
     }
 
-    public List<ScheduleTabEntity> readTab(long id)
-    {
-        return userService.find(id)
-                .getUserTab();
-    }
+//    public List<ScheduleTabEntity> readTab(long id)
+//    {
+//        return userService.find(id)
+//                .getUserTab();
+//    }
 
 //    public ScheduleTabEntity findById(Long id)
 //    {

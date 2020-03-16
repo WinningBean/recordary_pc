@@ -40,39 +40,39 @@ public class FollowerService {
         else return true;
     }
 
-    public List<UserEntity> followers(Long userFK){ // 사용자를 팔로우
-        List<FollowerEntity> followerEntityList = userService.find(userFK).getFollowTarget();
-        List<UserEntity> followerList = new ArrayList<>();
-        for (FollowerEntity followerEntity : followerEntityList){
-            followerList.add(followerEntity.getUserFK());
-        }
-        return followerList;
-    }
+//    public List<UserEntity> followers(Long userFK){ // 사용자를 팔로우
+//        List<FollowerEntity> followerEntityList = userService.find(userFK).getFollowTarget();
+//        List<UserEntity> followerList = new ArrayList<>();
+//        for (FollowerEntity followerEntity : followerEntityList){
+//            followerList.add(followerEntity.getUserFK());
+//        }
+//        return followerList;
+//    }
+//
+//    public List<UserEntity> following(Long userFK){ // 사용자가 팔로우
+////        List<FollowerEntity> followerEntityList = userService.find(userFK).getFollowUser();
+//        List<UserEntity> followingList = new ArrayList<>();
+//        for (FollowerEntity followerEntity : followerEntityList){
+//            followingList.add(followerEntity.getTargetFK());
+//        }
+//        return followingList;
+//    }
 
-    public List<UserEntity> following(Long userFK){ // 사용자가 팔로우
-        List<FollowerEntity> followerEntityList = userService.find(userFK).getFollowUser();
-        List<UserEntity> followingList = new ArrayList<>();
-        for (FollowerEntity followerEntity : followerEntityList){
-            followingList.add(followerEntity.getTargetFK());
-        }
-        return followingList;
-    }
+//    public Boolean followEachOther(Long userFK, Long targetFK){ // 맞팔 상태
+//        UserEntity user = userService.find(userFK);
+//        UserEntity target = userService.find(targetFK);
+//        FollowerEntity followerEntity = followerRepository.findByUserFKAndTargetFK(user, target);
+//        if (followerEntity == null) return false;
+//        return true;
+//    }
 
-    public Boolean followEachOther(Long userFK, Long targetFK){ // 맞팔 상태
-        UserEntity user = userService.find(userFK);
-        UserEntity target = userService.find(targetFK);
-        FollowerEntity followerEntity = followerRepository.findByUserFKAndTargetFK(user, target);
-        if (followerEntity == null) return false;
-        return true;
-    }
-
-    public List<UserEntity> friends(Long userFK){ // 사용자 친구 리스트 (맞팔)
-        Set<UserEntity> followers = new HashSet<UserEntity>(followers(userFK));
-        Set<UserEntity> followings = new HashSet<UserEntity>(following(userFK));
-
-        if (followers == null || followings == null) return null;
-        followers.retainAll(followings);
-        List<UserEntity> friendsList = new ArrayList<UserEntity>(followers);
-        return friendsList;
-    }
+//    public List<UserEntity> friends(Long userFK){ // 사용자 친구 리스트 (맞팔)
+//        Set<UserEntity> followers = new HashSet<UserEntity>(followers(userFK));
+//        Set<UserEntity> followings = new HashSet<UserEntity>(following(userFK));
+//
+//        if (followers == null || followings == null) return null;
+//        followers.retainAll(followings);
+//        List<UserEntity> friendsList = new ArrayList<UserEntity>(followers);
+//        return friendsList;
+//    }
 }

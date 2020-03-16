@@ -1,27 +1,32 @@
 package com.fairy_pitt.recordary.common.entity;
 
-import lombok.Data;
+import com.fairy_pitt.recordary.endpoint.user.service.UserPasswordHashService;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@NoArgsConstructor
 @Entity
 @Table(name = "USER_TB")
-public class UserEntity {
+public class UserEntity extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "USER_CD")
     private Long userCd;
 
-    @Column(name = "USER_ID")
+    @Column(name = "USER_ID", unique=true, nullable = false)
     private String userId;
 
-    @Column(name = "USER_PW")
+    @Column(name = "USER_PW", nullable = false)
     private String userPw;
 
-    @Column(name = "USER_NM")
+    @Column(name = "USER_NM", nullable = false)
     private String userNm;
 
     @Column(name = "USER_EX")
@@ -53,4 +58,17 @@ public class UserEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tabUserFk")
     private  List<ScheduleTabEntity> userTab;
+
+    @Builder
+    public UserEntity(String userId, String userPw, String userNm){
+        this.userId = userId;
+        this.userPw = userPw;
+        this.userNm = userNm;
+    }
+
+    public void update(String userPw, String userNm, String userEx){
+        this.userPw = userPw;
+        this.userNm = userNm;
+        this.userEx = userEx;
+    }
 }
