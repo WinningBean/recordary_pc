@@ -72,7 +72,7 @@ public class MainController {
 
         if (currentUser == null) map.put("currentUser",null);
         else {
-            map.put("currentUser", userService.userInfo(currentUser.getUserId()));
+//            map.put("currentUser", userService.userInfo(currentUser.getUserId()));
 
             List<GroupMemberEntity> groupMemberEntities = groupmemberService.readUserGroup(currentUser);
             List<Optional<GroupEntity>> userGroup = new ArrayList<>();
@@ -102,11 +102,11 @@ public class MainController {
             }
             map.put("userGroup", groupMapList);
 
-            List<UserEntity> friendList = followerService.friends(currentUser.getUserCd());
+//            List<UserEntity> friendList = followerService.friends(currentUser.getUserCd());
             List friendMapList = new ArrayList();
-            for (UserEntity friend : friendList) {
-                friendMapList.add(userService.userInfo(friend.getUserId()));
-            }
+//            for (UserEntity friend : friendList) {
+//                friendMapList.add(userService.userInfo(friend.getUserId()));
+//            }
             map.put("friendList", friendMapList);
         }*/
         return map;

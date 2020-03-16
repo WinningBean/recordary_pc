@@ -6,6 +6,7 @@ import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
+import com.fairy_pitt.recordary.endpoint.post.dto.PostListResponseDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostUpdateRequestDto;
@@ -20,34 +21,38 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//@RequestMapping("post")
+@RequestMapping("post")
 @RequiredArgsConstructor
 @RestController
 public class PostController {
 
     private final PostService postService;
 
-    @PostMapping("/api/post")
+    @PostMapping("/")
     public Long save(@RequestBody PostSaveRequestDto requestDto) {
         return postService.save(requestDto);
     }
 
-    @PutMapping("/api/post/{postCd}")
+    @PutMapping("/{postCd}")
     public Long update(@PathVariable Long postCd, @RequestBody PostUpdateRequestDto requestDto) {
         return postService.update(postCd, requestDto);
     }
 
-    @DeleteMapping("/api/post/{postCd}")
+    @DeleteMapping("/{postCd}")
     public Long delete(@PathVariable Long postCd) {
         postService.delete(postCd);
         return postCd;
     }
 
-    @GetMapping("/api/post/{postCd}")
+    @GetMapping("/{postCd}")
     public PostResponseDto findByCd(@PathVariable Long postCd) {
         return postService.findByCd(postCd);
     }
 
+    @GetMapping("/")
+    public List<PostListResponseDto> findAllDesc(){
+        return postService.findAllDesc();
+    }
 //    @GetMapping("/api/post/list")
 //    public List<PostsListResponseDto> findAll() {
 //        return postsService.findAllDesc();

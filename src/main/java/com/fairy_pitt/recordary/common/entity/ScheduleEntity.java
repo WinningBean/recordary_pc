@@ -21,9 +21,6 @@ public class ScheduleEntity {
    private Long scheduleCd;
 
    @ManyToOne
-   private PostEntity postCodeFK;
-
-   @ManyToOne
    private ScheduleTabEntity TabCodeFK;
 
    @Column(name = "SCHEDULE_NM")
@@ -46,4 +43,6 @@ public class ScheduleEntity {
 
    //private String scheduleLocation;
 
+//   @OneToOne(fetch = FetchType.LAZY, mappedBy = "scheduleFK")
+//   private List<PostEntity> postList;
 }

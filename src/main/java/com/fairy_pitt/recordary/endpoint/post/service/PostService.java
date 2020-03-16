@@ -34,25 +34,24 @@ public class PostService {
     @Transactional
     public Long update(Long postCd, PostUpdateRequestDto requestDto) {
         PostEntity postEntity = Optional.ofNullable(postRepository.findByPostCd(postCd))
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + postCd));
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. code = " + postCd));
 
         postEntity.update(requestDto.getPostEx(), requestDto.getPostPublicState());
-
         return postCd;
     }
 
     @Transactional
     public void delete (Long postCd) {
-        PostEntity posts = Optional.ofNullable(postRepository.findByPostCd(postCd))
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + postCd));
+        PostEntity postEntity = Optional.ofNullable(postRepository.findByPostCd(postCd))
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. code = " + postCd));
 
-        postRepository.delete(posts);
+        postRepository.delete(postEntity);
     }
 
     @Transactional(readOnly = true)
     public PostResponseDto findByCd(Long postCd) {
         PostEntity postEntity = Optional.ofNullable(postRepository.findByPostCd(postCd))
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + postCd));
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. code = " + postCd));
 
         return new PostResponseDto(postEntity);
     }

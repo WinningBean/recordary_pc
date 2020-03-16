@@ -2,100 +2,108 @@ package com.fairy_pitt.recordary.endpoint.user.service;
 
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
+import com.fairy_pitt.recordary.endpoint.user.dto.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-//@RequiredArgsConstructor
 @Slf4j
 @Transactional
+@RequiredArgsConstructor
 @Service
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private UserPasswordHashService userPasswordHashService;
+
+    private final UserRepository userRepository;
+    private final UserPasswordHashService userPasswordHashService;
     @Autowired
     private HttpSession session;
 
-    public Boolean joinUser(String userId, String userPw, String userNm){
-
-        if (userId.equals("") || userPw.equals("") || userNm.equals("")) return false;
-
-        UserEntity user = new UserEntity();
-        user.setUserId(userId);
-        user.setUserPw(userPasswordHashService.getSHA256(userPw));
-        user.setUserNm(userNm);
-
-        userRepository.save(user);
-        return true;
+    @Transactional
+    public Boolean save(UserSaveRequestDto requestDto){
+        UserSaveRequestDto userSaveRequestDto = UserSaveRequestDto.builder()
+                .userId(requestDto.getUserId())
+                .userPw(userPasswordHashService.getSHA256(requestDto.getUserPw()))
+                .userNm(requestDto.getUserNm())
+                .build();
+        return Optional.ofNullable(userRepository.save(userSaveRequestDto.toEntity())).isPresent();
     }
 
-    public Boolean possibleId(String input_id){
-        if (userRepository.findByUserId(input_id) == null) return true;
-        return false;
+    @Transactional
+    public String update(String userId, UserUpdateRequestDto requestDto){
+        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(userId))
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
+
+        String hashedPassword = userPasswordHashService.getSHA256(requestDto.getUserPw());
+        userEntity.update(hashedPassword, requestDto.getUserNm(), requestDto.getUserEx());
+        return userId;
     }
 
-    public Boolean login(String userId, String userPw){
-        if (userId.equals("") || userPw.equals("")) return false;
-
-        String hashedPassword = userPasswordHashService.getSHA256(userPw);
-        UserEntity user = userRepository.findByUserIdAndUserPw(userId, hashedPassword);
-        if (user == null) return false;
-
-        session.setAttribute("loginUser", user);
-        log.info("set userId = {}", user.getUserId());
-
-        return true;
+    @Transactional
+    public void delete(String userId){
+        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(userId))
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
+        userRepository.delete(userEntity);
     }
 
-    public Map<String, Object> userInfo(String userId){
-        UserEntity user = userRepository.findByUserId(userId);
-        Map<String, Object> userMap = new HashMap<>();
-        userMap.put("user_id", user.getUserId());
-        userMap.put("user_nm", user.getUserNm());
-        userMap.put("user_pic", null);
-        userMap.put("user_ex", user.getUserEx());
-        return userMap;
+    @Transactional(readOnly = true)
+    public UserResponseDto findById(String userId){
+        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(userId))
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
+
+        return new UserResponseDto(userEntity);
     }
 
-    public Boolean checkPw(UserEntity user, String userPw){
-        UserEntity checkUser = userRepository.findByUserPw(userPasswordHashService.getSHA256(userPw));
-        return user.getUserCd().equals(checkUser.getUserCd());
+    @Transactional(readOnly = true)
+    public List<UserListResponseDto> findNmUser(String findNm){
+        return userRepository.findAllByUserNmLike("%"+findNm+"%").stream()
+                .map(UserListResponseDto::new)
+                .collect(Collectors.toList());
     }
 
-    public void updateNm(UserEntity user, String userNm) {
-        user.setUserNm(userNm);
-        userRepository.save(user);
+    @Transactional(readOnly = true)
+    public Boolean possibleId(String inputId){
+        return !Optional.ofNullable(userRepository.findByUserId(inputId)).isPresent();
     }
 
-    public void updatePw(UserEntity user, String userPw){
-        user.setUserPw(userPasswordHashService.getSHA256(userPw));
-        userRepository.save(user);
+    @Transactional(readOnly = true)
+    public Boolean checkPw(UserLoginRequestDto requestDto){
+        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(requestDto.getUserId()))
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + requestDto.getUserId()));
+
+        String hashedPassword = userPasswordHashService.getSHA256(requestDto.getUserPw());
+        return userEntity.getUserPw().equals(hashedPassword);
     }
 
-    public void updateEx(UserEntity user, String useEx){
-        user.setUserEx(useEx);
-        userRepository.save(user);
+    @Transactional(readOnly = true)
+    public UserResponseDto login(UserLoginRequestDto requestDto){
+        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(requestDto.getUserId()))
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + requestDto.getUserId()));
+
+        Boolean userState = checkPw(requestDto);
+        if (userState){
+            session.setAttribute("loginUser", userEntity.getUserId());
+            log.info("set userId = {}", session.getAttribute("loginUser"));
+        }
+        return new UserResponseDto(userEntity);
     }
 
-    public void delete(UserEntity user) {
-        userRepository.delete(user);
+    @Transactional(readOnly = true)
+    public String currentUser(){
+        return String.valueOf(session.getAttribute("loginUser"));
     }
 
-    public List<UserEntity> search(String userSearch){
-       return userRepository.findAllByUserNmLike("%"+userSearch+"%");
+    @Transactional(readOnly = true)
+    public Boolean logout(){
+        session.removeAttribute("loginUser");
+        return  (session.getAttribute("loginUser") == null);
     }
-
-    public UserEntity find(Long cd){
-        return userRepository.findByUserCd(cd);
-    }
-
-    public UserEntity findById(String userId){return  userRepository.findByUserId(userId);}
 }
