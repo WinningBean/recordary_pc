@@ -147,7 +147,7 @@ const Calendar = props => {
                     end: props.choiceSharedEndDate
                   })
                 ) {
-                  return { backgroundColor: 'rgba(20,81,51,.2)' };
+                  return { backgroundColor: 'rgba(7,65,115,.2)' };
                 }
               }
             })()}

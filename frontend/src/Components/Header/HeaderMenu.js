@@ -104,45 +104,43 @@ const HeaderMenu = props => {
         return (
           <li key={value.group_cd}>
             <div className='button-wrap'>
-              <Link to={`/groupProfile/${value.group_cd}`}>
-                <GroupButton>
+              <GroupButton>
+                <div
+                  style={{
+                    display: 'flex',
+                    width: '250px',
+                    justifyContent: 'space-between'
+                  }}
+                >
                   <div
                     style={{
                       display: 'flex',
-                      width: '250px',
-                      justifyContent: 'space-between'
+                      alignItems: 'center',
+                      marginBottom: '10px'
                     }}
                   >
-                    <div
+                    <img
+                      alt='group-img'
                       style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        marginBottom: '10px'
+                        marginRight: '10px',
+                        borderRadius: '50%',
+                        width: '40px',
+                        height: '40px',
+                        objectFit: 'cover'
                       }}
-                    >
-                      <img
-                        alt='group-img'
-                        style={{
-                          marginRight: '10px',
-                          borderRadius: '50%',
-                          width: '40px',
-                          height: '40px',
-                          objectFit: 'cover'
-                        }}
-                        src={value.group_pic}
-                      />
-                      {value.group_nm}
-                    </div>
-                    <div className='LongMenuOpen'>
-                      <LongMenu
-                        options={['그룹 정보', '그룹 관리', '그룹 삭제']}
-                        code={value.group_cd}
-                        returnValue={onGroupMenuSelect}
-                      />
-                    </div>
+                      src={value.group_pic}
+                    />
+                    {value.group_nm}
                   </div>
-                </GroupButton>
-              </Link>
+                  <div className='LongMenuOpen'>
+                    <LongMenu
+                      options={['그룹 정보', '그룹 관리', '그룹 삭제']}
+                      code={value.group_cd}
+                      returnValue={onGroupMenuSelect}
+                    />
+                  </div>
+                </div>
+              </GroupButton>
             </div>
           </li>
         );
@@ -300,7 +298,7 @@ const HeaderMenu = props => {
           </div>
           <div className='profile-edit-icon'>
             <CustomIconButton onClick={ShowProfileEditForm}>
-              <EditIcon />
+              <EditIcon style={{ color: 'white' }} />
             </CustomIconButton>
           </div>
           {profileEditForm}
