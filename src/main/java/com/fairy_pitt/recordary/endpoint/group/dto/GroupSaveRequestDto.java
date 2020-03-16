@@ -3,13 +3,13 @@ package com.fairy_pitt.recordary.endpoint.group.dto;
 import com.fairy_pitt.recordary.common.entity.GroupEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
+@Getter
 @NoArgsConstructor
-@Setter
-public class GroupDto {
+public class GroupSaveRequestDto {
 
     private UserEntity gMstUserFK;
     private String groupName;
@@ -17,8 +17,8 @@ public class GroupDto {
     private String groupEx;
     private String groupPic;
 
-   @Builder(builderClassName = "createGroupBuilder", builderMethodName = "createGroupBuilder")
-   public GroupDto(UserEntity gMstUserFK, String groupName, Boolean groupState, String groupPic, String  groupEx)
+   @Builder
+   public GroupSaveRequestDto(UserEntity gMstUserFK, String groupName, Boolean groupState, String groupPic, String  groupEx)
    {
       this.gMstUserFK = gMstUserFK;
       this.groupName = groupName;
@@ -27,24 +27,9 @@ public class GroupDto {
       this.groupEx = groupEx;
    }
 
-    @Builder(builderClassName = "updateGroupBuilder", builderMethodName = "updateGroupBuilder")
-    public GroupDto(String groupName, Boolean groupState, String groupPic, String  groupEx)
-    {
-        this.groupName = groupName;
-        this.groupState = groupState;
-        this.groupPic = groupPic;
-        this.groupEx = groupEx;
-    }
-
-    @Builder(builderClassName = "updateGroupMasterBuilder", builderMethodName = "updateGroupMasterBuilder")
-    public GroupDto(UserEntity gMstUserFK)
-    {
-        this.gMstUserFK = gMstUserFK;
-    }
-
    public GroupEntity toEntity(){
     return GroupEntity.builder()
-            .gMstUserFK(gMstUserFK)
+            //.gMstUserFK(gMstUserFK)
             .groupEx(groupEx)
             .groupName(groupName)
             .groupState(groupState)

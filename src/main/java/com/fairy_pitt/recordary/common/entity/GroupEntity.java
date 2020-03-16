@@ -7,12 +7,11 @@ import javax.persistence.*;
 import java.util.List;
 
 @Getter
-@ToString
 @Table(name = "GROUP_TB")
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 public class GroupEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "GROUP_CD" )
@@ -44,12 +43,29 @@ public class GroupEntity {
     private List<PostEntity> postEntityList;
 
     @Builder
-    public GroupEntity(UserEntity gMstUserFK, String groupName,Boolean groupState,String groupPic,String  groupEx)
-    {
+    public GroupEntity(UserEntity gMstUserFK,
+                       String groupName,
+                       Boolean groupState,
+                       String groupPic,
+                       String  groupEx) {
         this.gMstUserFK = gMstUserFK;
         this.groupName = groupName;
         this.groupState = groupState;
         this.groupPic = groupPic;
         this.groupEx = groupEx;
+    }
+
+    public void updateGroupInfo(String groupName,
+                                Boolean groupState,
+                                String groupPic,
+                                String  groupEx) {
+        this.groupName = groupName;
+        this.groupState = groupState;
+        this.groupPic = groupPic;
+        this.groupEx = groupEx;
+    }
+
+    public void updateGroupMaster(UserEntity gMstUserFK) {
+        this.gMstUserFK = gMstUserFK;
     }
 }

@@ -1,29 +1,40 @@
 package com.fairy_pitt.recordary.endpoint.group;
 
-import com.fairy_pitt.recordary.common.entity.GroupEntity;
-import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
-import com.fairy_pitt.recordary.common.repository.UserRepository;
-import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupSaveRequestDto;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupUpdateRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
-import com.fairy_pitt.recordary.endpoint.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-@Controller
 @Transactional
-@RequestMapping("group")
+@RequiredArgsConstructor
+//@RequestMapping("group")
+@Controller
 public class GroupController {
 
-/*    @Autowired
+    private  GroupService groupService ;
+
+    @PostMapping("group/create")
+    public Long groupCreate(@RequestBody GroupSaveRequestDto groupSaveRequestDto)
+    {
+        return groupService.save(groupSaveRequestDto);
+    }
+
+
+    @PutMapping("/api/v1/posts/{id}")
+    public Long update(@PathVariable Long id, @RequestBody GroupUpdateRequestDto requestDto) {
+        return groupService.updateGroupInfo(id, requestDto);
+    }
+
+
+
+//    public @ResponseBody GroupDto groupShow()
+}
+
+/*  @Autowired
     private HttpSession session;
 
     @Autowired
@@ -191,4 +202,4 @@ public class GroupController {
         return resultMap;
     }*/
 
-}
+

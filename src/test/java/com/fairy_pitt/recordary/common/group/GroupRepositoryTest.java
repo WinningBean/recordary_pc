@@ -30,7 +30,7 @@ public class GroupRepositoryTest {
     @Test
     public void 그룹_생성하기() {
         //given
-      //  UserEntity gMstUserFK =
+       //  UserEntity gMstUserFK =
         String groupName = "테스트 그룹";
         Boolean groupState = true;
         String groupPic = null;

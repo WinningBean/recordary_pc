@@ -1,20 +1,80 @@
 package com.fairy_pitt.recordary.endpoint.group.service;
 
 import com.fairy_pitt.recordary.common.entity.GroupEntity;
-import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupSaveRequestDto;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
 
-@Service
 @RequiredArgsConstructor// 검색해보기
+@Service
 public class GroupService {
+
+    private final GroupRepository groupRepository;
+    private final UserRepository usersRepository;
+    private final GroupMemberService groupMemberService;
+
+    @Transactional
+    public Long save(GroupSaveRequestDto groupSaveRequestDto)
+    {
+        return groupRepository.save(groupSaveRequestDto.toEntity())
+                .getGroupCd();
+    }
+
+    @Transactional
+    public Long updateGroupInfo(Long id, GroupUpdateRequestDto groupDto)
+    {
+        GroupEntity groupEntity = groupRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
+
+        groupEntity.updateGroupInfo(groupDto.getGroupName(), groupDto.getGroupState(), groupDto.getGroupPic(), groupDto.getGroupEx());
+
+        return id;
+    }
+
+    //그룹 방장 변경 -UserDto 만들어지고 가능함
+/*    public Long changGroupMaster(UserEntity userEntity, Long groupCd)
+    {
+        GroupDto groupInfo = new GroupDto();
+        GroupDto.updateGroupMasterBuilder().gMstUserFK(userEntity);
+        groupInfo.setGMstUserFK(userEntity);
+        groupInfo.setGMstUserFK(userEntity);
+        return groupRepository.save(groupInfo.toEntity()).getGroupCd();
+    }*/
+
+    @Transactional
+    public void delete (Long id) {
+        GroupEntity groupEntity = groupRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
+
+        groupRepository.delete(groupEntity);
+    }
+
+    @Transactional(readOnly = true)
+    public GroupResponseDto findById(Long id) {
+        GroupEntity entity = groupRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + id));
+
+        return new GroupResponseDto(entity);
+    }
+
+//    public List<GroupMemberDto> findGroupMEmber(Long groupCd)
+//    {
+//        List<GroupMemberEntity> groupMemberList = groupRepository.findByGroupCd(groupCd).getMembers();
+//
+//    }
+
+/*
+    public GroupEntity fineById(Long groupCd)
+    {
+        return groupRepository.findByGroupCd(groupCd);
+    }*/
+}
 /*
     @Autowired
     private final GroupRepository groupRepository;
@@ -78,4 +138,4 @@ public class GroupService {
     {
         return groupRepository.findAllBygState(true);
     }*/
-}
+

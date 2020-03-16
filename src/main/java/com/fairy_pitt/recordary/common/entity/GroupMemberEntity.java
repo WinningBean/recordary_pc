@@ -1,29 +1,22 @@
 package com.fairy_pitt.recordary.common.entity;
 
 import com.fairy_pitt.recordary.common.pk.GroupMemberPK;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.stream.DoubleStream;
 
-@Data
-@Entity
+@Getter
 @Table(name="GROUP_MEMBER_TB")
-//@IdClass(GroupMemberPK.class)
+@IdClass(GroupMemberPK.class)
+@Entity
 public class GroupMemberEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "GROUP_MEMBER_CD" )
-    private Long groupMemberCd;
-
     @ManyToOne
     private GroupEntity groupCodeFK;
 
+    @Id
     @ManyToOne
     private UserEntity userCodeFK;
 
