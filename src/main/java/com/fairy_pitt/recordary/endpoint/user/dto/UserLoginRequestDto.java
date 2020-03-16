@@ -10,15 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Getter
 @NoArgsConstructor
 public class UserLoginRequestDto {
-    @Autowired
-    private UserPasswordHashService userPasswordHashService;
     private String userId;
     private String userPw;
 
     @Builder
     public UserLoginRequestDto(String userId, String userPw){
         this.userId = userId;
-        this.userPw = userPasswordHashService.getSHA256(userPw);
+        this.userPw = userPw;
     }
 
     public UserEntity toEntity(){

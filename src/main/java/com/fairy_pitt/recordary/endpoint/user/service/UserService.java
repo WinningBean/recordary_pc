@@ -92,8 +92,8 @@ public class UserService {
         if (userState){
             session.setAttribute("loginUser", userEntity.getUserId());
             log.info("set userId = {}", session.getAttribute("loginUser"));
-        }
-        return new UserResponseDto(userEntity);
+            return new UserResponseDto(userEntity);
+        }else return null;
     }
 
     @Transactional(readOnly = true)

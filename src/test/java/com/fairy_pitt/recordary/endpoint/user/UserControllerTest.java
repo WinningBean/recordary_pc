@@ -2,6 +2,8 @@ package com.fairy_pitt.recordary.endpoint.user;
 
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserLoginRequestDto;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserUpdateRequestDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserPasswordHashService;
@@ -31,7 +33,7 @@ public class UserControllerTest {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    UserPasswordHashService userPasswordHashService;
+    private UserPasswordHashService userPasswordHashService;
 
     @After
     public void tearDown() throws Exception{
@@ -133,4 +135,23 @@ public class UserControllerTest {
 //        assertThat(all.get(0).getUserNm()).isEqualTo(expectedUserNm);
 //        assertThat(all.get(0).getUserEx()).isEqualTo(expectedUserEx);
 //    }
+
+    @Test
+    public void User_로그인() throws Exception{
+        //given
+        User_회원가입();
+        UserLoginRequestDto requestDto = UserLoginRequestDto.builder()
+                .userId(staticUserId)
+                .userPw("testPassword")
+                .build();
+
+        String url = "http://localhost:" + port + "/user/login";
+
+        //when
+        ResponseEntity<UserResponseDto> responseEntity = restTemplate.postForEntity(url, requestDto, UserResponseDto.class);
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(((UserResponseDto)responseEntity.getBody()).getUserId()).isEqualTo(staticUserId);
+    }
 }
