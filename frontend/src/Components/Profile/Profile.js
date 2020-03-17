@@ -27,17 +27,17 @@ class Profile extends React.Component {
         {
           postIt_cd: 0,
           postIt_nm: 'All',
-          postItClick: false
+          postIt_click: false
         },
         {
           postIt_cd: 1,
           postIt_nm: '친구',
-          postItClick: false
+          postIt_click: false
         },
         {
           postIt_cd: 2,
           postIt_nm: '학교',
-          postItClick: false
+          postIt_click: false
         }
       ],
 
@@ -345,14 +345,6 @@ class Profile extends React.Component {
       profileScheduleClick: false
     });
   };
-
-  PictureClick = (index, click) => {
-    const array = this.state.post;
-    array[index] = { ...array[index], post_pic_click: click };
-
-    this.setState({ post: array });
-  };
-
   render() {
     const ProfileDownTimeLine = () => {
       if (
@@ -369,9 +361,6 @@ class Profile extends React.Component {
         this.state.profilePictureClick === true &&
         this.state.profileScheduleClick === false
       ) {
-        // const postPicClickState = produce(this.state, draft => {
-        //   draft.post[0].post_pic_click = true;
-        // });
         return (
           <>
             <div className='profile-MediaTimeline'>
@@ -385,15 +374,17 @@ class Profile extends React.Component {
                     alt={value.post_cd}
                     src={value.post_pic}
                     onClick={() =>
-                      this.PictureClick(index, !value.post_pic_click)
+                      this.setState({
+                        value: (this.state.post[index] = {
+                          ...value,
+                          post_pic_click: true
+                        })
+                      })
                     }
                   />
                 </div>
               ))}
             </div>
-            {console.log(this.state.post[0].post_pic_click)}
-            {console.log(this.state.post[1].post_pic_click)}
-            {console.log(this.state.post[2].post_pic_click)}
             {this.state.post.map((value, index) => {
               if (value.post_pic_click === true) {
                 return (
@@ -401,7 +392,12 @@ class Profile extends React.Component {
                     open
                     key={value.post_cd}
                     onClose={() =>
-                      this.PictureClick(index, !value.post_pic_click)
+                      this.setState({
+                        value: (this.state.post[index] = {
+                          ...value,
+                          post_pic_click: false
+                        })
+                      })
                     }
                   >
                     <Timeline data={value} />
@@ -439,18 +435,25 @@ class Profile extends React.Component {
             <div className='main-profile-info-postIt'>
               <div className='postIt'>
                 <ul style={{ width: '40px' }}>
-                  {this.state.postIt.map(value => (
+                  {this.state.postIt.map((value, index) => (
                     <li
                       key={value.postIt_cd}
-                      onClick={() => this.setState({})}
+                      onClick={() =>
+                        this.setState({
+                          value: (this.state.postIt[index] = {
+                            ...value,
+                            postIt_click: !value.postIt_click
+                          })
+                        })
+                      }
                       style={
-                        value.postItClick === true
+                        value.postIt_click === true
                           ? { width: '40px' }
                           : { width: '20px' }
                       }
                     />
                   ))}
-                  {console.log(this.state.postIt[0])}
+                  {console.log(this.state.postIt)}
                 </ul>
               </div>
               <div id='main-profile-info'>
