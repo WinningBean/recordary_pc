@@ -7,10 +7,8 @@ import RightIcon from '@material-ui/icons/ChevronRight';
 import * as dateFns from 'date-fns';
 import { useImmer } from 'use-immer';
 
-const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEndDay }) => {
-  const [currentMonth, setCurrentMonth] = useImmer(dateFns.startOfMonth(sharedStartDay));
-
-  const CalendarHeader = () => {
+const CalendarHeader = React.memo(
+  ({ currentMonth, onLeftClick, onRightClick }) => {
     return (
       <div className='calendar-header' style={{ height: '45px' }}>
         <div className='calendar-header-side'>
@@ -22,7 +20,7 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
               minWidth: '40px',
               height: '45px'
             }}
-            onClick={() => setCurrentMonth(draft => dateFns.subMonths(draft, 1))}
+            onClick={onLeftClick}
           >
             <LeftIcon />
           </div>
@@ -39,16 +37,23 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
               minWidth: '40px',
               height: '45px'
             }}
-            onClick={() => setCurrentMonth(draft => dateFns.addMonths(draft, 1))}
+            onClick={onRightClick}
           >
             <RightIcon />
           </div>
         </div>
       </div>
     );
-  };
+  },
+  (props, newProps) => {
+    return props === newProps;
+    // false 일시 랜더링
+    // true 일시 비랜더링
+  }
+);
 
-  const CalendarDays = () => {
+const CalendarDays = React.memo(
+  ({ currentMonth }) => {
     const days = [];
 
     let startDate = dateFns.startOfWeek(currentMonth);
@@ -70,9 +75,17 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
         {days}
       </div>
     );
-  };
+  },
+  (props, newProps) => {
+    return props === newProps;
+    // false 일시 랜더링
+    // true 일시 비랜더링
+  }
+);
 
-  const Cells = () => {
+const Cells = React.memo(
+  ({ currentMonth }) => {
+    const [dayLocation, setDayLocation] = useImmer(null);
     const today = new Date();
     const monthStart = currentMonth;
     const monthEnd = dateFns.endOfMonth(monthStart);
@@ -104,7 +117,7 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
             {dateFns.isSameDay(day, today) ? (
               <div className='selected' style={{ opacity: '.5' }} />
             ) : null}
-            <span className='bg'>{formattedDate}</span>
+            {/* <span className='bg'>{formattedDate}</span> */}
             <span className='number' style={{ left: 1, top: 0 }}>
               {formattedDate}
             </span>
@@ -124,15 +137,28 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
       );
       days = [];
     }
-    return rows;
-  };
+    return <>{rows}</>;
+  },
+  (props, newProps) => {
+    return props === newProps;
+    // false 일시 랜더링
+    // true 일시 비랜더링
+  }
+);
+
+const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEndDay }) => {
+  const [currentMonth, setCurrentMonth] = useImmer(dateFns.startOfMonth(sharedStartDay));
 
   return (
     <>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {CalendarHeader()}
-        {CalendarDays()}
-        {Cells()}
+        <CalendarHeader
+          currentMonth={currentMonth}
+          onLeftClick={() => setCurrentMonth(draft => dateFns.subMonths(draft, 1))}
+          onRightClick={() => setCurrentMonth(draft => dateFns.addMonths(draft, 1))}
+        />
+        <CalendarDays currentMonth={currentMonth} />
+        <Cells currentMonth={currentMonth} />
       </div>
     </>
   );
