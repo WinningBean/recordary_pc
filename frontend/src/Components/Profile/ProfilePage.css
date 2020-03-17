@@ -251,3 +251,7 @@ nav > div {
   /* border: 1px solid lightgray;
   border-radius: 10px; */
 }
+
+.MuiDialog-paperWidthSm {
+  max-width: 100% !important;
+}

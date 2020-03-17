@@ -125,10 +125,9 @@ const Timeline = props => {
         </div>
         <div className='profile-name'>{data.user_id}</div>
         <div className='profile-time'>
-          <div className='profile-time-text'>{`${dateFns.differenceInDays(
-            data.uploadDate,
-            new Date()
-          )}일 전`}</div>
+          <div className='profile-time-text'>
+            {`${dateFns.differenceInDays(data.uploadDate, new Date())}일 전`}
+          </div>
         </div>
         <div className='profile-moreIcon'>
           <LongMenu
