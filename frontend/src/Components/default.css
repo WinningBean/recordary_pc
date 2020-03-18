@@ -22,13 +22,13 @@ img {
   border: none;
 }
 
-html,
+/* html,
 body,
 #root,
 #wrapper {
   width: 100%;
   height: 100%;
-}
+} */
 html {
   overflow: visible !important;
 }

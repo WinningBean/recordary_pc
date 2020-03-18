@@ -194,24 +194,24 @@ class Login extends React.Component {
           {
             postForm: 2,
             post_cd: 5,
-            user_id: 'HwangSG',
+            user_id: '두번쨰폼',
             user_pic: 'http://placehold.it/40x40',
             group_cd: null,
             uploadDate: new Date(),
             post_pic: 'img/1579501322063.jpg',
             sharedStartDay: new Date('2020-03-25'),
-            sharedEndDay: new Date('2020-03-25'),
+            sharedEndDay: new Date('2020-03-28'),
             sharedSchedual: [
               {
                 cd: '01',
-                start: new Date('2020-03-18'),
-                end: new Date('2020-03-20'),
+                start: new Date('2020-03-25'),
+                end: new Date('2020-03-28'),
                 ex: '발닦고 잠자기'
               },
               {
                 cd: '02',
-                start: new Date('2020-03-21'),
-                end: new Date('2020-03-23'),
+                start: new Date('2020-03-26'),
+                end: new Date('2020-03-27'),
                 ex: 'ex2'
               },
               {
@@ -292,8 +292,8 @@ class Login extends React.Component {
             group_cd: null,
             uploadDate: new Date(),
             post_pic: 'img/1579501322063.jpg',
-            sharedStartDay: new Date('2020-05-25'),
-            sharedEndDay: new Date('2020-03-25'),
+            sharedStartDay: new Date('2020-03-25'),
+            sharedEndDay: new Date('2020-04-25'),
             sharedSchedual: [
               {
                 cd: '01',

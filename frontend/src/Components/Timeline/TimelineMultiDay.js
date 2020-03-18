@@ -1,62 +1,87 @@
-import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import AvatarGroup from '@material-ui/lab/AvatarGroup';
-import PersonIcon from '@material-ui/icons/Person';
+import React, { useMemo, useState } from 'react';
 import LeftIcon from '@material-ui/icons/ChevronLeft';
 import RightIcon from '@material-ui/icons/ChevronRight';
 import * as dateFns from 'date-fns';
-import { useImmer } from 'use-immer';
+import produce from 'immer';
 
-const CalendarHeader = React.memo(
-  ({ currentMonth, onLeftClick, onRightClick }) => {
+const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEndDay }) => {
+  const [currentMonth, setCurrentMonth] = useState(dateFns.startOfMonth(sharedStartDay));
+  const [dayLocation, setDayLocation] = useState(null);
+
+  const CalendarHeader = useMemo(() => {
+    console.log('render header');
     return (
-      <div className='calendar-header' style={{ height: '45px' }}>
+      <div className='calendar-header' style={{ height: '25px' }}>
         <div className='calendar-header-side'>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              minWidth: '40px',
-              height: '45px'
-            }}
-            onClick={onLeftClick}
-          >
-            <LeftIcon />
-          </div>
+          {dateFns.isSameMonth(currentMonth, sharedStartDay) ? (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                minWidth: '40px',
+                height: '25px',
+                color: '#4444'
+              }}
+            >
+              <LeftIcon />
+            </div>
+          ) : (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                minWidth: '40px',
+                height: '25px'
+              }}
+              onClick={() => setCurrentMonth(dateFns.subMonths(currentMonth, 1))}
+            >
+              <LeftIcon />
+            </div>
+          )}
         </div>
-        <div className='calendar-header-center' style={{ height: '45px', fontSize: '15px' }}>
+        <div className='calendar-header-center' style={{ height: '25px', fontSize: '15px' }}>
           <span>{dateFns.format(currentMonth, 'MMM yyyy')}</span>
         </div>
         <div className='calendar-header-side'>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              minWidth: '40px',
-              height: '45px'
-            }}
-            onClick={onRightClick}
-          >
-            <RightIcon />
-          </div>
+          {dateFns.isSameMonth(currentMonth, sharedEndDay) ? (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                minWidth: '40px',
+                height: '25px',
+                color: '#4444'
+              }}
+            >
+              <RightIcon />
+            </div>
+          ) : (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                minWidth: '40px',
+                height: '25px'
+              }}
+              onClick={() => setCurrentMonth(dateFns.addMonths(currentMonth, 1))}
+            >
+              <RightIcon />
+            </div>
+          )}
         </div>
       </div>
     );
-  },
-  (props, newProps) => {
-    return props === newProps;
-    // false 일시 랜더링
-    // true 일시 비랜더링
-  }
-);
+  }, [currentMonth, sharedStartDay, sharedEndDay]);
 
-const CalendarDays = React.memo(
-  ({ currentMonth }) => {
+  const CalendarDays = useMemo(() => {
+    console.log('render day');
     const days = [];
 
-    let startDate = dateFns.startOfWeek(currentMonth);
+    let startDate = dateFns.startOfWeek(new Date());
 
     for (let i = 0; i < 7; i++) {
       days.push(
@@ -75,17 +100,10 @@ const CalendarDays = React.memo(
         {days}
       </div>
     );
-  },
-  (props, newProps) => {
-    return props === newProps;
-    // false 일시 랜더링
-    // true 일시 비랜더링
-  }
-);
+  }, []);
 
-const Cells = React.memo(
-  ({ currentMonth }) => {
-    const [dayLocation, setDayLocation] = useImmer(null);
+  const Cells = useMemo(() => {
+    console.log('render cells');
     const today = new Date();
     const monthStart = currentMonth;
     const monthEnd = dateFns.endOfMonth(monthStart);
@@ -97,6 +115,12 @@ const Cells = React.memo(
     let days = [];
     let day = startDate;
     let formattedDate = '';
+
+    const location = [];
+    var x = 0;
+    var y = 15;
+    // var x = 68.43;
+    // var y = 56;
 
     while (day <= endDate) {
       for (let i = 0; i < 7; i++) {
@@ -112,7 +136,19 @@ const Cells = React.memo(
             }`}
             key={day}
             onClick={() => console.log('click days')}
-            style={{ width: 'auto', height: '50px', flex: '1' }}
+            style={
+              dateFns.isWithinInterval(day, {
+                start: dateFns.startOfDay(sharedStartDay),
+                end: dateFns.endOfDay(sharedEndDay)
+              })
+                ? { width: 'auto', height: '56px', flex: '1' }
+                : {
+                    backgroundColor: 'rgba(116, 116, 116, 0.1)',
+                    width: 'auto',
+                    height: '56px',
+                    flex: '1'
+                  }
+            }
           >
             {dateFns.isSameDay(day, today) ? (
               <div className='selected' style={{ opacity: '.5' }} />
@@ -122,10 +158,20 @@ const Cells = React.memo(
               {formattedDate}
             </span>
             <div className='more' />
+            {/* <div style={{ backgroundColor: 'yellow', marginTop: '12px', height: '40px' }}> </div> */}
           </div>
         );
+
+        location.push({
+          x,
+          y,
+          day
+        });
+        x += 68.43;
         day = dateFns.addDays(day, 1);
       }
+      y += 56;
+      x = 0;
       rows.push(
         <div
           className='cell-row'
@@ -137,28 +183,103 @@ const Cells = React.memo(
       );
       days = [];
     }
-    return <>{rows}</>;
-  },
-  (props, newProps) => {
-    return props === newProps;
-    // false 일시 랜더링
-    // true 일시 비랜더링
-  }
-);
+    setDayLocation(location);
+    return rows;
+  }, [currentMonth, sharedEndDay, sharedStartDay]);
 
-const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEndDay }) => {
-  const [currentMonth, setCurrentMonth] = useImmer(dateFns.startOfMonth(sharedStartDay));
+  console.log(dayLocation);
+
+  const Schedual = () => {
+    if (dayLocation === null) return null;
+
+    var size = undefined;
+
+    const length = sharedSchedual.length;
+    if (length < 2) size = 43;
+    else if (length === 2) size = 21;
+    else if (length === 3) size = 14;
+    else if (length === 4) size = 10;
+    else if (length === 5) size = 8;
+    else if (length <= 6) size = 7;
+
+    const monthStart = currentMonth;
+    const monthEnd = dateFns.endOfMonth(monthStart);
+    const startDate = dateFns.startOfWeek(monthStart);
+    const endDate = dateFns.endOfWeek(monthEnd);
+
+    const sc = [];
+
+    console.log(sharedSchedual);
+    sharedSchedual.forEach((schedualValue, index) => {
+      if (dateFns.isWithinInterval(schedualValue.start, { start: monthStart, end: endDate })) {
+        const currDayLocation = dayLocation.filter(value =>
+          dateFns.isSameDay(value.day, schedualValue.start)
+        )[0];
+
+        const diffCount = dateFns.differenceInCalendarWeeks(
+          currDayLocation.start,
+          currDayLocation.end
+        );
+        if (diffCount > 0) {
+          // 시작일과 끝일 주가 다를때
+        } else {
+          console.log(schedualValue.start, schedualValue.end);
+          if (dateFns.isSameDay(schedualValue.start, schedualValue.end)) {
+            sc.push(
+              <div
+                style={{
+                  key: currDayLocation.y + size * index,
+                  position: 'absolute',
+                  left: `${currDayLocation.x}px`,
+                  top: `${currDayLocation.y + size * index}px`,
+                  width: '68.43px',
+                  height: `${size}px`,
+                  backgroundColor: `rgba(${Math.random() * 255},${Math.random() *
+                    255},${Math.random() * 255},.8)`,
+                  borderRadius: '4px',
+                  paddingLeft: '5px',
+                  borderLeft: '3px solid gray'
+                }}
+              />
+            );
+            return;
+          } else {
+            sc.push(
+              <div
+                style={{
+                  key: currDayLocation.y + size * index,
+                  position: 'absolute',
+                  left: `${currDayLocation.x}px`,
+                  top: `${currDayLocation.y + size * index}px`,
+                  width: `${480 - currDayLocation.x}px`,
+                  height: `${size}px`,
+                  backgroundColor: `rgba(${Math.random() * 255},${Math.random() *
+                    255},${Math.random() * 255},.5)`,
+                  borderRadius: '4px',
+                  marginLeft: '5px',
+                  borderLeft: '3px solid gray'
+                }}
+              />
+            );
+            return;
+          }
+        }
+      }
+    });
+    console.log(sc);
+    return sc;
+  };
+  console.log(dayLocation);
 
   return (
     <>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <CalendarHeader
-          currentMonth={currentMonth}
-          onLeftClick={() => setCurrentMonth(draft => dateFns.subMonths(draft, 1))}
-          onRightClick={() => setCurrentMonth(draft => dateFns.addMonths(draft, 1))}
-        />
-        <CalendarDays currentMonth={currentMonth} />
-        <Cells currentMonth={currentMonth} />
+        {CalendarHeader}
+        {CalendarDays}
+        <div style={{ position: 'relative' }}>
+          {Cells}
+          {Schedual()}
+        </div>
       </div>
     </>
   );

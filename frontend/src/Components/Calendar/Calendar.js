@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import * as dateFns from 'date-fns';
 import CalendarScheduleEdit from 'Components/Calendar/CalendarScheduleEdit';
 
@@ -11,7 +11,6 @@ import RightIcon from '@material-ui/icons/ChevronRight';
 
 import './Calendar.css';
 import produce from 'immer';
-import { useImmer } from 'use-immer';
 
 // 600x475, 85x74
 const Calendar = props => {
@@ -20,7 +19,6 @@ const Calendar = props => {
   // 1 : 내 그룹 캘린더
   // 2 : 남의 캘린더 (그룹도 포함)
   // 3 : 나의 일정 공유 캘린더
-  const choiceDate = props.choiceDate;
   const [userDate, setUserDate] = useState([
     {
       cd: '01',
@@ -48,9 +46,7 @@ const Calendar = props => {
     }
   ]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const selectedDate = new Date();
   const [dayLocation, setDayLocation] = useState(null);
-  const [isMakedCells, setIsMakedCells] = useState();
   const [popover, setPopover] = useState(null);
   const [detailedSC, setDetailedSC] = useState(null);
   const [scheduleEditOpen, setScheduleEditOpen] = useState(false);
@@ -67,6 +63,8 @@ const Calendar = props => {
   })();
 
   console.log('render');
+
+  const onChoice = useCallback(currDay => props.onChoice(currDay, userDate), [props, userDate]);
 
   //#region Handler
   var id = undefined;
@@ -156,7 +154,6 @@ const Calendar = props => {
           cloneObj.style.backgroundColor = realObj[0].style.backgroundColor;
           document.getElementById('wrap-cells').appendChild(cloneObj);
           isMove = true;
-          return;
         }
         const rect = e.currentTarget.getBoundingClientRect();
         const xa = e.clientX - rect.left;
@@ -216,7 +213,7 @@ const Calendar = props => {
     console.log('render CalendarDays');
     const days = [];
 
-    let startDate = dateFns.startOfWeek(currentMonth);
+    let startDate = dateFns.startOfWeek(new Date());
 
     for (let i = 0; i < 7; i++) {
       days.push(
@@ -235,6 +232,7 @@ const Calendar = props => {
     const monthEnd = dateFns.endOfMonth(monthStart);
     const startDate = dateFns.startOfWeek(monthStart);
     const endDate = dateFns.endOfWeek(monthEnd);
+    const selectedDate = new Date();
 
     const rows = [];
     var location = [];
@@ -244,7 +242,6 @@ const Calendar = props => {
     let formattedDate = '';
     let y = 18;
     let x = 0;
-    let count = 0;
     while (day <= endDate) {
       for (let i = 0; i < 7; i++) {
         location.push({
@@ -266,7 +263,7 @@ const Calendar = props => {
               isBorderLeft === true ? 'borderLeft' : ''
             }`}
             key={day}
-            onClick={type !== 3 ? null : () => props.onChoice(currDay, userDate)}
+            onClick={type !== 3 ? null : () => onChoice(currDay)}
             style={(() => {
               if (type !== 3) {
                 return null;
@@ -300,7 +297,6 @@ const Calendar = props => {
         );
         day = dateFns.addDays(day, 1);
         x += 85;
-        count++;
       }
       rows.push(
         <div className='cell-row' key={day}>
@@ -314,7 +310,7 @@ const Calendar = props => {
 
     setDayLocation(location);
     return rows;
-  }, [currentMonth]);
+  }, [currentMonth, type, props.choiceSharedStartDate, props.choiceSharedEndDate, onChoice]);
   //#endregion
 
   //#region Schedule View
@@ -420,7 +416,7 @@ const Calendar = props => {
   };
   //#endregion
 
-  const Schedual = useMemo(() => {
+  const Schedual = () => {
     if (dayLocation === null) {
       return null;
     }
@@ -445,22 +441,22 @@ const Calendar = props => {
     }
 
     var copyDayLocation = dayLocation.map(value => ({ ...value }));
-    copyDraft.map(value => {
-      if (
-        // 데이트가 해당 캘린더 안에 속하는지 확인
-        !(
-          dateFns.isWithinInterval(value.start, {
-            start: copyDayLocation[0].day,
-            end: dateFns.addDays(copyDayLocation[copyDayLocation.length - 1].day, 1)
-          }) ||
-          dateFns.isWithinInterval(value.end, {
-            start: copyDayLocation[0].day,
-            end: dateFns.addDays(copyDayLocation[copyDayLocation.length - 1].day, 1)
-          })
-        )
-      ) {
-        return;
-      }
+    copyDraft.forEach(value => {
+      // if (
+      //   // 데이트가 해당 캘린더 안에 속하는지 확인
+      //   !(
+      //     dateFns.isWithinInterval(value.start, {
+      //       start: copyDayLocation[0].day,
+      //       end: dateFns.addDays(copyDayLocation[copyDayLocation.length - 1].day, 1)
+      //     }) ||
+      //     dateFns.isWithinInterval(value.end, {
+      //       start: copyDayLocation[0].day,
+      //       end: dateFns.addDays(copyDayLocation[copyDayLocation.length - 1].day, 1)
+      //     })
+      //   )
+      // ) {
+      //   return;
+      // }
       var index = null;
       var secondBlock = false;
       var beforeStartDay = false;
@@ -481,9 +477,9 @@ const Calendar = props => {
         }
       }
       if (copyDayLocation[index].overlap === 2) {
-        const currDom = document.getElementById(
-          `cell-index-${dateFns.format(copyDayLocation[index].day, 'MMdd')}`
-        );
+        // const currDom = document.getElementById(
+        //   `cell-index-${dateFns.format(copyDayLocation[index].day, 'MMdd')}`
+        // );
         const moreList = document.querySelectorAll('.more');
         moreList[index].style.display = 'block';
         return;
@@ -562,7 +558,7 @@ const Calendar = props => {
               );
               sc.pop();
               sc.push(cloneElement);
-              return sc;
+              return;
             }
             if (secondBlock) {
               sc.push(longSC(value.cd, 595, 0, copyDayLocation[index].y + 25, value.ex, i + 1));
@@ -597,7 +593,7 @@ const Calendar = props => {
             );
             sc.pop();
             sc.push(cloneElement);
-            return sc;
+            return;
           }
           if (secondBlock) {
             sc.push(
@@ -659,7 +655,7 @@ const Calendar = props => {
       }
     });
     return sc;
-  }, [dayLocation, userDate]);
+  };
 
   return (
     <div className='calendar'>
@@ -673,12 +669,12 @@ const Calendar = props => {
           onMouseUp={onScMouseUp}
         >
           {Cells}
-          {Schedual}
+          {Schedual()}
         </div>
       ) : (
         <div id='wrap-cells'>
           {Cells}
-          {Schedual}
+          {Schedual()}
         </div>
       )}
       <Popover
@@ -717,89 +713,86 @@ const Calendar = props => {
           <div className='calendar-popover-content'>
             {popover === null
               ? null
-              : (() => {
-                  return userDate.map(value => {
-                    if (
+              : (() =>
+                  userDate
+                    .filter(value =>
                       dateFns.isWithinInterval(popover.date, {
                         start: dateFns.startOfDay(value.start),
                         end: dateFns.endOfDay(value.end)
                       })
-                    ) {
-                      return (
+                    )
+                    .map(value => (
+                      <div
+                        className={`sc${value.cd}`}
+                        key={value.cd}
+                        style={{
+                          position: 'relative',
+                          marginTop: '5px',
+                          width: '190px',
+                          height: '30px',
+                          cursor: 'pointer',
+                          userSelect: 'none'
+                        }}
+                        // onMouseDown={onScMouseDown}
+                        onClick={e =>
+                          setDetailedSC({
+                            event: e.currentTarget,
+                            cd: value.cd
+                          })
+                        }
+                      >
                         <div
-                          className={`sc${value.cd}`}
-                          key={value.cd}
                           style={{
-                            position: 'relative',
-                            marginTop: '5px',
-                            width: '190px',
-                            height: '30px',
-                            cursor: 'pointer',
-                            userSelect: 'none'
+                            position: 'absolute',
+                            lineHeight: '24px',
+                            margin: '0 5px'
                           }}
-                          // onMouseDown={onScMouseDown}
-                          onClick={e =>
-                            setDetailedSC({
-                              event: e.currentTarget,
-                              cd: value.cd
-                            })
-                          }
                         >
-                          <div
+                          <span
                             style={{
                               position: 'absolute',
-                              lineHeight: '24px',
-                              margin: '0 5px'
+                              left: '0',
+                              top: '7px',
+                              backgroundColor: '#9e5fff',
+                              width: '6px',
+                              height: '6px',
+                              borderRadius: '50%'
+                            }}
+                          />
+                          <span
+                            style={{
+                              paddingLeft: '10px',
+                              display: 'block',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                              fontWeight: 'bold',
+                              fontSize: '14px'
                             }}
                           >
-                            <span
-                              style={{
-                                position: 'absolute',
-                                left: '0',
-                                top: '7px',
-                                backgroundColor: '#9e5fff',
-                                width: '6px',
-                                height: '6px',
-                                borderRadius: '50%'
-                              }}
-                            />
-                            <span
-                              style={{
-                                paddingLeft: '10px',
-                                display: 'block',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                whiteSpace: 'nowrap',
-                                fontWeight: 'bold',
-                                fontSize: '14px'
-                              }}
-                            >
-                              {value.ex}
-                            </span>
-                            <span
-                              style={{
-                                position: 'absolute',
-                                left: '10px',
-                                top: '15px',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                whiteSpace: 'nowrap',
-                                fontWeight: 'bold',
-                                fontSize: '10px',
-                                color: 'gray'
-                              }}
-                            >
-                              {dateFns.format(value.start, 'a ') === 'AM' ? '오전' : '오후'}
-                              {dateFns.format(value.start, 'h -')}
-                              {dateFns.format(value.end, 'a ') === 'AM' ? '오전' : '오후'}
-                              {dateFns.format(value.end, 'h')}
-                            </span>
-                          </div>
+                            {value.ex}
+                          </span>
+                          <span
+                            style={{
+                              position: 'absolute',
+                              left: '10px',
+                              top: '15px',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                              fontWeight: 'bold',
+                              fontSize: '10px',
+                              color: 'gray'
+                            }}
+                          >
+                            {dateFns.format(value.start, 'a ') === 'AM' ? '오전' : '오후'}
+                            {dateFns.format(value.start, 'h -')}
+                            {dateFns.format(value.end, 'a ') === 'AM' ? '오전' : '오후'}
+                            {dateFns.format(value.end, 'h')}
+                          </span>
                         </div>
-                      );
-                    }
-                  });
-                })()}
+                      </div>
+                    )))()}
           </div>
         </div>
       </Popover>
