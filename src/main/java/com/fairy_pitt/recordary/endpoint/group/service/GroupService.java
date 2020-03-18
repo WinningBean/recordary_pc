@@ -1,11 +1,14 @@
 package com.fairy_pitt.recordary.endpoint.group.service;
 
 import com.fairy_pitt.recordary.common.entity.GroupEntity;
+import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
+import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,8 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class GroupService {
 
     private final GroupRepository groupRepository;
-    private final UserRepository usersRepository;
-    private final GroupMemberService groupMemberService;
+    private final UserRepository userRepository;
 
     @Transactional
     public Long save(GroupSaveRequestDto requestDto)
@@ -37,15 +39,17 @@ public class GroupService {
         return id;
     }
 
-    //그룹 방장 변경 -UserDto 만들어지고 가능함
-/*    public Long changGroupMaster(UserEntity userEntity, Long groupCd)
+    @Transactional
+    public Long changGroupMaster(String UserId, Long groupCd)
     {
-        GroupDto groupInfo = new GroupDto();
-        GroupDto.updateGroupMasterBuilder().gMstUserFK(userEntity);
-        groupInfo.setGMstUserFK(userEntity);
-        groupInfo.setGMstUserFK(userEntity);
-        return groupRepository.save(groupInfo.toEntity()).getGroupCd();
-    }*/
+        GroupEntity groupEntity = groupRepository.findById(groupCd)
+                .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + groupCd));
+
+        UserEntity User = userRepository.findByUserId(UserId);
+        groupEntity.updateGroupMaster(User);
+
+        return groupCd;
+    }
 
     @Transactional
     public void delete (Long id) {

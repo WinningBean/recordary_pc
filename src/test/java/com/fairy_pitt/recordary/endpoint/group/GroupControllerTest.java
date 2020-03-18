@@ -131,9 +131,47 @@ public class GroupControllerTest {
 
     @Test
     public void Group_방장위임() throws  Exception{
-        // given
+        //given
+        UserEntity saveUser = userRepository.save(UserEntity.builder()
+                .userId("test")
+                .userPw("test")
+                .userNm("테스트 유저")
+                .build());
+
+        String groupName ="test";
+        Boolean groupState = true;
+        String groupPic = "asd";
+        String  groupEx = "test";
+
+        GroupEntity groupEntity = groupRepository.save(  GroupEntity.builder()
+                .gMstUserFK(saveUser)
+                .groupName(groupName)
+                .groupState(true)
+                .groupPic(groupPic)
+                .groupEx(groupEx)
+                .build());
+
+        Long groupId = groupEntity.getGroupCd();
+
+
+        UserEntity changeUser = userRepository.save(UserEntity.builder()
+                .userId("test222222222")
+                .userPw("test2222")
+                .userNm("테스트 유저222222")
+                .build());
+
+        String url = "http://localhost:" + port + "group/changeMaster/" + groupId;
+        String userId  = changeUser.getUserId();
         //when
+        ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url,userId,Long.class);
+
         //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isGreaterThan(0L);
+
+        List<GroupEntity> all = groupRepository.findAll();
+        assertThat(all.get(0).getGMstUserFK().getUserNm()).isEqualTo(changeUser.getUserNm());
+        assertThat(all.get(0).getGroupName()).isEqualTo(groupName);
     }
 
 

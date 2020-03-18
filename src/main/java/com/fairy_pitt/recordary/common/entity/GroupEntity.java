@@ -17,7 +17,7 @@ public class GroupEntity {
     @Column(name = "GROUP_CD" )
     private Long groupCd;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private UserEntity gMstUserFK;
 
     @Column(name = "GROUP_NM")
@@ -65,7 +65,7 @@ public class GroupEntity {
         this.groupEx = groupEx;
     }
 
-    public void updateGroupMaster(UserEntity gMstUserFK) {
-        this.gMstUserFK = gMstUserFK;
+    public void updateGroupMaster(UserEntity User) {
+        this.gMstUserFK = User;
     }
 }

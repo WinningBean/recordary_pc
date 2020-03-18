@@ -1,8 +1,11 @@
 package com.fairy_pitt.recordary.endpoint.group;
 
+import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupUpdateRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
+import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +19,8 @@ import javax.transaction.Transactional;
 @Controller
 public class GroupController {
 
-    private final  GroupService groupService ;
+    private final GroupService groupService;
+    private final UserService userService;
 
     @PostMapping("create")
     public @ResponseBody Long groupCreate(@RequestBody GroupSaveRequestDto requestDto)
@@ -26,8 +30,16 @@ public class GroupController {
 
 
     @PostMapping("update/{id}")
-    public @ResponseBody Long update(@PathVariable Long id, @RequestBody GroupUpdateRequestDto requestDto) {
+    public @ResponseBody Long update(@PathVariable Long id,
+                                     @RequestBody GroupUpdateRequestDto requestDto) {
         return groupService.updateGroupInfo(id, requestDto);
+    }
+
+    @PostMapping("changeMaster/{groupCd}")
+    public @ResponseBody Long updateMaster(@PathVariable Long groupCd,
+                                           @RequestBody String userId) {
+
+        return groupService.changGroupMaster(userId,groupCd);
     }
 
 
