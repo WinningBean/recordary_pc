@@ -7,9 +7,11 @@ import com.fairy_pitt.recordary.common.pk.GroupMemberPK;
 import com.fairy_pitt.recordary.common.repository.GroupMemberRepository;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupMemberRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -19,6 +21,28 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GroupMemberService {
 
+    private final GroupMemberRepository groupMemberRepository;
+    private final GroupApplyService groupApplyService;
+
+    @Transactional
+    public Boolean save(GroupMemberRequestDto groupMemberRequestDto)
+    {
+        GroupMemberEntity groupMemberEntity = groupMemberRequestDto.toEntity();
+        GroupMemberPK groupMemberPK = new GroupMemberPK(groupMemberEntity.getGroupCodeFK().getGroupCd(),
+                                                        groupMemberEntity.getUserCodeFK().getUserCd());
+        groupApplyService.delete(groupMemberPK);
+        groupMemberRepository.save(groupMemberEntity);
+        return true;
+    }
+
+    @Transactional
+    public Boolean delete (GroupMemberPK id) {
+        GroupMemberEntity groupApplyEntity = groupMemberRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
+
+        groupMemberRepository.delete(groupApplyEntity);
+        return true;
+    }
 /*
     @Autowired
     private final GroupRepository groupRepository;

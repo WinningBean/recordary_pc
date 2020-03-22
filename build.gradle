@@ -39,6 +39,7 @@ dependencies {
     compile('com.h2database:h2')
     compile('org.springframework.session:spring-session-jdbc')
     compile('org.springframework.boot:spring-boot-devtools')
+    compile ('net.sf.json-lib:json-lib:2.4:jdk15')
 
     annotationProcessor ('org.projectlombok:lombok')
 

@@ -4,6 +4,8 @@ import com.fairy_pitt.recordary.common.entity.GroupApplyEntity;
 import com.fairy_pitt.recordary.common.entity.GroupEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.pk.GroupMemberPK;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupApplyRequestDto;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupApplyResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupApplyService;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
@@ -22,6 +24,35 @@ import java.util.Map;
 @Controller
 @RequiredArgsConstructor
 public class GroupApplyController {
+
+    private final  GroupApplyService groupApplyService;
+
+    @PostMapping("create")
+    public @ResponseBody int groupCreate(@RequestBody GroupApplyRequestDto requestDto)
+    {
+        return groupApplyService.save(requestDto);
+    }
+
+    @DeleteMapping("check")
+    public @ResponseBody Boolean checkApply(@RequestBody GroupMemberPK id){
+        groupApplyService.delete(id);
+        return true;
+    }
+
+    @GetMapping("find")
+    public @ResponseBody List<GroupApplyResponseDto> findGroupAppliesToUser(String userId){
+
+        return groupApplyService.findGroupAppliesToUser(userId);
+    }
+
+    @GetMapping("findGroup")
+    public @ResponseBody List<GroupApplyResponseDto> findUserAppliesToGroup(Long groupCd)
+    {
+        return groupApplyService.findUserAppliesToGroup(groupCd);
+    }
+
+
+
 
  /*   @Autowired
     private final UserService userService;

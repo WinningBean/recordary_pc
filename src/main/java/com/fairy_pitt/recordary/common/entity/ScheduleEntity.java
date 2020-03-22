@@ -8,11 +8,12 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-@Entity
+
 @Data
 @Table(name = "Schedule_TB")
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class ScheduleEntity {
 
    @Id
@@ -22,6 +23,9 @@ public class ScheduleEntity {
 
    @ManyToOne
    private ScheduleTabEntity TabCodeFK;
+
+   @OneToOne
+   private PostEntity PostFK;
 
    @Column(name = "SCHEDULE_NM")
    private String scheduleNm;

@@ -1,12 +1,16 @@
 package com.fairy_pitt.recordary.endpoint.group;
 
 import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupUpdateRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
+import com.sun.tools.javac.util.List;
 import lombok.RequiredArgsConstructor;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +32,6 @@ public class GroupController {
         return groupService.save(requestDto);
     }
 
-
     @PostMapping("update/{id}")
     public @ResponseBody Long update(@PathVariable Long id,
                                      @RequestBody GroupUpdateRequestDto requestDto) {
@@ -38,9 +41,31 @@ public class GroupController {
     @PostMapping("changeMaster/{groupCd}")
     public @ResponseBody Long updateMaster(@PathVariable Long groupCd,
                                            @RequestBody String userId) {
-
         return groupService.changGroupMaster(userId,groupCd);
     }
+
+    @DeleteMapping("{groupCd}")
+    public @ResponseBody Long deleteGroup(@PathVariable Long groupCd){
+        groupService.delete(groupCd);
+        return groupCd;
+    }
+
+    @GetMapping("{groupCd}")
+    public @ResponseBody JSONArray groupPage(@PathVariable Long groupCd) {
+
+        return groupService.findAllGroupInfoById(groupCd);
+    }
+
+    //@GetMapping
+
+
+//    @GetMapping("readAll")
+//    public @ResponseBody List<GroupResponseDto> findAllGroup()
+//    {
+//        groupService.find
+//    }
+
+
 
 
 
@@ -62,35 +87,7 @@ public class GroupController {
     @Autowired
     private UserRepository userRepository;
 
-    @ResponseBody
-    @PostMapping("create") // 그룹 생성
-    public Map<String,Boolean> CreateGroup(@RequestParam Map<String, Object> groupInfo) {
-        //UserEntity currUser = (UserEntity) session.getAttribute("loginUser");
 
-*//*        GroupEntity groupEntity = new GroupEntity();
-        GroupMemberEntity groupMemberEntity = new GroupMemberEntity();
-
-        groupEntity.setGName((String)groupInfo.get("group_nm"));
-        groupEntity.setGEx((String) groupInfo.get("group_ex"));
-
-        groupEntity.setGMstUserFK((UserEntity) session.getAttribute("loginUser"));
-
-        if((String) groupInfo.get("group_state") == "true")
-        {
-            groupEntity.setGState(true);
-        }else {
-            groupEntity.setGState(false);
-        }
-        GroupEntity groupCreate = groupService.groupCreate(groupEntity);
-        groupMemberEntity.setUserCodeFK(groupCreate.getGMstUserFK());
-        groupMemberEntity.setGroupCodeFK(groupCreate);
-
-        boolean groupCreateComplete = groupMemberService.insertMember(groupCreate);*//*
-        Map<String, Boolean> result = new HashMap<>();
-   *//*     result.put("isCreate", groupCreateComplete );*//*
-
-        return result;
-    }
 
     @CrossOrigin
     @ResponseBody
