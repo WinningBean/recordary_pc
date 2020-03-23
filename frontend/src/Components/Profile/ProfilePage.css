@@ -27,17 +27,6 @@
   height: 40px;
   margin: 8px 0px;
   float: right;
-  background-color: rgba(150, 100, 30, 0.3);
-}
-.postIt > ul > .postIt-1 {
-  background-color: rgba(20, 81, 51, 0.7);
-  /* border: 1px solid gray; */
-}
-.postIt > ul > .postIt-2 {
-  background-color: rgba(150, 100, 30, 0.3);
-}
-.postIt > ul > .postIt-3 {
-  background-color: rgba(200, 30, 10, 0.3);
 }
 
 #main-profile .profile-search-schedule {
@@ -179,11 +168,9 @@ nav > div {
   margin: 10px;
 }
 .media-box {
-  margin: 10px;
-  background-color: black;
   width: 272px;
-  height: 272px;
-  object-fit: contain;
+  height: auto;
+  object-fit: cover;
 }
 .timeline-profile-schedule:hover,
 .media-box:hover {

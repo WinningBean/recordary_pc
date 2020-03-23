@@ -16,6 +16,9 @@ import { styled } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
 
 class Profile extends React.Component {
+  // 0 : 내 프로필
+  // 1 : 내 그룹 프로필
+  // 2 : 남의 프로필 (그룹도 포함)
   constructor(props) {
     super(props);
     this.state = {
@@ -27,17 +30,26 @@ class Profile extends React.Component {
         {
           postIt_cd: 0,
           postIt_nm: 'All',
-          postIt_click: false
+          postIt_click: true,
+          postIt_color: '#16a085'
         },
         {
           postIt_cd: 1,
           postIt_nm: '친구',
-          postIt_click: false
+          postIt_click: false,
+          postIt_color: '#e74c3c'
         },
         {
           postIt_cd: 2,
           postIt_nm: '학교',
-          postIt_click: false
+          postIt_click: false,
+          postIt_color: '#f1c40f'
+        },
+        {
+          postIt_cd: 3,
+          postIt_nm: '졸작',
+          postIt_click: false,
+          postIt_color: '#2980b9'
         }
       ],
 
@@ -366,7 +378,14 @@ class Profile extends React.Component {
             <div className='profile-MediaTimeline'>
               {this.state.post.map((value, index) => (
                 <div
-                  style={{ display: 'flex', flexWrap: 'wrap' }}
+                  style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    height: '272px',
+                    width: '272px',
+                    overflow: 'hidden',
+                    margin: '10px'
+                  }}
                   key={value.post_cd}
                 >
                   <img
@@ -426,122 +445,138 @@ class Profile extends React.Component {
     return (
       <>
         <Header />
-        <main>
-          <ScrollToTopOnMount />
-          <div id='main-profile'>
-            <div className='profile-search-schedule'>
-              <SearchAppBar></SearchAppBar>
-            </div>
-            <div className='main-profile-info-postIt'>
-              <div className='postIt'>
-                <ul style={{ width: '40px' }}>
-                  {this.state.postIt.map((value, index) => (
-                    <li
-                      key={value.postIt_cd}
-                      onClick={() =>
-                        this.setState({
-                          value: (this.state.postIt[index] = {
-                            ...value,
-                            postIt_click: !value.postIt_click
-                          })
-                        })
-                      }
-                      style={
-                        value.postIt_click === true
-                          ? { width: '40px' }
-                          : { width: '20px' }
-                      }
-                    />
-                  ))}
-                  {console.log(this.state.postIt)}
-                </ul>
+        {this.props.location.state.profile_type === 0 ? (
+          <main>
+            <ScrollToTopOnMount />
+            <div id='main-profile'>
+              <div className='profile-search-schedule'>
+                <SearchAppBar></SearchAppBar>
               </div>
-              <div id='main-profile-info'>
-                <div id='userinfo'>
-                  <div id='user-image'>
-                    <img
-                      alt='profile-img'
-                      src='https://i.pinimg.com/originals/0d/e8/86/0de8869350e89fd300edaeef3b659674.jpg'
-                    />
-                  </div>
-                  <div id='userinfo-text'>
-                    <div className='info'>
-                      <ul>
-                        <li>
-                          <span className='name'>Water_Glasses</span>
-                        </li>
-                        <li>
-                          <span className='followerName'>팔로워</span>
-                          <Link
-                            component='button'
-                            onClick={() =>
-                              this.setState({
-                                followerNumClick: true
-                              })
-                            }
-                          >
-                            <span className='followerNum'>50</span>
-                          </Link>
-                          {FollowerShow()}
-                        </li>
-                        <li>
-                          <span className='followerName'>팔로우</span>
-                          <Link
-                            component='button'
-                            onClick={() =>
-                              this.setState({
-                                followerNumClick: true
-                              })
-                            }
-                          >
-                            <span className='followNum'>18</span>
-                          </Link>
-                        </li>
-                      </ul>
-                      <div className='status-content'>
-                        <div>
-                          #카르페디엠 #현재를 즐겨라 #OMG #새벽 5시 13분
+              <div className='main-profile-info-postIt'>
+                <div className='postIt'>
+                  <ul style={{ width: '40px' }}>
+                    {this.state.postIt.map((value, index) => (
+                      <li
+                        key={value.postIt_cd}
+                        onClick={() => {
+                          this.setState({
+                            postIt: this.state.postIt.map((val, _index) => {
+                              if (_index === index) {
+                                return {
+                                  ...val,
+                                  postIt_click: !val.postIt_click
+                                };
+                              }
+                              return {
+                                ...val,
+                                postIt_click: false
+                              };
+                            })
+                          });
+                        }}
+                        style={
+                          value.postIt_click === true
+                            ? {
+                                width: '40px',
+                                backgroundColor: `${value.postIt_color}77`
+                              }
+                            : {
+                                width: '20px',
+                                backgroundColor: `${value.postIt_color}77`
+                              }
+                        }
+                      />
+                    ))}
+                    {console.log(this.state.postIt)}
+                  </ul>
+                </div>
+                <div id='main-profile-info'>
+                  <div id='userinfo'>
+                    <div id='user-image'>
+                      <img
+                        alt='profile-img'
+                        src='https://i.pinimg.com/originals/0d/e8/86/0de8869350e89fd300edaeef3b659674.jpg'
+                      />
+                    </div>
+                    <div id='userinfo-text'>
+                      <div className='info'>
+                        <ul>
+                          <li>
+                            <span className='name'>Water_Glasses</span>
+                          </li>
+                          <li>
+                            <span className='followerName'>팔로워</span>
+                            <Link
+                              component='button'
+                              onClick={() =>
+                                this.setState({
+                                  followerNumClick: true
+                                })
+                              }
+                            >
+                              <span className='followerNum'>50</span>
+                            </Link>
+                            {FollowerShow()}
+                          </li>
+                          <li>
+                            <span className='followerName'>팔로우</span>
+                            <Link
+                              component='button'
+                              onClick={() =>
+                                this.setState({
+                                  followerNumClick: true
+                                })
+                              }
+                            >
+                              <span className='followNum'>18</span>
+                            </Link>
+                          </li>
+                        </ul>
+                        <div className='status-content'>
+                          <div>
+                            #카르페디엠 #현재를 즐겨라 #OMG #새벽 5시 13분
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div id='schedule-area'>
-                  <Calendar type={0} />
+                  <div id='schedule-area'>
+                    <Calendar type={0} />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <nav>
-            <div
-              id='tap-1'
-              style={
-                this.state.profileScheduleClick === true &&
-                this.state.profilePictureClick === false
-                  ? { backgroundColor: 'rgba(161, 159, 159, .2)' }
-                  : null
-              }
-            >
-              <NavButton onClick={this.setProfileScheduleOpen}>
-                <span>일정</span>
-              </NavButton>
-            </div>
-            <div
-              id='tap-2'
-              style={
-                this.state.profilePictureClick === true &&
-                this.state.profileScheduleClick === false
-                  ? { backgroundColor: 'rgba(161, 159, 159, 0.2)' }
-                  : null
-              }
-            >
-              <NavButton onClick={this.setProfilePictureOpen}>
-                <span>사진</span>
-              </NavButton>
-            </div>
-          </nav>
-          {ProfileDownTimeLine()}
-        </main>
+            <nav>
+              <div
+                id='tap-1'
+                style={
+                  this.state.profileScheduleClick === true &&
+                  this.state.profilePictureClick === false
+                    ? { backgroundColor: 'rgba(161, 159, 159, .2)' }
+                    : null
+                }
+              >
+                <NavButton onClick={this.setProfileScheduleOpen}>
+                  <span>일정</span>
+                </NavButton>
+              </div>
+              <div
+                id='tap-2'
+                style={
+                  this.state.profilePictureClick === true &&
+                  this.state.profileScheduleClick === false
+                    ? { backgroundColor: 'rgba(161, 159, 159, 0.2)' }
+                    : null
+                }
+              >
+                <NavButton onClick={this.setProfilePictureOpen}>
+                  <span>사진</span>
+                </NavButton>
+              </div>
+            </nav>
+            {ProfileDownTimeLine()}
+          </main>
+        ) : null}
       </>
     );
   }

@@ -152,21 +152,21 @@ const HeaderMenu = props => {
             onClick={() => showOpen(true)}
           >
             <div>
-              <span style={{ fontSize: '18px', paddingTop: '5px' }}>
-                Groups
+              <span
+                style={{
+                  fontSize: '18px',
+                  paddingTop: '5px',
+                  fontWeight: 'bold'
+                }}
+              >
+                그룹
               </span>
             </div>
-            <span>
+            <span style={{ marginTop: '5px' }}>
               <ArrowUp style={{ fontSize: '30px' }} />
             </span>
           </GroupButton>
-          <div
-            style={{
-              position: 'absolute',
-              top: '4px',
-              left: '85px'
-            }}
-          >
+          <div style={{ position: 'absolute', top: '3px', left: '45px' }}>
             <IconButton onClick={showGroupAdd}>
               <AddIcon style={{ fontSize: '20px' }} />
             </IconButton>
@@ -181,13 +181,21 @@ const HeaderMenu = props => {
       <div className='button-wrap'>
         <GroupButton onClick={() => showOpen(true)}>
           <div>
-            <span style={{ fontSize: '18px', paddingTop: '5px' }}>Groups</span>
+            <span
+              style={{
+                fontSize: '18px',
+                paddingTop: '5px',
+                fontWeight: 'bold'
+              }}
+            >
+              그룹
+            </span>
           </div>
-          <span>
+          <span style={{ marginTop: '5px' }}>
             <ArrowDown style={{ fontSize: '30px' }} />
           </span>
         </GroupButton>
-        <div style={{ position: 'absolute', top: '4px', left: '85px' }}>
+        <div style={{ position: 'absolute', top: '3px', left: '45px' }}>
           <IconButton onClick={showGroupAdd}>
             <AddIcon style={{ fontSize: '20px' }} />
           </IconButton>
@@ -237,11 +245,17 @@ const HeaderMenu = props => {
             onClick={() => showOpen(false)}
           >
             <div>
-              <span style={{ fontSize: '18px', paddingTop: '5px' }}>
-                Friends
+              <span
+                style={{
+                  fontSize: '18px',
+                  paddingTop: '5px',
+                  fontWeight: 'bold'
+                }}
+              >
+                친구
               </span>
             </div>
-            <span>
+            <span style={{ marginTop: '5px' }}>
               <ArrowUp style={{ fontSize: '30px' }} />
             </span>
           </GroupButton>
@@ -254,9 +268,13 @@ const HeaderMenu = props => {
     return (
       <GroupButton onClick={() => showOpen(false)}>
         <div>
-          <span style={{ fontSize: '18px', paddingTop: '5px' }}>Friends</span>
+          <span
+            style={{ fontSize: '18px', paddingTop: '5px', fontWeight: 'bold' }}
+          >
+            친구
+          </span>
         </div>
-        <span>
+        <span style={{ marginTop: '5px' }}>
           <ArrowDown style={{ fontSize: '30px' }} />
         </span>
       </GroupButton>
