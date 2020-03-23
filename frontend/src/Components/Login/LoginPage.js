@@ -204,22 +204,25 @@ class Login extends React.Component {
             sharedSchedual: [
               {
                 cd: '01',
-                start: new Date('2020-03-25'),
+                start: new Date('2020-03-13'),
                 end: new Date('2020-03-28'),
-                ex: '발닦고 잠자기'
-              },
-              {
-                cd: '02',
-                start: new Date('2020-03-26'),
-                end: new Date('2020-03-27'),
-                ex: 'ex2'
+                ex: '발닦고 잠자기',
+                color: '#c0392b'
               },
               {
                 cd: '03',
                 start: new Date('2020-03-25'),
                 end: new Date('2020-03-25'),
-                ex: 'ex3'
+                ex: 'ex3',
+                color: '#f1c40f'
               }
+              // {
+              //   cd: '02',
+              //   start: new Date('2020-03-26'),
+              //   end: new Date('2020-03-27'),
+              //   ex: 'ex2',
+              //   color: '#e74c3c'
+              // }
             ],
             comment: [
               {
@@ -297,21 +300,38 @@ class Login extends React.Component {
             sharedSchedual: [
               {
                 cd: '01',
-                start: new Date('2020-03-18'),
-                end: new Date('2020-03-20'),
-                ex: '발닦고 잠자기'
+                start: new Date('2020-03-25'),
+                end: new Date('2020-03-28'),
+                ex: '발닦고 잠자기',
+                color: '#c0392b'
               },
               {
                 cd: '02',
-                start: new Date('2020-03-21'),
-                end: new Date('2020-03-23'),
-                ex: 'ex2'
+                start: new Date('2020-03-27'),
+                end: new Date('2020-04-06'),
+                ex: '발닦고 잠자기',
+                color: '#ff9ff3'
               },
               {
                 cd: '03',
-                start: new Date('2020-03-25'),
-                end: new Date('2020-03-25'),
-                ex: 'ex3'
+                start: new Date('2020-04-03'),
+                end: new Date('2020-04-08'),
+                ex: '발닦고 잠자기',
+                color: '#feca57'
+              },
+              {
+                cd: '04',
+                start: new Date('2020-04-12'),
+                end: new Date('2020-04-12'),
+                ex: '발닦고 잠자기',
+                color: '#5f27cd'
+              },
+              {
+                cd: '05',
+                start: new Date('2020-04-12'),
+                end: new Date('2020-04-25'),
+                ex: '발닦고 잠자기',
+                color: '#1dd1a1'
               }
             ],
             comment: [

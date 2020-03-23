@@ -45,11 +45,7 @@ header {
   color: white;
 }
 
-#header-right
-  > .search-user
-  > .makeStyles-search-155
-  > div
-  > .makeStyles-inputInput-158 {
+#header-right > .search-user > .makeStyles-search-155 > div > .makeStyles-inputInput-158 {
   color: white !important;
 }
 
@@ -114,7 +110,7 @@ header {
   align-content: center !important;
   position: absolute;
   top: 0;
-  right: 10px;
+  right: 0;
 }
 
 .notify-list {

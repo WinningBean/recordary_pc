@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import GroupModify from 'Containers/Group/GroupModify';
 import GroupDelete from 'Components/Group/GroupDelete';
 import GroupApply from 'Components/Group/GroupApply';
+import Snackbar from 'Components/UI/Snackbar';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
@@ -53,6 +54,35 @@ const GroupSetting = props => {
   const [info, setInfo] = useState(undefined);
   const data = props.data;
 
+  useEffect(() => {
+    const form = new FormData();
+    form.append('group_cd', 2);
+    (async () => {
+      try {
+        const groupData = await axios.post('/group/show', form);
+        console.log(groupData.data);
+        setInfo(groupData.data);
+      } catch (e) {
+        console.error(e);
+        setInfo(null);
+      }
+    })();
+  }, []);
+
+  if (info === undefined) {
+    return (
+      <Snackbar onClose={() => props.onClose()} severity='success' content='데이터 요청중...' />
+    );
+  } else if (info === null) {
+    return (
+      <Snackbar
+        onClose={() => props.onClose()}
+        severity='error'
+        content='서버에러로 인하여 데이터 요청에 실패하였습니다.'
+      />
+    );
+  }
+
   const currPage = (() => {
     switch (listIndex) {
       case 0:
@@ -63,20 +93,6 @@ const GroupSetting = props => {
         return <GroupDelete data={data} />;
     }
   })();
-
-  useEffect(() => {
-    const form = new FormData();
-    form.append('group_cd', 2);
-    (async () => {
-      const groupData = await axios.post('/group/show', form);
-      console.log(groupData.data);
-      setInfo(groupData.data);
-    })();
-  }, []);
-
-  if (info === undefined) {
-    return <div></div>;
-  }
 
   return (
     <Dialog open onClose={() => props.onClose()}>

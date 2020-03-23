@@ -420,6 +420,8 @@ const Calendar = props => {
     if (dayLocation === null) {
       return null;
     }
+    if (!dateFns.isSameMonth(dayLocation[parseInt(dayLocation.length / 2)].day, currentMonth))
+      return null;
     console.log('render schedual');
     const sc = [];
 
@@ -442,50 +444,41 @@ const Calendar = props => {
 
     var copyDayLocation = dayLocation.map(value => ({ ...value }));
     copyDraft.forEach(value => {
-      // if (
-      //   // 데이트가 해당 캘린더 안에 속하는지 확인
-      //   !(
-      //     dateFns.isWithinInterval(value.start, {
-      //       start: copyDayLocation[0].day,
-      //       end: dateFns.addDays(copyDayLocation[copyDayLocation.length - 1].day, 1)
-      //     }) ||
-      //     dateFns.isWithinInterval(value.end, {
-      //       start: copyDayLocation[0].day,
-      //       end: dateFns.addDays(copyDayLocation[copyDayLocation.length - 1].day, 1)
-      //     })
-      //   )
-      // ) {
-      //   return;
-      // }
       var index = null;
       var secondBlock = false;
       var beforeStartDay = false;
       if (
-        !dateFns.isWithinInterval(value.start, {
+        dateFns.isWithinInterval(value.start, {
           start: copyDayLocation[0].day,
-          end: dateFns.addDays(copyDayLocation[copyDayLocation.length - 1].day, 1)
+          end: dateFns.endOfDay(copyDayLocation[copyDayLocation.length - 1].day)
         })
       ) {
-        index = 0;
-        beforeStartDay = true;
-      } else {
         for (let i = 0; i < copyDayLocation.length; i++) {
           if (dateFns.isSameDay(copyDayLocation[i].day, value.start)) {
             index = i;
             break;
           }
         }
+      } else {
+        if (
+          dateFns.isWithinInterval(value.end, {
+            start: copyDayLocation[0].day,
+            end: dateFns.endOfDay(copyDayLocation[copyDayLocation.length - 1].day)
+          })
+        ) {
+          index = 0;
+          beforeStartDay = true;
+        } else {
+          return;
+        }
       }
       if (copyDayLocation[index].overlap === 2) {
-        // const currDom = document.getElementById(
-        //   `cell-index-${dateFns.format(copyDayLocation[index].day, 'MMdd')}`
-        // );
+        console.log(index);
         const moreList = document.querySelectorAll('.more');
         moreList[index].style.display = 'block';
         return;
       } else if (copyDayLocation[index].overlap > 2) {
         return;
-      } else {
       }
       if (dateFns.isSameDay(value.start, value.end)) {
         if (copyDayLocation[index].isSecondBlock) {
@@ -499,47 +492,44 @@ const Calendar = props => {
         copyDayLocation[index].overlap = ++copyDayLocation[index].overlap;
         copyDayLocation[index].isSecondBlock = true;
       } else {
-        if (dateFns.differenceInCalendarWeeks(value.end, value.start) > 0) {
-          if (!beforeStartDay) {
-            if (copyDayLocation[index].isSecondBlock === true) {
-              secondBlock = true;
-              sc.push(
-                longSC(
-                  value.cd,
-                  595 - copyDayLocation[index].x,
-                  copyDayLocation[index].x,
-                  copyDayLocation[index].y + 25,
-                  value.ex,
-                  0
-                )
-              );
-            } else {
-              copyDayLocation[index].isSecondBlock = true;
-              sc.push(
-                longSC(
-                  value.cd,
-                  595 - copyDayLocation[index].x,
-                  copyDayLocation[index].x,
-                  copyDayLocation[index].y,
-                  value.ex,
-                  0
-                )
-              );
-            }
-
-            for (
-              let k = 0;
-              k < dateFns.differenceInDays(dateFns.endOfWeek(value.start), value.start) + 1;
-              k++
-            ) {
-              copyDayLocation[index].isSecondBlock = true;
-              copyDayLocation[index].overlap = ++copyDayLocation[index].overlap;
-              index++;
-            }
+        if (dateFns.differenceInCalendarWeeks(value.end, copyDayLocation[index].day) > 0) {
+          if (copyDayLocation[index].isSecondBlock === true) {
+            secondBlock = true;
+            sc.push(
+              longSC(
+                value.cd,
+                595 - copyDayLocation[index].x,
+                copyDayLocation[index].x,
+                copyDayLocation[index].y + 25,
+                value.ex,
+                beforeStartDay ? -1 : 0
+              )
+            );
+          } else {
+            copyDayLocation[index].isSecondBlock = true;
+            sc.push(
+              longSC(
+                value.cd,
+                595 - copyDayLocation[index].x,
+                copyDayLocation[index].x,
+                copyDayLocation[index].y,
+                value.ex,
+                beforeStartDay ? -1 : 0
+              )
+            );
           }
 
+          const endOfWeek = dateFns.endOfWeek(copyDayLocation[index].day);
+          const startOfWeek = copyDayLocation[index].day;
+          for (let k = 0; k < dateFns.differenceInDays(endOfWeek, startOfWeek) + 1; k++) {
+            copyDayLocation[index].isSecondBlock = true;
+            ++copyDayLocation[index].overlap;
+            ++index;
+          }
           var i = 0;
-          const weekGap = dateFns.differenceInCalendarWeeks(value.end, value.start);
+          const weekGap = beforeStartDay
+            ? dateFns.differenceInCalendarWeeks(value.end, copyDayLocation[0].day)
+            : dateFns.differenceInCalendarWeeks(value.end, value.start);
           for (; i < weekGap - 1; i++) {
             // middle sc
             if (index >= copyDayLocation.length) {
@@ -631,7 +621,7 @@ const Calendar = props => {
               copyDayLocation[index].x,
               copyDayLocation[index].y + 25,
               value.ex,
-              0
+              beforeStartDay ? -1 : 0
             )
           );
         } else {
@@ -642,7 +632,7 @@ const Calendar = props => {
               copyDayLocation[index].x,
               copyDayLocation[index].y,
               value.ex,
-              0
+              beforeStartDay ? -1 : 0
             )
           );
         }

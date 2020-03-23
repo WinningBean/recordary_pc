@@ -39,9 +39,12 @@ const HeaderMenu = props => {
     return;
   };
 
+  console.log(menuDialog);
+
   const onGroupMenuSelect = (selectedValue, code) => {
     const value = data.userGroup.filter(value => value.group_cd === code)[0];
     // 그룹목록에서 현재 선택된 그룹 객체를 찾음
+    console.log(selectedValue, code);
     switch (selectedValue) {
       case '그룹 정보':
         setMenuDialog(
@@ -62,11 +65,8 @@ const HeaderMenu = props => {
               user_id: data.currentUser.user_id,
               group: value
             }}
-            onClose={() => setMenuDialog(null)}
           />
         );
-        break;
-      case '그룹 삭제':
         break;
     }
   };
@@ -89,9 +89,7 @@ const HeaderMenu = props => {
 
   const ShowProfileEditForm = () => {
     if (profileEditForm === null) {
-      setProfileEditForm(
-        <ProfileEditor onCancel={() => setProfileEditForm(null)} />
-      );
+      setProfileEditForm(<ProfileEditor onCancel={() => setProfileEditForm(null)} />);
       return;
     }
     setProfileEditForm(null);
@@ -100,9 +98,9 @@ const HeaderMenu = props => {
 
   const GroupList = () => {
     if (open.group === true) {
-      const groups = data.userGroup.map(value => {
+      const groups = data.userGroup.map((value, index) => {
         return (
-          <li key={value.group_cd}>
+          <li key={`groups-${index}`}>
             <div className='button-wrap'>
               <GroupButton>
                 <div
@@ -132,15 +130,15 @@ const HeaderMenu = props => {
                     />
                     {value.group_nm}
                   </div>
-                  <div className='LongMenuOpen'>
-                    <LongMenu
-                      options={['그룹 정보', '그룹 관리', '그룹 삭제']}
-                      code={value.group_cd}
-                      returnValue={onGroupMenuSelect}
-                    />
-                  </div>
                 </div>
               </GroupButton>
+              <div className='LongMenuOpen'>
+                <LongMenu
+                  options={['그룹 정보', '그룹 관리']}
+                  code={value.group_cd}
+                  returnValue={onGroupMenuSelect}
+                />
+              </div>
             </div>
           </li>
         );
@@ -152,9 +150,7 @@ const HeaderMenu = props => {
             onClick={() => showOpen(true)}
           >
             <div>
-              <span style={{ fontSize: '18px', paddingTop: '5px' }}>
-                Groups
-              </span>
+              <span style={{ fontSize: '18px', paddingTop: '5px', fontWeight: 'bold' }}>그룹</span>
             </div>
             <span>
               <ArrowUp style={{ fontSize: '30px' }} />
@@ -164,7 +160,7 @@ const HeaderMenu = props => {
             style={{
               position: 'absolute',
               top: '4px',
-              left: '85px'
+              left: '40px'
             }}
           >
             <IconButton onClick={showGroupAdd}>
@@ -181,13 +177,19 @@ const HeaderMenu = props => {
       <div className='button-wrap'>
         <GroupButton onClick={() => showOpen(true)}>
           <div>
-            <span style={{ fontSize: '18px', paddingTop: '5px' }}>Groups</span>
+            <span style={{ fontSize: '18px', paddingTop: '5px', fontWeight: 'bold' }}>그룹</span>
           </div>
           <span>
             <ArrowDown style={{ fontSize: '30px' }} />
           </span>
         </GroupButton>
-        <div style={{ position: 'absolute', top: '4px', left: '85px' }}>
+        <div
+          style={{
+            position: 'absolute',
+            top: '4px',
+            left: '40px'
+          }}
+        >
           <IconButton onClick={showGroupAdd}>
             <AddIcon style={{ fontSize: '20px' }} />
           </IconButton>
@@ -198,27 +200,29 @@ const HeaderMenu = props => {
 
   const friendList = () => {
     if (open.friend === true) {
-      const friends = data.friendList.map(value => {
+      const friends = data.friendList.map((value, index) => {
         return (
-          <li key={value.user_id}>
-            <GroupButton>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  marginBottom: '10px'
-                }}
-              >
-                <img
-                  alt='friend-img'
+          <li key={`friend-${index}`}>
+            <div className='button-wrap'>
+              <GroupButton>
+                <div
                   style={{
-                    marginRight: '10px',
-                    borderRadius: '50%'
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginBottom: '10px'
                   }}
-                  src={value.user_pic}
-                />
-                {value.user_nm}
-              </div>
+                >
+                  <img
+                    alt='friend-img'
+                    style={{
+                      marginRight: '10px',
+                      borderRadius: '50%'
+                    }}
+                    src={value.user_pic}
+                  />
+                  {value.user_nm}
+                </div>
+              </GroupButton>
               <div className='LongMenuOpen'>
                 <LongMenu
                   options={['친구 관리']}
@@ -226,7 +230,7 @@ const HeaderMenu = props => {
                   returnValue={onFriendMenuSelect}
                 />
               </div>
-            </GroupButton>
+            </div>
           </li>
         );
       });
@@ -237,9 +241,7 @@ const HeaderMenu = props => {
             onClick={() => showOpen(false)}
           >
             <div>
-              <span style={{ fontSize: '18px', paddingTop: '5px' }}>
-                Friends
-              </span>
+              <span style={{ fontSize: '18px', paddingTop: '5px', fontWeight: 'bold' }}>친구</span>
             </div>
             <span>
               <ArrowUp style={{ fontSize: '30px' }} />
@@ -254,7 +256,7 @@ const HeaderMenu = props => {
     return (
       <GroupButton onClick={() => showOpen(false)}>
         <div>
-          <span style={{ fontSize: '18px', paddingTop: '5px' }}>Friends</span>
+          <span style={{ fontSize: '18px', paddingTop: '5px', fontWeight: 'bold' }}>친구</span>
         </div>
         <span>
           <ArrowDown style={{ fontSize: '30px' }} />
@@ -265,12 +267,7 @@ const HeaderMenu = props => {
 
   const showSetting = () => {
     if (setting === null) {
-      setSetting(
-        <SettingMenu
-          currentUser={data.currentUser}
-          onClose={() => setSetting(null)}
-        />
-      );
+      setSetting(<SettingMenu currentUser={data.currentUser} onClose={() => setSetting(null)} />);
       return;
     }
     setSetting(null);
@@ -288,11 +285,7 @@ const HeaderMenu = props => {
         <div className='menu-profile'>
           <div className='menu-profile-pic-nm'>
             <div style={{ marginRight: '10px' }}>
-              <img
-                alt='user img'
-                src='http://placehold.it/40x40'
-                style={{ borderRadius: '50%' }}
-              />
+              <img alt='user img' src='http://placehold.it/40x40' style={{ borderRadius: '50%' }} />
             </div>
             <span>{data.currentUser.user_id}</span>
           </div>

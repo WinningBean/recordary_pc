@@ -1,12 +1,15 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
+import Avatar from '@material-ui/core/Avatar';
+import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import LeftIcon from '@material-ui/icons/ChevronLeft';
 import RightIcon from '@material-ui/icons/ChevronRight';
+import CloseIcon from '@material-ui/icons/Close';
 import * as dateFns from 'date-fns';
-import produce from 'immer';
 
 const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEndDay }) => {
   const [currentMonth, setCurrentMonth] = useState(dateFns.startOfMonth(sharedStartDay));
   const [dayLocation, setDayLocation] = useState(null);
+  const [clickSc, setClickSc] = useState(undefined);
 
   const CalendarHeader = useMemo(() => {
     console.log('render header');
@@ -118,7 +121,7 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
 
     const location = [];
     var x = 0;
-    var y = 15;
+    var y = 20;
     // var x = 68.43;
     // var y = 56;
 
@@ -141,22 +144,48 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
                 start: dateFns.startOfDay(sharedStartDay),
                 end: dateFns.endOfDay(sharedEndDay)
               })
-                ? { width: 'auto', height: '56px', flex: '1' }
-                : {
-                    backgroundColor: 'rgba(116, 116, 116, 0.1)',
-                    width: 'auto',
-                    height: '56px',
-                    flex: '1'
-                  }
+                ? { borderRight: 'none', width: '68.43px', height: '56px' }
+                : { width: '68.43px', height: '56px' }
             }
           >
-            {dateFns.isSameDay(day, today) ? (
+            {/* {dateFns.isSameDay(day, today) ? (
               <div className='selected' style={{ opacity: '.5' }} />
-            ) : null}
+            ) : null} */}
             {/* <span className='bg'>{formattedDate}</span> */}
-            <span className='number' style={{ left: 1, top: 0 }}>
-              {formattedDate}
-            </span>
+            {dateFns.isWithinInterval(day, {
+              start: dateFns.startOfDay(sharedStartDay),
+              end: dateFns.endOfDay(sharedEndDay)
+            }) ? (
+              <>
+                <div
+                  style={{
+                    height: '15px',
+                    textAlign: 'center',
+                    fontSize: '9px',
+                    fontWeight: 'bold',
+                    backgroundColor: 'rgba(20, 81, 51, 0.6)',
+                    lineHeight: '1.7',
+                    color: 'white'
+                  }}
+                >
+                  {formattedDate}
+                </div>
+                <div style={{ height: '100%', borderRight: '1px solid lightgray' }} />
+              </>
+            ) : (
+              <div
+                style={{
+                  height: '15px',
+                  textAlign: 'center',
+                  fontSize: '9px',
+                  fontWeight: 'bold',
+                  lineHeight: '1.7'
+                }}
+              >
+                {formattedDate}
+              </div>
+            )}
+
             <div className='more' />
             {/* <div style={{ backgroundColor: 'yellow', marginTop: '12px', height: '40px' }}> </div> */}
           </div>
@@ -187,20 +216,12 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
     return rows;
   }, [currentMonth, sharedEndDay, sharedStartDay]);
 
-  console.log(dayLocation);
-
   const Schedual = () => {
     if (dayLocation === null) return null;
+    if (!dateFns.isSameMonth(dayLocation[parseInt(dayLocation.length / 2)].day, currentMonth))
+      return null;
 
-    var size = undefined;
-
-    const length = sharedSchedual.length;
-    if (length < 2) size = 43;
-    else if (length === 2) size = 21;
-    else if (length === 3) size = 14;
-    else if (length === 4) size = 10;
-    else if (length === 5) size = 8;
-    else if (length <= 6) size = 7;
+    var size = 9;
 
     const monthStart = currentMonth;
     const monthEnd = dateFns.endOfMonth(monthStart);
@@ -209,80 +230,285 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
 
     const sc = [];
 
-    console.log(sharedSchedual);
-    sharedSchedual.forEach((schedualValue, index) => {
-      if (dateFns.isWithinInterval(schedualValue.start, { start: monthStart, end: endDate })) {
-        const currDayLocation = dayLocation.filter(value =>
-          dateFns.isSameDay(value.day, schedualValue.start)
-        )[0];
+    var index = undefined;
 
-        const diffCount = dateFns.differenceInCalendarWeeks(
-          currDayLocation.start,
-          currDayLocation.end
+    const overlap = [];
+    for (let i = 0; i < dayLocation.length; i++) {
+      overlap.push(0);
+    }
+
+    sharedSchedual.forEach((schedualValue, schedualIndex) => {
+      var isBeforeStartDay = false;
+      if (!dateFns.isWithinInterval(schedualValue.start, { start: startDate, end: endDate })) {
+        if (!dateFns.isWithinInterval(schedualValue.end, { start: startDate, end: endDate }))
+          return;
+        index = 0;
+        isBeforeStartDay = true;
+      } else {
+        for (let i = 0; i < dayLocation.length; i++) {
+          if (dateFns.isSameDay(dayLocation[i].day, schedualValue.start)) {
+            index = i;
+            break;
+          }
+        }
+      }
+
+      if (index === undefined) return;
+
+      const color = schedualValue.color;
+
+      var diffCount = dateFns.differenceInCalendarWeeks(schedualValue.end, dayLocation[index].day);
+
+      if (diffCount > 0) {
+        console.log(`${dayLocation[index].day}-${overlap[index]}`);
+        sc.push(
+          <div
+            key={`${dayLocation[index].day}-${overlap[index]}`}
+            style={{
+              position: 'absolute',
+              left: `${dayLocation[index].x}px`,
+              top: `${dayLocation[index].y + (size + 2) * overlap[index]}px`,
+              width: `${475 - dayLocation[index].x - 5}px`,
+              height: `${size}px`,
+              backgroundColor: `${color}80`,
+              borderRadius: '4px',
+              marginLeft: '5px',
+              borderLeft: isBeforeStartDay === false ? `3px solid ${color}` : null,
+              cursor: 'pointer'
+            }}
+            onClick={() => setClickSc(schedualIndex)}
+          />
         );
-        if (diffCount > 0) {
-          // 시작일과 끝일 주가 다를때
-        } else {
-          console.log(schedualValue.start, schedualValue.end);
-          if (dateFns.isSameDay(schedualValue.start, schedualValue.end)) {
-            sc.push(
-              <div
-                style={{
-                  key: currDayLocation.y + size * index,
-                  position: 'absolute',
-                  left: `${currDayLocation.x}px`,
-                  top: `${currDayLocation.y + size * index}px`,
-                  width: '68.43px',
-                  height: `${size}px`,
-                  backgroundColor: `rgba(${Math.random() * 255},${Math.random() *
-                    255},${Math.random() * 255},.8)`,
-                  borderRadius: '4px',
-                  paddingLeft: '5px',
-                  borderLeft: '3px solid gray'
-                }}
-              />
-            );
-            return;
-          } else {
-            sc.push(
-              <div
-                style={{
-                  key: currDayLocation.y + size * index,
-                  position: 'absolute',
-                  left: `${currDayLocation.x}px`,
-                  top: `${currDayLocation.y + size * index}px`,
-                  width: `${480 - currDayLocation.x}px`,
-                  height: `${size}px`,
-                  backgroundColor: `rgba(${Math.random() * 255},${Math.random() *
-                    255},${Math.random() * 255},.5)`,
-                  borderRadius: '4px',
-                  marginLeft: '5px',
-                  borderLeft: '3px solid gray'
-                }}
-              />
-            );
+        const endOfWeek = dateFns.endOfWeek(dayLocation[index].day);
+        const startOfWeek = dayLocation[index].day;
+        for (let k = 0; k < dateFns.differenceInDays(endOfWeek, startOfWeek) + 1; k++) {
+          ++overlap[index];
+          ++index;
+        }
+
+        for (var i = 1; i < diffCount; i++) {
+          if (dateFns.addWeeks(schedualValue.start, i) > endDate) {
             return;
           }
+          console.log(`${dayLocation[index].day}-${overlap[index]}`);
+          sc.push(
+            <div
+              key={`${dayLocation[index].day}-${overlap[index]}`}
+              style={{
+                position: 'absolute',
+                left: `0px`,
+                top: `${dayLocation[index].y + (size + 2) * overlap[index]}px`,
+                width: `470px`,
+                height: `${size}px`,
+                backgroundColor: `${color}80`,
+                marginLeft: '5px',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+              onClick={() => setClickSc(schedualIndex)}
+            />
+          );
+
+          for (let k = 0; k < 7; k++) {
+            ++overlap[index];
+            ++index;
+          }
+        }
+        if (dateFns.addWeeks(schedualValue.start, i) > endDate) {
+          return;
+        }
+        const endDayLocation = dayLocation.filter(value =>
+          dateFns.isSameDay(value.day, schedualValue.end)
+        )[0];
+        console.log(`${dayLocation[index].day}-${overlap[index]}`);
+        sc.push(
+          <div
+            key={`${dayLocation[index].day}-${overlap[index]}`}
+            style={{
+              position: 'absolute',
+              left: `0px`,
+              top: `${endDayLocation.y + (size + 2) * overlap[index]}px`,
+              width: `${endDayLocation.x + 68.43 - 5}px`,
+              height: `${size}px`,
+              backgroundColor: `${color}80`,
+              borderRadius: '4px',
+              marginLeft: '5px',
+              borderRight: `3px solid ${color}`,
+              cursor: 'pointer'
+            }}
+            onClick={() => setClickSc(schedualIndex)}
+          />
+        );
+
+        const countDays =
+          dateFns.differenceInDays(endDayLocation.day, dateFns.startOfWeek(endDayLocation.day)) + 1;
+        for (let k = 0; k < countDays; k++) {
+          ++overlap[index];
+          ++index;
+        }
+
+        return;
+      } else {
+        if (dateFns.isSameDay(schedualValue.start, schedualValue.end)) {
+          console.log(`${dayLocation[index].day}-${overlap[index]}`);
+          sc.push(
+            <div
+              key={`${dayLocation[index].day}-${overlap[index]}`}
+              style={{
+                position: 'absolute',
+                left: `${dayLocation[index].x}px`,
+                top: `${dayLocation[index].y + (size + 2) * overlap[index]}px`,
+                width: `${68.43 - 5}px`,
+                height: `${size}px`,
+                backgroundColor: `${color}80`,
+                borderRadius: '4px',
+                marginLeft: '5px',
+                borderLeft: isBeforeStartDay === false ? `3px solid ${color}` : null,
+                cursor: 'pointer'
+              }}
+              onClick={() => setClickSc(schedualIndex)}
+            />
+          );
+          ++overlap[index];
+          return;
+        } else {
+          console.log(`${dayLocation[index].day}-${overlap[index]}`);
+          sc.push(
+            <div
+              key={`${dayLocation[index].day}-${overlap[index]}`}
+              style={{
+                position: 'absolute',
+                left: `${dayLocation[index].x}px`,
+                top: `${dayLocation[index].y + (size + 2) * overlap[index]}px`,
+                width: `${480 - dayLocation[index].x - 10}px`,
+                height: `${size}px`,
+                backgroundColor: `${color}80`,
+                borderRadius: '4px',
+                marginLeft: '5px',
+                borderLeft: isBeforeStartDay === false ? `3px solid ${color}` : null,
+                borderRight: `3px solid ${color}`,
+                cursor: 'pointer'
+              }}
+              onClick={() => setClickSc(schedualIndex)}
+            />
+          );
+          const endOfWeek = schedualValue.end;
+          const startOfWeek = dayLocation[index].day;
+          for (let k = 0; k < dateFns.differenceInDays(endOfWeek, startOfWeek) + 1; k++) {
+            ++overlap[index];
+            ++index;
+          }
+
+          return;
         }
       }
     });
     console.log(sc);
     return sc;
   };
-  console.log(dayLocation);
 
   return (
     <>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
         {CalendarHeader}
         {CalendarDays}
         <div style={{ position: 'relative' }}>
           {Cells}
           {Schedual()}
         </div>
+        <div
+          className='transition-all'
+          style={
+            clickSc === undefined
+              ? {
+                  position: 'absolute',
+                  bottom: '0',
+                  height: 0,
+                  width: '100%',
+                  backgroundColor: 'rgb(253,253,253)'
+                }
+              : {
+                  position: 'absolute',
+                  bottom: '0',
+                  width: '100%',
+                  height: '100%',
+                  zIndex: '1',
+                  backgroundColor: 'rgb(253,253,253)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  padding: '5px 5px',
+                  borderTop: `3px solid ${sharedSchedual[clickSc].color}`
+                }
+          }
+        >
+          {clickSc === undefined ? null : (
+            <>
+              <div
+                style={{
+                  flex: 1,
+                  fontSize: '18px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  fontWeight: 'bold',
+                  borderBottom: '1px solid rgb(229, 229, 229)',
+                  display: 'flex',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <h2 style={{ paddingLeft: '8px' }}>Title</h2>
+                <div onClick={() => setClickSc(undefined)} style={{ paddingRight: '8px' }}>
+                  <CloseIcon />
+                </div>
+              </div>
+              <div style={{ flex: 3, height: '150px', display: 'flex', paddingTop: '8px' }}>
+                {sharedSchedual[clickSc].ex}
+              </div>
+              <div style={{ flex: 2 }}>
+                <div
+                  style={{
+                    height: '50%',
+                    display: 'flex',
+                    fontSize: '15px',
+                    justifyContent: 'space-between',
+                    borderBottom: '1px solid rgb(229, 229, 229)',
+                    alignItems: 'center'
+                  }}
+                >
+                  <span style={{ fontWeight: 'bold' }}>시작</span>
+                  <span style={{ fontWeight: 'bold' }}>
+                    {dateFns.format(sharedSchedual[clickSc].start, 'yyyy.M.d EEE h:mm a')}
+                  </span>
+                </div>
+                <div
+                  style={{
+                    height: '50%',
+                    display: 'flex',
+                    fontSize: '15px',
+                    justifyContent: 'space-between',
+                    borderBottom: '1px solid rgb(229, 229, 229)',
+                    alignItems: 'center'
+                  }}
+                >
+                  <span style={{ fontWeight: 'bold' }}>종료</span>
+                  <span style={{ fontWeight: 'bold' }}>
+                    {dateFns.format(sharedSchedual[clickSc].end, 'yyyy.M.d EEE h:mm a')}
+                  </span>
+                </div>
+              </div>
+              <div style={{ flex: 1, marginTop: '6px', marginLeft: '6px' }}>
+                <AvatarGroup>
+                  <Avatar alt='Remy Sharp' src='http://placehold.it/40x40' />
+                  <Avatar alt='Travis Howard' src='http://placehold.it/40x40' />
+                  <Avatar alt='Cindy Baker' src='http://placehold.it/40x40' />
+                  <Avatar>+3</Avatar>
+                </AvatarGroup>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </>
   );
 };
 
-export default TimelineMultiDay;
+export default React.memo(TimelineMultiDay);
