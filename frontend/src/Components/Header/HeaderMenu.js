@@ -152,7 +152,7 @@ const HeaderMenu = props => {
             <div>
               <span style={{ fontSize: '18px', paddingTop: '5px', fontWeight: 'bold' }}>그룹</span>
             </div>
-            <span>
+            <span style={{ marginTop: '5px' }}>
               <ArrowUp style={{ fontSize: '30px' }} />
             </span>
           </GroupButton>
@@ -179,7 +179,7 @@ const HeaderMenu = props => {
           <div>
             <span style={{ fontSize: '18px', paddingTop: '5px', fontWeight: 'bold' }}>그룹</span>
           </div>
-          <span>
+          <span style={{ marginTop: '5px' }}>
             <ArrowDown style={{ fontSize: '30px' }} />
           </span>
         </GroupButton>
@@ -243,7 +243,7 @@ const HeaderMenu = props => {
             <div>
               <span style={{ fontSize: '18px', paddingTop: '5px', fontWeight: 'bold' }}>친구</span>
             </div>
-            <span>
+            <span style={{ marginTop: '5px' }}>
               <ArrowUp style={{ fontSize: '30px' }} />
             </span>
           </GroupButton>
@@ -258,7 +258,7 @@ const HeaderMenu = props => {
         <div>
           <span style={{ fontSize: '18px', paddingTop: '5px', fontWeight: 'bold' }}>친구</span>
         </div>
-        <span>
+        <span style={{ marginTop: '5px' }}>
           <ArrowDown style={{ fontSize: '30px' }} />
         </span>
       </GroupButton>

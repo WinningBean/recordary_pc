@@ -166,10 +166,15 @@ const ScheduleShare = props => {
               setIsCalendarOpen(false);
             }}
             open
-            style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}
+            style={{
+              backgroundColor: 'transparent'
+            }}
           >
             {choiceDate.start === null ? (
-              <div className='post-append-header'>
+              <div
+                className='post-append-header'
+                style={{ backgroundColor: '#5d5d5d' }}
+              >
                 <div className='Post-Append-titleName'>
                   <PlaylistAddCheckIcon
                     style={{
@@ -188,10 +193,10 @@ const ScheduleShare = props => {
                   transitionProperty: 'background-color',
                   transitionDuration: '0.7s',
                   transitionTimingFunction: 'ease-out',
-                  backgroundColor: 'rgba(7,65,115,1)'
+                  backgroundColor: 'rgba(20, 81, 51, 0.8)'
                 }}
               >
-                <div className='Post-Append-titleName' style={{}}>
+                <div className='Post-Append-titleName'>
                   <PlaylistAddCheckIcon
                     style={{
                       fontSize: '40px',

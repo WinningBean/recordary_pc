@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import SearchAppBar from 'Components/Other/SearchField';
 import HeaderMenu from 'Containers/Header/HeaderMenu';
 import NotifyPopup from 'Components/UI/NotifyPopup';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 import { Link } from 'react-router-dom';
 
 class Header extends React.Component {
@@ -89,8 +90,20 @@ class Header extends React.Component {
           <div className='header-ring'>
             <NotifyPopup style={{ fontSize: 40, color: 'white' }}></NotifyPopup>
           </div>
+          <div className='header-ring'>
+            <AssignmentIcon
+              style={{ marginTop: '5px', fontSize: 37, color: 'white' }}
+            ></AssignmentIcon>
+          </div>
           <div className='profile-icon'>
-            <Link to={`/${this.props.user_id}`}>
+            <Link
+              to={{
+                pathname: `/${this.props.user_id}`,
+                state: {
+                  profile_type: 0
+                }
+              }}
+            >
               <AccountCircleIcon style={{ fontSize: 40, color: 'white' }}>
                 Profile
               </AccountCircleIcon>

@@ -28,16 +28,6 @@
   margin: 8px 0px;
   float: right;
 }
-.postIt > ul > .postIt-1 {
-  background-color: rgba(20, 81, 51, 0.7);
-  /* border: 1px solid gray; */
-}
-.postIt > ul > .postIt-2 {
-  background-color: rgba(150, 100, 30, 0.3);
-}
-.postIt > ul > .postIt-3 {
-  background-color: rgba(200, 30, 10, 0.3);
-}
 
 #main-profile .profile-search-schedule {
   align-self: flex-end;
@@ -146,44 +136,46 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 10px;
 }
 
 nav > div {
-  padding-left: 5px;
-  padding-right: 5px;
+  width: 420px;
+  margin-left: 10px;
+  margin-right: 10px;
   /* box-shadow: 0px 1px 5px rgb(161, 159, 159); */
 }
 
 /* ScheduleTimeline부분 */
-.profile-ScheduleTimeLine,
-.profile-MediaTimeline {
+.profile-ScheduleTimeLine {
   display: flex;
   flex-wrap: wrap;
   align-self: center;
-  width: 900px;
+  margin: 10px 0px;
+}
+.profile-MediaTimeline {
+  align-self: center;
+  width: 880px;
   margin-left: 10px;
   margin-right: 10px;
   margin-top: 10px;
-}
-
-article {
   display: flex;
 }
 
-.media-area {
-  margin-left: 5px;
-}
-
-.timeline-profile-schedule,
-.media-box {
+.timeline-profile-schedule {
   width: 420px;
   height: 290px;
   margin: 10px;
-  background-color: white;
+}
+.media-box {
+  width: 272px;
+  height: auto;
+  object-fit: cover;
 }
 .timeline-profile-schedule:hover,
 .media-box:hover {
-  box-shadow: 0px 1px 5px rgba(161, 159, 159, 0.9);
+  cursor: pointer;
+  box-shadow: 1px 1px 10px rgba(100, 100, 100, 0.9);
 }
 
 .timeline-profile-time {
@@ -219,18 +211,6 @@ article {
   height: 150px;
 }
 
-.media-box {
-  display: flex;
-  align-content: center;
-  justify-content: center;
-}
-.media-box > img {
-  width: 400px;
-  height: 290px;
-  object-fit: cover;
-  /* background-color: black; */
-}
-
 /* 캘린더 css */
 
 .schedule-area {
@@ -257,4 +237,8 @@ article {
   width: 600px;
   /* border: 1px solid lightgray;
   border-radius: 10px; */
+}
+
+.MuiDialog-paperWidthSm {
+  max-width: 100% !important;
 }

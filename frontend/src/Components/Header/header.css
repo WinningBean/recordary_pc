@@ -51,6 +51,7 @@ header {
 
 #header-right .header-ring {
   margin-left: 12px;
+  cursor: pointer;
 }
 
 #header-right .profile-icon {
@@ -110,7 +111,7 @@ header {
   align-content: center !important;
   position: absolute;
   top: 0;
-  right: 0;
+  right: 4px;
 }
 
 .notify-list {
