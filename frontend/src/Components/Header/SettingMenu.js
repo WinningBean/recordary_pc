@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import './header.css';
 import UserEditor from 'Components/Header/UserEditor';
+import AlertSetting from 'Components/Header/AlertSetting';
+import PublicSetting from 'Components/Header/PublicSetting';
+import LockSetting from 'Components/Header/LockSetting';
+import AdviceSetting from 'Components/Header/AdviceSetting';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
@@ -19,7 +23,7 @@ import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: '860px',
+    width: '700px',
     height: '600px'
   },
   list: {
@@ -38,9 +42,7 @@ const useStyles = makeStyles(theme => ({
   },
   content: {
     display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '660px',
+    width: '500px',
     height: '540px',
     padding: '30px 30px'
   }
@@ -55,6 +57,14 @@ const SettingMenu = props => {
     switch (listIndex) {
       case 0:
         return <UserEditor data={data} />;
+      case 1:
+        return <AlertSetting data={data} />;
+      case 2:
+        return <PublicSetting data={data} />;
+      case 3:
+        return <LockSetting data={data} />;
+      case 4:
+        return <AdviceSetting data={data} />;
     }
   })();
 
@@ -66,10 +76,7 @@ const SettingMenu = props => {
             <SettingsIcon style={{ fontSize: '44px' }} />
           </div>
           &nbsp; 설정
-          <div
-            className='dialog-header-icon'
-            style={{ position: 'absolute', right: '5px' }}
-          >
+          <div className='dialog-header-icon' style={{ position: 'absolute', right: '5px' }}>
             <IconButton onClick={() => props.onClose()}>
               <CloseIcon style={{ color: '#ffffff', fontSize: '20px' }} />
             </IconButton>
@@ -146,6 +153,19 @@ const SettingMenu = props => {
                 <HelpOutlineIcon />
               </ListItemIcon>
               <ListItemText primary='도움말' />
+            </ListItem>
+            <ListItem
+              style={{
+                position: 'absolute',
+                bottom: '0',
+                display: 'flex',
+                justifyContent: 'flex-end',
+                backgroundColor: '#f0efef',
+                height: '40px'
+              }}
+            >
+              <div style={{ marginRight: '5px' }}>from.</div>
+              <div style={{ fontWeight: 'bold', fontSize: '15px' }}> PairyFitt</div>
             </ListItem>
           </List>
           <div className={classes.content}>{currPage}</div>
