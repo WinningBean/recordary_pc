@@ -99,3 +99,15 @@ footer{
     min-height: 100px;
     background-color: lightgray;
 } */
+/* 스크롤 css */
+::-webkit-scrollbar-track {
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: lightgray;
+}

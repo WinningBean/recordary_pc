@@ -14,14 +14,6 @@ const PublicSetting = props => {
         <span style={{ fontSize: '16px' }}>내 게시물</span>
         <PublicRange />
       </div>
-      <div className='AlertStyle'>
-        <span style={{ fontSize: '16px' }}>내가 쓴 댓글</span>
-        <PublicRange />
-      </div>
-      <div className='AlertStyle'>
-        <span style={{ fontSize: '16px' }}>함께 하는 멤버</span>
-        <PublicRange />
-      </div>
     </div>
   );
 };

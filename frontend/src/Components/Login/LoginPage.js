@@ -464,44 +464,22 @@ class Login extends React.Component {
         {registerPage}
         <form action='go_to_main' onSubmit={this.loginHandel}>
           <div className='icon'>
-            {/* <a href="main" onClick={(e) => {
-                            e.preventDefault();
-                            this.props.onChangePage();
-                        }}>
-                            <img className="title-image" alt="Recordary icon" src="http://localhost:8080/Recodary.png"/>
-                        </a> */}
             <Link to='/main'>
               {/* <img className="title-image" alt="Recordary icon" src="http://localhost:8080/Recodary.png"/> */}
-              <img
-                className='title-image'
-                alt='Recordary icon'
-                src='img/Recordary.png'
-              />
+              <img className='title-image' alt='Recordary icon' src='img/Recordary.png' />
             </Link>
           </div>
           {this.state.successRegister()}
           {this.state.failedLogin()}
           <div className='login-form'>
             <div className='login-text'>
-              <TextField
-                name='user_id'
-                autoFocus
-                label='아이디'
-                onChange={this.changeHandel}
-              />
+              <TextField name='user_id' autoFocus label='아이디' onChange={this.changeHandel} />
               <br />
-              <TextField
-                name='user_pw'
-                type='password'
-                label='비밀번호'
-                onChange={this.changeHandel}
-              />
+              <TextField name='user_pw' type='password' label='비밀번호' onChange={this.changeHandel} />
               <br />
             </div>
             <div className='login-button'>
-              <MyButton onClick={() => this.setState({ isRegister: true })}>
-                회원가입
-              </MyButton>
+              <MyButton onClick={() => this.setState({ isRegister: true })}>회원가입</MyButton>
               <MyButton type='submit'>로그인</MyButton>
             </div>
           </div>
