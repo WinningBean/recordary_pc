@@ -11,6 +11,6 @@ import java.util.List;
 public interface PostLikeRepository extends JpaRepository<PostLikeEntity, PostLikePK> {
     PostLikeEntity findByPostFKAndUserFK(PostEntity postFK, UserEntity userFK);
 
-    List<UserEntity> findAllByPostFK(PostEntity postFK);
-    List<PostEntity> findAllByUserFK(UserEntity userFK);
+    List<PostLikeEntity> findAllByPostFK(PostEntity postFK);
+    List<PostLikeEntity> findAllByUserFK(UserEntity userFK);
 }
