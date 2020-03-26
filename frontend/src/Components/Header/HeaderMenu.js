@@ -6,6 +6,8 @@ import ProfileEditor from 'Components/Profile/ProfileEditor';
 import GroupSetting from 'Components/Group/GroupSetting';
 import GroupInfo from 'Components/Group/GroupInfo';
 import SettingMenu from 'Components/Header/SettingMenu';
+import FriendAdd from 'Components/Group/GroupMemberSearch';
+import FriendSetting from 'Components/Header/FriendSetting';
 
 import { styled } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -16,7 +18,6 @@ import ArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import ArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
-import { Link } from 'react-router-dom';
 
 const HeaderMenu = props => {
   const data = props.data;
@@ -38,8 +39,6 @@ const HeaderMenu = props => {
     setOpen({ ...open, friend: !open.friend });
     return;
   };
-
-  console.log(menuDialog);
 
   const onGroupMenuSelect = (selectedValue, code) => {
     const value = data.userGroup.filter(value => value.group_cd === code)[0];
@@ -72,15 +71,43 @@ const HeaderMenu = props => {
   };
 
   const onFriendMenuSelect = (selectedValue, code) => {
-    const value = data.userFriend.filter(value => value.user_id === code)[0];
+    const value = data.friendList.filter(value => value.friend_user_id === code)[0];
     switch (selectedValue) {
       case '친구 관리':
+        setMenuDialog(
+          <FriendSetting
+            onClose={() => setMenuDialog(null)}
+            data={{
+              user_id: data.currentUser.user_id,
+              group: value
+            }}
+          />
+        );
+        break;
+      case '메시지 보내기':
         break;
     }
   };
   const showGroupAdd = () => {
     if (groupAdd === null) {
       setGroupAdd(<GroupAdd onCancel={() => setGroupAdd(null)} />);
+      return;
+    }
+    setGroupAdd(null);
+    return;
+  };
+
+  const showFriendAdd = () => {
+    if (groupAdd === null) {
+      setGroupAdd(
+        <FriendAdd
+          onCancel={() => setGroupAdd(null)}
+          onAdd={() => {
+            console.log('친구추가 요청 보냄');
+            setGroupAdd(null);
+          }}
+        />
+      );
       return;
     }
     setGroupAdd(null);
@@ -114,7 +141,8 @@ const HeaderMenu = props => {
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      marginBottom: '10px'
+                      marginBottom: '10px',
+                      fontWeight: 'bold'
                     }}
                   >
                     <img
@@ -133,11 +161,7 @@ const HeaderMenu = props => {
                 </div>
               </GroupButton>
               <div className='LongMenuOpen'>
-                <LongMenu
-                  options={['그룹 정보', '그룹 관리']}
-                  code={value.group_cd}
-                  returnValue={onGroupMenuSelect}
-                />
+                <LongMenu options={['그룹 정보', '그룹 관리']} code={value.group_cd} returnValue={onGroupMenuSelect} />
               </div>
             </div>
           </li>
@@ -145,10 +169,7 @@ const HeaderMenu = props => {
       });
       return (
         <div className='button-wrap'>
-          <GroupButton
-            style={{ backgroundColor: 'rgba(209, 204, 192,0.4)' }}
-            onClick={() => showOpen(true)}
-          >
+          <GroupButton style={{ backgroundColor: 'rgba(209, 204, 192,0.4)' }} onClick={() => showOpen(true)}>
             <div>
               <span style={{ fontSize: '18px', paddingTop: '5px', fontWeight: 'bold' }}>그룹</span>
             </div>
@@ -209,23 +230,27 @@ const HeaderMenu = props => {
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    marginBottom: '10px'
+                    marginBottom: '10px',
+                    fontWeight: 'bold'
                   }}
                 >
                   <img
                     alt='friend-img'
                     style={{
+                      width: '40px',
+                      height: '40px',
+                      objectFit: 'cover',
                       marginRight: '10px',
                       borderRadius: '50%'
                     }}
-                    src={value.user_pic}
+                    src={value.friend_user_pic}
                   />
-                  {value.user_nm}
+                  {value.friend_user_nm}
                 </div>
               </GroupButton>
               <div className='LongMenuOpen'>
                 <LongMenu
-                  options={['친구 관리']}
+                  options={['친구 관리', '메시지 보내기']}
                   code={value.user_id}
                   returnValue={onFriendMenuSelect}
                 />
@@ -235,11 +260,8 @@ const HeaderMenu = props => {
         );
       });
       return (
-        <div className='gruop-field'>
-          <GroupButton
-            style={{ backgroundColor: 'rgba(209, 204, 192,0.4)' }}
-            onClick={() => showOpen(false)}
-          >
+        <div className='button-wrap'>
+          <GroupButton style={{ backgroundColor: 'rgba(209, 204, 192,0.4)' }} onClick={() => showOpen(false)}>
             <div>
               <span style={{ fontSize: '18px', paddingTop: '5px', fontWeight: 'bold' }}>친구</span>
             </div>
@@ -247,6 +269,17 @@ const HeaderMenu = props => {
               <ArrowUp style={{ fontSize: '30px' }} />
             </span>
           </GroupButton>
+          <div
+            style={{
+              position: 'absolute',
+              top: '4px',
+              left: '40px'
+            }}
+          >
+            <IconButton onClick={showFriendAdd}>
+              <AddIcon style={{ fontSize: '20px' }} />
+            </IconButton>
+          </div>
           <div>
             <ul>{friends}</ul>
           </div>
@@ -254,14 +287,27 @@ const HeaderMenu = props => {
       );
     }
     return (
-      <GroupButton onClick={() => showOpen(false)}>
-        <div>
-          <span style={{ fontSize: '18px', paddingTop: '5px', fontWeight: 'bold' }}>친구</span>
+      <div className='button-wrap'>
+        <GroupButton onClick={() => showOpen(false)}>
+          <div>
+            <span style={{ fontSize: '18px', paddingTop: '5px', fontWeight: 'bold' }}>친구</span>
+          </div>
+          <span style={{ marginTop: '5px' }}>
+            <ArrowDown style={{ fontSize: '30px' }} />
+          </span>
+        </GroupButton>
+        <div
+          style={{
+            position: 'absolute',
+            top: '4px',
+            left: '40px'
+          }}
+        >
+          <IconButton onClick={showFriendAdd}>
+            <AddIcon style={{ fontSize: '20px' }} />
+          </IconButton>
         </div>
-        <span style={{ marginTop: '5px' }}>
-          <ArrowDown style={{ fontSize: '30px' }} />
-        </span>
-      </GroupButton>
+      </div>
     );
   };
 

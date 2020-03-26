@@ -36,9 +36,7 @@ const GroupApply = props => {
           &nbsp;&nbsp;
           <div>
             <Chip
-              avatar={
-                <Avatar alt={`${info.user_id} img`} src={info.user_pic} />
-              }
+              avatar={<Avatar alt={`${info.user_id} img`} src={info.user_pic} />}
               className={classes.chip}
               label={info.user_nm}
               style={{
@@ -56,12 +54,7 @@ const GroupApply = props => {
               return info.group_member.map((value, index) => {
                 return (
                   <Chip
-                    avatar={
-                      <Avatar
-                        alt={`${value.user_id} img`}
-                        src={value.user_pic}
-                      />
-                    }
+                    avatar={<Avatar alt={`${value.user_id} img`} src={value.user_pic} />}
                     className={classes.chip}
                     label={value.user_nm}
                     clickable
@@ -79,9 +72,7 @@ const GroupApply = props => {
                               form.append('user_id', 'ffff3311');
                               //     .group.group_cd,
                               // value.user_id
-                              const isDelete = (
-                                await axios.post('/groupMember/delete', form)
-                              ).data.isDelete;
+                              const isDelete = (await axios.post('/groupMember/delete', form)).data.isDelete;
                               if (isDelete === false) {
                                 setDialog(
                                   <AlertDialog
@@ -93,9 +84,7 @@ const GroupApply = props => {
                                 return;
                               }
 
-                              const k = JSON.parse(
-                                JSON.stringify(info.group_member)
-                              );
+                              const k = JSON.parse(JSON.stringify(info.group_member));
                               k.splice(index, 1);
                               setInfo({
                                 ...info,

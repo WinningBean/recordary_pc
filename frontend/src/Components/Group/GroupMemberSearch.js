@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import 'Components/Other/SearchField.css';
+import Snackbar from 'Components/UI/Snackbar';
+
 import IconButton from '@material-ui/core/IconButton';
 import Dialog from '@material-ui/core/Dialog';
 import SearchIcon from '@material-ui/icons/Search';
@@ -26,10 +28,12 @@ const GroupMemberSearch = props => {
       );
       return;
     }
+    setAlert(<Snackbar onClose={() => setAlert(null)} severity='success' content='데이터 요청중...' />);
     try {
       const { data } = await axios.get('/user/search', {
         params: { userSearch: input }
       });
+
       console.log(data);
       if (data.searchedCount === 0) {
         setAlert(
@@ -43,6 +47,20 @@ const GroupMemberSearch = props => {
         );
         return;
       }
+
+      // const data = [
+      //   {
+      //     user_id: 'ABCD1234',
+      //     user_pic: 'http://placehold.it/40x40',
+      //     user_nm: '김길동'
+      //   },
+      //   {
+      //     user_id: 'POIU7894',
+      //     user_pic: 'http://placehold.it/40x40',
+      //     user_nm: '이길동'
+      //   }
+      // ];
+      // setList(data);
       setList(data.searedUser);
     } catch (error) {
       setAlert(
@@ -55,26 +73,10 @@ const GroupMemberSearch = props => {
         />
       );
     }
-    // const data = [
-    //     {
-    //         user_id: 'ABCD1234',
-    //         user_pic: 'http://placehold.it/40x40',
-    //         user_nm: '김길동'
-    //     },
-    //     {
-    //         user_id: 'POIU7894',
-    //         user_pic: 'http://placehold.it/40x40',
-    //         user_nm: '이길동'
-    //     }
-    // ]
   };
 
   return (
-    <Dialog
-      open
-      style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}
-      onClose={() => props.onCancel()}
-    >
+    <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }} onClose={() => props.onCancel()}>
       <div className='searchField-result'>
         <div className='searchField-title'>
           <InputBase
