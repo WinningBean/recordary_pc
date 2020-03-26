@@ -8,13 +8,15 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 
-@NoArgsConstructor
+
 @Getter
 @Table(name = "SCHEDULE_GB_TB")
+@NoArgsConstructor
 @Entity
 public class ScheduleTabEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long tabCd;
 
     @ManyToOne

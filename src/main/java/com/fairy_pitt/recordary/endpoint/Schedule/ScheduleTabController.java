@@ -16,17 +16,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Controller
+
 @RequestMapping("tab")
 @RequiredArgsConstructor
+@RestController
 public class ScheduleTabController {
 
     private final ScheduleTabService scheduleTabService;
-    private final HttpSession session;
     private final UserService userService;
 
     @PostMapping("create")
-    public Long save(@RequestBody ScheduleTabRequestDto requestDto){
+    public @ResponseBody Long save(@RequestBody ScheduleTabRequestDto requestDto){
         return scheduleTabService.save(requestDto);
     }
 

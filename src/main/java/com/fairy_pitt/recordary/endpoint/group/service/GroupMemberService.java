@@ -31,8 +31,8 @@ public class GroupMemberService {
     @Transactional
     public Boolean save(GroupMemberRequestDto groupMemberRequestDto)
     {
-        UserEntity user = userRepository.findByUserId(groupMemberRequestDto.getUserCodeFK());
-        GroupEntity group = groupRepository.findByGroupCd(groupMemberRequestDto.getGroupCodeFK());
+        UserEntity user = userRepository.findByUserId(groupMemberRequestDto.getUserId());
+        GroupEntity group = groupRepository.findByGroupCd(groupMemberRequestDto.getGroupCd());
         GroupMemberEntity groupMemberEntity = groupMemberRequestDto.toEntity(group,user);
         GroupMemberPK groupMemberPK = new GroupMemberPK(groupMemberEntity.getGroupCodeFK().getGroupCd(),
                                                         groupMemberEntity.getUserCodeFK().getUserCd());

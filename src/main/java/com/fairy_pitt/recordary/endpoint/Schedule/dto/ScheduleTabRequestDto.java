@@ -15,7 +15,7 @@ public class ScheduleTabRequestDto {
     private String tabNm;
     private String tabCol;
 
-    @Builder(builderClassName = "createScheduleBuilder", builderMethodName = "createScheduleBuilder")
+    @Builder(builderClassName = "createScheduleTabBuilder", builderMethodName = "createScheduleTabBuilder")
     public ScheduleTabRequestDto(String userFk,
                                  String tabNm,
                                  String tabCol) {
