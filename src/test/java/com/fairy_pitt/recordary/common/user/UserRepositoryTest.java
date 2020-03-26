@@ -64,6 +64,7 @@ public class UserRepositoryTest {
                 .userPw("testPassword")
                 .userNm("테스트 유저")
                 .build());
+
         //when
         List<UserEntity> userEntityList = userRepository.findAll();
 

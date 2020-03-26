@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTest {
     @LocalServerPort
-    private  int port;
+    private int port;
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -99,33 +99,33 @@ public class UserControllerTest {
         assertThat(all.get(0).getUserNm()).isEqualTo(userNm);
     }
 
-//    @Test
-//    public void User_수정된다() throws Exception{
-//        //given
-//        UserEntity saveUser = userRepository.save(UserEntity.builder()
-//                .userId(staticUserId)
-//                .userPw(userPasswordHashService.getSHA256("testPassword"))
-//                .userNm("테스트 유저")
-//                .build());
-//
-//        String updateId = saveUser.getUserId();
-//        String expectedUserPw = "testPassword2";
-//        String expectedUserNm = "테스트 유저2";
-//        String expectedUserEx = "상태 메세지";
-//
-//        UserUpdateRequestDto requestDto = UserUpdateRequestDto.builder()
-//                .userPw(expectedUserPw)
-//                .userNm(expectedUserNm)
-//                .userEx(expectedUserEx)
-//                .build();
-//
-//        String url = "http://localhost:" + port + "/user/ " + updateId;
-//
-//        HttpEntity<UserUpdateRequestDto> requestDtoHttpEntity = new HttpEntity<>(requestDto);
-//
-//        //when
-//        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.PUT, requestDtoHttpEntity, String.class);
-//
+    @Test
+    public void User_수정된다() throws Exception{
+        //given
+        UserEntity saveUser = userRepository.save(UserEntity.builder()
+                .userId(staticUserId)
+                .userPw(userPasswordHashService.getSHA256("testPassword"))
+                .userNm("테스트 유저")
+                .build());
+
+        String updateId = saveUser.getUserId();
+        String expectedUserPw = "testPassword2";
+        String expectedUserNm = "테스트 유저2";
+        String expectedUserEx = "상태 메세지";
+
+        UserUpdateRequestDto requestDto = UserUpdateRequestDto.builder()
+                .userPw(expectedUserPw)
+                .userNm(expectedUserNm)
+                .userEx(expectedUserEx)
+                .build();
+
+        String url = "http://localhost:" + port + "/user/ " + updateId;
+
+        HttpEntity<UserUpdateRequestDto> requestDtoHttpEntity = new HttpEntity<>(requestDto);
+
+        //when
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.PUT, requestDtoHttpEntity, String.class);
+
 //        //then
 //        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 //        assertThat(responseEntity.getBody()).isEqualTo(staticUserId);
@@ -134,7 +134,7 @@ public class UserControllerTest {
 //        assertThat(all.get(0).getUserPw()).isEqualTo(userPasswordHashService.getSHA256(expectedUserPw));
 //        assertThat(all.get(0).getUserNm()).isEqualTo(expectedUserNm);
 //        assertThat(all.get(0).getUserEx()).isEqualTo(expectedUserEx);
-//    }
+    }
 
     @Test
     public void User_로그인() throws Exception{
