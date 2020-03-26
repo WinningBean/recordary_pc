@@ -5,11 +5,17 @@ import com.fairy_pitt.recordary.common.entity.GroupEntity;
 import com.fairy_pitt.recordary.common.entity.PostEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.*;
+import com.fairy_pitt.recordary.endpoint.Schedule.Service.ScheduleService;
+import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
+import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostListResponseDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
+import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,15 +26,32 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UserService userService;
+    private final GroupService groupService;
+    private final ScheduleService scheduleService;
+    private final FollowerService followerService;
 
     @Transactional
-    public Long save(PostSaveRequestDto requestDto) {
-        return postRepository.save(requestDto.toEntity()).getPostCd();
+    public Boolean save(PostSaveRequestDto requestDto) {
+        PostEntity postEntity = PostEntity.builder()
+                .userFK(userService.findEntity(requestDto.getUserFK_id()))
+                .groupFK(groupService.findEntity(requestDto.getGroupFK_cd()))
+                .postOriginFK(this.findEntity(requestDto.getPostOriginFK_cd()))
+                .scheduleFK(scheduleService.findEntity(requestDto.getScheduleFK_cd()))
+                //.mediaFK()
+                .postEx(requestDto.getPostEx())
+                .postPublicState(requestDto.getPostPublicState())
+                .postStrYMD(requestDto.getPostStrYMD())
+                .postEndYMD(requestDto.getPostEndYMD())
+                .build();
+
+        return Optional.ofNullable(postRepository.save(postEntity)).isPresent();
     }
 
     @Transactional
@@ -49,6 +72,39 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
+    public List<PostListResponseDto> userPost(String userId){
+        return postRepository.findAllByUserFKOrderByCreatedDateDesc(userService.findEntity(userId)).stream()
+                .map(PostListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostListResponseDto> groupPost(Long groupCd){
+        return postRepository.findAllByGroupFKOrderByCreatedDateDesc(groupService.findEntity(groupCd)).stream()
+                .map(PostListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostListResponseDto> userPostSearch(String searchContent, String userId){
+        return postRepository.findAllByPostExLikeAndUserFK("%"+searchContent+"%", userService.findEntity(userId)).stream()
+                .map(PostListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostListResponseDto> groupPostSearch(String searchContent, Long groupCd){
+        return postRepository.findAllByPostExLikeAndGroupFK("%"+searchContent+"%", groupService.findEntity(groupCd)).stream()
+                .map(PostListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public PostEntity findEntity(Long postCd){
+        return postRepository.findByPostCd(postCd);
+    }
+
+    @Transactional(readOnly = true)
     public PostResponseDto findByCd(Long postCd) {
         PostEntity postEntity = Optional.ofNullable(postRepository.findByPostCd(postCd))
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. code = " + postCd));
@@ -63,75 +119,13 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    // 수정 필요
-
-//    @Autowired
-//    private PostRepository postRepository;
-//    @Autowired
-//    private PostLikeRepository postLikeRepository;
-//    @Autowired
-//    private UserRepository userRepository;
-//    @Autowired
-//    private FollowerRepository followerRepository;
-//    @Autowired
-//    private GroupMemberRepository groupMemberRepository;
-//
-//    public Boolean create(UserEntity currentUser, GroupEntity groupEntity, Map<String, Object> postMap){
-//        if (currentUser == null || postMap == null) return false;
-//
-//        PostEntity post = new PostEntity();
-//        post.setUserFK(currentUser);
-//        if (groupEntity == null) post.setGroupFK(null);
-//        else post.setGroupFK(groupEntity);
-//        post.setPostOriginFK(null);
-//        post.setPostEx((String)postMap.get("post_ex"));
-//        post.setPostPublicState((int)postMap.get("post_pb_st"));
-//        post.setPostStrYMD((String)postMap.get("post_str_ymd"));
-//        post.setPostEndYMD((String)postMap.get("post_end_ymd"));
-//
-//        Optional<PostEntity> resultPostEntity = Optional.of(postRepository.save(post));
-//        if (resultPostEntity.isPresent()) return true;
-//        else return false;
-//    }
-//
-//    public Boolean share(UserEntity currentUser, GroupEntity groupEntity, Map<String, Object> postMap){
-//        if (currentUser == null || postMap == null) return false;
-//
-//        PostEntity postOrigin = postRepository.findByPostCd((Long)postMap.get("post_origin_fk"));
-//
-//        PostEntity post = new PostEntity();
-//        post.setUserFK(currentUser);
-//        if (groupEntity == null) post.setGroupFK(null);
-//        else post.setGroupFK(groupEntity);
-//        post.setPostOriginFK(postOrigin);
-//        post.setPostEx((String)postMap.get("post_ex"));
-//        post.setPostPublicState((int)postMap.get("post_pb_st"));
-//        post.setPostStrYMD((String)postMap.get("post_str_ymd"));
-//        post.setPostEndYMD((String)postMap.get("post_end_ymd"));
-//
-//        Optional<PostEntity> resultPostEntity = Optional.of(postRepository.save(post));
-//        if (resultPostEntity.isPresent()) return true;
-//        else return false;
-//    }
-//
-//    public Boolean update(PostEntity postEntity){
-//        Long postCd = postEntity.getPostCd();
-//        PostEntity updatePost = postRepository.findByPostCd(postCd);
-//        if (updatePost == null) return false;
-//
-//        updatePost.setPostEx(postEntity.getPostEx());
-//        updatePost.setPostPublicState(postEntity.getPostPublicState());
-//        postRepository.save(updatePost);
-//        return true;
-//    }
-//
-//    public List<PostEntity> timeLine(UserEntity userEntity){ // 수정 필요
-//        List<FollowerEntity> followerEntityList = followerRepository.findAllByUserFK(userEntity);
-//        List<GroupEntity> groupEntityList = groupMemberRepository.findAllByUserCodeFK(userEntity);
+//    public List<PostListResponseDto> timeLine(String userId){ // 수정 필요
+//        List<UserResponseDto> followingList = followerService.followingList(userId);
+//        List<GroupEntity> groupEntityList = null;
 //
 //        List<PostEntity> postList = new ArrayList<>();
-//        for (FollowerEntity follower : followerEntityList){
-//            List<PostEntity> userPost = postRepository.findAllByUserFK(follower.getTargetFK());
+//        for (UserResponseDto userResponseDto : followingList){
+//            List<PostEntity> userPost = postRepository.findAllByUserFKOrderByCreatedDateDesc(userService.findEntity(userResponseDto.getUserId()));
 //            for (PostEntity post : userPost){
 //                postList.add(post);
 //            }
@@ -145,27 +139,5 @@ public class PostService {
 //
 //        return postList;
 //    }
-//
-//    public List<PostEntity> userPost(UserEntity userEntity){
-//        return postRepository.findAllByUserFK(userEntity);
-//    }
-//
-//    public List<PostEntity> groupPost(GroupEntity groupEntity){
-//        return postRepository.findAllByGroupFK(groupEntity);
-//    }
-//
-//    public Boolean delete(Long postCd){
-//        PostEntity postEntity = postRepository.findByPostCd(postCd);
-//        postRepository.delete(postEntity);
-//        if (postRepository.findByPostCd(postCd) != null) return false;
-//        return true;
-//    }
-//
-//    public List<PostEntity> userPostSearch(String searchContent, UserEntity userEntity){
-//        return postRepository.findAllByPostExLikeAndUserFK("%"+searchContent+"%", userEntity);
-//    }
-//
-//    public List<PostEntity> groupPostSearch(String searchContent, GroupEntity groupEntity){
-//        return postRepository.findAllByPostExLikeAndGroupFK("%"+searchContent+"%", groupEntity);
-//    }
+
 }

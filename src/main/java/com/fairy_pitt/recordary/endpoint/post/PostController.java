@@ -12,6 +12,7 @@ import com.fairy_pitt.recordary.endpoint.post.dto.PostSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostUpdateRequestDto;
 import com.fairy_pitt.recordary.endpoint.post.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/")
-    public Long save(@RequestBody PostSaveRequestDto requestDto) {
+    public Boolean save(@RequestBody PostSaveRequestDto requestDto){
         return postService.save(requestDto);
     }
 
@@ -53,140 +54,25 @@ public class PostController {
     public List<PostListResponseDto> findAllDesc(){
         return postService.findAllDesc();
     }
-//    @GetMapping("/api/post/list")
-//    public List<PostsListResponseDto> findAll() {
-//        return postsService.findAllDesc();
-//    }
 
-    // 수정 필요
+    @GetMapping("/user/{userId}")
+    public List<PostListResponseDto> userPost(@PathVariable String userId){
+        return postService.userPost(userId);
+    }
 
-//    @Autowired
-//    private PostService postService;
-//    @Autowired
-//    private HttpSession session;
-//    @Autowired
-//    private PostRepository postRepository;
-//    @Autowired
-//    private UserRepository userRepository;
-//    @Autowired
-//    private GroupRepository groupRepository;
-//
-//    @PostMapping("/write")
-//    public Map<String, Boolean> write(@RequestParam Map<String, Object> paramMap){
-//        String userId = (String) paramMap.get("user_id");
-//        Long groupCd = (Long) paramMap.get("group_cd");
-//
-//        UserEntity userEntity = userRepository.findByUserId(userId);
-//        GroupEntity groupEntity = groupRepository.findByGroupCd(groupCd);
-//
-//        Map<String, Object> postMap = (Map)paramMap.get("inputPost");
-//        Boolean writeState = postService.create(userEntity, groupEntity, postMap);
-//
-//        Map<String, Boolean> map = new HashMap<>();
-//        map.put("isWrite", writeState);
-//        return map;
-//    }
-//
-//    @PostMapping("/share")
-//    public  Map<String, Boolean> share(@RequestParam Map<String, Object> paramMap){
-//        String  userId = (String) paramMap.get("user_id");
-//        Long groupCd = (Long) paramMap.get("group_cd");
-//
-//        UserEntity userEntity = userRepository.findByUserId(userId);
-//        GroupEntity groupEntity = groupRepository.findByGroupCd(groupCd);
-//
-//        Map<String, Object> postMap = (Map)paramMap.get("sharePost");
-//        Boolean writeState = postService.share(userEntity, groupEntity, postMap);
-//
-//        Map<String, Boolean> map = new HashMap<>();
-//        map.put("isShare", writeState);
-//        return map;
-//    }
-//
-//    @PostMapping("/update")
-//    public Map<String, Boolean> update(@RequestParam Map<String, Object> paramMap){
-//        PostEntity postEntity = new PostEntity();
-//        postEntity.setPostCd((Long)paramMap.get("post_cd"));
-//        postEntity.setPostEx((String)paramMap.get("post_ex"));
-//        postEntity.setPostPublicState((int)paramMap.get("post_pb_st"));
-//
-//        Boolean updateState = postService.update(postEntity);
-//        Map<String, Boolean> map = new HashMap<>();
-//        map.put("isUpdate", updateState);
-//        return map;
-//    }
-//
-//    @GetMapping("/")
-//    public Map<String, Object> userPost(@RequestParam Map<String, Object> paramMap){
-//        String  userId = (String)paramMap.get("user_id");
-//        UserEntity userEntity = userRepository.findByUserId(userId);
-//        List<PostEntity> postList;
-//
-//        Long groupCd = (Long)paramMap.get("group_cd");
-//        if (groupCd != null){
-//            GroupEntity groupEntity = groupRepository.findByGroupCd(groupCd);
-//            postList = postService.groupPost(groupEntity);
-//        }
-//        else postList = postService.userPost(userEntity);
-//
-//
-//        Map<String, Object> map = new HashMap<>();
-//        List postMapList = new ArrayList();
-//        for (PostEntity postEntity : postList){
-//            Map<String, Object> postDetailMap = new HashMap<>();
-//            postDetailMap.put("post_cd", postEntity.getPostCd());
-//            postDetailMap.put("post_group_fk", postEntity.getGroupFK().getGroupCd());
-//            postDetailMap.put("post_origin_fk", postEntity.getPostOriginFK().getPostCd());
-//            postDetailMap.put("post_ex", postEntity.getPostEx());
-//            postDetailMap.put("post_pb_st", postEntity.getPostPublicState());
-//            postDetailMap.put("post_str_ymd", postEntity.getPostStrYMD());
-//            postDetailMap.put("post_end_ymd", postEntity.getPostEndYMD());
-//            postDetailMap.put("post_created_dt", postEntity.getCreatedDate());
-//            postDetailMap.put("post_updated_dt", postEntity.getUpdatedDate());
-//            postMapList.add(postDetailMap);
-//        }
-//        map.put("userPost", postMapList);
-//        return map;
-//    }
-//
-//    @PostMapping("/delete")
-//    public Map<String, Boolean> delete(@RequestParam Map<String, Object> paramMap){
-//        Boolean deleteState = postService.delete((Long) paramMap.get("post_cd"));
-//        Map<String, Boolean> map = new HashMap<>();
-//        map.put("isDelete", deleteState);
-//        return map;
-//    }
-//
-//    @GetMapping("/search")
-//    public Map<String, Object> search(@RequestParam Map<String, Object> paramMap){
-//        String searchContent = (String)paramMap.get("searchContent");
-//        String userId = (String) paramMap.get("user_id");
-//        UserEntity userEntity = userRepository.findByUserId(userId);
-//        List<PostEntity> postList;
-//
-//        Long groupCd = (Long)paramMap.get("group_cd");
-//        if (groupCd != null){
-//            GroupEntity groupEntity = groupRepository.findByGroupCd(groupCd);
-//            postList = postService.groupPostSearch(searchContent, groupEntity);
-//        }
-//        else postList = postService.userPostSearch(searchContent, userEntity);
-//
-//        Map<String, Object> map = new HashMap<>();
-//        List postMapList = new ArrayList();
-//        for (PostEntity postEntity : postList){
-//            Map<String, Object> postDetailMap = new HashMap<>();
-//            postDetailMap.put("post_cd", postEntity.getPostCd());
-//            postDetailMap.put("post_group_fk", postEntity.getGroupFK().getGroupCd());
-//            postDetailMap.put("post_origin_fk", postEntity.getPostOriginFK().getPostCd());
-//            postDetailMap.put("post_ex", postEntity.getPostEx());
-//            postDetailMap.put("post_pb_st", postEntity.getPostPublicState());
-//            postDetailMap.put("post_str_ymd", postEntity.getPostStrYMD());
-//            postDetailMap.put("post_end_ymd", postEntity.getPostEndYMD());
-//            postDetailMap.put("post_created_dt", postEntity.getCreatedDate());
-//            postDetailMap.put("post_updated_dt", postEntity.getUpdatedDate());
-//            postMapList.add(postDetailMap);
-//        }
-//        map.put("searchedPost", postMapList);
-//        return map;
-//    }
+    @GetMapping("/group/{groupCd}")
+    public List<PostListResponseDto> groupPost(@PathVariable Long groupCd){
+        return postService.groupPost(groupCd);
+    }
+
+    @GetMapping("/user/{userId}/search")
+    public List<PostListResponseDto> userPostSearch(@PathVariable String userId, @RequestParam(value = "input")String searchContent){
+        return postService.userPostSearch(searchContent, userId);
+    }
+
+    @GetMapping("/group/{groupCd}/search")
+    public List<PostListResponseDto> groupPostSearch(@PathVariable Long groupCd, @RequestParam(value = "input")String searchContent){
+        return postService.groupPostSearch(searchContent, groupCd);
+    }
 }
+
