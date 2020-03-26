@@ -19,6 +19,9 @@ public class ScheduleEntity {
    private Long scheduleCd;
 
    @ManyToOne
+   private  UserEntity userFk;
+
+   @ManyToOne
    private ScheduleTabEntity TabCodeFK;
 
    @OneToOne
@@ -39,25 +42,32 @@ public class ScheduleEntity {
    @Column(name = "SCHEDULE_COLOR")
    private String scheduleCol;
 
+   @Column(name = "POST_PB_ST")
+   private int schedulePublicState;
+
    @OneToMany(fetch = FetchType.LAZY, mappedBy = "scheduleCodeFK")
    private List<ScheduleMemberEntity> scheduleMembers;
 
    @Builder
-   public ScheduleEntity(ScheduleTabEntity TabCodeFK,
-                         PostEntity PostFK,
+   public ScheduleEntity(ScheduleTabEntity Tab,
+                         UserEntity user,
+                         PostEntity Post,
                          String scheduleNm,
                          String scheduleEx,
                          Date scheduleStr,
                          Date scheduleEnd,
-                         String scheduleCol){
+                         String scheduleCol,
+                         int schedulePublicState){
 
-      this.TabCodeFK = TabCodeFK;
-      this.PostFK = PostFK;
+      this.TabCodeFK = Tab;
+      this.userFk = user;
+      this.PostFK = Post;
       this.scheduleNm = scheduleNm;
       this.scheduleEx = scheduleEx;
       this.scheduleStr = scheduleStr;
       this.scheduleEnd = scheduleEnd;
       this.scheduleCol = scheduleCol;
+      this.schedulePublicState = schedulePublicState;
    }
 
    public void updateSchedule(ScheduleTabEntity TabCodeFK,
