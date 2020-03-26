@@ -36,9 +36,10 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-thymeleaf')
     compile('org.projectlombok:lombok')
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
-    compile('com.h2database:h2')
+    compile('com.h2database:h2:1.4.199')
     compile('org.springframework.session:spring-session-jdbc')
     compile('org.springframework.boot:spring-boot-devtools')
+    compile('org.json:json:20180813')
 
     annotationProcessor ('org.projectlombok:lombok')
 
