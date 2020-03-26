@@ -1,11 +1,11 @@
 package com.fairy_pitt.recordary.common.pk;
 
-import lombok.Data;
+import lombok.Getter;
 
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
-@Data
+@Getter
 @Embeddable
 public class PostTagPK implements Serializable {
     private Long postFK;

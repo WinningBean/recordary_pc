@@ -1,13 +1,13 @@
 package com.fairy_pitt.recordary.common.pk;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
-@Data
+@Getter
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
