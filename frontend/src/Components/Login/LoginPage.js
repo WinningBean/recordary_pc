@@ -89,14 +89,14 @@ class Login extends React.Component {
         friendList: [
           {
             friend_user_id: 1,
-            friend_user_nm: '친구1',
-            friend_user_pic: 'http://placehold.it/40x40',
+            friend_user_nm: '위성호',
+            friend_user_pic: 'https://cdn.pixabay.com/photo/2017/11/07/14/47/character-2927150_960_720.png',
             friend_user_ex: 'hi'
           },
           {
             friend_user_id: 2,
-            friend_user_nm: '친구2',
-            friend_user_pic: 'http://placehold.it/40x40',
+            friend_user_nm: '홍길동',
+            friend_user_pic: 'https://storage.needpix.com/rsynced_images/character-1166998_1280.jpg',
             friend_user_ex: 'hi'
           }
         ],
@@ -116,13 +116,17 @@ class Login extends React.Component {
         ],
         post: [
           {
-            postForm: 1,
+            postForm: 0,
             post_cd: 4,
             user_id: 'HwangSG',
             user_pic: 'http://placehold.it/40x40',
             group_cd: null,
             uploadDate: new Date(),
-            post_pic: 'img/1579501322063.jpg',
+            post_pic: [
+              'img/1579501322063.jpg',
+              'https://cdn.pixabay.com/photo/2017/11/07/14/47/character-2927150_960_720.png',
+              'https://storage.needpix.com/rsynced_images/character-1166998_1280.jpg'
+            ],
             post_title: '팔색조와 여행😁',
             post_ex:
               '1일차 : 천사곱창에서 1차😍 보드게임방 2차🐱‍👤\n2일차 : 치치에서 1차~ 오술차에서 2차!!🍺🍻\n3일차 : 김밥천국에서 냠냠🍳🍱🍜\n4일차 : 본캠 카페!~~!~!🥛☕',
@@ -207,6 +211,7 @@ class Login extends React.Component {
                 start: new Date('2020-03-13'),
                 end: new Date('2020-03-28'),
                 ex: '발닦고 잠자기',
+                pic: ['http://placehold.it/400x400'],
                 color: '#c0392b'
               },
               {
@@ -214,6 +219,11 @@ class Login extends React.Component {
                 start: new Date('2020-03-25'),
                 end: new Date('2020-03-25'),
                 ex: 'ex3',
+                pic: [
+                  'https://cdn.pixabay.com/photo/2017/11/07/14/47/character-2927150_960_720.png',
+                  'https://storage.needpix.com/rsynced_images/character-1166998_1280.jpg',
+                  'http://placehold.it/400x400'
+                ],
                 color: '#f1c40f'
               }
               // {
@@ -472,36 +482,20 @@ class Login extends React.Component {
                         </a> */}
             <Link to='/main'>
               {/* <img className="title-image" alt="Recordary icon" src="http://localhost:8080/Recodary.png"/> */}
-              <img
-                className='title-image'
-                alt='Recordary icon'
-                src='img/Recordary.png'
-              />
+              <img className='title-image' alt='Recordary icon' src='img/Recordary.png' />
             </Link>
           </div>
           {this.state.successRegister()}
           {this.state.failedLogin()}
           <div className='login-form'>
             <div className='login-text'>
-              <TextField
-                name='user_id'
-                autoFocus
-                label='아이디'
-                onChange={this.changeHandel}
-              />
+              <TextField name='user_id' autoFocus label='아이디' onChange={this.changeHandel} />
               <br />
-              <TextField
-                name='user_pw'
-                type='password'
-                label='비밀번호'
-                onChange={this.changeHandel}
-              />
+              <TextField name='user_pw' type='password' label='비밀번호' onChange={this.changeHandel} />
               <br />
             </div>
             <div className='login-button'>
-              <MyButton onClick={() => this.setState({ isRegister: true })}>
-                회원가입
-              </MyButton>
+              <MyButton onClick={() => this.setState({ isRegister: true })}>회원가입</MyButton>
               <MyButton type='submit'>로그인</MyButton>
             </div>
           </div>

@@ -84,9 +84,10 @@
 }
 
 .timeline-picture {
+  position: relative;
   width: 500px;
   height: 340px;
-  padding: 5px;
+  overflow: hidden;
 }
 
 .timeline-picture > img {
@@ -113,6 +114,16 @@
   padding-top: 5px;
   font-size: 16px;
   line-height: 150%;
+}
+
+.timeline-picture-bottom {
+  border-radius: 50%;
+  height: 6px;
+  transition: all 0.2s ease-in-out;
+  width: 6px;
+  background: rgba(var(--eca, 255, 255, 255), 1);
+  margin-right: 2px;
+  transition: all 0.2s ease-in-out 0.2s;
 }
 
 .comment-reply-users {

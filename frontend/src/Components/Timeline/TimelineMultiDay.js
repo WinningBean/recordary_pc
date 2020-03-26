@@ -4,12 +4,14 @@ import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import LeftIcon from '@material-ui/icons/ChevronLeft';
 import RightIcon from '@material-ui/icons/ChevronRight';
 import CloseIcon from '@material-ui/icons/Close';
+import Dialog from '@material-ui/core/Dialog';
 import * as dateFns from 'date-fns';
 
 const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEndDay }) => {
   const [currentMonth, setCurrentMonth] = useState(dateFns.startOfMonth(sharedStartDay));
   const [dayLocation, setDayLocation] = useState(null);
   const [clickSc, setClickSc] = useState(undefined);
+  const [clickPic, setClickPic] = useState(undefined);
 
   const CalendarHeader = useMemo(() => {
     console.log('render header');
@@ -202,11 +204,7 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
       y += 56;
       x = 0;
       rows.push(
-        <div
-          className='cell-row'
-          key={day}
-          style={{ width: 'auto', height: 'auto', flex: '1', display: 'flex' }}
-        >
+        <div className='cell-row' key={day} style={{ width: 'auto', height: 'auto', flex: '1', display: 'flex' }}>
           {days}
         </div>
       );
@@ -218,8 +216,7 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
 
   const Schedual = () => {
     if (dayLocation === null) return null;
-    if (!dateFns.isSameMonth(dayLocation[parseInt(dayLocation.length / 2)].day, currentMonth))
-      return null;
+    if (!dateFns.isSameMonth(dayLocation[parseInt(dayLocation.length / 2)].day, currentMonth)) return null;
 
     var size = 9;
 
@@ -240,8 +237,7 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
     sharedSchedual.forEach((schedualValue, schedualIndex) => {
       var isBeforeStartDay = false;
       if (!dateFns.isWithinInterval(schedualValue.start, { start: startDate, end: endDate })) {
-        if (!dateFns.isWithinInterval(schedualValue.end, { start: startDate, end: endDate }))
-          return;
+        if (!dateFns.isWithinInterval(schedualValue.end, { start: startDate, end: endDate })) return;
         index = 0;
         isBeforeStartDay = true;
       } else {
@@ -317,9 +313,7 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
         if (dateFns.addWeeks(schedualValue.start, i) > endDate) {
           return;
         }
-        const endDayLocation = dayLocation.filter(value =>
-          dateFns.isSameDay(value.day, schedualValue.end)
-        )[0];
+        const endDayLocation = dayLocation.filter(value => dateFns.isSameDay(value.day, schedualValue.end))[0];
         console.log(`${dayLocation[index].day}-${overlap[index]}`);
         sc.push(
           <div
@@ -340,8 +334,7 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
           />
         );
 
-        const countDays =
-          dateFns.differenceInDays(endDayLocation.day, dateFns.startOfWeek(endDayLocation.day)) + 1;
+        const countDays = dateFns.differenceInDays(endDayLocation.day, dateFns.startOfWeek(endDayLocation.day)) + 1;
         for (let k = 0; k < countDays; k++) {
           ++overlap[index];
           ++index;
@@ -455,9 +448,11 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
                   justifyContent: 'space-between'
                 }}
               >
-                <h2 style={{ paddingLeft: '8px' }}>Title</h2>
-                <div onClick={() => setClickSc(undefined)} style={{ paddingRight: '8px' }}>
-                  <CloseIcon />
+                <div style={{ paddingLeft: '8px' }}>
+                  <h2>Title</h2>
+                </div>
+                <div style={{ paddingRight: '8px', display: 'flex' }}>
+                  <CloseIcon onClick={() => setClickSc(undefined)} />
                 </div>
               </div>
               <div style={{ flex: 3, height: '150px', display: 'flex', paddingTop: '8px' }}>
@@ -495,17 +490,64 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
                   </span>
                 </div>
               </div>
-              <div style={{ flex: 1, marginTop: '6px', marginLeft: '6px' }}>
-                <AvatarGroup>
-                  <Avatar alt='Remy Sharp' src='http://placehold.it/40x40' />
-                  <Avatar alt='Travis Howard' src='http://placehold.it/40x40' />
-                  <Avatar alt='Cindy Baker' src='http://placehold.it/40x40' />
-                  <Avatar>+3</Avatar>
-                </AvatarGroup>
+              <div
+                style={{
+                  flex: 1,
+                  marginTop: '6px',
+                  marginLeft: '6px',
+                  display: 'flex',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <div>
+                  <ul style={{ display: 'flex', alignItems: 'center' }}>
+                    {sharedSchedual[clickSc].pic.length > 0
+                      ? sharedSchedual[clickSc].pic.map((value, index) => {
+                          return (
+                            <li
+                              key={`sharedSchedule-picture-${sharedSchedual[clickSc].cd}-${index}`}
+                              style={{ marginRight: '4px' }}
+                              onClick={() => setClickPic(value)}
+                            >
+                              <img
+                                alt='shared-schedule-img'
+                                src={value}
+                                style={{ width: '50px', height: '40px', objectFit: 'cover' }}
+                              />
+                            </li>
+                          );
+                        })
+                      : null}
+                  </ul>
+                </div>
+                <div>
+                  <AvatarGroup>
+                    <Avatar alt='Remy Sharp' src='http://placehold.it/40x40' />
+                    <Avatar alt='Travis Howard' src='http://placehold.it/40x40' />
+                    <Avatar alt='Cindy Baker' src='http://placehold.it/40x40' />
+                    <Avatar>+3</Avatar>
+                  </AvatarGroup>
+                </div>
               </div>
             </>
           )}
         </div>
+        {clickPic === undefined ? null : (
+          <Dialog
+            open
+            onClose={() => {
+              setClickPic(undefined);
+            }}
+          >
+            <div style={{ backgroundColor: 'black' }}>
+              <img
+                alt='clicked img'
+                src={clickPic}
+                style={{ maxHeight: '800px', maxWidth: '800px', objectFit: 'contain' }}
+              />
+            </div>
+          </Dialog>
+        )}
       </div>
     </>
   );
