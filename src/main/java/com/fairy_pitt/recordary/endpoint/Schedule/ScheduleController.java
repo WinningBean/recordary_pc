@@ -21,10 +21,7 @@ import java.util.Map;
 @RequestMapping("schedule")
 public class ScheduleController {
 
-
-    @Autowired
     private final ScheduleService scheduleService;
-    private final PostService postService ;
     private final ScheduleTabService scheduleTabService;
 
 //    @PostMapping("create")
