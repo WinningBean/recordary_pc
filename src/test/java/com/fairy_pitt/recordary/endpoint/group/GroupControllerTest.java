@@ -4,6 +4,7 @@ import com.fairy_pitt.recordary.common.entity.GroupEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupSaveRequestDto;
 
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupUpdateRequestDto;
@@ -14,10 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -60,7 +66,7 @@ public class GroupControllerTest {
         String  groupEx = "test";
 
         GroupSaveRequestDto requestDto = GroupSaveRequestDto.createGroupBuilder()
-                .gMstUserFK(saveUser)
+                .userId(saveUser.getUserId())
                 .groupName(groupName)
                 .groupState(true)
                 .groupPic(groupPic)
@@ -174,5 +180,47 @@ public class GroupControllerTest {
         assertThat(all.get(0).getGroupName()).isEqualTo(groupName);
     }
 
+    @Test
+    public void Group_검색() throws  Exception{
 
+        //given
+        UserEntity saveUser = userRepository.save(UserEntity.builder()
+                .userId("test")
+                .userPw("test")
+                .userNm("테스트 유저")
+                .build());
+
+        String groupName ="test";
+        Boolean groupState = true;
+        String groupPic = "asd";
+        String  groupEx = "test";
+
+        GroupEntity groupEntity = groupRepository.save(  GroupEntity.builder()
+                .gMstUserFK(saveUser)
+                .groupName(groupName)
+                .groupState(true)
+                .groupPic(groupPic)
+                .groupEx(groupEx)
+                .build());
+
+        GroupEntity groupEntity2 = groupRepository.save(  GroupEntity.builder()
+                .gMstUserFK(saveUser)
+                .groupName(groupName)
+                .groupState(true)
+                .groupPic(groupPic)
+                .groupEx(groupEx)
+                .build());
+
+
+        String url = "http://localhost:" + port + "group/readAll";
+
+        //when
+        ResponseEntity<List> responseEntity = restTemplate.getForEntity(url,List.class);
+
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody().size()).isEqualTo(2);
+
+    }
 }
