@@ -80,5 +80,6 @@ task copyHtmlApp(type: Copy) {
 }
 
 yarnBuild.dependsOn appNpmInstall
+yarnBuild.dependsOn yarnBuild
 compileJava.dependsOn copyWebApp
 compileJava.dependsOn copyHtmlApp
