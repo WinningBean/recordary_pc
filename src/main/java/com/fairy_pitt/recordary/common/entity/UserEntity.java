@@ -1,10 +1,9 @@
 package com.fairy_pitt.recordary.common.entity;
 
-import com.fairy_pitt.recordary.endpoint.user.service.UserPasswordHashService;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -32,30 +31,39 @@ public class UserEntity extends BaseTimeEntity{
     @Column(name = "USER_EX")
     private String userEx;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = {CascadeType.ALL})
     private List<FollowerEntity> followUser = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "targetFK", cascade = {CascadeType.ALL})
     private List<FollowerEntity> followTarget = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "gMstUserFK")
     private List<GroupEntity> masters;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userCodeFK")
     private List<GroupMemberEntity> groups;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userCodeFK")
     private List<GroupApplyEntity> applyGroups;
-    
+
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = {CascadeType.ALL})
     private List<PostEntity> postList;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = {CascadeType.ALL})
     private List<PostTagEntity> postTagList;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = {CascadeType.ALL})
     private List<PostLikeEntity> postLikeList;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tabUserFk")
     private  List<ScheduleTabEntity> userTab;
 

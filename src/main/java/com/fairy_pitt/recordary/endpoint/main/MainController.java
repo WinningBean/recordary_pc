@@ -3,9 +3,11 @@ package com.fairy_pitt.recordary.endpoint.main;
 import com.fairy_pitt.recordary.common.entity.GroupEntity;
 import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
+//import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
 import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,53 +23,19 @@ public class MainController {
 
     @Autowired
     private HttpSession session;
-
-    @ResponseBody
-    @GetMapping("/checkUser")
-    public Map<String, Boolean> checkUser(){
-        Map<String, Boolean> map = new HashMap<>();
-        Boolean userState = false;
-
-        UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
-        if (currentUser != null) userState = true;
-
-        map.put("isCurrentUser", userState);
-        return map;
-    }
-
-    @ResponseBody
-    @PostMapping("/checkSession")
-    public Map<String, Boolean> checkSession(@RequestParam Map<String, String> paramMap){
-        Map<String, Boolean> map = new HashMap<>();
-        Boolean sessionState = false;
-
-        UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
-        if (currentUser.getUserCd().equals(paramMap.get("user_cd"))) sessionState = true;
-
-        map.put("isSessionUser", sessionState);
-        return map;
-    }
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private FollowerService followerService;
+    @Autowired
+    private GroupService groupService;
+    @Autowired
+    private GroupMemberService groupmemberService;
 
     @GetMapping("/groupCreatePage")
     public String createGroup(){
         return "group/create";
     }
-
-    @GetMapping("/logout")
-    public String logout(){
-//        session.invalidate();
-        session.removeAttribute("loginUser");
-        return "index";
-    }
-
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private GroupService groupService;
-    @Autowired
-    private GroupMemberService groupmemberService;
-    @Autowired
-    private FollowerService followerService;
 
     @ResponseBody
     @GetMapping("/mainPage")
@@ -100,21 +68,9 @@ public class MainController {
             }
             map.put("userGroup", groupMapList);
 
-//            List<UserEntity> friendList = followerService.friends(currentUser.getUserCd());
-            List friendMapList = new ArrayList();
-//            for (UserEntity friend : friendList) {
-//                friendMapList.add(userService.userInfo(friend.getUserId()));
-//            }
-            map.put("friendList", friendMapList);
+            List<UserResponseDto> friendList = followerService.friends(userService.currentUserId());
+            map.put("friendList", friendList);
         }
         return map;
     }
-
-//    @ResponseBody
-//    @GetMapping("/{userId}")
-//    public Map<String, Object> userProfile(@PathVariable("userId") String userId){
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("userInfo", userService.userInfo(userId));
-//        return map;
-//    }
 }

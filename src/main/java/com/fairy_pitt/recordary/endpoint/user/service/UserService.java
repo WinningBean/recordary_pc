@@ -24,8 +24,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserPasswordHashService userPasswordHashService;
-    @Autowired
-    private HttpSession session;
+    private final HttpSession httpSession;
 
     @Transactional
     public Boolean save(UserSaveRequestDto requestDto){
@@ -51,22 +50,8 @@ public class UserService {
     public void delete(String userId){
         UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(userId))
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
+
         userRepository.delete(userEntity);
-    }
-
-    @Transactional(readOnly = true)
-    public UserResponseDto findById(String userId){
-        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(userId))
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
-
-        return new UserResponseDto(userEntity);
-    }
-
-    @Transactional(readOnly = true)
-    public List<UserListResponseDto> findNmUser(String findNm){
-        return userRepository.findAllByUserNmLike("%"+findNm+"%").stream()
-                .map(UserListResponseDto::new)
-                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -90,20 +75,45 @@ public class UserService {
 
         Boolean userState = checkPw(requestDto);
         if (userState){
-            session.setAttribute("loginUser", userEntity.getUserId());
-            log.info("set userId = {}", session.getAttribute("loginUser"));
+            httpSession.setAttribute("loginUser", userEntity.getUserId());
+            log.info("set userId = {}", httpSession.getAttribute("loginUser"));
             return new UserResponseDto(userEntity);
         }else return null;
     }
 
     @Transactional(readOnly = true)
-    public String currentUser(){
-        return String.valueOf(session.getAttribute("loginUser"));
+    public Boolean logout(){
+        httpSession.removeAttribute("loginUser");
+        return (httpSession.getAttribute("loginUser") == null);
     }
 
     @Transactional(readOnly = true)
-    public Boolean logout(){
-        session.removeAttribute("loginUser");
-        return  (session.getAttribute("loginUser") == null);
+    public UserEntity currentUser(){
+        return findEntity(String.valueOf(httpSession.getAttribute("loginUser")));
+    }
+
+    @Transactional(readOnly = true)
+    public String currentUserId(){
+        return String.valueOf(httpSession.getAttribute("loginUser"));
+    }
+
+    @Transactional(readOnly = true)
+    public UserEntity findEntity(String userId){
+        return userRepository.findByUserId(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public UserResponseDto findById(String userId){
+        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(userId))
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
+
+        return new UserResponseDto(userEntity);
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserListResponseDto> findNmUser(String findNm){
+        return userRepository.findAllByUserNmLike("%"+findNm+"%").stream()
+                .map(UserListResponseDto::new)
+                .collect(Collectors.toList());
     }
 }
