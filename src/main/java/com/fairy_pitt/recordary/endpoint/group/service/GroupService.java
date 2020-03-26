@@ -2,10 +2,13 @@ package com.fairy_pitt.recordary.endpoint.group.service;
 
 import com.fairy_pitt.recordary.common.entity.GroupEntity;
 import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
+import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.GroupMemberRepository;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
+import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleResponseDto;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupMemberResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupUpdateRequestDto;
@@ -17,11 +20,14 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
-@RequiredArgsConstructor// 검색해보기
+@RequiredArgsConstructor
 @Service
 public class GroupService {
 
@@ -30,13 +36,14 @@ public class GroupService {
     private final GroupMemberRepository groupMemberRepository;
 
     @Transactional
-    public Long save(GroupSaveRequestDto requestDto) {
-        return groupRepository.save(requestDto.toEntity())
+    public Long save(@RequestBody GroupSaveRequestDto requestDto) {
+        UserEntity user = userRepository.findByUserId(requestDto.getUserId());
+        return groupRepository.save(requestDto.toEntity(user))
                 .getGroupCd();
     }
 
     @Transactional
-    public Long updateGroupInfo(Long id, GroupUpdateRequestDto groupDto) {
+    public Long updateGroupInfo(Long id, @RequestBody GroupUpdateRequestDto groupDto) {
         GroupEntity groupEntity = groupRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
 
@@ -94,6 +101,40 @@ public class GroupService {
         group.add(groupMemberInfoList);
         return group;
     }
+
+    @Transactional(readOnly = true)
+    public List<GroupResponseDto> findAllGroup(){
+
+        return groupRepository.findAllByGroupState(true).stream()
+                .map(GroupResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<GroupResponseDto> findGroupByName(String groupName){
+        return groupRepository.findByGroupNameLike("%"+groupName+"%").stream()
+                .map(GroupResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<GroupResponseDto> findUserGroups(String userId){
+        List<GroupMemberEntity> groupEntities = userRepository.findByUserId(userId).getGroups();
+        List<GroupResponseDto> result = new ArrayList<>();
+
+        for (GroupMemberEntity temp: groupEntities) {
+            GroupResponseDto groupResponseDto = new GroupResponseDto(temp.getGroupCodeFK());
+            result.add(groupResponseDto);
+        }
+        return  result;
+    }
+/*    @Transactional(readOnly = true)
+    public List<GroupMemberResponseDto> findGroupMembers(Long groupCd){
+
+        return groupRepository.findByGroupCd(groupCd).getMembers().stream()
+                .map(GroupMemberResponseDto::new)
+                .collect(Collectors.toList());
+    }*/
 }
 
 //    @Transactional(readOnly = true)

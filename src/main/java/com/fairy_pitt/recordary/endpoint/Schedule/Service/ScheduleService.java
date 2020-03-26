@@ -1,50 +1,83 @@
 package com.fairy_pitt.recordary.endpoint.Schedule.Service;
 
-import com.fairy_pitt.recordary.common.entity.PostEntity;
-import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
-import com.fairy_pitt.recordary.common.entity.ScheduleMemberEntity;
-import com.fairy_pitt.recordary.common.entity.ScheduleTabEntity;
+import com.fairy_pitt.recordary.common.entity.*;
+import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.common.repository.ScheduleRepository;
+import com.fairy_pitt.recordary.common.repository.ScheduleTabRepository;
+import com.fairy_pitt.recordary.common.repository.UserRepository;
+import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleMemberResponseDto;
+import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleResponseDto;
+import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleSaveRequestDto;
+import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequestMapping("schedule")
 @RequiredArgsConstructor
 public class ScheduleService { // 포스터가 있어야 일정이 생길 수있음
 
-    @Autowired
     private final ScheduleRepository scheduleRepository;
+    private final ScheduleTabRepository scheduleTabRepository;
+   // private final UserRepository userRepository;
+    private final PostRepository postRepository;
 
-
-    public Boolean createSchedule (Map<String, Object> scheduleInfo, PostEntity postEntity, ScheduleTabEntity scheduleTabEntity)
+    @Transactional
+    public Long save(ScheduleSaveRequestDto requestDto)
     {
-        ScheduleEntity scheduleEntity = new ScheduleEntity();
-        scheduleEntity.setScheduleNm((String)scheduleInfo.get("schedule_nm"));
-        scheduleEntity.setScheduleEx((String)scheduleInfo.get("schedule_ex"));
-        scheduleEntity.setTabCodeFK(scheduleTabEntity);
-        scheduleEntity.setScheduleStr((Date) scheduleInfo.get("schedule_str"));
-        scheduleEntity.setScheduleStr((Date) scheduleInfo.get("schedule_end"));
-
-        Optional<ScheduleEntity> resultEntity = Optional.of(scheduleRepository.save(scheduleEntity));
-        if (resultEntity.isPresent()) return true;
-        else return false;
+        ScheduleTabEntity scheduleTabEntity = scheduleTabRepository.findByTabCd(requestDto.getTabCodeFK());
+        PostEntity post = postRepository.findByPostCd(requestDto.getPostFK());
+        return scheduleRepository.save(requestDto.toEntity(scheduleTabEntity,post))
+                .getScheduleCd();
     }
 
-    public Boolean deleteSchedule(long scheduleId)
-    {
-        scheduleRepository.deleteById(scheduleId);
-        return true;
+    @Transactional
+    public Long update(Long id, ScheduleUpdateRequestDto UpdateRequestDto) {
+        ScheduleEntity scheduleEntity = scheduleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 스케줄이 없습니다. id=" + id));
+
+        ScheduleTabEntity scheduleTabEntity = scheduleTabRepository.findByTabCd(UpdateRequestDto.getTabCodeFK());
+        scheduleEntity.updateSchedule(scheduleTabEntity,
+                UpdateRequestDto.getScheduleNm(),
+                UpdateRequestDto.getScheduleEx(),
+                UpdateRequestDto.getScheduleStr(),
+                UpdateRequestDto.getScheduleEnd(),
+                UpdateRequestDto.getScheduleCol());
+
+        return id;
     }
 
+    @Transactional
+    public void delete(Long id) {
+        ScheduleEntity scheduleEntity = scheduleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
+
+        scheduleRepository.delete(scheduleEntity);
+    }
+
+    @Transactional
+    public List<ScheduleResponseDto> findScheduleByDate(Date fromData, Date ToData)
+    {
+        List<ScheduleEntity> entityList = scheduleRepository.findByScheduleStrBetween(fromData, ToData);
+        List<ScheduleResponseDto> result = new ArrayList<>();
+        for (ScheduleEntity temp: entityList) {
+            ScheduleResponseDto scheduleResponseDto = new ScheduleResponseDto(temp);
+            result.add(scheduleResponseDto);
+        }
+        return result;
+    }
+
+//    public List<ScheduleMemberResponseDto> getScheduleMember(Long id) {
+//        return scheduleRepository.findById(id).get().getScheduleMembers();
+//    }
+
+/*
     public List<ScheduleEntity> findScheduleByDate(Date fromData, Date ToData)
     {
         return scheduleRepository.findByScheduleStrBetween(fromData, ToData);
@@ -64,6 +97,6 @@ public class ScheduleService { // 포스터가 있어야 일정이 생길 수있
     public List<ScheduleMemberEntity> getScheduleMember(long scheduleCode)
     {
         return scheduleRepository.findById(scheduleCode).get().getScheduleMembers();
-    }
+    }*/
 
 }

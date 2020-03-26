@@ -22,12 +22,18 @@ import java.util.Optional;
 public class GroupMemberService {
 
     private final GroupMemberRepository groupMemberRepository;
+    private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
+
     private final GroupApplyService groupApplyService;
+
 
     @Transactional
     public Boolean save(GroupMemberRequestDto groupMemberRequestDto)
     {
-        GroupMemberEntity groupMemberEntity = groupMemberRequestDto.toEntity();
+        UserEntity user = userRepository.findByUserId(groupMemberRequestDto.getUserCodeFK());
+        GroupEntity group = groupRepository.findByGroupCd(groupMemberRequestDto.getGroupCodeFK());
+        GroupMemberEntity groupMemberEntity = groupMemberRequestDto.toEntity(group,user);
         GroupMemberPK groupMemberPK = new GroupMemberPK(groupMemberEntity.getGroupCodeFK().getGroupCd(),
                                                         groupMemberEntity.getUserCodeFK().getUserCd());
         groupApplyService.delete(groupMemberPK);

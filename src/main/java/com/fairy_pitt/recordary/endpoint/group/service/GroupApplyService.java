@@ -32,7 +32,9 @@ public class GroupApplyService {
 
     @Transactional
     public int save(GroupApplyRequestDto requestDto){
-        return groupApplyRepository.save(requestDto.toEntity())
+        UserEntity user = userRepository.findByUserId(requestDto.getUserCodeFK());
+        GroupEntity group = groupRepository.findByGroupCd(requestDto.getGroupCodeFK());
+        return groupApplyRepository.save(requestDto.toEntity(user,group))
                 .getApplyState();
     }
 
