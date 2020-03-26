@@ -12,14 +12,14 @@ import lombok.NonNull;
 @Getter
 public class ScheduleMemberResponseDto {
 
-    private Long scheduleCodeFK;
-    private Long userCodeFK;
+    private Long scheduleCd;
+    private Long userId;
     private Boolean scheduleState;
 
     public ScheduleMemberResponseDto(ScheduleMemberEntity entity)
     {
-        this.scheduleCodeFK = entity.getScheduleCodeFK().getScheduleCd();
-        this.userCodeFK = entity.getUserCodeFK().getUserCd();
+        this.scheduleCd = entity.getScheduleFK().getScheduleCd();
+        this.userId = entity.getUserFK().getUserCd();
         this.scheduleState = entity.getScheduleState();
     }
 }

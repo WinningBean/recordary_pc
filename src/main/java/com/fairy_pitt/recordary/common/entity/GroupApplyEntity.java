@@ -15,19 +15,19 @@ public class GroupApplyEntity  implements Serializable {
 
     @Id
     @ManyToOne
-    private GroupEntity groupCodeFK;
+    private GroupEntity groupFK;
 
     @Id
     @ManyToOne
-    private UserEntity userCodeFK;
+    private UserEntity userFK;
 
     private int applyState;
 
     @Builder
-    public GroupApplyEntity(GroupEntity groupCodeFK, UserEntity userCodeFK, int applyState){
+    public GroupApplyEntity(GroupEntity groupFK, UserEntity userFK, int applyState){
 
-        this.groupCodeFK = groupCodeFK;
-        this.userCodeFK = userCodeFK;
+        this.groupFK = groupFK;
+        this.userFK = userFK;
         this.applyState = applyState;
     }
 

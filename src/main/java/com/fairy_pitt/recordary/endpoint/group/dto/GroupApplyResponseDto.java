@@ -14,8 +14,8 @@ public class GroupApplyResponseDto {
 
     public GroupApplyResponseDto(GroupApplyEntity entity)
     {
-        this.groupCodeFK = entity.getGroupCodeFK().getGroupCd();
-        this.userCodeFK = entity.getUserCodeFK().getUserCd();
+        this.groupCodeFK = entity.getGroupFK().getGroupCd();
+        this.userCodeFK = entity.getUserFK().getUserCd();
         this.applyState = entity.getApplyState();
     }
 }

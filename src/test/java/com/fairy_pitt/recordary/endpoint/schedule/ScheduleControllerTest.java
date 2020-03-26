@@ -57,8 +57,8 @@ public class ScheduleControllerTest {
         Date scheduleEnd = Timestamp.valueOf("2020-03-26 12:13:24");
 
         ScheduleSaveRequestDto requestDto = ScheduleSaveRequestDto.createScheduleBuilder()
-                .TabCodeFK(null)
-                .PostFK(null)
+                .tabFK(null)
+                .postFK(null)
                 .scheduleNm(scheduleNm)
                 .scheduleEx(scheduleEx)
                 .scheduleStr(scheduleStr)
@@ -90,8 +90,8 @@ public class ScheduleControllerTest {
         Date scheduleEnd = Timestamp.valueOf("2020-03-26 12:13:24");
 
         ScheduleEntity saveSchedule = scheduleRepository.save(ScheduleEntity.builder()
-                .TabCodeFK(null)
-                .PostFK(null)
+                .tabFK(null)
+                .postFK(null)
                 .scheduleNm("Test")
                 .scheduleEx(scheduleEx)
                 .scheduleStr(scheduleStr)

@@ -22,10 +22,10 @@ public class ScheduleEntity {
    private  UserEntity userFk;
 
    @ManyToOne
-   private ScheduleTabEntity TabCodeFK;
+   private ScheduleTabEntity tabFK;
 
    @OneToOne
-   private PostEntity PostFK;
+   private PostEntity postFK;
 
    @Column(name = "SCHEDULE_NM")
    private String scheduleNm;
@@ -45,13 +45,13 @@ public class ScheduleEntity {
    @Column(name = "POST_PB_ST")
    private int schedulePublicState;
 
-   @OneToMany(fetch = FetchType.LAZY, mappedBy = "scheduleCodeFK")
+   @OneToMany(fetch = FetchType.LAZY, mappedBy = "scheduleFK")
    private List<ScheduleMemberEntity> scheduleMembers;
 
    @Builder
-   public ScheduleEntity(ScheduleTabEntity Tab,
-                         UserEntity user,
-                         PostEntity Post,
+   public ScheduleEntity(ScheduleTabEntity tabFK,
+                         UserEntity userFK,
+                         PostEntity postFK,
                          String scheduleNm,
                          String scheduleEx,
                          Date scheduleStr,
@@ -59,9 +59,9 @@ public class ScheduleEntity {
                          String scheduleCol,
                          int schedulePublicState){
 
-      this.TabCodeFK = Tab;
-      this.userFk = user;
-      this.PostFK = Post;
+      this.tabFK = tabFK;
+      this.userFk = userFK;
+      this.postFK = postFK;
       this.scheduleNm = scheduleNm;
       this.scheduleEx = scheduleEx;
       this.scheduleStr = scheduleStr;
@@ -76,7 +76,7 @@ public class ScheduleEntity {
                               Date scheduleStr,
                               Date scheduleEnd,
                               String scheduleCol){
-      this.TabCodeFK = TabCodeFK;
+      this.tabFK = TabCodeFK;
       this.scheduleNm = scheduleNm;
       this.scheduleEx = scheduleEx;
       this.scheduleStr = scheduleStr;

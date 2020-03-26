@@ -16,22 +16,22 @@ public class ScheduleMemberEntity implements Serializable {
 
     @Id
     @ManyToOne
-    private ScheduleEntity scheduleCodeFK;
+    private ScheduleEntity scheduleFK;
 
     @Id
     @ManyToOne
-    private UserEntity userCodeFK;
+    private UserEntity userFK;
 
     @Column(name="SCHEDULE_ACCEPT_ST")
     private Boolean scheduleState;
 
     @Builder
-    public ScheduleMemberEntity(ScheduleEntity scheduleCodeFK,
-                                UserEntity userCodeFK,
+    public ScheduleMemberEntity(ScheduleEntity scheduleFK,
+                                UserEntity userFK,
                                 Boolean scheduleState){
 
-      this.scheduleCodeFK = scheduleCodeFK;
-      this.userCodeFK = userCodeFK;
+      this.scheduleFK = scheduleFK;
+      this.userFK = userFK;
       this.scheduleState = scheduleState;
     }
 
@@ -40,8 +40,4 @@ public class ScheduleMemberEntity implements Serializable {
         this.scheduleState = scheduleState;
     }
 
-
-    /*SCHEDULE_FK (일정 코드) [PK] [FK] NN
-SCHEDULE_MBR_FK (일정 멤버 코드) [PK] [FK] NN
-SCHEDULE_ACCEPT_ST (일정 수락 상태) NN : BOOLEAN (0. 미수락 1. 수락) DEFAULT:0*/
 }

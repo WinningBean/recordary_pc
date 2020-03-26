@@ -11,13 +11,13 @@ import java.io.Serializable;
 @Embeddable
 @NoArgsConstructor
 public class GroupMemberPK implements Serializable {
-    private Long groupCodeFK;
-    private Long userCodeFK;
+    private Long groupFK;
+    private Long userFK;
 
-    public GroupMemberPK(Long groupCodeFK,Long userCodeFK)
+    public GroupMemberPK(Long groupFK,Long userFK)
     {
-        this.groupCodeFK = groupCodeFK;
-        this.userCodeFK = userCodeFK;
+        this.groupFK = groupFK;
+        this.userFK = userFK;
     }
 
 }

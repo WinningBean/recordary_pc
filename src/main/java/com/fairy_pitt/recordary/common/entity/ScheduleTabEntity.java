@@ -26,7 +26,7 @@ public class ScheduleTabEntity {
 
     private String tabCol;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "TabCodeFK")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tabFK")
     private List<ScheduleEntity> tabSchedules;
 
     @Builder

@@ -44,11 +44,11 @@ public class UserEntity extends BaseTimeEntity{
     private List<GroupEntity> masters;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userCodeFK")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK")
     private List<GroupMemberEntity> groups;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userCodeFK")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK")
     private List<GroupApplyEntity> applyGroups;
 
     @JsonIgnore
@@ -68,7 +68,7 @@ public class UserEntity extends BaseTimeEntity{
     private  List<ScheduleTabEntity> userTab;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userCodeFK")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK")
     private List<ScheduleMemberEntity> scheduleMembers;
 
     @JsonIgnore

@@ -34,8 +34,8 @@ public class GroupMemberService {
         UserEntity user = userRepository.findByUserId(groupMemberRequestDto.getUserId());
         GroupEntity group = groupRepository.findByGroupCd(groupMemberRequestDto.getGroupCd());
         GroupMemberEntity groupMemberEntity = groupMemberRequestDto.toEntity(group,user);
-        GroupMemberPK groupMemberPK = new GroupMemberPK(groupMemberEntity.getGroupCodeFK().getGroupCd(),
-                                                        groupMemberEntity.getUserCodeFK().getUserCd());
+        GroupMemberPK groupMemberPK = new GroupMemberPK(groupMemberEntity.getGroupFK().getGroupCd(),
+                                                        groupMemberEntity.getUserFK().getUserCd());
         groupApplyService.delete(groupMemberPK);
         groupMemberRepository.save(groupMemberEntity);
         return true;
@@ -50,15 +50,6 @@ public class GroupMemberService {
         return true;
     }
 /*
-    @Autowired
-    private final GroupRepository groupRepository;
-    @Autowired
-    private final UserRepository userRepository;
-    @Autowired
-    private final GroupMemberRepository groupMemberRepository;
-    @Autowired
-    private HttpSession session;
-
 
     public List<GroupMemberEntity> readUserGroup(UserEntity user)
     {

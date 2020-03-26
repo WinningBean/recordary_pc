@@ -14,16 +14,16 @@ public class GroupMemberEntity implements Serializable {
 
     @Id
     @ManyToOne
-    private GroupEntity groupCodeFK;
+    private GroupEntity groupFK;
 
     @Id
     @ManyToOne
-    private UserEntity userCodeFK;
+    private UserEntity userFK;
 
     @Builder
-    public GroupMemberEntity(GroupEntity groupCodeFK,UserEntity userCodeFK) {
+    public GroupMemberEntity(GroupEntity groupFK,UserEntity userFK) {
 
-        this.groupCodeFK = groupCodeFK;
-        this.userCodeFK = userCodeFK;
+        this.groupFK = groupFK;
+        this.userFK = userFK;
     }
 }

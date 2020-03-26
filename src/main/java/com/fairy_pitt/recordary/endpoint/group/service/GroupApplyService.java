@@ -49,7 +49,7 @@ public class GroupApplyService {
     @Transactional(readOnly = true)
     public List<GroupApplyResponseDto> findGroupAppliesToUser(String userId){
         UserEntity user = userRepository.findByUserId(userId);
-        List<GroupApplyEntity> groupApplyEntities = groupApplyRepository.findAllByUserCodeFKAndAndApplyState(user,1);
+        List<GroupApplyEntity> groupApplyEntities = groupApplyRepository.findAllByUserFKAndAndApplyState(user,1);
         List<GroupApplyResponseDto> groupApplyResponseDtoList = new ArrayList<>();
 
         for (GroupApplyEntity groupApplyEntity : groupApplyEntities){
@@ -63,7 +63,7 @@ public class GroupApplyService {
     @Transactional(readOnly = true)
     public List<GroupApplyResponseDto> findUserAppliesToGroup(Long groupCd){
         GroupEntity group = groupRepository.findByGroupCd(groupCd);
-        List<GroupApplyEntity> groupApplyEntities = groupApplyRepository.findAllByGroupCodeFKAndApplyState(group,2);
+        List<GroupApplyEntity> groupApplyEntities = groupApplyRepository.findAllByGroupFKAndApplyState(group,2);
         List<GroupApplyResponseDto> groupApplyResponseDtoList = new ArrayList<>();
 
         for (GroupApplyEntity groupApplyEntity : groupApplyEntities){

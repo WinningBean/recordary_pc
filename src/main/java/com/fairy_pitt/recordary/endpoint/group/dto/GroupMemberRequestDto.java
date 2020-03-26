@@ -25,8 +25,8 @@ public class GroupMemberRequestDto {
 
     public GroupMemberEntity toEntity(GroupEntity groupCodeFK, UserEntity userCodeFK){
         return GroupMemberEntity.builder()
-                .groupCodeFK(groupCodeFK)
-                .userCodeFK(userCodeFK)
+                .groupFK(groupCodeFK)
+                .userFK(userCodeFK)
                 .build();
     }
 }

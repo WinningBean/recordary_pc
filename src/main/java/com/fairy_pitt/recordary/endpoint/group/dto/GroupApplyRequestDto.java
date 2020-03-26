@@ -26,8 +26,8 @@ public class GroupApplyRequestDto {
 
     public GroupApplyEntity toEntity(UserEntity user, GroupEntity group){
         return GroupApplyEntity.builder()
-                .groupCodeFK(group)
-                .userCodeFK(user)
+                .groupFK(group)
+                .userFK(user)
                 .applyState(applyState)
                 .build();
     }

@@ -3,6 +3,7 @@ package com.fairy_pitt.recordary.endpoint.Schedule.dto;
 import com.fairy_pitt.recordary.common.entity.PostEntity;
 import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
 import com.fairy_pitt.recordary.common.entity.ScheduleTabEntity;
+import com.fairy_pitt.recordary.common.entity.UserEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,8 +15,9 @@ import java.util.Date;
 @Getter
 public class ScheduleSaveRequestDto {
 
-    private Long TabCodeFK;
-    private Long PostFK;
+    private Long tabCd;
+    private Long postCd;
+    private String userId;
     private String scheduleNm;
     private String scheduleEx;
     private Date scheduleStr;
@@ -23,15 +25,17 @@ public class ScheduleSaveRequestDto {
     private String scheduleCol;
 
     @Builder(builderClassName = "createScheduleBuilder", builderMethodName = "createScheduleBuilder")
-    public ScheduleSaveRequestDto(Long TabCodeFK,
-                                  Long PostFK,
+    public ScheduleSaveRequestDto(Long tabFK,
+                                  Long postFK,
+                                  String userFk,
                                   String scheduleNm,
                                   String scheduleEx,
                                   Date scheduleStr,
                                   Date scheduleEnd,
                                   String scheduleCol) {
-        this.TabCodeFK = TabCodeFK;
-        this.PostFK = PostFK;
+        this.tabCd = tabFK;
+        this.postCd = postFK;
+        this.userId = userFk;
         this.scheduleNm = scheduleNm;
         this.scheduleEx = scheduleEx;
         this.scheduleStr = scheduleStr;
@@ -39,11 +43,13 @@ public class ScheduleSaveRequestDto {
         this.scheduleCol = scheduleCol;
     }
 
-    public ScheduleEntity toEntity(ScheduleTabEntity TabCodeFK,
-                                   PostEntity PostFK){
+    public ScheduleEntity toEntity(ScheduleTabEntity Tab,
+                                   PostEntity Post,
+                                   UserEntity user){
         return ScheduleEntity.builder()
-                .TabCodeFK(TabCodeFK)
-                .PostFK(PostFK)
+                .userFK(user)
+                .tabFK(Tab)
+                .postFK(Post)
                 .scheduleNm(scheduleNm)
                 .scheduleEx(scheduleEx)
                 .scheduleStr(scheduleStr)

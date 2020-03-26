@@ -12,6 +12,6 @@ import java.util.List;
 @Repository
 public interface GroupApplyRepository extends JpaRepository<GroupApplyEntity, GroupMemberPK> {
 
-   List<GroupApplyEntity> findAllByUserCodeFKAndAndApplyState(UserEntity userEntity, int applyState);
-   List<GroupApplyEntity> findAllByGroupCodeFKAndApplyState(GroupEntity groupEntity, int applyState);
+   List<GroupApplyEntity> findAllByUserFKAndAndApplyState(UserEntity userEntity, int applyState);
+   List<GroupApplyEntity> findAllByGroupFKAndApplyState(GroupEntity groupEntity, int applyState);
 }

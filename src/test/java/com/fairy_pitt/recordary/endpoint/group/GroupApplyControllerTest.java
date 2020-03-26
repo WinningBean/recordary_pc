@@ -95,8 +95,8 @@ public class GroupApplyControllerTest {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         List<GroupApplyEntity> all = groupApplyRepository.findAll();
-        assertThat(all.get(0).getGroupCodeFK().getGroupCd()).isEqualTo(group);
-        assertThat(all.get(0).getUserCodeFK().getUserId()).isEqualTo(user);
+        assertThat(all.get(0).getGroupFK().getGroupCd()).isEqualTo(group);
+        assertThat(all.get(0).getUserFK().getUserId()).isEqualTo(user);
     }
 
 

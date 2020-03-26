@@ -32,10 +32,10 @@ public class GroupEntity {
     @Column(name = "GROUP_EX")
     private String  groupEx;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupCodeFK")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK")
     private List<GroupMemberEntity> members;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupCodeFK")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK")
     private List<GroupApplyEntity> applyMembers;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK")

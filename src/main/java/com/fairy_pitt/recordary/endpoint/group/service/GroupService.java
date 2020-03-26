@@ -87,7 +87,7 @@ public class GroupService {
         groupInfo.put("groupState", entity.getGroupState());
         groupInfo.put("groupMaster", entity.getGMstUserFK().getUserId());
 
-        List<UserEntity> members = groupMemberRepository.findAllByGroupCodeFK(entity);
+        List<UserEntity> members = groupMemberRepository.findAllByGroupFK(entity);
         for (UserEntity groupMember : members) {
             if (!entity.getGMstUserFK().getUserId().equals(groupMember.getUserId())) {
                 JSONObject groupMemberInfo = new JSONObject();
@@ -124,7 +124,7 @@ public class GroupService {
         List<GroupResponseDto> result = new ArrayList<>();
 
         for (GroupMemberEntity temp: groupEntities) {
-            GroupResponseDto groupResponseDto = new GroupResponseDto(temp.getGroupCodeFK());
+            GroupResponseDto groupResponseDto = new GroupResponseDto(temp.getGroupFK());
             result.add(groupResponseDto);
         }
         return  result;

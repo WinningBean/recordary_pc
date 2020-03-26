@@ -12,23 +12,23 @@ import java.util.Date;
 @NoArgsConstructor
 public class ScheduleMemberSaveRequestDto {
 
-    private Long scheduleCodeFK;
-    private Long userCodeFK;
+    private Long scheduleCd;
+    private String userId;
     private Boolean scheduleState;
 
     @Builder(builderClassName = "createScheduleMemberBuilder", builderMethodName = "createScheduleMemberBuilder")
-    public ScheduleMemberSaveRequestDto(Long scheduleCodeFK,
-                                        Long userCodeFK,
+    public ScheduleMemberSaveRequestDto(Long scheduleCd,
+                                        String userId,
                                         Boolean scheduleState) {
-        this.scheduleCodeFK = scheduleCodeFK;
-        this.userCodeFK = userCodeFK;
+        this.scheduleCd = scheduleCd;
+        this.userId = userId;
         this.scheduleState = scheduleState;
     }
 
     public ScheduleMemberEntity toEntity(ScheduleEntity schedule, UserEntity user){
         return ScheduleMemberEntity.builder()
-                .scheduleCodeFK(schedule)
-                .userCodeFK(user)
+                .scheduleFK(schedule)
+                .userFK(user)
                 .scheduleState(scheduleState)
                 .build();
     }

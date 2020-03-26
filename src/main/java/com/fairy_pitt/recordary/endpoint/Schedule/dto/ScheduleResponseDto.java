@@ -13,8 +13,9 @@ import java.util.Date;
 public class ScheduleResponseDto {
 
     private Long scheduleCd;
-    private Long TabCodeFK;
-    private PostEntity PostFK;
+    private Long tabCd;
+    private String  userId;
+    private PostEntity postFK;
     private String scheduleNm;
     private String scheduleEx;
     private Date scheduleStr;
@@ -23,8 +24,9 @@ public class ScheduleResponseDto {
 
     public ScheduleResponseDto(ScheduleEntity entity) {
         this.scheduleCd = entity.getScheduleCd();
-        this.TabCodeFK = entity.getTabCodeFK().getTabCd();
-        this.PostFK = entity.getPostFK();
+        this.tabCd = entity.getTabFK().getTabCd();
+        this.userId = entity.getUserFk().getUserId();
+        this.postFK = entity.getPostFK();
         this.scheduleNm = entity.getScheduleNm();
         this.scheduleEx = entity.getScheduleEx();
         this.scheduleStr = entity.getScheduleStr();
