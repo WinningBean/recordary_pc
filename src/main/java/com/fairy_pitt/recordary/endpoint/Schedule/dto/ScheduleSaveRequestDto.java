@@ -4,17 +4,18 @@ import com.fairy_pitt.recordary.common.entity.PostEntity;
 import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
 import com.fairy_pitt.recordary.common.entity.ScheduleTabEntity;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
 
 @NoArgsConstructor
-@Setter
+@Getter
 public class ScheduleSaveRequestDto {
 
-    private ScheduleTabEntity TabCodeFK;
-    private PostEntity PostFK;
+    private Long TabCodeFK;
+    private Long PostFK;
     private String scheduleNm;
     private String scheduleEx;
     private Date scheduleStr;
@@ -22,8 +23,8 @@ public class ScheduleSaveRequestDto {
     private String scheduleCol;
 
     @Builder(builderClassName = "createScheduleBuilder", builderMethodName = "createScheduleBuilder")
-    public ScheduleSaveRequestDto(ScheduleTabEntity TabCodeFK,
-                                  PostEntity PostFK,
+    public ScheduleSaveRequestDto(Long TabCodeFK,
+                                  Long PostFK,
                                   String scheduleNm,
                                   String scheduleEx,
                                   Date scheduleStr,
@@ -38,7 +39,8 @@ public class ScheduleSaveRequestDto {
         this.scheduleCol = scheduleCol;
     }
 
-    public ScheduleEntity toEntity(){
+    public ScheduleEntity toEntity(ScheduleTabEntity TabCodeFK,
+                                   PostEntity PostFK){
         return ScheduleEntity.builder()
                 .TabCodeFK(TabCodeFK)
                 .PostFK(PostFK)

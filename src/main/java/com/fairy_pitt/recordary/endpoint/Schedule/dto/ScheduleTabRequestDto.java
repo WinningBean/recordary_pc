@@ -3,19 +3,20 @@ package com.fairy_pitt.recordary.endpoint.Schedule.dto;
 import com.fairy_pitt.recordary.common.entity.ScheduleTabEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
-@Setter
+@Getter
 public class ScheduleTabRequestDto {
 
-    private UserEntity userFk;
+    private String userFk;
     private String tabNm;
     private String tabCol;
 
     @Builder(builderClassName = "createScheduleBuilder", builderMethodName = "createScheduleBuilder")
-    public ScheduleTabRequestDto(UserEntity userFk,
+    public ScheduleTabRequestDto(String userFk,
                                  String tabNm,
                                  String tabCol) {
         this.userFk = userFk;
@@ -23,9 +24,9 @@ public class ScheduleTabRequestDto {
         this.tabNm = tabNm;
     }
 
-    public ScheduleTabEntity toEntity(){
+    public ScheduleTabEntity toEntity(UserEntity user){
         return ScheduleTabEntity.builder()
-                .userFk(userFk)
+                .userFk(user)
                 .tabNm(tabNm)
                 .tabCol(tabCol)
                 .build();

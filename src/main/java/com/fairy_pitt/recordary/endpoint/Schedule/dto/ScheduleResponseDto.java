@@ -13,7 +13,7 @@ import java.util.Date;
 public class ScheduleResponseDto {
 
     private Long scheduleCd;
-    private ScheduleTabEntity TabCodeFK;
+    private Long TabCodeFK;
     private PostEntity PostFK;
     private String scheduleNm;
     private String scheduleEx;
@@ -23,7 +23,7 @@ public class ScheduleResponseDto {
 
     public ScheduleResponseDto(ScheduleEntity entity) {
         this.scheduleCd = entity.getScheduleCd();
-        this.TabCodeFK = entity.getTabCodeFK();
+        this.TabCodeFK = entity.getTabCodeFK().getTabCd();
         this.PostFK = entity.getPostFK();
         this.scheduleNm = entity.getScheduleNm();
         this.scheduleEx = entity.getScheduleEx();

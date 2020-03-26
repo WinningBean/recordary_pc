@@ -14,8 +14,7 @@ import java.util.Date;
 @Getter
 public class ScheduleUpdateRequestDto {
 
-    private ScheduleTabEntity TabCodeFK;
-    private PostEntity PostFK;
+    private Long TabCodeFK;
     private String scheduleNm;
     private String scheduleEx;
     private Date scheduleStr;
@@ -23,8 +22,7 @@ public class ScheduleUpdateRequestDto {
     private String scheduleCol;
 
     @Builder(builderClassName = "updateScheduleBuilder", builderMethodName = "updateScheduleBuilder")
-    public ScheduleUpdateRequestDto(ScheduleTabEntity TabCodeFK,
-                                  PostEntity PostFK,
+    public ScheduleUpdateRequestDto(Long TabCodeFK,
                                   String scheduleNm,
                                   String scheduleEx,
                                   Date scheduleStr,
@@ -32,7 +30,6 @@ public class ScheduleUpdateRequestDto {
                                   String scheduleCol)
     {
         this.TabCodeFK = TabCodeFK;
-        this.PostFK = PostFK;
         this.scheduleNm = scheduleNm;
         this.scheduleEx = scheduleEx;
         this.scheduleStr = scheduleStr;
