@@ -21,19 +21,20 @@ import java.util.*;
 @Service
 @RequestMapping("schedule")
 @RequiredArgsConstructor
-public class ScheduleService { // 포스터가 있어야 일정이 생길 수있음
+public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final ScheduleTabRepository scheduleTabRepository;
-   // private final UserRepository userRepository;
+    private final UserRepository userRepository;
     private final PostRepository postRepository;
 
     @Transactional
     public Long save(ScheduleSaveRequestDto requestDto)
     {
-        ScheduleTabEntity scheduleTabEntity = scheduleTabRepository.findByTabCd(requestDto.getTabCodeFK());
-        PostEntity post = postRepository.findByPostCd(requestDto.getPostFK());
-        return scheduleRepository.save(requestDto.toEntity(scheduleTabEntity,post))
+        ScheduleTabEntity scheduleTabEntity = scheduleTabRepository.findByTabCd(requestDto.getTabCd());
+        PostEntity post = postRepository.findByPostCd(requestDto.getPostCd());
+        UserEntity user = userRepository.findByUserId(requestDto.getUserId());
+        return scheduleRepository.save(requestDto.toEntity(scheduleTabEntity,post,user))
                 .getScheduleCd();
     }
 
