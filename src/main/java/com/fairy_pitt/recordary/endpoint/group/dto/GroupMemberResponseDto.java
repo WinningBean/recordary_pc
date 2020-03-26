@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GroupMemberResponseDto {
 
-    private GroupEntity groupCodeFK;
-    private UserEntity userCodeFK;
+    private Long groupCodeFK;
+    private Long userCodeFK;
 
     public GroupMemberResponseDto(GroupApplyEntity entity)
     {
-        this.groupCodeFK = entity.getGroupCodeFK();
-        this.userCodeFK = entity.getUserCodeFK();
+        this.groupCodeFK = entity.getGroupCodeFK().getGroupCd();
+        this.userCodeFK = entity.getUserCodeFK().getUserCd();
     }
 }

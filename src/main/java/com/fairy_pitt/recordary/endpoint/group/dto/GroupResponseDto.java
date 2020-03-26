@@ -8,7 +8,7 @@ import lombok.Getter;
 public class GroupResponseDto { // 응답(요청에대한 답)
 
     private  Long groupCd;
-    private UserEntity gMstUserFK;
+    private Long gMstUserFK;
     private String groupName;
     private Boolean groupState;
     private String groupEx;
@@ -17,7 +17,7 @@ public class GroupResponseDto { // 응답(요청에대한 답)
     public GroupResponseDto(GroupEntity entity)
     {
         this.groupCd = entity.getGroupCd();
-        this.gMstUserFK = entity.getGMstUserFK();
+        this.gMstUserFK = entity.getGMstUserFK().getUserCd();
         this.groupName = entity.getGroupName();
         this.groupState = entity.getGroupState();
         this.groupEx = entity.getGroupEx();

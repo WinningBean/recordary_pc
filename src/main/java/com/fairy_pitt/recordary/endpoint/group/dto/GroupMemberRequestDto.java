@@ -8,20 +8,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
+@Getter
 @NoArgsConstructor
 public class GroupMemberRequestDto {
 
-    private GroupEntity groupCodeFK;
-    private UserEntity userCodeFK;
+    private Long groupCodeFK;
+    private String userCodeFK;
 
-    public GroupMemberRequestDto(GroupEntity groupCodeFK, UserEntity userCodeFK){
+    public GroupMemberRequestDto(Long groupCodeFK, String userCodeFK){
 
         this.groupCodeFK = groupCodeFK;
         this.userCodeFK = userCodeFK;
     }
 
-    public GroupMemberEntity toEntity(){
+    public GroupMemberEntity toEntity(GroupEntity groupCodeFK, UserEntity userCodeFK){
         return GroupMemberEntity.builder()
                 .groupCodeFK(groupCodeFK)
                 .userCodeFK(userCodeFK)

@@ -8,14 +8,14 @@ import lombok.Getter;
 @Getter
 public class GroupApplyResponseDto {
 
-    private GroupEntity groupCodeFK;
-    private UserEntity userCodeFK;
+    private Long groupCodeFK;
+    private Long userCodeFK;
     private int applyState;
 
     public GroupApplyResponseDto(GroupApplyEntity entity)
     {
-        this.groupCodeFK = entity.getGroupCodeFK();
-        this.userCodeFK = entity.getUserCodeFK();
+        this.groupCodeFK = entity.getGroupCodeFK().getGroupCd();
+        this.userCodeFK = entity.getUserCodeFK().getUserCd();
         this.applyState = entity.getApplyState();
     }
 }

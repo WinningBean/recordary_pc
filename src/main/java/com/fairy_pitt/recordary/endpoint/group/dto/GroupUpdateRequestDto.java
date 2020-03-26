@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class GroupUpdateRequestDto {
 
-    private UserEntity gMstUserFK;
+    private Long gMstUserFK;
     private String groupName;
     private Boolean groupState;
     private String groupEx;
@@ -25,7 +25,7 @@ public class GroupUpdateRequestDto {
     }
 
     @Builder(builderClassName = "updateGroupMasterBuilder", builderMethodName = "updateGroupMasterBuilder")
-    public GroupUpdateRequestDto(UserEntity gMstUserFK)
+    public GroupUpdateRequestDto(Long gMstUserFK)
     {
         this.gMstUserFK = gMstUserFK;
     }

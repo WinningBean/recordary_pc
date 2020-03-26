@@ -24,7 +24,6 @@ public class GroupEntity {
     private String groupName;
 
     @Column(name = "GROUP_PB_ST" )
-    @ColumnDefault("true")
     private Boolean groupState;
 
     @Column(name = "GROUP_PIC" )
@@ -48,6 +47,7 @@ public class GroupEntity {
                        Boolean groupState,
                        String groupPic,
                        String  groupEx) {
+
         this.gMstUserFK = gMstUserFK;
         this.groupName = groupName;
         this.groupState = groupState;

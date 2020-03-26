@@ -11,25 +11,25 @@ import lombok.Setter;
 @NoArgsConstructor
 public class GroupSaveRequestDto {
 
-    private UserEntity gMstUserFK;
+    private String userId;
     private String groupName;
     private Boolean groupState;
     private String groupEx;
     private String groupPic;
 
    @Builder(builderClassName = "createGroupBuilder", builderMethodName = "createGroupBuilder")
-   public GroupSaveRequestDto(UserEntity gMstUserFK, String groupName, Boolean groupState, String groupPic, String  groupEx)
+   public GroupSaveRequestDto(String userId, String groupName, Boolean groupState, String groupPic, String  groupEx)
    {
-      this.gMstUserFK = gMstUserFK;
+      this.userId = userId;
       this.groupName = groupName;
       this.groupState = groupState;
       this.groupPic = groupPic;
       this.groupEx = groupEx;
    }
 
-   public GroupEntity toEntity(){
+   public GroupEntity toEntity(UserEntity user){
     return GroupEntity.builder()
-            .gMstUserFK(gMstUserFK)
+            .gMstUserFK(user)
             .groupEx(groupEx)
             .groupName(groupName)
             .groupState(groupState)

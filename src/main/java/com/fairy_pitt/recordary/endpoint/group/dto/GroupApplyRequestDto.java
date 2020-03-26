@@ -4,29 +4,30 @@ import com.fairy_pitt.recordary.common.entity.GroupApplyEntity;
 import com.fairy_pitt.recordary.common.entity.GroupEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
+@Getter
 @NoArgsConstructor
 public class GroupApplyRequestDto {
 
-    private GroupEntity groupCodeFK;
-    private UserEntity userCodeFK;
+    private Long groupCodeFK;
+    private String userCodeFK;
     private int applyState;
 
     @Builder
-    public GroupApplyRequestDto(UserEntity user, GroupEntity group, int applyState)
+    public GroupApplyRequestDto(String userId, Long groupCd, int applyState)
     {
-        this.groupCodeFK = group;
-        this.userCodeFK = user;
+        this.groupCodeFK = groupCd;
+        this.userCodeFK = userId;
         this.applyState =  applyState;
     }
 
-    public GroupApplyEntity toEntity(){
+    public GroupApplyEntity toEntity(UserEntity user, GroupEntity group){
         return GroupApplyEntity.builder()
-                .groupCodeFK(groupCodeFK)
-                .userCodeFK(userCodeFK)
+                .groupCodeFK(group)
+                .userCodeFK(user)
                 .applyState(applyState)
                 .build();
     }
