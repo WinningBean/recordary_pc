@@ -61,4 +61,8 @@ public class ScheduleService { // 포스터가 있어야 일정이 생길 수있
         return true;
     }
 
+    public ScheduleEntity findEntity(Long ScheduleCd){
+        return scheduleRepository.findByScheduleCd(ScheduleCd);
+    }
+
 }
