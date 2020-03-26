@@ -5,6 +5,8 @@ spring:
     properties:
       dialect: org.hibernate.dialect.MySQL5InnoDBDialect
     open-in-view: false
+    hibernate:
+      ddl-auto: create-drop
 
     h2:
       console:
