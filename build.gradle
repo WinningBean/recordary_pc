@@ -40,6 +40,7 @@ dependencies {
     compile('org.springframework.session:spring-session-jdbc')
     compile('org.springframework.boot:spring-boot-devtools')
     compile('org.json:json:20180813')
+    compile('joda-time:joda-time:2.2')
 
     annotationProcessor ('org.projectlombok:lombok')
 
