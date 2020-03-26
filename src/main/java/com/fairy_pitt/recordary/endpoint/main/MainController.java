@@ -33,13 +33,13 @@ public class MainController {
     private GroupMemberService groupmemberService;
 
     @GetMapping("/groupCreatePage")
-    public String createGroup(){
+    public String createGroup() {
         return "group/create";
     }
 
     @ResponseBody
     @GetMapping("/mainPage")
-    public Map<String, Object> profileRequest(){
+    public Map<String, Object> profileRequest() {
         Map<String, Object> map = new HashMap<>();
 
        /* UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
@@ -79,6 +79,7 @@ public class MainController {
         //     List<UserResponseDto> friendList = followerService.friends(userService.currentUserId());
         //     map.put("friendList", friendList);
         // }
-        // return map;
+        return map;
     }
+
 }

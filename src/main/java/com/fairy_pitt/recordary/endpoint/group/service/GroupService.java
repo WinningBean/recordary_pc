@@ -15,14 +15,15 @@ import com.fairy_pitt.recordary.endpoint.group.dto.GroupUpdateRequestDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import net.sf.json.JSON;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -93,12 +94,12 @@ public class GroupService {
                 groupMemberInfo.put("user_id", groupMember.getUserId());
                 groupMemberInfo.put("user_nm", groupMember.getUserNm());
                 groupMemberInfo.put("user_ex", groupMember.getUserEx());
-                groupMemberInfo.put("user_pic", null);
-                groupMemberInfoList.add(groupMemberInfo);
+                groupMemberInfo.put("user_pic", (Collection<?>) null);
+                groupMemberInfoList.put(groupMemberInfo);
             }
         }
-        group.add(groupInfo);
-        group.add(groupMemberInfoList);
+        group.put(groupInfo);
+        group.put(groupMemberInfoList);
         return group;
     }
 
