@@ -3,42 +3,47 @@ package com.fairy_pitt.recordary.endpoint.follower;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserListResponseDto;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+@Transactional
+@RequiredArgsConstructor
 @RestController
-@CrossOrigin
 public class FollowerController {
-    @Autowired
-    private HttpSession session;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private FollowerService followerService;
+    private final FollowerService followerService;
 
-    @Transactional
     @GetMapping("/{targetId}/follow")
-    public Map<String, Boolean> follow(@PathVariable("targetId") String targetId){
-        UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
-        Map<String, Boolean> map = new HashMap<>();
-        map.put("isFollow", followerService.create(currentUser, targetId));
-        return map;
+    public Boolean follow(@PathVariable("targetId") String targetId){
+        return followerService.save(targetId);
     }
 
-    @Transactional
-    @GetMapping("/{targetId}/unFollow")
-    public Map<String, Boolean> unFollow(@PathVariable("targetId") String targetId){
-        UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
-        Map<String, Boolean> map = new HashMap<>();
-        map.put("isUnFollow", followerService.delete(currentUser, targetId));
-        return map;
+    @DeleteMapping("/{targetId}/unFollow")
+    public String unFollow(@PathVariable("targetId") String targetId){
+        followerService.delete(targetId);
+        return targetId;
+    }
+
+    @GetMapping("/{userId}/follower")
+    public List<UserListResponseDto> followerList(@PathVariable("userId") String userId){
+        return followerService.followerList(userId);
+    }
+
+    @GetMapping("/{userId}/following")
+    public List<UserListResponseDto> followingList(@PathVariable("userId") String userId){
+        return followerService.followingList(userId);
+    }
+
+    @GetMapping("/{userId}/friends")
+    public List<UserResponseDto> friends(@PathVariable("userId") String userId){
+        return followerService.friends(userId);
     }
 }
