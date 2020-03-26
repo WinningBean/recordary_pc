@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ScheduleRepository extends JpaRepository<ScheduleEntity,Long> {
-
+    ScheduleEntity findByScheduleCd(Long scheduleCd);
     List<ScheduleEntity> findByScheduleStrBetween(Date fromDate, Date toDate);
    // List<ScheduleEntity> findAllByPostCdFK(PostEntity postEntity);
 
