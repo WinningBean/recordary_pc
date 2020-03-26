@@ -3,13 +3,12 @@ import * as dateFns from 'date-fns';
 import './Timeline.css';
 import LongMenu from 'Components/Other/MoreMenu';
 import PostShare from 'Components/Profile/PostShare';
-
-import PersonIcon from '@material-ui/icons/Person';
+import TimelineOneday from 'Components/Timeline/TimelineOneDay';
+import TimelineMultiDay from 'Components/Timeline/TimelineMultiDay';
 import ThumbUpRoundedIcon from '@material-ui/icons/ThumbUpRounded';
 import CommentIcon from '@material-ui/icons/Comment';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import Avatar from '@material-ui/core/Avatar';
-import AvatarGroup from '@material-ui/lab/AvatarGroup';
+
 import CommentTimeline from 'Components/Timeline/CommentTimeline';
 
 const TimelineWeekSchedule = props => {
@@ -53,7 +52,7 @@ const TimelineWeekSchedule = props => {
         {isClickList[index] === false ? (
           <span>{`댓글 ${list.length}개 모두 보기`}</span>
         ) : (
-          <span>{`대댓글 접기`}</span>
+          <span>{`댓글 접기`}</span>
         )}
       </div>
     </div>
@@ -120,8 +119,33 @@ const TimelineWeekSchedule = props => {
       </>
     ));
   };
+
+  const timelineInfo = (() => {
+    switch (data.postForm) {
+      case 1:
+        return (
+          <TimelineOneday
+            title={data.post_title}
+            ex={data.post_ex}
+            startDay={data.post_str_ymd}
+            endDay={data.post_end_ymd}
+          />
+        );
+      case 2:
+        return (
+          <TimelineMultiDay
+            title={data.post_title}
+            ex={data.post_ex}
+            sharedSchedual={data.sharedSchedual}
+            sharedStartDay={data.sharedStartDay}
+            sharedEndDay={data.sharedEndDay}
+          />
+        );
+    }
+  })();
+
   return (
-    <div className='timeline'>
+    <div className='timeline' style={{ minHeight: '391px' }}>
       <div className='timeline-profile'>
         <div className='profile-picture'>
           <img alt={`${data.user_id} img`} src={data.user_pic} />
@@ -140,73 +164,28 @@ const TimelineWeekSchedule = props => {
           />
         </div>
       </div>
-      <div className='timeline-info' style={{ height: 'auto', alignItems: 'center' }}>
-        <div className='timeline-week-info'>
-          <div
-            style={{
-              flex: 1,
-              fontSize: '18px',
-              display: 'flex',
-              alignItems: 'center',
-              fontWeight: 'bold',
-              borderBottom: '1px solid rgb(229, 229, 229)'
-            }}
-          >
-            저녁약속
-          </div>
-          <div style={{ flex: 3, display: 'flex', paddingTop: '8px' }}>
-            좋감힘나이러ㅏㄴ미ㅓㅏㅣㅇ너ㅏㅣㅁㄴㄹ
-          </div>
-          <div style={{ flex: 2 }}>
-            <div
-              style={{
-                height: '50%',
-                display: 'flex',
-                fontSize: '15px',
-                justifyContent: 'space-between',
-                borderBottom: '1px solid rgb(229, 229, 229)',
-                alignItems: 'center'
-              }}
-            >
-              <span style={{ fontWeight: 'bold' }}>시작</span>
-              <span>2020.3.11 수 오후 8:00</span>
-            </div>
-            <div
-              style={{
-                height: '50%',
-                display: 'flex',
-                fontSize: '15px',
-                justifyContent: 'space-between',
-                borderBottom: '1px solid rgb(229, 229, 229)',
-                alignItems: 'center'
-              }}
-            >
-              <span style={{ fontWeight: 'bold' }}>종료</span>
-              <span>2020.3.11 수 오후 8:00</span>
-            </div>
-          </div>
-          <div style={{ flex: 1, marginTop: '6px', marginLeft: '6px' }}>
-            <AvatarGroup>
-              <Avatar alt='Remy Sharp' src='http://placehold.it/40x40' />
-              <Avatar alt='Travis Howard' src='http://placehold.it/40x40' />
-              <Avatar alt='Cindy Baker' src='http://placehold.it/40x40' />
-              <Avatar>+3</Avatar>
-            </AvatarGroup>
-          </div>
+      <div className='timeline-info' style={{ height: 'auto' }}>
+        <div
+          className='timeline-week-info'
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: '340px',
+            overflow: 'auto'
+          }}
+        >
+          {timelineInfo}
         </div>
         <div className='comment-context'>
-          <div className='comment-reply' style={{ height: 'auto', maxHeight: '180px' }}>
+          <div className='comment-reply' style={{ height: '200px', overflowY: 'auto' }}>
             {commentList()}
           </div>
           <div className='comment-context-icon'>
             <div className='comment-icon-left'>
               <div className='likeIcon'>
-                <ThumbUpRoundedIcon style={{ fontSize: 30 }}>like</ThumbUpRoundedIcon>
+                <ThumbUpRoundedIcon style={{ fontSize: 25 }}>like</ThumbUpRoundedIcon>
               </div>
               <div className='comment-title'>
-                {/* <ThumbUpRoundedIcon
-                  style={{ fontSize: '25', paddingRight: '5px' }}
-                /> */}
                 {`${data.postLikePerson} 님 외 ${data.postLikeCount}명이 좋아합니다`}
               </div>
             </div>

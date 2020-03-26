@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Snackbar from 'Components/UI/Snackbar';
 import './group.css';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -10,7 +11,6 @@ import GroupIcon from '@material-ui/icons/Group';
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -38,14 +38,36 @@ const useStyles = makeStyles(theme => ({
 const GroupInfo = props => {
   const classes = useStyles();
   const data = props.data;
-  const [info, setInfo] = useState(null);
+  const [info, setInfo] = useState(undefined);
 
-  // useEffect( async ()=>{
-  //     // 그룹 대표사진 250x250 img, 유저 리스트, 유저 40x40 img
-  //     const groupInfo = (await axios.post('/group/info',{params:{group_cd:data.group.group_cd}})).data;
-  // setInfo(info);
-  // });
+  useEffect(() => {
+    // 그룹 대표사진 250x250 img, 유저 리스트, 유저 40x40 img
+    (async () => {
+      try {
+        const groupInfo = (
+          await axios.post('/group/info', { params: { group_cd: data.group.group_cd } })
+        ).data;
+        setInfo(groupInfo);
+      } catch (e) {
+        console.error(e);
+        setInfo(null);
+      }
+    })();
+  }, []);
 
+  if (info === undefined) {
+    return (
+      <Snackbar onClose={() => props.onClose()} severity='success' content='데이터 요청중...' />
+    );
+  } else if (info === null) {
+    return (
+      <Snackbar
+        onClose={() => props.onClose()}
+        severity='error'
+        content='서버에러로 인하여 데이터 요청에 실패하였습니다.'
+      />
+    );
+  }
   return (
     <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
       <div className='dialog-wrap' style={{ height: '550px', width: '600px' }}>
@@ -73,20 +95,16 @@ const GroupInfo = props => {
                 justifyContent: 'center'
               }}
             >
-              {info === null ? (
-                <CircularProgress />
-              ) : (
-                <img
-                  style={{
-                    width: '250px',
-                    height: '250px',
-                    objectFit: 'cover',
-                    borderRadius: '50%'
-                  }}
-                  alt='profile-img'
-                  src={info.group_pic}
-                />
-              )}
+              <img
+                style={{
+                  width: '250px',
+                  height: '250px',
+                  objectFit: 'cover',
+                  borderRadius: '50%'
+                }}
+                alt='profile-img'
+                src={info.group_pic}
+              />
             </div>
             <div
               style={{
@@ -106,28 +124,6 @@ const GroupInfo = props => {
                 InputProps={{
                   readOnly: true
                 }}
-                onClick={() =>
-                  setInfo({
-                    admin: {
-                      user_id: 'admin048',
-                      user_pic: 'http://placehold.it/40x40',
-                      user_nm: '어드민'
-                    },
-                    group_pic: 'http://placehold.it/250x250',
-                    member: [
-                      {
-                        user_id: 'abcd1234',
-                        user_pic: 'http://placehold.it/40x40',
-                        user_nm: '홍길동'
-                      },
-                      {
-                        user_id: 'kkk8874',
-                        user_pic: 'http://placehold.it/40x40',
-                        user_nm: '김길동'
-                      }
-                    ]
-                  })
-                }
               />
               <TextField
                 className={classes.marginBottom}
@@ -157,48 +153,34 @@ const GroupInfo = props => {
               &nbsp;
               <span>그룹 멤버</span>
             </div>
-            {info === null ? (
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  padding: '4px',
-                  minHeight: '180px'
-                }}
-              >
-                <CircularProgress />
-              </div>
-            ) : (
-              <div style={{ padding: '4px', minHeight: '180px' }}>
-                <Link to={`/${info.admin.user_id}`}>
-                  <Chip
-                    avatar={<Avatar alt={`${info.admin.user_id} img`} src={info.admin.user_pic} />}
-                    className={classes.chip}
-                    label={info.admin.user_nm}
-                    style={{
-                      backgroundColor: 'rgba(20, 81, 51, 0.8)',
-                      color: '#ffffff'
-                    }}
-                    clickable
-                  />
-                </Link>
-                {(() => {
-                  return info.member.map(value => {
-                    return (
-                      <Link to={`/${value.user_id}`}>
-                        <Chip
-                          avatar={<Avatar alt={`${value.user_id} img`} src={value.user_pic} />}
-                          className={classes.chip}
-                          label={value.user_nm}
-                          clickable
-                        />
-                      </Link>
-                    );
-                  });
-                })()}
-              </div>
-            )}
+            <div style={{ padding: '4px', minHeight: '180px' }}>
+              <Link to={`/${info.admin.user_id}`}>
+                <Chip
+                  avatar={<Avatar alt={`${info.admin.user_id} img`} src={info.admin.user_pic} />}
+                  className={classes.chip}
+                  label={info.admin.user_nm}
+                  style={{
+                    backgroundColor: 'rgba(20, 81, 51, 0.8)',
+                    color: '#ffffff'
+                  }}
+                  clickable
+                />
+              </Link>
+              {(() => {
+                return info.member.map(value => {
+                  return (
+                    <Link to={`/${value.user_id}`}>
+                      <Chip
+                        avatar={<Avatar alt={`${value.user_id} img`} src={value.user_pic} />}
+                        className={classes.chip}
+                        label={value.user_nm}
+                        clickable
+                      />
+                    </Link>
+                  );
+                });
+              })()}
+            </div>
           </div>
         </DialogContent>
       </div>

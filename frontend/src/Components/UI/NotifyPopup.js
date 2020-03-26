@@ -19,6 +19,7 @@ const NotifyPopup = () => {
       </IconButton>
       <Menu
         {...bindMenu(popupState)}
+        style={{ marginTop: '5px' }}
         getContentAnchorEl={null}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}

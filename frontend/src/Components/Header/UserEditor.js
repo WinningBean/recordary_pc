@@ -47,12 +47,7 @@ class UserEditor extends React.Component {
               defaultValue={this.state.user_nm}
               onChange={this.changeHandel}
             />
-            <UserEditTextField
-              name='user_id'
-              disabled
-              label='아이디'
-              defaultValue={this.state.user_id}
-            />
+            <UserEditTextField name='user_id' disabled label='아이디' defaultValue={this.state.user_id} />
             <UserEditTextField
               name='user_pw'
               type='password'
@@ -66,10 +61,7 @@ class UserEditor extends React.Component {
               label='바꿀 패스워드'
               onChange={e => {
                 this.changeHandel(e);
-                if (
-                  e.target.value === '' ||
-                  this.state.user_change_pw_check === ''
-                ) {
+                if (e.target.value === '' || this.state.user_change_pw_check === '') {
                   this.setState({ isSamePw: undefined });
                   return;
                 }
@@ -156,10 +148,7 @@ class UserEditor extends React.Component {
                   });
                   return;
                 }
-                if (
-                  this.state.user_change_pw !== '' ||
-                  this.state.user_change_pw_check !== ''
-                ) {
+                if (this.state.user_change_pw !== '' || this.state.user_change_pw_check !== '') {
                   if (!this.state.isSamePw) {
                     this.setState({
                       alertDialog: () => {
@@ -205,10 +194,7 @@ class UserEditor extends React.Component {
                   form.append('user_change_pw', this.state.user_change_pw);
                   const {
                     data: { updateState }
-                  } = await axios.post(
-                    'http://localhost:8080/userUpdate',
-                    form
-                  );
+                  } = await axios.post('http://localhost:8080/userUpdate', form);
                   if (updateState === true) {
                     this.setState({
                       alertDialog: () => {
@@ -279,7 +265,7 @@ const EditorButton = styled(Button)({
 });
 
 const UserEditTextField = styled(TextField)({
-  width: '560px',
+  width: '400px',
   height: '60px',
   fontSize: '15px'
 });

@@ -90,7 +90,7 @@
   transition: 0.5s ease-in;
 }
 
-.cell-row .disabled {
+.disabled {
   color: #ddd;
 }
 .selected {
