@@ -67,9 +67,11 @@ public class UserEntity extends BaseTimeEntity{
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFk")
     private  List<ScheduleTabEntity> userTab;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userCodeFK")
     private List<ScheduleMemberEntity> scheduleMembers;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "commentUserFK")
     private List<CommentEntity> userComments;
    
