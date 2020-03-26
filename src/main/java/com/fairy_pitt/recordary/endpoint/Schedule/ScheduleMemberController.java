@@ -1,13 +1,14 @@
 package com.fairy_pitt.recordary.endpoint.Schedule;
 
+import com.fairy_pitt.recordary.common.pk.ScheduleMemberEntityPK;
 import com.fairy_pitt.recordary.endpoint.Schedule.Service.ScheduleMemberService;
 import com.fairy_pitt.recordary.endpoint.Schedule.Service.ScheduleService;
+import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleMemberSaveRequestDto;
+import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleMemberUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupMemberRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +20,30 @@ public class ScheduleMemberController {
 
     private final ScheduleService scheduleService;
     private final ScheduleMemberService scheduleMemberService;
-    @GetMapping("insert")
+
+    @PutMapping("/")
+    public  Boolean save(@RequestBody ScheduleMemberSaveRequestDto requestDto){
+
+        scheduleMemberService.save(requestDto);
+        return true;
+    }
+
+    @PutMapping("update")
+    public  Boolean update(@RequestBody ScheduleMemberEntityPK id,
+                           @RequestBody ScheduleMemberUpdateRequestDto requestDto){
+        scheduleMemberService.update(id,requestDto);
+        return true;
+    }
+
+    @DeleteMapping("delete")
+    public Boolean delete(@RequestBody ScheduleMemberEntityPK id){
+        scheduleMemberService.delete(id);
+        return true;
+    }
+
+
+
+    /*    @GetMapping("insert")
     public Map<String, Boolean> addMember(@RequestParam Map<String, Object> tabInfo)
     {
         Map<String, Boolean> result = new HashMap<>();
@@ -39,6 +63,6 @@ public class ScheduleMemberController {
     {
         Map<String, Boolean> result = new HashMap<>();
         return result;
-    }
+    }*/
 
 }

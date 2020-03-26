@@ -7,7 +7,6 @@ import com.fairy_pitt.recordary.endpoint.group.dto.GroupUpdateRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
-import com.sun.tools.javac.util.List;
 import lombok.RequiredArgsConstructor;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -16,57 +15,61 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Transactional
 @RequiredArgsConstructor
 @RequestMapping("group")
-@Controller
+@RestController
 public class GroupController {
 
     private final GroupService groupService;
     private final UserService userService;
 
     @PostMapping("create")
-    public @ResponseBody Long groupCreate(@RequestBody GroupSaveRequestDto requestDto)
+    public Long groupCreate(@RequestBody GroupSaveRequestDto requestDto)
     {
         return groupService.save(requestDto);
     }
 
     @PostMapping("update/{id}")
-    public @ResponseBody Long update(@PathVariable Long id,
+    public Long update(@PathVariable Long id,
                                      @RequestBody GroupUpdateRequestDto requestDto) {
         return groupService.updateGroupInfo(id, requestDto);
     }
 
     @PostMapping("changeMaster/{groupCd}")
-    public @ResponseBody Long updateMaster(@PathVariable Long groupCd,
+    public Long updateMaster(@PathVariable Long groupCd,
                                            @RequestBody String userId) {
         return groupService.changGroupMaster(userId,groupCd);
     }
 
     @DeleteMapping("{groupCd}")
-    public @ResponseBody Long deleteGroup(@PathVariable Long groupCd){
+    public Long deleteGroup(@PathVariable Long groupCd){
         groupService.delete(groupCd);
         return groupCd;
     }
 
     @GetMapping("{groupCd}")
-    public @ResponseBody JSONArray groupPage(@PathVariable Long groupCd) {
-
+    public JSONArray groupPage(@PathVariable Long groupCd) {
         return groupService.findAllGroupInfoById(groupCd);
     }
 
     //@GetMapping
 
 
-//    @GetMapping("readAll")
-//    public @ResponseBody List<GroupResponseDto> findAllGroup()
-//    {
-//        groupService.find
-//    }
+    @GetMapping("readAll")
+    public @ResponseBody List<GroupResponseDto> findAllGroup()
+    {
+        return groupService.findAllGroup();
+    }
 
 
+    @GetMapping("group/{userId}")
+    public List<GroupResponseDto> findUserGroup(@PathVariable String userId){
 
+        return groupService.findUserGroups(userId);
+    }
 
 
 //    public @ResponseBody GroupDto groupShow()
