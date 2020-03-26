@@ -40,10 +40,10 @@ public class PostService {
     @Transactional
     public Boolean save(PostSaveRequestDto requestDto) {
         PostEntity postEntity = PostEntity.builder()
-                .userFK(userService.findEntity(requestDto.getUserFK_id()))
-                .groupFK(groupService.findEntity(requestDto.getGroupFK_cd()))
-                .postOriginFK(this.findEntity(requestDto.getPostOriginFK_cd()))
-                .scheduleFK(scheduleService.findEntity(requestDto.getScheduleFK_cd()))
+                .userFK(userService.findEntity(requestDto.getUserId()))
+                .groupFK(groupService.findEntity(requestDto.getGroupCd()))
+                .postOriginFK(this.findEntity(requestDto.getPostOriginCd()))
+                .scheduleFK(scheduleService.findEntity(requestDto.getScheduleCd()))
                 //.mediaFK()
                 .postEx(requestDto.getPostEx())
                 .postPublicState(requestDto.getPostPublicState())

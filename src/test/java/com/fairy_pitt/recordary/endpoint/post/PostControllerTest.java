@@ -59,11 +59,11 @@ public class PostControllerTest {
         String postEndYMD = "2c0200311";
 
         PostSaveRequestDto requestDto = PostSaveRequestDto.builder()
-                .userFK_id(user1.getUserId())
-                .groupFK_cd(null)
-                .postOriginFK_cd(null)
-                .scheduleFK_cd(null)
-                .mediaFK_cd(null)
+                .userId(user1.getUserId())
+                .groupCd(null)
+                .postOriginCd(null)
+                .scheduleCd(null)
+                .mediaCd(null)
                 .postEx(postEx)
                 .postPublicState(postPublicState)
                 .postStrYMD(postStrYMD)

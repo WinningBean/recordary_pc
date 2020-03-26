@@ -12,31 +12,31 @@ import javax.persistence.Transient;
 @Getter
 @NoArgsConstructor
 public class PostSaveRequestDto {
-    private String userFK_id;
-    private Long groupFK_cd;
-    private Long postOriginFK_cd;
-    private Long scheduleFK_cd;
-    private Long mediaFK_cd;
+    private String userId;
+    private Long groupCd;
+    private Long postOriginCd;
+    private Long scheduleCd;
+    private Long mediaCd;
     private String postEx;
     private int postPublicState;
     private String postStrYMD;
     private String postEndYMD;
 
     @Builder
-    public PostSaveRequestDto(String userFK_id,
-                              Long groupFK_cd,
-                              Long postOriginFK_cd,
-                              Long scheduleFK_cd,
-                              Long mediaFK_cd,
+    public PostSaveRequestDto(String userId,
+                              Long groupCd,
+                              Long postOriginCd,
+                              Long scheduleCd,
+                              Long mediaCd,
                               String postEx,
                               int postPublicState,
                               String postStrYMD,
                               String postEndYMD) {
-        this.userFK_id = userFK_id;
-        this.groupFK_cd = groupFK_cd;
-        this.postOriginFK_cd = postOriginFK_cd;
-        this.scheduleFK_cd = scheduleFK_cd;
-        this.mediaFK_cd = mediaFK_cd;
+        this.userId = userId;
+        this.groupCd = groupCd;
+        this.postOriginCd = postOriginCd;
+        this.scheduleCd = scheduleCd;
+        this.mediaCd = mediaCd;
         this.postEx = postEx;
         this.postPublicState = postPublicState;
         this.postStrYMD = postStrYMD;
