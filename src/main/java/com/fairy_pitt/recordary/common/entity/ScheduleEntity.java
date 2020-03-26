@@ -1,18 +1,15 @@
 package com.fairy_pitt.recordary.common.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
 
-@Data
+@Getter
 @Table(name = "Schedule_TB")
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 public class ScheduleEntity {
 
@@ -45,6 +42,37 @@ public class ScheduleEntity {
    @OneToMany(fetch = FetchType.LAZY, mappedBy = "scheduleCodeFK")
    private List<ScheduleMemberEntity> scheduleMembers;
 
+   @Builder
+   public ScheduleEntity(ScheduleTabEntity TabCodeFK,
+                         PostEntity PostFK,
+                         String scheduleNm,
+                         String scheduleEx,
+                         Date scheduleStr,
+                         Date scheduleEnd,
+                         String scheduleCol){
+
+      this.TabCodeFK = TabCodeFK;
+      this.PostFK = PostFK;
+      this.scheduleNm = scheduleNm;
+      this.scheduleEx = scheduleEx;
+      this.scheduleStr = scheduleStr;
+      this.scheduleEnd = scheduleEnd;
+      this.scheduleCol = scheduleCol;
+   }
+
+   public void updateSchedule(ScheduleTabEntity TabCodeFK,
+                              String scheduleNm,
+                              String scheduleEx,
+                              Date scheduleStr,
+                              Date scheduleEnd,
+                              String scheduleCol){
+      this.TabCodeFK = TabCodeFK;
+      this.scheduleNm = scheduleNm;
+      this.scheduleEx = scheduleEx;
+      this.scheduleStr = scheduleStr;
+      this.scheduleEnd = scheduleEnd;
+      this.scheduleCol = scheduleCol;
+   }
    //private String scheduleLocation;
 
 //   @OneToOne(fetch = FetchType.LAZY, mappedBy = "scheduleFK")

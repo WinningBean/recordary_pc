@@ -56,7 +56,7 @@ public class UserEntity extends BaseTimeEntity{
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = {CascadeType.ALL})
     private List<PostLikeEntity> postLikeList;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tabUserFk")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFk")
     private  List<ScheduleTabEntity> userTab;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userCodeFK")
