@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ScheduleTabRepository extends JpaRepository<ScheduleTabEntity,Long> {
 
-    //ScheduleTabEntity findByTabCd(Long tacCd);
+    ScheduleTabEntity findByTabCd(Long tacCd);
 }
