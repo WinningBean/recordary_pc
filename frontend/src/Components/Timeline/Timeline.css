@@ -260,20 +260,6 @@ fieldset {
   background-color: rgba(20, 81, 51, 0.9) !important;
 }
 
-/* 스크롤 css */
-.comment-reply::-webkit-scrollbar-track {
-  border-radius: 8px;
-}
-
-.comment-reply::-webkit-scrollbar {
-  width: 8px;
-}
-
-.comment-reply::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background-color: lightgray;
-}
-
 .transition-all {
   transition: all 0.3s ease-out;
 }

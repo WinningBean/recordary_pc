@@ -37,11 +37,7 @@ header {
   margin-right: 10px;
 }
 
-#header-right
-  > .search-user
-  > .makeStyles-search-155
-  > .makeStyles-searchIcon-156
-  > .MuiSvgIcon-root {
+#header-right > .search-user > .makeStyles-search-155 > .makeStyles-searchIcon-156 > .MuiSvgIcon-root {
   color: white;
 }
 
@@ -50,12 +46,10 @@ header {
 }
 
 #header-right .header-ring {
-  margin-left: 12px;
   cursor: pointer;
 }
 
 #header-right .profile-icon {
-  margin-left: 10px;
   width: 40px;
   height: 40px;
   cursor: pointer;
@@ -120,4 +114,9 @@ header {
 }
 .notify-list-time {
   color: rgb(209, 204, 192);
+}
+/* TodoList */
+.before-todo:hover {
+  background-color: rgba(209, 204, 192, 0.2);
+  cursor: pointer;
 }

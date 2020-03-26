@@ -271,10 +271,7 @@ const Calendar = props => {
               if (props.choiceSharedStartDate !== null && props.choiceSharedEndDate === null) {
                 if (dateFns.differenceInCalendarDays(currDay, props.choiceSharedStartDate) === 0)
                   return { border: '2px solid green' };
-              } else if (
-                props.choiceSharedStartDate !== null &&
-                props.choiceSharedEndDate !== null
-              ) {
+              } else if (props.choiceSharedStartDate !== null && props.choiceSharedEndDate !== null) {
                 if (
                   dateFns.isWithinInterval(currDay, {
                     start: props.choiceSharedStartDate,
@@ -289,10 +286,7 @@ const Calendar = props => {
             {dateFns.isSameDay(day, selectedDate) ? <div className='selected' /> : null}
             <span className='bg'>{formattedDate}</span>
             <span className='number'>{formattedDate}</span>
-            <div
-              className='more'
-              onClick={e => setPopover({ event: e.currentTarget, date: currDay })}
-            />
+            <div className='more' onClick={e => setPopover({ event: e.currentTarget, date: currDay })} />
           </div>
         );
         day = dateFns.addDays(day, 1);
@@ -420,8 +414,7 @@ const Calendar = props => {
     if (dayLocation === null) {
       return null;
     }
-    if (!dateFns.isSameMonth(dayLocation[parseInt(dayLocation.length / 2)].day, currentMonth))
-      return null;
+    if (!dateFns.isSameMonth(dayLocation[parseInt(dayLocation.length / 2)].day, currentMonth)) return null;
     console.log('render schedual');
     const sc = [];
 
@@ -482,9 +475,7 @@ const Calendar = props => {
       }
       if (dateFns.isSameDay(value.start, value.end)) {
         if (copyDayLocation[index].isSecondBlock) {
-          sc.push(
-            shortSC(value.cd, copyDayLocation[index].x, copyDayLocation[index].y + 20, value.ex)
-          );
+          sc.push(shortSC(value.cd, copyDayLocation[index].x, copyDayLocation[index].y + 20, value.ex));
         } else {
           copyDayLocation[index].isSecondBlock = true;
           sc.push(shortSC(value.cd, copyDayLocation[index].x, copyDayLocation[index].y, value.ex));
@@ -565,8 +556,7 @@ const Calendar = props => {
           }
 
           if (
-            dateFns.addDays(copyDayLocation[copyDayLocation.length - 1].day, 1) <=
-            dateFns.addWeeks(value.start, i + 1)
+            dateFns.addDays(copyDayLocation[copyDayLocation.length - 1].day, 1) <= dateFns.addWeeks(value.start, i + 1)
           ) {
             const cloneElement = React.cloneElement(
               sc[sc.length - 1],
@@ -586,16 +576,7 @@ const Calendar = props => {
             return;
           }
           if (secondBlock) {
-            sc.push(
-              longSC(
-                value.cd,
-                copyDayLocation[index].x + 85,
-                0,
-                copyDayLocation[index].y + 25,
-                value.ex,
-                i + 1
-              )
-            );
+            sc.push(longSC(value.cd, copyDayLocation[index].x + 85, 0, copyDayLocation[index].y + 25, value.ex, i + 1));
           } else {
             const diffDay = dateFns.differenceInDays(value.end, copyDayLocation[index].day) + 1;
             sc.push(longSC(value.cd, 85 * diffDay, 0, copyDayLocation[index].y, value.ex, i + 1));
@@ -652,12 +633,7 @@ const Calendar = props => {
       {CalendarHeader}
       {CalendarDays}
       {type === 0 ? (
-        <div
-          id='wrap-cells'
-          onMouseDown={onMouseDownCell}
-          onMouseMove={MouseMoveHandler}
-          onMouseUp={onScMouseUp}
-        >
+        <div id='wrap-cells' onMouseDown={onMouseDownCell} onMouseMove={MouseMoveHandler} onMouseUp={onScMouseUp}>
           {Cells}
           {Schedual()}
         </div>
@@ -685,9 +661,7 @@ const Calendar = props => {
           <div className='calendar-popover-header'>
             {popover === null ? null : (
               <>
-                <div style={{ fontSize: '24px', textAlign: 'center' }}>
-                  {dateFns.format(popover.date, 'd일')}
-                </div>
+                <div style={{ fontSize: '24px', textAlign: 'center' }}>{dateFns.format(popover.date, 'd일')}</div>
                 <div
                   style={{
                     fontSize: '12px',
@@ -800,10 +774,7 @@ const Calendar = props => {
         disableRestoreFocus
         onClose={() => setDetailedSC(null)}
       >
-        <div
-          className='calendar-detailedsc'
-          style={{ borderTop: '5px solid rgba(158, 95, 255, 0.5)' }}
-        >
+        <div className='calendar-detailedsc' style={{ borderTop: '5px solid rgba(158, 95, 255, 0.5)' }}>
           <div className='calendar-detailedsc-content'>
             <div
               style={{
@@ -839,16 +810,11 @@ const Calendar = props => {
           </div>
           {type === 0 ? (
             <div className='calendar-detailedsc-buttons'>
-              <div
-                className='calendar-detailedsc-buttons-button'
-                onClick={userDate => setScheduleEditOpen(true)}
-              >
+              <div className='calendar-detailedsc-buttons-button' onClick={userDate => setScheduleEditOpen(true)}>
                 <CreateIcon fontSize='small' />
                 수정
               </div>
-              {scheduleEditOpen === true ? (
-                <CalendarScheduleEdit onCancel={() => setScheduleEditOpen(false)} />
-              ) : null}
+              {scheduleEditOpen === true ? <CalendarScheduleEdit onCancel={() => setScheduleEditOpen(false)} /> : null}
               <div
                 style={{
                   background: '#e5e5e5',

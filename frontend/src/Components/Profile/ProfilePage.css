@@ -172,8 +172,9 @@ nav > div {
   height: auto;
   object-fit: cover;
 }
+
 .timeline-profile-schedule:hover,
-.media-box:hover {
+.media-box-hover:hover {
   cursor: pointer;
   box-shadow: 1px 1px 10px rgba(100, 100, 100, 0.9);
 }

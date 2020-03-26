@@ -170,8 +170,7 @@ class Register extends React.Component {
                     return (
                       <Alert severity='error'>
                         <AlertTitle>Error</AlertTitle>
-                        서버 문제로 인해 회원가입에 실패하였습니다. 다시 한번
-                        시도해주세요.
+                        서버 문제로 인해 회원가입에 실패하였습니다. 다시 한번 시도해주세요.
                       </Alert>
                     );
                   }
@@ -209,10 +208,7 @@ class Register extends React.Component {
                 style={{ width: '300px', marginBottom: '10px' }}
                 onChange={e => {
                   this.changeHandel(e);
-                  if (
-                    e.target.value === '' ||
-                    this.state.user_pw_check === ''
-                  ) {
+                  if (e.target.value === '' || this.state.user_pw_check === '') {
                     this.setState({ isSamePw: undefined });
                     return;
                   }

@@ -474,12 +474,6 @@ class Login extends React.Component {
         {registerPage}
         <form action='go_to_main' onSubmit={this.loginHandel}>
           <div className='icon'>
-            {/* <a href="main" onClick={(e) => {
-                            e.preventDefault();
-                            this.props.onChangePage();
-                        }}>
-                            <img className="title-image" alt="Recordary icon" src="http://localhost:8080/Recodary.png"/>
-                        </a> */}
             <Link to='/main'>
               {/* <img className="title-image" alt="Recordary icon" src="http://localhost:8080/Recodary.png"/> */}
               <img className='title-image' alt='Recordary icon' src='img/Recordary.png' />

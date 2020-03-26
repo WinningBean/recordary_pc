@@ -372,6 +372,7 @@ class Profile extends React.Component {
             <div className='profile-MediaTimeline'>
               {this.state.post.map((value, index) => (
                 <div
+                  className='media-box-hover'
                   style={{
                     display: 'flex',
                     flexWrap: 'wrap',
