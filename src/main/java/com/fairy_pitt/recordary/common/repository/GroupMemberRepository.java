@@ -11,6 +11,6 @@ import java.util.List;
 
 @Repository
 public interface GroupMemberRepository extends JpaRepository<GroupMemberEntity, GroupMemberPK> {
-    List<GroupEntity> findAllByUserCodeFK(UserEntity userEntity);
-    List<UserEntity> findAllByGroupCodeFK(GroupEntity groupEntity);
+//    List<GroupEntity> findAllByUserCodeFK(UserEntity userEntity);
+//    List<UserEntity> findAllByGroupCodeFK(GroupEntity groupEntity);
 }

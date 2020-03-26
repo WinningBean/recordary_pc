@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 public interface ScheduleRepository extends JpaRepository<ScheduleEntity,Long> {
-
+    ScheduleEntity findByScheduleCd(Long scheduleCd);
     List<ScheduleEntity> findByScheduleStrBetween(Date fromDate, Date toDate);
 
   //  ResponseEntity<Long> postForEntity(String url, ScheduleSaveRequestDto requestDto, Class<Long> longClass);

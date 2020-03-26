@@ -24,7 +24,6 @@ import java.util.Map;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
-    private final PostService postService ;
     private final ScheduleTabService scheduleTabService;
 
 

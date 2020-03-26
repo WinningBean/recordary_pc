@@ -1,7 +1,9 @@
 package com.fairy_pitt.recordary.endpoint.post;
 
 import com.fairy_pitt.recordary.common.entity.PostEntity;
+import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
+import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostUpdateRequestDto;
 import org.junit.After;
@@ -32,21 +34,36 @@ public class PostControllerTest {
     private TestRestTemplate restTemplate;
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @After
     public void tearDown() throws Exception {
         postRepository.deleteAll();
+        postRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
     public void Post_등록된다() throws Exception {
         //given
+        UserEntity user1 = userRepository.save(UserEntity.builder()
+                .userId("testUser1")
+                .userPw("testPassword")
+                .userNm("테스트 유저1")
+                .build());
+
         String postEx = "테스트 게시글";
         int postPublicState = 1;
         String postStrYMD = "20200310";
-        String postEndYMD = "20200311";
+        String postEndYMD = "2c0200311";
 
         PostSaveRequestDto requestDto = PostSaveRequestDto.builder()
+                .userFK_id(user1.getUserId())
+                .groupFK_cd(null)
+                .postOriginFK_cd(null)
+                .scheduleFK_cd(null)
+                .mediaFK_cd(null)
                 .postEx(postEx)
                 .postPublicState(postPublicState)
                 .postStrYMD(postStrYMD)
@@ -56,13 +73,14 @@ public class PostControllerTest {
         String url = "http://localhost:" + port + "/post/";
 
         //when
-        ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url, requestDto, Long.class);
+        ResponseEntity<Boolean> responseEntity = restTemplate.postForEntity(url, requestDto, Boolean.class);
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).isGreaterThan(0L);
+        assertThat(responseEntity.getBody()).isEqualTo(true);
 
         List<PostEntity> all = postRepository.findAll();
+        assertThat(all.get(0).getUserFK().getUserId()).isEqualTo(user1.getUserId());
         assertThat(all.get(0).getPostEx()).isEqualTo(postEx);
         assertThat(all.get(0).getPostPublicState()).isEqualTo(postPublicState);
         assertThat(all.get(0).getPostStrYMD()).isEqualTo(postStrYMD);
@@ -72,7 +90,14 @@ public class PostControllerTest {
     @Test
     public void Post_수정된다() throws Exception {
         //given
+        UserEntity user1 = userRepository.save(UserEntity.builder()
+                .userId("testUser1")
+                .userPw("testPassword")
+                .userNm("테스트 유저1")
+                .build());
+
         PostEntity savedPost = postRepository.save(PostEntity.builder()
+                .userFK(user1)
                 .postEx("테스트 게시글")
                 .postPublicState(1)
                 .postStrYMD("20200310")
@@ -102,5 +127,103 @@ public class PostControllerTest {
         List<PostEntity> all = postRepository.findAll();
         assertThat(all.get(0).getPostEx()).isEqualTo(expectedPostEx);
         assertThat(all.get(0).getPostPublicState()).isEqualTo(expectedPostPublicState);
+    }
+
+    @Test
+    public void Post_사용자게시물() throws Exception{
+        //given
+        UserEntity user1 = userRepository.save(UserEntity.builder()
+                .userId("testUser1")
+                .userPw("testPassword")
+                .userNm("테스트 유저1")
+                .build());
+
+        postRepository.save(PostEntity.builder()
+                .userFK(user1)
+                .postEx("테스트 게시글1")
+                .postPublicState(1)
+                .postStrYMD("20200310")
+                .postEndYMD("20200311")
+                .build());
+        postRepository.save(PostEntity.builder()
+                .userFK(user1)
+                .postEx("테스트 게시글2")
+                .postPublicState(1)
+                .postStrYMD("20200310")
+                .postEndYMD("20200311")
+                .build());
+        postRepository.save(PostEntity.builder()
+                .userFK(user1)
+                .postEx("테스트 게시글3")
+                .postPublicState(1)
+                .postStrYMD("20200310")
+                .postEndYMD("20200311")
+                .build());
+        postRepository.save(PostEntity.builder()
+                .userFK(user1)
+                .postEx("테스트 게시글4")
+                .postPublicState(1)
+                .postStrYMD("20200310")
+                .postEndYMD("20200311")
+                .build());
+
+        String url = "http://localhost:" + port + "/post/user/" + user1.getUserId();
+
+        //when
+        ResponseEntity<List> responseEntity = restTemplate.getForEntity(url, List.class);
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody().size()).isEqualTo(4);
+    }
+
+    @Test
+    public void Post_사용자게시물검색() throws Exception{
+        //given
+        UserEntity user1 = userRepository.save(UserEntity.builder()
+                .userId("testUser1")
+                .userPw("testPassword")
+                .userNm("테스트 유저1")
+                .build());
+
+        postRepository.save(PostEntity.builder()
+                .userFK(user1)
+                .postEx("테스트 게시글1")
+                .postPublicState(1)
+                .postStrYMD("20200310")
+                .postEndYMD("20200311")
+                .build());
+        postRepository.save(PostEntity.builder()
+                .userFK(user1)
+                .postEx("테스트 게시글2")
+                .postPublicState(1)
+                .postStrYMD("20200310")
+                .postEndYMD("20200311")
+                .build());
+        postRepository.save(PostEntity.builder()
+                .userFK(user1)
+                .postEx("테스트 게시글3")
+                .postPublicState(1)
+                .postStrYMD("20200310")
+                .postEndYMD("20200311")
+                .build());
+        postRepository.save(PostEntity.builder()
+                .userFK(user1)
+                .postEx("게시글4")
+                .postPublicState(1)
+                .postStrYMD("20200310")
+                .postEndYMD("20200311")
+                .build());
+
+        String searchContent = "테스트";
+
+        String url = "http://localhost:" + port + "/post/user/" + user1.getUserId() + "/search?input=" + searchContent;
+
+        //when
+        ResponseEntity<List> responseEntity = restTemplate.getForEntity(url, List.class);
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody().size()).isEqualTo(3);
     }
 }

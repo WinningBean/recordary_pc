@@ -4,52 +4,67 @@ import com.fairy_pitt.recordary.common.entity.PostEntity;
 import com.fairy_pitt.recordary.common.entity.PostLikeEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.PostLikeRepository;
-import com.fairy_pitt.recordary.common.repository.PostRepository;
-import com.fairy_pitt.recordary.common.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fairy_pitt.recordary.endpoint.post.dto.PostListResponseDto;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserListResponseDto;
+import com.fairy_pitt.recordary.endpoint.user.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Transactional
+@RequiredArgsConstructor
 @Service
 public class PostLikeService {
-    @Autowired
-    PostLikeRepository postLikeRepository;
-    @Autowired
-    PostRepository postRepository;
-    @Autowired
-    UserRepository userRepository;
 
-    public Boolean create(Long postCd, String userId){
-        PostEntity post = postRepository.findByPostCd(postCd);
-        UserEntity user = userRepository.findByUserId(userId);
+    private final PostLikeRepository postLikeRepository;
+    private final PostService postService;
+    private final UserService userService;
 
-        PostLikeEntity postLike = new PostLikeEntity();
-        postLike.setPostFK(post);
-        postLike.setUserFK(user);
+    @Transactional
+    public Boolean save(Long postCd){
+        PostLikeEntity postLikeEntity = PostLikeEntity.builder()
+                .postFK(postService.findEntity(postCd))
+                .userFK(userService.currentUser())
+                .build();
 
-        Optional<PostLikeEntity> resultPostLikeEntity = Optional.of(postLikeRepository.save(postLike));
-        if (resultPostLikeEntity.isPresent()) return true;
-        else return false;
+        return Optional.ofNullable(postLikeRepository.save(postLikeEntity)).isPresent();
     }
 
-    public Boolean delete(Long postCd, String userId){
-        PostEntity post = postRepository.findByPostCd(postCd);
-        UserEntity user = userRepository.findByUserId(userId);
-        PostLikeEntity postLike = postLikeRepository.findByPostFKAndUserFK(post, user);
-        postLikeRepository.delete(postLike);
-        if (postLikeRepository.findByPostFKAndUserFK(post, user) != null) return false;
-        return true;
+    @Transactional
+    public void delete(Long postCd){
+        PostLikeEntity postLikeEntity = Optional.ofNullable(
+                postLikeRepository.findByPostFKAndUserFK(postService.findEntity(postCd), userService.currentUser()))
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시물에 좋아요를 하지 않았습니다. code = " + postCd));
+        postLikeRepository.delete(postLikeEntity);
     }
 
-    public List<PostEntity> userPostLikeSearch(String userId){
-        UserEntity user = userRepository.findByUserId(userId);
-        return postLikeRepository.findAllByUserFK(user);
+    @Transactional(readOnly = true)
+    public List<UserListResponseDto> postLikeUser(Long postCd){
+        PostEntity postEntity = postService.findEntity(postCd);
+        List<UserEntity> userEntityList = new ArrayList<>();
+        for (PostLikeEntity postLikeEntity : postLikeRepository.findAllByPostFK(postEntity)){
+            userEntityList.add(postLikeEntity.getUserFK());
+        }
+        return userEntityList.stream()
+                .map(UserListResponseDto::new)
+                .collect(Collectors.toList());
     }
 
-    public List<UserEntity> postLikeUserSearch(Long postCd){
-        PostEntity post = postRepository.findByPostCd(postCd);
-        return postLikeRepository.findAllByPostFK(post);
+    @Transactional(readOnly = true)
+    public List<PostListResponseDto> userLikePost(String userId){
+        UserEntity userEntity = userService.findEntity(userId);
+        List<PostEntity> postEntityList = new ArrayList<>();;
+        for (PostLikeEntity postLikeEntity : postLikeRepository.findAllByUserFK(userEntity)){
+            postEntityList.add(postLikeEntity.getPostFK());
+        }
+        System.out.println("================");
+        return postEntityList.stream()
+                .map(PostListResponseDto::new)
+                .collect(Collectors.toList());
     }
 }

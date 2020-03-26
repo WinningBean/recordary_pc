@@ -56,8 +56,8 @@ public class UserController {
         return userService.possibleId(userId);
     }
 
-    @GetMapping("/current")
-    public String currentUser(){
-        return userService.currentUser();
+    @GetMapping("/currentId")
+    public String currentUserId(){
+        return userService.currentUserId();
     }
 }

@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface MediaRepository extends JpaRepository<MediaEntity, Long> {
-    String findByMediaCd(Long mediaCd);
+    MediaEntity findByMediaCd(Long mediaCd);
 }

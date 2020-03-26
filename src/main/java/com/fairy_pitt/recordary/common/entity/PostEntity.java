@@ -1,5 +1,6 @@
 package com.fairy_pitt.recordary.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,21 +51,38 @@ public class PostEntity extends BaseTimeEntity{
 
     @Column(name = "POST_END_YMD")
     private String postEndYMD;
-    
+
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "postFK", cascade = {CascadeType.ALL})
     private List<PostTagEntity> postTagList;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "postOriginFK", cascade = {CascadeType.ALL})
     private List<PostEntity> postOriginList;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "commentPostFK")
     private List<CommentEntity> postComments;
     
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "postFK", cascade = {CascadeType.ALL})
     private List<PostLikeEntity> postLikList;
 
     @Builder
-    public PostEntity(String postEx, int postPublicState, String postStrYMD, String postEndYMD){
+    public PostEntity(UserEntity userFK,
+                      GroupEntity groupFK,
+                      PostEntity postOriginFK,
+                      ScheduleEntity scheduleFK,
+                      MediaEntity mediaFK,
+                      String postEx,
+                      int postPublicState,
+                      String postStrYMD,
+                      String postEndYMD){
+        this.userFK = userFK;
+        this.groupFK = groupFK;
+        this.postOriginFK = postOriginFK;
+        this.scheduleFK = scheduleFK;
+        this.mediaFK = mediaFK;
         this.postEx = postEx;
         this.postPublicState = postPublicState;
         this.postStrYMD = postStrYMD;

@@ -6,50 +6,67 @@ import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.common.repository.PostTagRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
+import com.fairy_pitt.recordary.endpoint.post.dto.PostListResponseDto;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserListResponseDto;
+import com.fairy_pitt.recordary.endpoint.user.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Transactional
+@RequiredArgsConstructor
 @Service
 public class PostTagService {
-    @Autowired
-    private PostTagRepository postTagRepository;
-    @Autowired
-    private PostRepository postRepository;
-    @Autowired
-    private UserRepository userRepository;
 
-    public Boolean create(Long postFK, Long userFK){
-        PostEntity post = postRepository.findByPostCd(postFK);
-        UserEntity user = userRepository.findByUserCd(userFK);
+    private final PostTagRepository postTagRepository;
+    private final PostService postService;
+    private final UserService userService;
 
-        PostTagEntity postTag = new PostTagEntity();
-        postTag.setPostFK(post);
-        postTag.setUserFK(user);
+    @Transactional
+    public Boolean save(Long postCd, String userId){
+        PostTagEntity postTagEntity = PostTagEntity.builder()
+                .postFK(postService.findEntity(postCd))
+                .userFK(userService.findEntity(userId))
+                .build();
 
-        Optional<PostTagEntity> resultPostTag = Optional.of(postTagRepository.save(postTag));
-        if (resultPostTag.isPresent()) return true;
-        else return false;
+        return Optional.ofNullable(postTagRepository.save(postTagEntity)).isPresent();
     }
 
-    public  Boolean delete(Long postFK, Long userFK){
-        PostEntity post = postRepository.findByPostCd(postFK);
-        UserEntity user = userRepository.findByUserCd(userFK);
-        PostTagEntity postTag = postTagRepository.findByPostFKAndUserFK(post, user);
-        postTagRepository.delete(postTag);
-        if (postTagRepository.findByPostFKAndUserFK(post, user) != null) return false;
-        else return true;
+    @Transactional
+    public void delete(Long postCd, String userId){
+        PostTagEntity postTagEntity = Optional.ofNullable(
+                postTagRepository.findByPostFKAndUserFK(postService.findEntity(postCd), userService.findEntity(userId)))
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시물에 태그되어 있지 않습니다. post_code = " + postCd + ", user_id = " + userId));
+        postTagRepository.delete(postTagEntity);
     }
 
-    public List<PostEntity> userTagPost(Long userFK){ // 사용자가 태그된 포스트
-        UserEntity user = userRepository.findByUserCd(userFK);
-        return postTagRepository.findAllByUserFK(user);
+    @Transactional(readOnly = true)
+    public List<UserListResponseDto> postTagUser(Long postCd){
+        PostEntity postEntity = postService.findEntity(postCd);
+        List<UserEntity> userEntityList = new ArrayList<>();
+        for (PostTagEntity postTagEntity : postTagRepository.findAllByPostFK(postEntity)){
+            userEntityList.add(postTagEntity.getUserFK());
+        }
+        return userEntityList.stream()
+                .map(UserListResponseDto::new)
+                .collect(Collectors.toList());
     }
 
-    public List<UserEntity> postTagUser(Long postFK){
-        PostEntity post = postRepository.findByPostCd(postFK);
-        return postTagRepository.findAllByPostFK(post);
+    @Transactional(readOnly = true)
+    public List<PostListResponseDto> userTagPost(String userId){
+        UserEntity userEntity = userService.findEntity(userId);
+        List<PostEntity> postEntityList = new ArrayList<>();
+        for (PostTagEntity postTagEntity : postTagRepository.findAllByUserFK(userEntity)){
+            postEntityList.add(postTagEntity.getPostFK());
+        }
+        return postEntityList.stream()
+                .map(PostListResponseDto::new)
+                .collect(Collectors.toList());
     }
 }

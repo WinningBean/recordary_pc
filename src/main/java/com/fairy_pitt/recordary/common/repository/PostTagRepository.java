@@ -9,9 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
 public interface PostTagRepository extends JpaRepository<PostTagEntity, PostTagPK> {
     PostTagEntity findByPostFKAndUserFK(PostEntity postFK, UserEntity userFK);
-    List<PostEntity> findAllByUserFK(UserEntity userFK);
-    List<UserEntity> findAllByPostFK(PostEntity postFK);
+    List<PostTagEntity> findAllByUserFK(UserEntity userFK);
+    List<PostTagEntity> findAllByPostFK(PostEntity postFK);
 }

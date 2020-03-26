@@ -128,75 +128,17 @@ public class GroupService {
         }
         return  result;
     }
-/*    @Transactional(readOnly = true)
+/*   
+ @Transactional(readOnly = true)
     public List<GroupMemberResponseDto> findGroupMembers(Long groupCd){
 
         return groupRepository.findByGroupCd(groupCd).getMembers().stream()
                 .map(GroupMemberResponseDto::new)
                 .collect(Collectors.toList());
     }*/
+
+    @Transactional(readOnly = true)
+    public GroupEntity findEntity(Long groupCd){
+        return groupRepository.findByGroupCd(groupCd);
+    }
 }
-
-//    @Transactional(readOnly = true)
-//    public List<GroupResponseDto> findAllGroup(Long id) {
-//        GroupEntity entity = groupRepository.findById(id)
-//                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + id));
-//
-//        return new GroupResponseDto(entity);
-//    }
-
-//    public List<GroupMemberDto> findGroupMEmber(Long groupCd)
-//    {
-//        List<GroupMemberEntity> groupMemberList = groupRepository.findByGroupCd(groupCd).getMembers();
-//
-//    }
-
-/*
-    @Autowired
-    private final GroupRepository groupRepository;
-    private final UserRepository usersRepository;
-    private final GroupMemberService groupMemberService;
-
-    public GroupEntity groupCreate(GroupEntity groupEntity){
-        GroupEntity resultGroupEntity = groupRepository.save(groupEntity);
-        return resultGroupEntity;
-    }
-
-    public GroupEntity findGroupId(long id){
-        return groupRepository.findByGroupCd(id);
-    }
-
-
-    //그룹 검색
-    public List<GroupEntity> groupSearch(String gName){
-
-
-    return groupRepository.findBygNameLike("%"+gName+"%");
-
-    }
-
-    public Optional<GroupEntity> findGroup(GroupEntity groupEntity){
-
-        return groupRepository.findById(groupEntity.getGroupCd());
-    }
-
-    public Boolean groupUpdate(GroupEntity groupEntity, long id){
-//        GroupEntity  thisBoardEntity = this.findGroupId(id);
-//
-//        //GroupEntity updateGroupEntity = thisBoardEntity.get();
-//
-//        thisBoardEntity.(groupEntity.getGEx());
-//        thisBoardEntity.setGName(groupEntity.getGName());
-//        thisBoardEntity.setGPic(groupEntity.getGPic());
-//        thisBoardEntity.setGState(groupEntity.getGState());
-//
-//        groupRepository.save(thisBoardEntity);
-         return  true;
-    }
-
-    //모든 공개그룹
-    public List<GroupEntity> findAllPublicGroup()
-    {
-        return groupRepository.findAllBygState(true);
-    }*/
-
