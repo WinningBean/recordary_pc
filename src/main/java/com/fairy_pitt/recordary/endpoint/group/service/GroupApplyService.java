@@ -25,7 +25,6 @@ public class GroupApplyService {
     private final GroupApplyRepository groupApplyRepository;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
-    private final UserService userService;
 
     @Transactional
     public int save(GroupApplyRequestDto requestDto){
@@ -73,41 +72,4 @@ public class GroupApplyService {
         return groupApplyResponseDtoList;
     }
 
-
-
-/*    @Autowired
-    private  final  GroupApplyRepository groupApplyRepository;
-    private final UserService userInfoService;
-    private final  GroupService groupService;
-
-    public  Boolean applyInsert(GroupApplyEntity groupApplyInfo)
-    {
-
-    *//*    Optional<GroupApplyEntity> resultPostTag = Optional.of(groupApplyRepository.save(groupApplyInfo));
-        if (resultPostTag.isPresent()) return true;
-        else*//* return false;
-    }
-
-    public Boolean applyDelete(GroupMemberPK groupApplyInfoID)
-    {
-       // groupApplyRepository.delete(groupApplyInfo);
-//        groupApplyRepository.deleteById(groupApplyInfoID);
-        return true;
-    }
-
-    //그룹이 유저한테 초대 신청 목록 찾기
-    public List<GroupApplyEntity> findGroupAppliesToUser(UserEntity userCd)
-    {
-        List<GroupApplyEntity> groupApplyEntity = groupApplyRepository.findAllByUserCodeFKAndAndApplyState(userCd,1);
-
-        return groupApplyEntity;
-    }
-
-    //유저가 그룹한테 초대 신청 목록 찾기
-    public List<GroupApplyEntity> findUserAppliesToGroup(GroupEntity groupCd)
-    {
-        List<GroupApplyEntity> groupApplyEntity = groupApplyRepository.findAllByGroupCodeFKAndApplyState(groupCd, 2);
-
-        return groupApplyEntity;
-    }*/
 }

@@ -25,8 +25,6 @@ public class GroupMemberService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
 
-
-
     @Transactional
     public Boolean save(GroupMemberRequestDto groupMemberRequestDto)
     {
@@ -45,60 +43,5 @@ public class GroupMemberService {
         groupMemberRepository.delete(groupApplyEntity);
         return true;
     }
-/*
-
-    public List<GroupMemberEntity> readUserGroup(UserEntity user)
-    {
-        return userRepository.findByUserId(user.getUserId())
-                .getGroups();
-    }
-
-    //그룹의 맴버 유저 찾기
-    public List<GroupMemberEntity> readGroupUser(GroupEntity group)
-    {
-        return groupRepository.findByGroupCd(group.getGroupCd())
-                .getMembers();
-    }
-
-
-    public Boolean insertMember(GroupEntity groupEntity)
-    {
-       // System.out.print(groupMemberEntity.getUserCodeFK());
-*/
-/*        UserEntity currentUser = (UserEntity)session.getAttribute("loginUser");
-        GroupMemberEntity insertGroupMember = new GroupMemberEntity();
-        insertGroupMember.setGroupCodeFK(groupEntity);
-        insertGroupMember.setUserCodeFK(currentUser);
-        Optional<GroupMemberEntity> resultMemberEntity = Optional.of(groupMemberRepository.save(insertGroupMember));
-
-        if (resultMemberEntity.isPresent()) {
-            return true;
-        } else {
-            return false;
-        }*//*
-
-        return false;
-    }
-
-    //그룹 탈퇴
-    public Boolean deleteMember(GroupMemberPK groupMemberEntity)
-    {
-//        groupMemberRepository.deleteById(groupMemberEntity);
-        return true;
-    }
-
-
-*/
-/*    public  Optional<GroupMemberEntity> findMember(GroupMemberPK groupMemberID)
-    {
-        return groupMemberRepository.findById(groupMemberID);
-    }*//*
-
-
-//    public Boolean deleteGroup()
-//    {
-//
-//    }
-*/
 
 }
