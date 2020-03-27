@@ -25,7 +25,6 @@ public class GroupMemberService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
 
-    private final GroupApplyService groupApplyService;
 
 
     @Transactional
@@ -34,9 +33,6 @@ public class GroupMemberService {
         UserEntity user = userRepository.findByUserId(groupMemberRequestDto.getUserId());
         GroupEntity group = groupRepository.findByGroupCd(groupMemberRequestDto.getGroupCd());
         GroupMemberEntity groupMemberEntity = groupMemberRequestDto.toEntity(group,user);
-        GroupMemberPK groupMemberPK = new GroupMemberPK(groupMemberEntity.getGroupFK().getGroupCd(),
-                                                        groupMemberEntity.getUserFK().getUserCd());
-        groupApplyService.delete(groupMemberPK);
         groupMemberRepository.save(groupMemberEntity);
         return true;
     }

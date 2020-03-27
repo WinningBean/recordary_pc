@@ -7,10 +7,7 @@ import com.fairy_pitt.recordary.common.pk.GroupMemberPK;
 import com.fairy_pitt.recordary.common.repository.GroupApplyRepository;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupApplyRequestDto;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupApplyResponseDto;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.group.dto.*;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +36,12 @@ public class GroupApplyService {
     }
 
     @Transactional
-    public void delete (GroupMemberPK id) {
+    public void delete (GroupMemberRequestDto requestDto) {
+        GroupMemberPK id = new GroupMemberPK(requestDto.getGroupCd(),
+                userRepository.findByUserId(requestDto.getUserId()).getUserCd());
+
         GroupApplyEntity groupApplyEntity = groupApplyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
+                .orElseThrow(() -> new IllegalArgumentException("해당 초대가 없습니다. id=" + id));
 
         groupApplyRepository.delete(groupApplyEntity);
     }

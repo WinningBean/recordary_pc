@@ -6,6 +6,7 @@ import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.pk.GroupMemberPK;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupApplyRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupApplyResponseDto;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupMemberRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupApplyService;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
@@ -34,7 +35,7 @@ public class GroupApplyController {
     }
 
     @DeleteMapping("check")
-    public @ResponseBody Boolean checkApply(@RequestBody GroupMemberPK id){
+    public @ResponseBody Boolean checkApply(@RequestBody GroupMemberRequestDto id){
         groupApplyService.delete(id);
         return true;
     }
