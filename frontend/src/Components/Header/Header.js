@@ -1,14 +1,14 @@
 import React from 'react';
 import './header.css';
-
+import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import Button from '@material-ui/core/Button';
 
 import SearchAppBar from 'Components/Other/SearchField';
 import HeaderMenu from 'Containers/Header/HeaderMenu';
 import NotifyPopup from 'Components/UI/NotifyPopup';
+import ToDoList from 'Components/Header/ToDoList';
 import { Link } from 'react-router-dom';
 
 class Header extends React.Component {
@@ -36,12 +36,7 @@ class Header extends React.Component {
                     </div> */}
             <div className='title-name'>
               <a href='http://localhost:3000/main'>
-                <img
-                  className='title-image'
-                  alt='Recordary icon'
-                  src='img/Recordary.png'
-                  style={{ height: '40px' }}
-                />
+                <img className='title-image' alt='Recordary icon' src='img/Recordary.png' style={{ height: '40px' }} />
               </a>
             </div>
           </div>
@@ -63,37 +58,32 @@ class Header extends React.Component {
             <IconButton onClick={() => this.setState({ openMenu: true })}>
               <MenuIcon style={{ fontSize: '30px', color: 'white' }} />
             </IconButton>
-            <HeaderMenu
-              open={this.state.openMenu}
-              onClose={() => this.setState({ openMenu: false })}
-            />
+            <HeaderMenu open={this.state.openMenu} onClose={() => this.setState({ openMenu: false })} />
           </div>
-          {/* <div className="title-icon">
-                        <a href="profile.html"><img alt="icon" src="RIcon.png" /></a>
-                    </div> */}
           <div className='title-name'>
             <a href='http://localhost:3000/main'>
-              <img
-                className='title-image'
-                alt='Recordary icon'
-                src='img/Recordary.png'
-                style={{ height: '40px' }}
-              />
+              <img className='title-image' alt='Recordary icon' src='img/Recordary.png' style={{ height: '40px' }} />
             </a>
           </div>
         </div>
         <div id='header-right'>
-          <div className='search-user'>
-            <SearchAppBar></SearchAppBar>
+          <div className='search-user' style={{ marginRight: '10px' }}>
+            <SearchAppBar />
           </div>
           <div className='header-ring'>
             <NotifyPopup style={{ fontSize: 40, color: 'white' }}></NotifyPopup>
           </div>
+          <ToDoList />
           <div className='profile-icon'>
-            <Link to={`/${this.props.user_id}`}>
-              <AccountCircleIcon style={{ fontSize: 40, color: 'white' }}>
-                Profile
-              </AccountCircleIcon>
+            <Link
+              to={{
+                pathname: `/${this.props.user_id}`,
+                state: {
+                  profile_type: 0
+                }
+              }}
+            >
+              <AccountCircleIcon style={{ fontSize: 40, color: 'white' }}>Profile</AccountCircleIcon>
             </Link>
           </div>
         </div>

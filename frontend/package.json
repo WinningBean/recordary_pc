@@ -19,10 +19,10 @@
     "axios": "^0.19.2",
     "cross-env": "^7.0.2",
     "date-fns": "^2.11.0",
+    "immer": "^6.0.1",
     "material-ui-popup-state": "^1.5.3",
     "moment": "^2.24.0",
     "react": "^16.13.0",
-    "react-big-calendar": "^0.23.0",
     "react-color": "^2.18.0",
     "react-dom": "^16.13.0",
     "react-file-picker": "0.0.6",
@@ -31,7 +31,8 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.4.0",
     "redux": "^4.0.5",
-    "styled-components": "^5.0.1"
+    "styled-components": "^5.0.1",
+    "use-immer": "^0.3.5"
   },
   "scripts": {
     "start": "cross-env NODE_PATH=src react-scripts start",
