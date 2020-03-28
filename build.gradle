@@ -47,6 +47,7 @@ dependencies {
     testCompile('junit:junit')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.projectlombok:lombok')
+    testCompile('org.hamcrest:hamcrest:2.1')
 
     testAnnotationProcessor ('org.projectlombok:lombok')
 }
