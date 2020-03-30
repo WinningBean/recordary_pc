@@ -32,22 +32,28 @@ repositories {
 }
 
 dependencies {
-    compile('org.springframework.boot:spring-boot-starter-web')
-    compile('org.springframework.boot:spring-boot-starter-thymeleaf')
-    compile('org.projectlombok:lombok')
-    compile('org.springframework.boot:spring-boot-starter-data-jpa')
-    compile('com.h2database:h2:1.4.199')
-    compile('org.springframework.session:spring-session-jdbc')
-    compile('org.springframework.boot:spring-boot-devtools')
-    compile('org.json:json:20180813')
-    compile('joda-time:joda-time:2.2')
+    implementation('org.springframework.boot:spring-boot-starter-web')
+    implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
+    implementation('org.projectlombok:lombok')
+    implementation('org.springframework.boot:spring-boot-configuration-processor')
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    implementation('com.h2database:h2:1.4.199')
+    implementation('org.springframework.session:spring-session-jdbc')
+    implementation('org.springframework.boot:spring-boot-devtools')
+    implementation('org.json:json:20180813')
+    implementation('joda-time:joda-time:2.2')
 
     annotationProcessor ('org.projectlombok:lombok')
+    annotationProcessor ('org.springframework.boot:spring-boot-configuration-processor')
 
-    testCompile('org.springframework.boot:spring-boot-starter-test')
-    testCompile('org.projectlombok:lombok')
+    testImplementation('junit:junit')
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation('org.projectlombok:lombok')
+    testImplementation('org.springframework.boot:spring-boot-configuration-processor')
+    testImplementation('org.hamcrest:hamcrest:2.1')
 
     testAnnotationProcessor ('org.projectlombok:lombok')
+    testAnnotationProcessor ('org.springframework.boot:spring-boot-configuration-processor')
 }
 
 def webappDir = "$projectDir/frontend"

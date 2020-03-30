@@ -29,6 +29,7 @@ public class GroupMemberController {
     @PostMapping("create")
     public @ResponseBody Boolean groupCreate(@RequestBody GroupMemberRequestDto requestDto)
     {
+        groupApplyService.delete(requestDto);
         return groupMemberService.save(requestDto);
     }
 
