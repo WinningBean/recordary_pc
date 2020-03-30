@@ -20,7 +20,7 @@ export default function ChattingButton() {
 
   return (
     <div className={classes.root}>
-      <Fab color='primary' aria-label='chatting'>
+      <Fab style={{ backgroundColor: '#910033', color: 'white' }} aria-label='chatting'>
         <QuestionAnswerIcon />
       </Fab>
     </div>

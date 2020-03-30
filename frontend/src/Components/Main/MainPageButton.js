@@ -15,7 +15,7 @@ const MainPageButton = () => {
       <div className='timeline-chatting-button'>
         <Chatting isOpen={isChatClick} />
         <div onClick={() => setIsChatClick(!isChatClick)}>
-          <ChattingButton />
+          <ChattingButton style={{ backgroundColor: 'rgb(245, 0, 87)' }} />
         </div>
       </div>
     </div>
