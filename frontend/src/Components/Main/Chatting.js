@@ -163,7 +163,7 @@ const Chatting = ({ isOpen }) => {
             height: '60px',
             display: 'flex',
             borderBottom: '1px solid lightgray',
-            borderLeft: value.isLogin ? '5px solid green' : 'none',
+            borderLeft: value.isLogin ? '5px solid rgb(145, 0, 51)' : 'none',
             paddingLeft: value.isLogin ? '5px' : '10px'
           }}
           onClick={() => setSelectedUser(value.id)}
@@ -236,7 +236,7 @@ const Chatting = ({ isOpen }) => {
               style={{
                 height: '10%',
                 display: 'flex',
-                backgroundColor: '#f50057',
+                backgroundColor: '#910033',
                 borderTopLeftRadius: '10px',
                 borderTopRightRadius: '10px'
               }}
@@ -257,7 +257,7 @@ const Chatting = ({ isOpen }) => {
               >
                 <img
                   src={value.pic}
-                  style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover' }}
+                  style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover', padding: '5px' }}
                 />
                 <span style={{ color: 'white', fontWeight: 'bold', fontSize: '16px', paddingLeft: '6px' }}>
                   {value.nm}
@@ -380,7 +380,9 @@ const Chatting = ({ isOpen }) => {
                   backgroundColor: 'white',
                   display: 'flex',
                   justifyContent: 'center',
-                  alignItems: 'center'
+                  alignItems: 'center',
+                  borderBottomLeftRadius: '5px',
+                  borderBottomRightRadius: '5px'
                 }}
               >
                 <textarea
@@ -448,7 +450,7 @@ const Chatting = ({ isOpen }) => {
           height: '10%',
           borderBottom: '1px solid lightgray',
           fontSize: '20px',
-          backgroundColor: '#f50057',
+          backgroundColor: '#910033',
           boxShadow: '0px 1px 5px lightgrey',
           borderTopLeftRadius: '10px',
           borderTopRightRadius: '10px',
