@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useImmer } from 'use-immer';
+import { format, isSameDay } from 'date-fns';
 import SearchIcon from '@material-ui/icons/Search';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import SubdirectoryArrowLeftIcon from '@material-ui/icons/SubdirectoryArrowLeft';
@@ -30,7 +31,7 @@ const Chatting = ({ isOpen }) => {
       message: [
         {
           ex: 'hello world',
-          date: new Date(),
+          date: new Date('2020-03-28'),
           isMyMessage: false
         },
         {
@@ -279,8 +280,29 @@ const Chatting = ({ isOpen }) => {
                     return val.isMyMessage ? (
                       <div
                         key={`${value.id}-${index}`}
-                        style={{ margin: '5px 10px', display: 'flex', justifyContent: 'flex-end' }}
+                        style={{
+                          margin: '5px 10px',
+                          display: 'flex',
+                          justifyContent: 'flex-end'
+                        }}
                       >
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'flex-end',
+                            paddingTop: '13px',
+                            paddingRight: '2px',
+                            color: '#938a8a'
+                          }}
+                        >
+                          {isSameDay(new Date(), val.date)
+                            ? format(val.date, 'a') === 'AM'
+                              ? '오전'
+                              : '오후' + format(val.date, 'h:mm')
+                            : `${format(val.date, 'yyyy-MM-dd')} ${
+                                format(val.date, 'a') === 'AM' ? '오전' : '오후'
+                              } ${format(val.date, 'h:mm')}`}
+                        </div>
                         <div
                           style={{
                             padding: '7px 15px',
@@ -310,6 +332,7 @@ const Chatting = ({ isOpen }) => {
                       >
                         <div
                           style={{
+                            display: 'flex',
                             padding: '7px 15px',
                             maxWidth: '70%',
                             backgroundColor: '#eee',
@@ -328,6 +351,22 @@ const Chatting = ({ isOpen }) => {
                               </span>
                             );
                           })}
+                        </div>
+                        <div
+                          style={{
+                            alignItems: 'flex-end',
+                            paddingTop: '13px',
+                            paddingLeft: '2px',
+                            color: '#938a8a'
+                          }}
+                        >
+                          {isSameDay(new Date(), val.date)
+                            ? format(val.date, 'a') === 'AM'
+                              ? '오전'
+                              : '오후' + format(val.date, 'h:mm')
+                            : `${format(val.date, 'yyyy-MM-dd')} ${
+                                format(val.date, 'a') === 'AM' ? '오전' : '오후'
+                              } ${format(val.date, 'h:mm')}`}
                         </div>
                       </div>
                     );
