@@ -35,6 +35,7 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
     implementation('org.projectlombok:lombok')
+    implementation('org.springframework.boot:spring-boot-configuration-processor')
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')
     implementation('com.h2database:h2:1.4.199')
     implementation('org.springframework.session:spring-session-jdbc')
@@ -43,13 +44,16 @@ dependencies {
     implementation('joda-time:joda-time:2.2')
 
     annotationProcessor ('org.projectlombok:lombok')
+    annotationProcessor ('org.springframework.boot:spring-boot-configuration-processor')
 
     testImplementation('junit:junit')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation('org.projectlombok:lombok')
+    testImplementation('org.springframework.boot:spring-boot-configuration-processor')
     testImplementation('org.hamcrest:hamcrest:2.1')
 
     testAnnotationProcessor ('org.projectlombok:lombok')
+    testAnnotationProcessor ('org.springframework.boot:spring-boot-configuration-processor')
 }
 
 def webappDir = "$projectDir/frontend"
