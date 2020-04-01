@@ -1,7 +1,8 @@
 package com.fairy_pitt.recordary.common.entity;
 
-import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 @Table(name = "GROUP_TB")
 @NoArgsConstructor
 @Entity
-public class GroupEntity {
+public class GroupEntity extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,6 +19,7 @@ public class GroupEntity {
     private Long groupCd;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "GROUP_MST_FK")
     private UserEntity gMstUserFK;
 
     @Column(name = "GROUP_NM")

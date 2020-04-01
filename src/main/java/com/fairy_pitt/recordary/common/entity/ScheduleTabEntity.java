@@ -1,7 +1,6 @@
 package com.fairy_pitt.recordary.common.entity;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,17 +12,21 @@ import java.util.List;
 @Table(name = "SCHEDULE_GB_TB")
 @NoArgsConstructor
 @Entity
-public class ScheduleTabEntity {
+public class ScheduleTabEntity extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "SCHEDULE_GB_CD")
     private Long tabCd;
 
     @ManyToOne
+    @JoinColumn(name = "SCHEDULE_GB_USER_FK")
     private UserEntity userFk;
 
+    @Column(name = "SCHEDULE_GB_NM")
     private String tabNm;
 
+    @Column(name = "SCHEDULE_GB_COLOR")
     private String tabCol;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tabFK")

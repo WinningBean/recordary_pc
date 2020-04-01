@@ -11,7 +11,7 @@ import java.util.List;
 @Table(name = "Schedule_TB")
 @NoArgsConstructor
 @Entity
-public class ScheduleEntity {
+public class ScheduleEntity extends BaseTimeEntity{
 
    @Id
    @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,12 +19,15 @@ public class ScheduleEntity {
    private Long scheduleCd;
 
    @ManyToOne
+   @JoinColumn(name = "SCHEDULE_USER_FK")
    private  UserEntity userFk;
 
    @ManyToOne
+   @JoinColumn(name = "SCHEDULE_GB_FK")
    private ScheduleTabEntity tabFK;
 
    @OneToOne
+   @JoinColumn(name = "SCHEDULE_POST_FK")
    private PostEntity postFK;
 
    @Column(name = "SCHEDULE_NM")
@@ -42,7 +45,7 @@ public class ScheduleEntity {
    @Column(name = "SCHEDULE_COLOR")
    private String scheduleCol;
 
-   @Column(name = "POST_PB_ST")
+   @Column(name = "SCHEDULE_PB_ST")
    private int schedulePublicState;
 
    @OneToMany(fetch = FetchType.LAZY, mappedBy = "scheduleFK")
