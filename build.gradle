@@ -24,7 +24,7 @@ apply plugin: 'com.moowork.node'
 group 'com.fairy_pitt'
 version '1.0-SNAPSHOT'
 
-mainClassName = 'com.fairy_pitt.recordary'
+mainClassName = 'com.fairy_pitt.recordary.RecordaryApplication'
 sourceCompatibility = 1.8
 
 repositories {
