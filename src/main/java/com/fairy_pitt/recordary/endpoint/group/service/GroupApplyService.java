@@ -36,9 +36,7 @@ public class GroupApplyService {
 
     @Transactional
     public void delete (GroupMemberRequestDto requestDto) {
-        GroupMemberPK id = new GroupMemberPK(requestDto.getGroupCd(),
-                userRepository.findByUserId(requestDto.getUserId()).getUserCd());
-
+        GroupMemberPK id = new GroupMemberPK(requestDto.getGroupCd(),requestDto.getUserCd());
         GroupApplyEntity groupApplyEntity = groupApplyRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 초대가 없습니다. id=" + id));
 

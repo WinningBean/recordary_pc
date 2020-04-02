@@ -9,6 +9,7 @@ import java.util.stream.DoubleStream;
 @Getter
 @Table(name="GROUP_MEMBER_TB")
 @IdClass(GroupMemberPK.class)
+@NoArgsConstructor
 @Entity
 public class GroupMemberEntity implements Serializable {
 

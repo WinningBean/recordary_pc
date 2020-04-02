@@ -139,7 +139,7 @@ public class GroupControllerTest {
     public void Group_방장위임() throws  Exception{
         //given
         UserEntity saveUser = userRepository.save(UserEntity.builder()
-                .userId("test")
+                .userId("test2")
                 .userPw("test")
                 .userNm("테스트 유저")
                 .build());

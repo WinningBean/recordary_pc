@@ -116,4 +116,9 @@ public class UserService {
                 .map(UserListResponseDto::new)
                 .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public UserEntity findEntity(Long groupCd) {
+        return userRepository.findByUserCd(groupCd);
+    }
 }

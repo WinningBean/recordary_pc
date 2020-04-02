@@ -8,6 +8,7 @@ import com.fairy_pitt.recordary.common.repository.GroupMemberRepository;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupMemberRequestDto;
+import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,17 +23,16 @@ import java.util.Optional;
 public class GroupMemberService {
 
     private final GroupMemberRepository groupMemberRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final GroupRepository groupRepository;
 
     @Transactional
     public Boolean save(GroupMemberRequestDto groupMemberRequestDto)
     {
-        UserEntity user = userRepository.findByUserId(groupMemberRequestDto.getUserId());
+        UserEntity user = userService.findEntity(groupMemberRequestDto.getUserCd());
         GroupEntity group = groupRepository.findByGroupCd(groupMemberRequestDto.getGroupCd());
         GroupMemberEntity groupMemberEntity = groupMemberRequestDto.toEntity(group,user);
-        groupMemberRepository.save(groupMemberEntity);
-        return true;
+        return Optional.ofNullable(groupMemberRepository.save(groupMemberEntity)).isPresent();
     }
 
     @Transactional
