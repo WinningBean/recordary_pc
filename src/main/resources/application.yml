@@ -1,12 +1,10 @@
 spring:
 
   jpa:
-    show-sql: false
+    show-sql: true
     properties:
       dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-    open-in-view: false
-    hibernate:
-      ddl-auto: create-drop
+    open-in-view: true
 
     h2:
       console:
