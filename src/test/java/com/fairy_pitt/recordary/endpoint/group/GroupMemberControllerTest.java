@@ -51,8 +51,8 @@ public class GroupMemberControllerTest {
         @After
         public void tearDown() throws Exception {
             groupMemberRepository.deleteAll();
-//            userRepository.deleteAll();
             groupRepository.deleteAll();
+            userRepository.deleteAll();
         }
 
         @Test
