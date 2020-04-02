@@ -1,16 +1,14 @@
 package com.fairy_pitt.recordary.common.entity;
 
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 @Entity
-public class CommentEntity {
+@Table(name = "COMMENT_TB")
+public class CommentEntity extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,14 +26,6 @@ public class CommentEntity {
     @ManyToOne
     @JoinColumn(name = "COMMENT_ORIGIN_FK")
     private CommentEntity commentOriginFK;
-
-    @Column(name = "COMMENT_CREATED_DT")
-    @CreatedDate
-    private LocalDateTime createdDate;
-
-    @Column(name = "COMMENT_UPDATED_DT")
-    @LastModifiedDate
-    private LocalDateTime updatedDate;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "commentOriginFK")
     private List<CommentEntity> applyGroups;
