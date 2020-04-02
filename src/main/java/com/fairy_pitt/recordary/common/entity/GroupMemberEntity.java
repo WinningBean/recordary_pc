@@ -3,6 +3,7 @@ package com.fairy_pitt.recordary.common.entity;
 import com.fairy_pitt.recordary.common.pk.GroupMemberPK;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
