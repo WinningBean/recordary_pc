@@ -59,34 +59,23 @@ dependencies {
 
 def webappDir = "$projectDir/frontend"
 
-node {
-    version = '12.16.1'
-    download=true
-    workDir = file("${project.buildDir}/nodejs")
-    npmWorkDir=file("${project.buildDir}/npm")
+processResources {
+    dependsOn("appNpmInstall")
+    dependsOn("copyWebApp")
 }
 
-task appNpmInstall(type: NpmTask) {
+task appNpmInstall(type: Exec) {
+    dependsOn("npmBuild")
+    workingDir("${webappDir}")
+    commandLine "npm", "install"
+}
+
+task npmBuild(type: NpmTask) {
     workingDir = file("${webappDir}")
     args = ['run-script', 'build']
-}
-
-task yarnBuild(type: YarnTask) {
-    workingDir = file("${webappDir}")
-    args = ['build']
 }
 
 task copyWebApp(type: Copy) {
     from 'frontend/build'
     into 'build/resources/main/static/.'
 }
-
-task copyHtmlApp(type: Copy) {
-    from 'build/resources/main/static/index.html'
-    into 'build/resources/main/templates/.'
-}
-
-yarnBuild.dependsOn appNpmInstall
-yarnBuild.dependsOn yarnBuild
-compileJava.dependsOn copyWebApp
-compileJava.dependsOn copyHtmlApp

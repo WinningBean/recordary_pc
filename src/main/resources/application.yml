@@ -12,3 +12,6 @@ spring:
 
   session:
     store-type: jdbc
+
+  thymeleaf:
+    prefix: classpath:static/
