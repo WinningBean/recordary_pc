@@ -19,7 +19,6 @@ cache:
 
 before_install:
   - chmod +x gradlew
-  - . $HOME/.nvm/nvm.sh
   - nvm install --lts
   - nvm use stable
 
