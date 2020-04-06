@@ -59,10 +59,6 @@ dependencies {
 
 def webappDir = "$projectDir/frontend"
 
-processResources {
-    dependsOn("frontCopy")
-}
-
 task frontBuild {
     doLast {
         exec {
@@ -76,34 +72,10 @@ task frontBuild {
     }
 }
 
-task frontCopy {
-    dependsOn("frontBuild")
-    doLast {
-        exec {
-            workingDir "${projectDir}/build"
-            commandLine "mkdir", "resources", "resources/main", "resources/main/static"
-        }
-        exec {
-            workingDir "${projectDir}"
-            commandLine "cp", "-r", "frontend/build/", "build/resources/main/static/"
-        }
-    }
+task copyWebApp(type: Copy) {
+    from 'frontend/build'
+    into 'build/resources/main/static/.'
 }
 
-//task appNpmInstall(type: Exec) {
-//    workingDir("${webappDir}")
-//    commandLine "npm", "install"
-//}
-//
-//task npmBuild(type: NpmTask) {
-//    dependsOn("appNpmInstall")
-//    workingDir = file("${webappDir}")
-//    args = ['run-script', 'build']
-//}
-//
-//task copyWebApp(type: Copy) {
-//    from 'frontend/build'
-//    into 'build/resources/main/static/.'
-//}
-//
-//compileJava.dependsOn("copyWebApp")
+copyWebApp.dependsOn frontBuild
+compileJava.dependsOn copyWebApp
