@@ -60,17 +60,17 @@ dependencies {
 def webappDir = "$projectDir/frontend"
 
 processResources {
-    dependsOn("appNpmInstall")
+    dependsOn("npmBuild")
     dependsOn("copyWebApp")
 }
 
 task appNpmInstall(type: Exec) {
-    dependsOn("npmBuild")
     workingDir("${webappDir}")
     commandLine "npm", "install"
 }
 
 task npmBuild(type: NpmTask) {
+    dependsOn("appNpmInstall")
     workingDir = file("${webappDir}")
     args = ['run-script', 'build']
 }
