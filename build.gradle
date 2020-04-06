@@ -85,7 +85,7 @@ task frontCopy {
         }
         exec {
             workingDir "${projectDir}"
-            commandLine "cp", "-r", "frontend/build/.", "build/resources/main/static/."
+            commandLine "cp", "-r", "frontend/build/", "build/resources/main/static/"
         }
     }
 }
