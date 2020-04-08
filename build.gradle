@@ -59,23 +59,45 @@ dependencies {
 
 def webappDir = "$projectDir/frontend"
 
-processResources {
-    dependsOn("appNpmInstall")
-    dependsOn("copyWebApp")
-}
+//processResources {
+//    dependsOn("frontBuild")
+//    dependsOn("copyWebApp")
+//}
 
-task appNpmInstall(type: Exec) {
-    dependsOn("npmBuild")
-    workingDir("${webappDir}")
-    commandLine "npm", "install"
-}
-
-task npmBuild(type: NpmTask) {
-    workingDir = file("${webappDir}")
-    args = ['run-script', 'build']
+task frontBuild {
+    doLast {
+        exec {
+            workingDir "${webappDir}"
+            commandLine "npm", "install"
+        }
+        exec {
+            workingDir "${webappDir}"
+            commandLine "npm", "run-script", "build"
+        }
+    }
 }
 
 task copyWebApp(type: Copy) {
     from 'frontend/build'
     into 'build/resources/main/static/.'
 }
+
+//task appNpmInstall(type: Exec) {
+//    workingDir("${webappDir}")
+//    commandLine "npm", "install"
+//}
+//
+//task npmBuild(type: NpmTask) {
+//    dependsOn("appNpmInstall")
+//    workingDir = file("${webappDir}")
+//    args = ['run-script', 'build']
+//}
+//
+//task copyWebApp(type: Copy) {
+//    from 'frontend/build'
+//    into 'build/resources/main/static/.'
+//}
+//
+
+copyWebApp.dependsOn frontBuild
+compileJava.dependsOn copyWebApp
