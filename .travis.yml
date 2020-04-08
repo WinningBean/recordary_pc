@@ -1,9 +1,5 @@
 language: java
 
-before_install:
-  - chmod +x gradlew
-  - npm install
-
 jdk:
   - openjdk8
 
@@ -12,11 +8,19 @@ branches:
     - master
     - try-ci
 
+env:
+  - TRAVIS_NODE_VERSION="lts/*"
+
 # Travis CI 서버의 Home
 cache:
   directories:
     - '$HOME/.m2/repository'
     - '$HOME/.gradle'
+
+before_install:
+  - chmod +x gradlew
+  - nvm install --lts
+  - nvm use stable
 
 script: "./gradlew -x clean build"
 
