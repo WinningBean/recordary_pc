@@ -29,11 +29,13 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
+    implementation('org.springframework.boot:spring-boot-starter-jdbc')
     implementation('org.projectlombok:lombok')
     implementation('org.springframework.boot:spring-boot-configuration-processor')
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')
@@ -59,22 +61,14 @@ dependencies {
 
 def webappDir = "$projectDir/frontend"
 
-//processResources {
-//    dependsOn("frontBuild")
-//    dependsOn("copyWebApp")
-//}
+task appNpmInstall(type: NpmTask) {
+    workingDir = file("${webappDir}")
+    args = ['install']
+}
 
-task frontBuild {
-    doLast {
-        exec {
-            workingDir "${webappDir}"
-            commandLine "npm", "install"
-        }
-        exec {
-            workingDir "${webappDir}"
-            commandLine "npm", "run-script", "build"
-        }
-    }
+task npmBuild(type: NpmTask) {
+    workingDir = file("${webappDir}")
+    args = ['run-script', 'build']
 }
 
 task copyWebApp(type: Copy) {
@@ -82,22 +76,6 @@ task copyWebApp(type: Copy) {
     into 'build/resources/main/static/.'
 }
 
-//task appNpmInstall(type: Exec) {
-//    workingDir("${webappDir}")
-//    commandLine "npm", "install"
-//}
-//
-//task npmBuild(type: NpmTask) {
-//    dependsOn("appNpmInstall")
-//    workingDir = file("${webappDir}")
-//    args = ['run-script', 'build']
-//}
-//
-//task copyWebApp(type: Copy) {
-//    from 'frontend/build'
-//    into 'build/resources/main/static/.'
-//}
-//
-
-copyWebApp.dependsOn frontBuild
-compileJava.dependsOn copyWebApp
+npmBuild.dependsOn("appNpmInstall")
+copyWebApp.dependsOn("npmBuild")
+compileJava.dependsOn("copyWebApp")
