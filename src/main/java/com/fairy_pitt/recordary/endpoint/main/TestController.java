@@ -1,7 +1,9 @@
 package com.fairy_pitt.recordary.endpoint.main;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @RestController
 public class TestController {
     @GetMapping("/getMapping")
