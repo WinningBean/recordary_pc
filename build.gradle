@@ -22,7 +22,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'com.moowork.node'
 
 group 'com.fairy_pitt'
-version '1.0-SNAPSHOT'
+version '1.0.1-SNAPSHOT-' + new Date().format("yyyyMMddHHmmss")
 
 mainClassName = 'com.fairy_pitt.recordary.RecordaryApplication'
 sourceCompatibility = 1.8
