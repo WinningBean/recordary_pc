@@ -26,3 +26,8 @@ cloud:
 
 
 
+  thymeleaf:
+    prefix: classpath:static/
+
+  profiles:
+    active: springdataJPA

@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.List;
@@ -38,12 +39,12 @@ public class CommentEntity extends BaseTimeEntity{
     private List<CommentEntity> applyGroups;
 
     @Builder
-    public CommentEntity(Long commentCd,
+    public CommentEntity(
                          UserEntity commentUserFK,
                          PostEntity commentPostFK,
                          CommentEntity commentOriginFK,
                          String content) {
-        this.commentCd = commentCd;
+                             
         this.commentUserFK = commentUserFK;
         this.commentPostFK = commentPostFK;
         this.commentOriginFK = commentOriginFK;
