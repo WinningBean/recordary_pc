@@ -118,7 +118,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserEntity findEntity(Long groupCd) {
-        return userRepository.findByUserCd(groupCd);
+    public UserEntity findEntity(Long userCd) {
+        return userRepository.findByUserCd(userCd);
     }
 }
