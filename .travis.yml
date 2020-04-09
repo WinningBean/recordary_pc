@@ -19,8 +19,6 @@ cache:
 
 before_install:
   - chmod +x gradlew
-  - nvm install --lts
-  - nvm use stable
 
 script: "./gradlew -x clean build"
 
