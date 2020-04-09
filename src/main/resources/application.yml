@@ -12,3 +12,17 @@ spring:
 
   session:
     store-type: jdbc
+
+cloud:
+  aws:
+    s3:
+      bucket: recordary-springboot-upload
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      instanceProfile: true
+
+
+

@@ -1,10 +1,12 @@
 package com.fairy_pitt.recordary.common.entity;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
 import javax.persistence.*;
 
-@Data
+@Getter
 @Entity
 @Table(name = "MEDIA_TB")
 public class MediaEntity extends BaseTimeEntity{
@@ -15,4 +17,9 @@ public class MediaEntity extends BaseTimeEntity{
 
     @Column(name = "MEDIA_PATH")
     private String mediaPath;
+
+    @Builder
+    public MediaEntity(String mediaPath) {
+        this.mediaPath = mediaPath;
+    }
 }
