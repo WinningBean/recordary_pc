@@ -1,10 +1,14 @@
 spring:
 
+  profiles:
+    include: real
+    active: springdataJPA
+
   jpa:
     show-sql: true
     properties:
-      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-    open-in-view: true
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 
     h2:
       console:
@@ -15,6 +19,3 @@ spring:
 
   thymeleaf:
     prefix: classpath:static/
-
-  profiles:
-    active: springdataJPA
