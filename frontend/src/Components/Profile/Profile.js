@@ -1,14 +1,14 @@
 import React from 'react';
 import produce from 'immer';
 import './ProfilePage.css';
-import 'Components/Main/mainPage.css';
+import '../Main/mainPage.css';
 import SearchAppBar from '../Other/SearchField';
 import ScrollToTopOnMount from '../Other/ScrollToTopOnMount';
-import Follower from 'Components/Profile/Follower';
-import Header from 'Containers/Header/Header';
-import Calendar from 'Components/Calendar/Calendar';
-import TimelineWeekSchedule from 'Components/Timeline/TimelineWeekSchedule';
-import Timeline from 'Components/Timeline/Timeline';
+import Follower from './Follower';
+import Header from '../../Containers/Header/Header';
+import Calendar from '../Calendar/Calendar';
+import TimelineWeekSchedule from '../Timeline/TimelineWeekSchedule';
+import Timeline from '../Timeline/Timeline';
 import { Dialog } from '@material-ui/core';
 
 import Button from '@material-ui/core/Button';

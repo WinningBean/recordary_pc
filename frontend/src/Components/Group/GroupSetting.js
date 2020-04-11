@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import GroupModify from 'Containers/Group/GroupModify';
-import GroupDelete from 'Components/Group/GroupDelete';
-import GroupApply from 'Components/Group/GroupApply';
-import Snackbar from 'Components/UI/Snackbar';
+import GroupModify from './GroupModify';
+import GroupDelete from './GroupDelete';
+import GroupApply from './GroupApply';
+import Snackbar from '../UI/Snackbar';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';

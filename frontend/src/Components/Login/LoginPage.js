@@ -4,8 +4,8 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/styles';
 import Register from './Register';
-import AlertDialog from 'Components/Other/AlertDialog';
-import Loading from 'Components/Loading/Loading';
+import AlertDialog from '../Other/AlertDialog';
+import Loading from '../Loading/Loading';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 

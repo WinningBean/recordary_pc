@@ -1,8 +1,8 @@
 import React from 'react';
 import './mainPage.css';
 
-import Timeline from 'Components/Timeline/Timeline';
-import TimelineWeekSchedule from 'Components/Timeline/TimelineWeekSchedule';
+import Timeline from '../Timeline/Timeline';
+import TimelineWeekSchedule from '../Timeline/TimelineWeekSchedule';
 
 class Main extends React.Component {
   render() {

@@ -11,11 +11,11 @@ import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import GroupIcon from '@material-ui/icons/Group';
-import AlertDialog from 'Components/Other/AlertDialog';
+import AlertDialog from './AlertDialog';
 import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
-import Snackbar from 'Components/UI/Snackbar';
-import store from 'store';
+import Snackbar from '../UI/Snackbar';
+import store from '../../store';
 
 import axios from 'axios';
 

@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import * as dateFns from 'date-fns';
-import CalendarScheduleEdit from 'Components/Calendar/CalendarScheduleEdit';
+import CalendarScheduleEdit from './CalendarScheduleEdit';
 
 import Popover from '@material-ui/core/Popover';
 import PersonIcon from '@material-ui/icons/Person';
