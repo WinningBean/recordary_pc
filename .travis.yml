@@ -8,9 +8,6 @@ branches:
     - master
     - try-ci
 
-env:
-  - TRAVIS_NODE_VERSION="lts/*"
-
 # Travis CI 서버의 Home
 cache:
   directories:
