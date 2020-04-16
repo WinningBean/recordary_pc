@@ -1,13 +1,10 @@
 package com.fairy_pitt.recordary.endpoint.schedule;
 
-import com.fairy_pitt.recordary.common.entity.PostEntity;
 import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
 import com.fairy_pitt.recordary.common.repository.ScheduleRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleUpdateRequestDto;
-import com.fairy_pitt.recordary.endpoint.post.dto.PostSaveRequestDto;
-import com.fairy_pitt.recordary.endpoint.post.dto.PostUpdateRequestDto;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -58,7 +53,6 @@ public class ScheduleControllerTest {
 
         ScheduleSaveRequestDto requestDto = ScheduleSaveRequestDto.createScheduleBuilder()
                 .tabFK(null)
-                .postFK(null)
                 .scheduleNm(scheduleNm)
                 .scheduleEx(scheduleEx)
                 .scheduleStr(scheduleStr)
@@ -91,7 +85,6 @@ public class ScheduleControllerTest {
 
         ScheduleEntity saveSchedule = scheduleRepository.save(ScheduleEntity.builder()
                 .tabFK(null)
-                .postFK(null)
                 .scheduleNm("Test")
                 .scheduleEx(scheduleEx)
                 .scheduleStr(scheduleStr)

@@ -1,8 +1,10 @@
 package com.fairy_pitt.recordary.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,21 +16,17 @@ import java.util.List;
 public class ScheduleEntity extends BaseTimeEntity{
 
    @Id
-   @GeneratedValue(strategy = GenerationType.AUTO)
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    @Column(name = "SCHEDULE_CD")
    private Long scheduleCd;
 
-   @ManyToOne
+   @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "SCHEDULE_USER_FK")
    private  UserEntity userFk;
 
-   @ManyToOne
+   @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "SCHEDULE_GB_FK")
    private ScheduleTabEntity tabFK;
-
-   @OneToOne
-   @JoinColumn(name = "SCHEDULE_POST_FK")
-   private PostEntity postFK;
 
    @Column(name = "SCHEDULE_NM")
    private String scheduleNm;
@@ -48,13 +46,17 @@ public class ScheduleEntity extends BaseTimeEntity{
    @Column(name = "SCHEDULE_PB_ST")
    private int schedulePublicState;
 
+   @JsonIgnore
    @OneToMany(fetch = FetchType.LAZY, mappedBy = "scheduleFK")
-   private List<ScheduleMemberEntity> scheduleMembers;
+   private List<ScheduleMemberEntity> scheduleMembers = new ArrayList<>();
+
+   @JsonIgnore
+   @OneToOne(fetch = FetchType.LAZY)
+   private PostEntity schedulePost = new PostEntity();
 
    @Builder
    public ScheduleEntity(ScheduleTabEntity tabFK,
                          UserEntity userFK,
-                         PostEntity postFK,
                          String scheduleNm,
                          String scheduleEx,
                          Date scheduleStr,
@@ -64,7 +66,6 @@ public class ScheduleEntity extends BaseTimeEntity{
 
       this.tabFK = tabFK;
       this.userFk = userFK;
-      this.postFK = postFK;
       this.scheduleNm = scheduleNm;
       this.scheduleEx = scheduleEx;
       this.scheduleStr = scheduleStr;

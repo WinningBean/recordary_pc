@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name = "USER_TB")
 public class UserEntity extends BaseTimeEntity{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_CD")
     private Long userCd;
 
@@ -41,44 +41,44 @@ public class UserEntity extends BaseTimeEntity{
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "gMstUserFK")
-    private List<GroupEntity> masters;
+    private List<GroupEntity> masters = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK")
-    private List<GroupMemberEntity> groups;
+    private List<GroupMemberEntity> groups = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK")
-    private List<GroupApplyEntity> applyGroups;
+    private List<GroupApplyEntity> applyGroups = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = {CascadeType.ALL})
-    private List<PostEntity> postList;
+    private List<PostEntity> postList = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = {CascadeType.ALL})
-    private List<PostTagEntity> postTagList;
+    private List<PostTagEntity> postTagList = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = {CascadeType.ALL})
-    private List<PostLikeEntity> postLikeList;
+    private List<PostLikeEntity> postLikeList = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFk")
-    private  List<ScheduleTabEntity> userTab;
+    private  List<ScheduleEntity> userScheduleList = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFk")
+    private  List<ScheduleTabEntity> userTab = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK")
-    private List<ScheduleMemberEntity> scheduleMembers;
+    private List<ScheduleMemberEntity> scheduleMembers = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "commentUserFK")
-    private List<CommentEntity> userComments;
+    private List<CommentEntity> userComments = new ArrayList<>();
 
-    @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFk")
-    private  List<ScheduleEntity> userScheduleList;
-   
     @Builder
     public UserEntity(String userId, String userPw, String userNm){
         this.userId = userId;

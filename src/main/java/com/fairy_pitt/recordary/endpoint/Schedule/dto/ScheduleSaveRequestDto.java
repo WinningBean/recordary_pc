@@ -7,7 +7,6 @@ import com.fairy_pitt.recordary.common.entity.UserEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.Date;
 
@@ -49,7 +48,6 @@ public class ScheduleSaveRequestDto {
         return ScheduleEntity.builder()
                 .userFK(user)
                 .tabFK(Tab)
-                .postFK(Post)
                 .scheduleNm(scheduleNm)
                 .scheduleEx(scheduleEx)
                 .scheduleStr(scheduleStr)
