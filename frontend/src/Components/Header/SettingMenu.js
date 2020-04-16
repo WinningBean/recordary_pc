@@ -165,7 +165,7 @@ const SettingMenu = props => {
               }}
             >
               <div style={{ marginRight: '5px' }}>from.</div>
-              <div style={{ fontWeight: 'bold', fontSize: '15px' }}> PairyFitt</div>
+              <div style={{ fontWeight: 'bold', fontSize: '15px' }}> FairyPitta</div>
             </ListItem>
           </List>
           <div className={classes.content}>{currPage}</div>
