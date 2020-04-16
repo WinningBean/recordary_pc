@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as dateFns from 'date-fns';
-import 'Components/Profile/ProfilePage.css';
+import './ProfilePage.css';
 
 import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
