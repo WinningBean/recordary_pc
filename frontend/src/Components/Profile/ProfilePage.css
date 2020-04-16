@@ -243,3 +243,9 @@ nav > div {
 .MuiDialog-paperWidthSm {
   max-width: 100% !important;
 }
+
+/* 일정검색 */
+.schedule-list:hover {
+  background-color: rgba(161, 159, 159, 0.2);
+  cursor: pointer;
+}

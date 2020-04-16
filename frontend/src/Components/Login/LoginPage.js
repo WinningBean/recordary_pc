@@ -202,7 +202,7 @@ class Login extends React.Component {
             user_pic: 'http://placehold.it/40x40',
             group_cd: null,
             uploadDate: new Date(),
-            post_pic: 'img/1579501322063.jpg',
+            post_pic: ['img/1579501322063.jpg'],
             sharedStartDay: new Date('2020-03-25'),
             sharedEndDay: new Date('2020-03-28'),
             sharedSchedual: [
@@ -304,7 +304,7 @@ class Login extends React.Component {
             user_pic: 'http://placehold.it/40x40',
             group_cd: null,
             uploadDate: new Date(),
-            post_pic: 'img/1579501322063.jpg',
+            post_pic: ['img/1579501322063.jpg'],
             sharedStartDay: new Date('2020-03-25'),
             sharedEndDay: new Date('2020-04-25'),
             sharedSchedual: [
