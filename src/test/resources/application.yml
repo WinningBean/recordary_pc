@@ -2,6 +2,18 @@
 spring:
   profiles:
     active: local
+cloud:
+  aws:
+    s3:
+      bucket: recordary-springboot-upload
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+    credentials:
+      instanceProfile: true
+
 
 # local
 ---
