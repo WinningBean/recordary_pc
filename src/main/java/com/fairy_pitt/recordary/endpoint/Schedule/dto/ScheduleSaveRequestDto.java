@@ -17,7 +17,7 @@ public class ScheduleSaveRequestDto {
 
     private Long tabCd;
     private Long postCd;
-    private String userId;
+    private Long userCd;
     private String scheduleNm;
     private String scheduleEx;
     private Date scheduleStr;
@@ -27,7 +27,7 @@ public class ScheduleSaveRequestDto {
     @Builder(builderClassName = "createScheduleBuilder", builderMethodName = "createScheduleBuilder")
     public ScheduleSaveRequestDto(Long tabFK,
                                   Long postFK,
-                                  String userFk,
+                                  Long userFk,
                                   String scheduleNm,
                                   String scheduleEx,
                                   Date scheduleStr,
@@ -35,7 +35,7 @@ public class ScheduleSaveRequestDto {
                                   String scheduleCol) {
         this.tabCd = tabFK;
         this.postCd = postFK;
-        this.userId = userFk;
+        this.userCd = userFk;
         this.scheduleNm = scheduleNm;
         this.scheduleEx = scheduleEx;
         this.scheduleStr = scheduleStr;
