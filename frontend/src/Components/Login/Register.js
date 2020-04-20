@@ -131,21 +131,9 @@ class Register extends React.Component {
                 },
               });
               try {
-                const form = new FormData();
-                form.append('userNm', this.state.user_nm);
-                form.append('userId', this.state.user_id);
-                form.append('userPw', this.state.user_pw);
-                const data = await axios.post(
-                  '/user/join',
-                  {
-                    userNm: this.state.user_nm,
-                    userId: this.state.user_id,
-                    userPw: this.state.user_pw,
-                  },
-                  { headers: { 'Content-Type': 'application/json; charset=utf=8' } }
-                );
-                console.log(data);
-                if (data.isPossibleId === false) {
+                const isExistId = (await axios.get(`/user/existId/${this.state.user_id}`)).data;
+                console.log(isExistId);
+                if (isExistId) {
                   this.setState({
                     alert: () => {
                       return (
@@ -158,7 +146,16 @@ class Register extends React.Component {
                   });
                   return;
                 }
-                if (data.isJoin === false) {
+
+                const isJoin = (
+                  await axios.post('/user/join', {
+                    userNm: this.state.user_nm,
+                    userId: this.state.user_id,
+                    userPw: this.state.user_pw,
+                  })
+                ).data;
+
+                if (!isJoin) {
                   this.setState({
                     alert: () => {
                       return (

@@ -9,7 +9,10 @@ class Main extends React.Component {
     var data = this.props.data;
     const timelineList = (() => {
       console.log(data);
-      return data.post.map(value => {
+      if (data.post === undefined) {
+        return null;
+      }
+      return data.post.map((value) => {
         switch (value.postForm) {
           case 0:
             return (
