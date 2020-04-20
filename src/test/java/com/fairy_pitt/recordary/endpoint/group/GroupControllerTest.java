@@ -176,7 +176,7 @@ public class GroupControllerTest {
         assertThat(responseEntity.getBody()).isGreaterThan(0L);
 
         List<GroupEntity> all = groupRepository.findAll();
-        assertThat(all.get(0).getGMstUserFK().getUserNm()).isEqualTo(changeUser.getUserNm());
+        assertThat(all.get(0).getGMstUserFK().getUserCd()).isEqualTo(changeUser.getUserCd());
         assertThat(all.get(0).getGroupName()).isEqualTo(groupName);
     }
 
