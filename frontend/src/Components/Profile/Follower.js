@@ -1,5 +1,5 @@
 import React from 'react';
-import 'Components/Other/SearchField.css';
+import '../Other/SearchField.css';
 
 import { styled } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';

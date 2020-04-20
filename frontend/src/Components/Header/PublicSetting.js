@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import PublicRange from 'Components/UI/PublicRange';
+import PublicRange from '../UI/PublicRange';
 
 const PublicSetting = props => {
   // const data = props.data;

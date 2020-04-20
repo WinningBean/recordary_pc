@@ -4,6 +4,8 @@ buildscript {
         mooworkVersion = '1.2.0'
     }
     repositories {
+        mavenCentral()
+        jcenter()
         maven {
             url "https://plugins.gradle.org/m2/"
         }

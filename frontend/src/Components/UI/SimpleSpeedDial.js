@@ -5,8 +5,8 @@ import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import ShareIcon from '@material-ui/icons/Share';
-import PostMediaScheduleAppend from 'Components/Profile/PostMediaScheduleAppend';
-import ScheduleShare from 'Components/Timeline/ScheduleShare';
+import PostMediaScheduleAppend from '../Profile/PostMediaScheduleAppend';
+import ScheduleShare from '../Timeline/ScheduleShare';
 
 const useStyles = makeStyles(theme => ({
   root: {

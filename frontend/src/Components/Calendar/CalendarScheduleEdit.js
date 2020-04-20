@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { ChromePicker } from 'react-color';
 
-import 'Components/Profile/PostAppend.css';
-import DTP from 'Components/UI/DTP';
-import SelectGroup from 'Components/UI/SelectGroup';
-import PublicRange from 'Components/UI/PublicRange';
+import '../Profile/PostAppend.css';
+import DTP from '../UI/DTP';
+import SelectGroup from '../UI/SelectGroup';
+import PublicRange from '../UI/PublicRange';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';

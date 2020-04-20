@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import './header.css';
-import UserEditor from 'Components/Header/UserEditor';
-import AlertSetting from 'Components/Header/AlertSetting';
-import PublicSetting from 'Components/Header/PublicSetting';
-import LockSetting from 'Components/Header/LockSetting';
-import AdviceSetting from 'Components/Header/AdviceSetting';
+import UserEditor from './UserEditor';
+import AlertSetting from './AlertSetting';
+import PublicSetting from './PublicSetting';
+import LockSetting from './LockSetting';
+import AdviceSetting from './AdviceSetting';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
@@ -165,7 +165,7 @@ const SettingMenu = props => {
               }}
             >
               <div style={{ marginRight: '5px' }}>from.</div>
-              <div style={{ fontWeight: 'bold', fontSize: '15px' }}> PairyFitt</div>
+              <div style={{ fontWeight: 'bold', fontSize: '15px' }}> FairyPitta</div>
             </ListItem>
           </List>
           <div className={classes.content}>{currPage}</div>

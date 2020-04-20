@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import * as dateFns from 'date-fns';
-import CalendarScheduleEdit from 'Components/Calendar/CalendarScheduleEdit';
+import CalendarScheduleEdit from './CalendarScheduleEdit';
 
 import Popover from '@material-ui/core/Popover';
 import PersonIcon from '@material-ui/icons/Person';
@@ -45,6 +45,7 @@ const Calendar = props => {
       ex: '발닦고 잠자기'
     }
   ]);
+  
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [dayLocation, setDayLocation] = useState(null);
   const [popover, setPopover] = useState(null);

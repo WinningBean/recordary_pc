@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Snackbar from 'Components/UI/Snackbar';
+import Snackbar from '../UI/Snackbar';
 import './group.css';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';

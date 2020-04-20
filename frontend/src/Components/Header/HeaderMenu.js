@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import './header.css';
-import GroupAdd from 'Containers/Group/GroupAdd';
-import LongMenu from 'Components/Other/MoreMenu';
-import ProfileEditor from 'Components/Profile/ProfileEditor';
-import GroupSetting from 'Components/Group/GroupSetting';
-import GroupInfo from 'Components/Group/GroupInfo';
-import SettingMenu from 'Components/Header/SettingMenu';
-import FriendAdd from 'Components/Group/GroupMemberSearch';
-import FriendSetting from 'Components/Header/FriendSetting';
+import GroupAdd from '../../Containers/Group/GroupAdd';
+import LongMenu from '../Other/MoreMenu';
+import ProfileEditor from '../Profile/ProfileEditor';
+import GroupSetting from '../Group/GroupSetting';
+import GroupInfo from '../Group/GroupInfo';
+import SettingMenu from './SettingMenu';
+import FriendAdd from '../Group/GroupMemberSearch';
+import FriendSetting from './FriendSetting';
 
 import { styled } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
