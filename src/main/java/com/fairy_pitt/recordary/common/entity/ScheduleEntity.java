@@ -28,6 +28,10 @@ public class ScheduleEntity extends BaseTimeEntity{
    @JoinColumn(name = "SCHEDULE_GB_FK")
    private ScheduleTabEntity tabFK;
 
+   @OneToOne
+   @JoinColumn(name = "SCHEDULE_POST_FK")
+   private PostEntity postFK;
+
    @Column(name = "SCHEDULE_NM")
    private String scheduleNm;
 
@@ -57,6 +61,7 @@ public class ScheduleEntity extends BaseTimeEntity{
    @Builder
    public ScheduleEntity(ScheduleTabEntity tabFK,
                          UserEntity userFK,
+                         PostEntity postFK,
                          String scheduleNm,
                          String scheduleEx,
                          Date scheduleStr,
@@ -66,6 +71,7 @@ public class ScheduleEntity extends BaseTimeEntity{
 
       this.tabFK = tabFK;
       this.userFk = userFK;
+      this.postFK = postFK;
       this.scheduleNm = scheduleNm;
       this.scheduleEx = scheduleEx;
       this.scheduleStr = scheduleStr;

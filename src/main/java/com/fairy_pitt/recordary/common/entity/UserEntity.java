@@ -64,19 +64,19 @@ public class UserEntity extends BaseTimeEntity{
     private List<PostLikeEntity> postLikeList = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFk")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFk", cascade = CascadeType.ALL)
     private  List<ScheduleEntity> userScheduleList = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFk")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFk", cascade = CascadeType.ALL)
     private  List<ScheduleTabEntity> userTab = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = CascadeType.ALL)
     private List<ScheduleMemberEntity> scheduleMembers = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "commentUserFK")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "commentUserFK", cascade = CascadeType.ALL)
     private List<CommentEntity> userComments = new ArrayList<>();
 
     @Builder
