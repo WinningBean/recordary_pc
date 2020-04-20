@@ -15,7 +15,7 @@ public class CommentResponseDto {
     public CommentResponseDto(CommentEntity comment)
     {
         this.commentCd = comment.getCommentCd();
-       // this.commentOriginFK = comment.getCommentOriginFK().getCommentCd();
+        this.commentOriginFK = comment.getCommentOriginFK().getCommentCd();
         this.content = comment.getContent();
         this.commentPostFK = comment.getCommentPostFK().getPostCd();
         this.commentUserFK = comment.getCommentUserFK().getUserCd();

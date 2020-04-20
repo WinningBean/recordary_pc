@@ -23,6 +23,7 @@ public class ScheduleSaveRequestDto {
     private Date scheduleStr;
     private Date scheduleEnd;
     private String scheduleCol;
+    private int schedulePublicState;
 
     @Builder(builderClassName = "createScheduleBuilder", builderMethodName = "createScheduleBuilder")
     public ScheduleSaveRequestDto(Long tabFK,
@@ -32,7 +33,8 @@ public class ScheduleSaveRequestDto {
                                   String scheduleEx,
                                   Date scheduleStr,
                                   Date scheduleEnd,
-                                  String scheduleCol) {
+                                  String scheduleCol,
+                                  int schedulePublicState) {
         this.tabCd = tabFK;
         this.postCd = postFK;
         this.userCd = userFk;
@@ -41,6 +43,7 @@ public class ScheduleSaveRequestDto {
         this.scheduleStr = scheduleStr;
         this.scheduleEnd = scheduleEnd;
         this.scheduleCol = scheduleCol;
+        this.schedulePublicState = schedulePublicState;
     }
 
     public ScheduleEntity toEntity(ScheduleTabEntity Tab,
@@ -55,6 +58,7 @@ public class ScheduleSaveRequestDto {
                 .scheduleStr(scheduleStr)
                 .scheduleEnd(scheduleEnd)
                 .scheduleCol(scheduleCol)
+                .schedulePublicState(schedulePublicState)
                 .build();
     }
 }

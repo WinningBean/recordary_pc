@@ -14,23 +14,25 @@ public class ScheduleResponseDto {
 
     private Long scheduleCd;
     private Long tabCd;
-    private String  userId;
+    private Long  userCd;
     private PostEntity postFK;
     private String scheduleNm;
     private String scheduleEx;
     private Date scheduleStr;
     private Date scheduleEnd;
     private String scheduleCol;
+    private int schedulePublicState;
 
     public ScheduleResponseDto(ScheduleEntity entity) {
         this.scheduleCd = entity.getScheduleCd();
         this.tabCd = entity.getTabFK().getTabCd();
-        this.userId = entity.getUserFk().getUserId();
+        this.userCd = entity.getUserFk().getUserCd();
         this.postFK = entity.getPostFK();
         this.scheduleNm = entity.getScheduleNm();
         this.scheduleEx = entity.getScheduleEx();
         this.scheduleStr = entity.getScheduleStr();
         this.scheduleEnd = entity.getScheduleEnd();
         this.scheduleCol = entity.getScheduleCol();
+        this.schedulePublicState = entity.getSchedulePublicState();
     }
 }
