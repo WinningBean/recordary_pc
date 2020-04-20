@@ -27,64 +27,74 @@ class Login extends React.Component {
 
   loginHandel = async e => {
     e.preventDefault();
-    // if(this.state.user_id === ""){
-    //     this.setState({
-    //         failedLogin: () => {
-    //             return (
-    //                 <AlertDialog
-    //                     severity="error"
-    //                     content="아이디를 작성하세요."
-    //                     onAlertClose={()=>{this.setState({ failedLogin: () => {} })}}
-    //                     />
-    //             )
-    //         }
-    //     })
-    //     return;
-    // }
-    // if(this.state.user_pw === ""){
-    //     this.setState({
-    //         failedLogin: () => {
-    //             return (
-    //                 <AlertDialog
-    //                     severity="error"
-    //                     content="비밀번호를 작성하세요."
-    //                     onAlertClose={()=>{this.setState({ failedLogin: () => {} })}}
-    //                     />
-    //             )
-    //         }
-    //     })
-    //     return;
-    // }
+    if(this.state.user_id === ""){
+        this.setState({
+            failedLogin: () => {
+                return (
+                    <AlertDialog
+                        severity="error"
+                        content="아이디를 작성하세요."
+                        onAlertClose={()=>{this.setState({ failedLogin: () => {} })}}
+                        />
+                )
+            }
+        })
+        return;
+    }
+    if(this.state.user_pw === ""){
+        this.setState({
+            failedLogin: () => {
+                return (
+                    <AlertDialog
+                        severity="error"
+                        content="비밀번호를 작성하세요."
+                        onAlertClose={()=>{this.setState({ failedLogin: () => {} })}}
+                        />
+                )
+            }
+        })
+        return;
+    }
     try {
-      // const Form = new FormData();
-      // Form.append('user_id', this.state.user_id);
-      // Form.append('user_pw', this.state.user_pw);
-      // const { isLogin } = (await axios.post('/user/loginRequest', Form)).data;
-      // // .catch();
-      // console.log(isLogin);
+      const Form = new FormData();
+      Form.append('user_id', this.state.user_id);
+      Form.append('user_pw', this.state.user_pw);
+      // const { isLogin } = (await axios.post('/user/login', Form)).data;
+      // .catch();
 
-      // if(isLogin === false){
-      //     this.setState({
-      //         failedLogin: () => {
-      //             return (
-      //                 <AlertDialog
-      //                     severity="error"
-      //                     content="로그인에 실패하였습니다."
-      //                     onAlertClose={()=>{this.setState({ failedLogin: () => {} })}}
-      //                     />
-      //             )
-      //         }
-      //     })
-      //     return;
-      // }
+      const LoginData = await axios.post(
+          '/user/login',
+          {
+            userId: this.state.user_id,
+            userPw: this.state.user_pw,
+          },
+          {headers: {'Content-Type': 'application/json; charset=utf=8'}}
+      );
+
+      console.log(LoginData);
+
+      if(LoginData.data === ""){
+          this.setState({
+              failedLogin: () => {
+                  return (
+                      <AlertDialog
+                          severity="error"
+                          content="로그인에 실패하였습니다."
+                          onAlertClose={()=>{this.setState({ failedLogin: () => {} })}}
+                          />
+                  )
+              }
+          })
+          return;
+      }
+
       this.setState({ isLoading: true });
       // 유저에 대한 정보를 가져오고 그 결과값을 state 에 저장
-      // const {data} = await axios.get("/mainPage");
       const data = {
         currentUser: {
-          user_ex: null,
-          user_id: 'ffff3311',
-          user_nm: '홍길동'
+          user_id: LoginData.data.userId,
+          user_nm: LoginData.data.userNm,
+          user_ex: LoginData.data.userEx
         },
         friendList: [
           {
