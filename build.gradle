@@ -78,7 +78,7 @@ task appNpmInstall(type: NpmTask) {
 
 task npmBuild(type: NpmTask) {
     workingDir = file("${webappDir}")
-    args = ['run-script', 'build']
+    args = ['run', 'build']
 }
 
 task copyWebApp(type: Copy) {
