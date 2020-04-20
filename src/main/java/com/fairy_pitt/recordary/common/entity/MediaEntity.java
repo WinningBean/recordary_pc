@@ -3,16 +3,17 @@ package com.fairy_pitt.recordary.common.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
 @NoArgsConstructor
-@Entity
 @Table(name = "MEDIA_TB")
+@Entity
 public class MediaEntity extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +28,7 @@ public class MediaEntity extends BaseTimeEntity{
     private List<PostEntity> postList = new ArrayList<>();
 
     @Builder
-    public MediaEntity(String mediaPath){
+    public MediaEntity(String mediaPath) {
         this.mediaPath = mediaPath;
     }
 }

@@ -23,7 +23,6 @@ public class PostListResponseDto {
         this.userFK = postEntity.getUserFK();
         this.groupFK = postEntity.getGroupFK();
         this.scheduleFK = postEntity.getScheduleFK();
-        this.mediaFK = postEntity.getMediaFK();
         this.postEx = postEntity.getPostEx();
         this.postPublicState = postEntity.getPostPublicState();
         this.postStrYMD = postEntity.getPostStrYMD();

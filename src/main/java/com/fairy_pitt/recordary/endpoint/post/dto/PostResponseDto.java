@@ -19,7 +19,6 @@ public class PostResponseDto {
     public PostResponseDto(PostEntity postEntity) {
         this.postOriginFK = postEntity.getPostOriginFK();
         this.scheduleFK = postEntity.getScheduleFK();
-        this.mediaFK = postEntity.getMediaFK();
         this.postEx = postEntity.getPostEx();
         this.postPublicState = postEntity.getPostPublicState();
         this.postStrYMD = postEntity.getPostStrYMD();

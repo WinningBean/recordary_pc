@@ -13,15 +13,15 @@ import java.util.Date;
 public class ScheduleMemberSaveRequestDto {
 
     private Long scheduleCd;
-    private String userId;
+    private Long userCd;
     private Boolean scheduleState;
 
     @Builder(builderClassName = "createScheduleMemberBuilder", builderMethodName = "createScheduleMemberBuilder")
     public ScheduleMemberSaveRequestDto(Long scheduleCd,
-                                        String userId,
+                                        Long userCd,
                                         Boolean scheduleState) {
         this.scheduleCd = scheduleCd;
-        this.userId = userId;
+        this.userCd = userCd;
         this.scheduleState = scheduleState;
     }
 
