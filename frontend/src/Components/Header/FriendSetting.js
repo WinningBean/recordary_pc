@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import Snackbar from 'Components/UI/Snackbar';
+import Snackbar from '../UI/Snackbar';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import TextField from '@material-ui/core/TextField';
-import Backdrop from 'Components/UI/Backdrop';
+import Backdrop from '../UI/Backdrop';
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';

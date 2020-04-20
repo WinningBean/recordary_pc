@@ -5,10 +5,10 @@ import { styled } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
-import SearchAppBar from 'Components/Other/SearchField';
-import HeaderMenu from 'Containers/Header/HeaderMenu';
-import NotifyPopup from 'Components/UI/NotifyPopup';
-import ToDoList from 'Components/Header/ToDoList';
+import SearchAppBar from '../Other/SearchField';
+import HeaderMenu from '../../Containers/Header/HeaderMenu';
+import NotifyPopup from '../UI/NotifyPopup';
+import ToDoList from './ToDoList';
 import { Link } from 'react-router-dom';
 
 class Header extends React.Component {

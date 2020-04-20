@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import GroupAdd from 'Components/Group/GroupAdd';
+import GroupAdd from '../../Components/Group/GroupAdd';
 
 const mapDispatchToProps = dispatch => {
     return {

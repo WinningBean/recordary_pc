@@ -4,8 +4,8 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/styles';
 import Register from './Register';
-import AlertDialog from 'Components/Other/AlertDialog';
-import Loading from 'Components/Loading/Loading';
+import AlertDialog from '../Other/AlertDialog';
+import Loading from '../Loading/Loading';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
@@ -202,7 +202,7 @@ class Login extends React.Component {
             user_pic: 'http://placehold.it/40x40',
             group_cd: null,
             uploadDate: new Date(),
-            post_pic: 'img/1579501322063.jpg',
+            post_pic: ['img/1579501322063.jpg'],
             sharedStartDay: new Date('2020-03-25'),
             sharedEndDay: new Date('2020-03-28'),
             sharedSchedual: [
@@ -304,7 +304,7 @@ class Login extends React.Component {
             user_pic: 'http://placehold.it/40x40',
             group_cd: null,
             uploadDate: new Date(),
-            post_pic: 'img/1579501322063.jpg',
+            post_pic: ['img/1579501322063.jpg'],
             sharedStartDay: new Date('2020-03-25'),
             sharedEndDay: new Date('2020-04-25'),
             sharedSchedual: [

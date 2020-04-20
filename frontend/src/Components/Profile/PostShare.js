@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import './PostAppend.css';
-import SelectGroup from 'Components/UI/SelectGroup';
-import PublicRange from 'Components/UI/PublicRange';
-import Backdrop from 'Components/UI/Backdrop';
-import AlertDialog from 'Components/Other/AlertDialog';
-import Snackbar from 'Components/UI/Snackbar';
+import SelectGroup from '../UI/SelectGroup';
+import PublicRange from '../UI/PublicRange';
+import Backdrop from '../UI/Backdrop';
+import AlertDialog from '../Other/AlertDialog';
+import Snackbar from '../UI/Snackbar';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -14,7 +14,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import axios from 'axios';
-import store from 'store';
+import store from '../../store';
 
 const PostShare = props => {
   const [open, setOpen] = React.useState(false);

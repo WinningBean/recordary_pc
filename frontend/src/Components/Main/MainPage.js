@@ -2,8 +2,8 @@ import React from 'react';
 import './mainPage.css';
 import Main from './Main';
 import Aside from './Aside';
-import MainPageButton from 'Components/Main/MainPageButton';
-import Header from 'Containers/Header/Header';
+import MainPageButton from './MainPageButton';
+import Header from '../../Containers/Header/Header';
 import { Redirect } from 'react-router-dom';
 
 class MainPage extends React.Component {

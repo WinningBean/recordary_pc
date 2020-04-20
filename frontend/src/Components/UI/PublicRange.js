@@ -1,5 +1,5 @@
 import React from 'react';
-import 'Components/Profile/PostAppend.css';
+import '../Profile/PostAppend.css';
 
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import 'Components/Other/SearchField.css';
-import Snackbar from 'Components/UI/Snackbar';
+import '../Other/SearchField.css';
+import Snackbar from '../UI/Snackbar';
 
 import IconButton from '@material-ui/core/IconButton';
 import Dialog from '@material-ui/core/Dialog';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
-import AlertDialog from 'Components/Other/AlertDialog';
+import AlertDialog from '../Other/AlertDialog';
 import axios from 'axios';
 import { Button, Avatar } from '@material-ui/core';
 

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import HeaderMenu from 'Components/Header/HeaderMenu';
+import HeaderMenu from '../../Components/Header/HeaderMenu';
 
 const mapStateToProps = state => {
     return {

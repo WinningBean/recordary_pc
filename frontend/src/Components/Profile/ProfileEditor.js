@@ -7,7 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 // import ReactCrop from 'react-image-crop';
 // import AlertDialog from './AlertDialog';
-import ImageEditor from 'Components/Other/ImageEditor';
+import ImageEditor from '../Other/ImageEditor';
 import 'react-image-crop/dist/ReactCrop.css';
 import './ProfileEditor.css';
 

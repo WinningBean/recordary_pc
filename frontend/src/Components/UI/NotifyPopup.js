@@ -1,5 +1,5 @@
 import React from 'react';
-import NotifyIconCount from 'Components/UI/NotifyIconCount';
+import NotifyIconCount from './NotifyIconCount';
 
 import { styled } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';

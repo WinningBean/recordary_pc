@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import 'Components/Profile/PostAppend.css';
-import SelectGroup from 'Components/UI/SelectGroup';
-import PublicRange from 'Components/UI/PublicRange';
-import Backdrop from 'Components/UI/Backdrop';
-import AlertDialog from 'Components/Other/AlertDialog';
-import Snackbar from 'Components/UI/Snackbar';
-import Calendar from 'Components/Calendar/Calendar';
+import '../Profile/PostAppend.css';
+import SelectGroup from '../UI/SelectGroup';
+import PublicRange from '../UI/PublicRange';
+import Backdrop from '../UI/Backdrop';
+import AlertDialog from '../Other/AlertDialog';
+import Snackbar from '../UI/Snackbar';
+import Calendar from '../Calendar/Calendar';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -18,7 +18,7 @@ import ShareIcon from '@material-ui/icons/Share';
 import Checkbox from '@material-ui/core/Checkbox';
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 import axios from 'axios';
-import store from 'store';
+import store from '../../store';
 import * as dateFns from 'date-fns';
 
 const ScheduleShare = props => {
