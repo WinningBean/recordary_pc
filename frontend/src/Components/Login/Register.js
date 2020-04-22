@@ -18,11 +18,11 @@ class Register extends React.Component {
     user_pw_check: '',
     isSamePw: undefined,
     alert: () => {},
-    alertDialog: () => {}
+    alertDialog: () => {},
   };
-  changeHandel = e => {
+  changeHandel = (e) => {
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -47,7 +47,7 @@ class Register extends React.Component {
           </div>
           <form
             method='POST'
-            onSubmit={async e => {
+            onSubmit={async (e) => {
               e.preventDefault();
               // const nameRules = /^[가-힣]{2,4}|[a-zA-Z]{2,10}\s[a-zA-Z]{2,10}$/;
               // if (!nameRules.test(this.state.user_nm)) {
@@ -124,19 +124,16 @@ class Register extends React.Component {
                       style={{
                         position: 'absolute',
                         top: '30px',
-                        left: '100px'
+                        left: '100px',
                       }}
                     />
                   );
-                }
+                },
               });
               try {
-                const form = new FormData();
-                form.append('user_nm', this.state.user_nm);
-                form.append('user_id', this.state.user_id);
-                form.append('user_pw', this.state.user_pw);
-                const { data } = await axios.post('/user/joinRequest', form);
-                if (data.isPossibleId === false) {
+                const isExistId = (await axios.get(`/user/existId/${this.state.user_id}`)).data;
+                console.log(isExistId);
+                if (isExistId) {
                   this.setState({
                     alert: () => {
                       return (
@@ -145,11 +142,20 @@ class Register extends React.Component {
                           이미 존재하는 아이디입니다.
                         </Alert>
                       );
-                    }
+                    },
                   });
                   return;
                 }
-                if (data.isJoin === false) {
+
+                const isJoin = (
+                  await axios.post('/user/join', {
+                    userNm: this.state.user_nm,
+                    userId: this.state.user_id,
+                    userPw: this.state.user_pw,
+                  })
+                ).data;
+
+                if (!isJoin) {
                   this.setState({
                     alert: () => {
                       return (
@@ -158,7 +164,7 @@ class Register extends React.Component {
                           회원가입에 실패하였습니다.
                         </Alert>
                       );
-                    }
+                    },
                   });
                   return;
                 }
@@ -173,7 +179,7 @@ class Register extends React.Component {
                         서버 문제로 인해 회원가입에 실패하였습니다. 다시 한번 시도해주세요.
                       </Alert>
                     );
-                  }
+                  },
                 });
               }
             }}
@@ -183,7 +189,7 @@ class Register extends React.Component {
               style={{
                 position: 'relative',
                 padding: '10px 30px',
-                marginTop: '10px'
+                marginTop: '10px',
               }}
             >
               <TextField
@@ -206,7 +212,7 @@ class Register extends React.Component {
                 type='password'
                 label='비밀번호'
                 style={{ width: '300px', marginBottom: '10px' }}
-                onChange={e => {
+                onChange={(e) => {
                   this.changeHandel(e);
                   if (e.target.value === '' || this.state.user_pw_check === '') {
                     this.setState({ isSamePw: undefined });
@@ -225,7 +231,7 @@ class Register extends React.Component {
                 type='password'
                 style={{ width: '300px', marginBottom: '10px' }}
                 label='비밀번호 확인'
-                onChange={e => {
+                onChange={(e) => {
                   this.changeHandel(e);
                   if (e.target.value === '' || this.state.user_pw === '') {
                     this.setState({ isSamePw: undefined });

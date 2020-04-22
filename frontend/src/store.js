@@ -4,24 +4,26 @@ const reducer = (state, action) => {
   if (state === undefined) {
     return {
       isLogin: false,
-      user: {}
+      user: {},
+      friendList: undefined,
+      groupList: undefined,
     };
   }
   switch (action.type) {
     case 'SET_LOGIN':
       return {
         ...state,
-        isLogin: action.loginData
+        isLogin: action.loginData,
       };
     case 'SET_USER':
       return {
         ...state,
-        user: action.userData
+        user: action.userData,
       };
     case 'ADD_GROUP':
       return {
         ...state,
-        user: { ...state.user, userGroup: state.user.userGroup.concat(action.groupAddData) }
+        user: { ...state.user, userGroup: state.user.userGroup.concat(action.groupAddData) },
       };
     case 'MODIFY_GROUP':
       const data = action.groupModifyData;
@@ -29,20 +31,20 @@ const reducer = (state, action) => {
       if (data.group_pic === null) {
         isChangePic = false;
       }
-      const changedGroup = state.user.userGroup.map(value => {
+      const changedGroup = state.user.userGroup.map((value) => {
         if (value.group_cd === data.group_cd) {
           if (isChangePic) {
             return {
               ...value,
               group_nm: data.group_nm,
               group_ex: data.group_ex,
-              group_pic: data.group_pic
+              group_pic: data.group_pic,
             };
           } else {
             return {
               ...value,
               group_nm: data.group_nm,
-              group_ex: data.group_ex
+              group_ex: data.group_ex,
             };
           }
         }
@@ -50,9 +52,30 @@ const reducer = (state, action) => {
       });
       return {
         ...state,
-        user: { ...state.user, userGroup: changedGroup }
+        user: { ...state.user, userGroup: changedGroup },
       };
+    case 'SAVE_FRIENDLIST':
+      return {
+        ...state,
+        friendList: action.friendList,
+      };
+    case 'SAVE_GROUPLIST':
+      return {
+        ...state,
+        groupList: action.groupList,
+      };
+    case 'SAVE_FRIEND':
+      return {
+        ...state,
+        friendList: state.friendList === undefined ? state.friendList : state.friendList.concat(action.friend),
+      };
+    // case 'SAVE_GROUP':
+    //   return {
+    //     ...state,
+    //     groupList: state.groupList === undefined ? state.groupList : state.groupList.concat(action.group),
+    //   };
   }
+
   return state;
 };
 
