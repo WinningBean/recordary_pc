@@ -28,7 +28,7 @@ public class ScheduleEntity extends BaseTimeEntity{
    @JoinColumn(name = "SCHEDULE_GB_FK")
    private ScheduleTabEntity tabFK;
 
-   @OneToOne
+   @OneToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "SCHEDULE_POST_FK")
    private PostEntity postFK;
 
@@ -51,12 +51,8 @@ public class ScheduleEntity extends BaseTimeEntity{
    private int schedulePublicState;
 
    @JsonIgnore
-   @OneToMany(fetch = FetchType.LAZY, mappedBy = "scheduleFK")
+   @OneToMany(fetch = FetchType.LAZY)
    private List<ScheduleMemberEntity> scheduleMembers = new ArrayList<>();
-
-   @JsonIgnore
-   @OneToOne(fetch = FetchType.LAZY)
-   private PostEntity schedulePost = new PostEntity();
 
    @Builder
    public ScheduleEntity(ScheduleTabEntity tabFK,
