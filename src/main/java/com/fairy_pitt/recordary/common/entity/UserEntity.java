@@ -28,6 +28,9 @@ public class UserEntity extends BaseTimeEntity{
     @Column(name = "USER_NM", nullable = false)
     private String userNm;
 
+    @Column(name = "USER_PIC")
+    private String userPic;
+
     @Column(name = "USER_EX")
     private String userEx;
 
@@ -86,9 +89,10 @@ public class UserEntity extends BaseTimeEntity{
         this.userNm = userNm;
     }
 
-    public void update(String userPw, String userNm, String userEx){
+    public void update(String userPw, String userNm, String userPic, String userEx){
         if (userPw != null) this.userPw = userPw;
         this.userNm = userNm;
+        this.userPic = userPic;
         this.userEx = userEx;
     }
 }

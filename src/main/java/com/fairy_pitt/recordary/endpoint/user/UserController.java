@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 
 @Transactional
@@ -31,7 +32,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public String update(@PathVariable String userId, @RequestBody UserUpdateRequestDto requestDto){
+    public String update(@PathVariable String userId, @RequestBody UserUpdateRequestDto requestDto) throws IOException {
         return userService.update(userId, requestDto);
     }
 
