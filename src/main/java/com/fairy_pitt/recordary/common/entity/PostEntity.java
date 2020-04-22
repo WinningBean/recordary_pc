@@ -74,6 +74,7 @@ public class PostEntity extends BaseTimeEntity{
                       GroupEntity groupFK,
                       PostEntity postOriginFK,
                       ScheduleEntity scheduleFK,
+                      MediaEntity mediaFK,
                       String postEx,
                       int postPublicState,
                       String postStrYMD,
@@ -82,6 +83,7 @@ public class PostEntity extends BaseTimeEntity{
         this.groupFK = groupFK;
         this.postOriginFK = postOriginFK;
         this.scheduleFK = scheduleFK;
+        this.mediaFK = mediaFK;
         this.postEx = postEx;
         this.postPublicState = postPublicState;
         this.postStrYMD = postStrYMD;
