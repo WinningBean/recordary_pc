@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class ScheduleTabResponseDto {
 
     private Long tabCd;
-    private UserEntity userFk;
+    private Long userCd;
     private String tabNm;
     private String tabCol;
 
@@ -19,6 +19,6 @@ public class ScheduleTabResponseDto {
         this.tabCd = entity.getTabCd();
         this.tabCol = entity.getTabCol();
         this.tabNm = entity.getTabNm();
-        this.userFk = entity.getUserFk();
+        this.userCd = entity.getUserFk().getUserCd();
     }
 }

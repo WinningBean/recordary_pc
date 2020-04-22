@@ -2,14 +2,15 @@ package com.fairy_pitt.recordary.common.entity;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Data
+@Getter
 @NoArgsConstructor
-@Entity
 @Table(name = "MEDIA_TB")
+@Entity
 public class MediaEntity extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,7 +21,7 @@ public class MediaEntity extends BaseTimeEntity{
     private String mediaPath;
 
     @Builder
-    public MediaEntity(String mediaPath){
+    public MediaEntity(String mediaPath) {
         this.mediaPath = mediaPath;
     }
 }

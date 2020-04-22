@@ -1,5 +1,6 @@
 package com.fairy_pitt.recordary.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ public class GroupEntity extends BaseTimeEntity{
     @Column(name = "GROUP_CD" )
     private Long groupCd;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GROUP_MST_FK")
     private UserEntity gMstUserFK;
 

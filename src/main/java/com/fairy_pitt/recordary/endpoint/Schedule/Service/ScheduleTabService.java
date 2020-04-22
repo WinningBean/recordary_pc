@@ -21,11 +21,11 @@ import java.util.Optional;
 public class ScheduleTabService {
 
     private final ScheduleTabRepository scheduleTabRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Transactional
     public Long save(ScheduleTabRequestDto requestDto) {
-        UserEntity user = userRepository.findByUserId(requestDto.getUserFk());
+        UserEntity user = userService.findEntity(requestDto.getUserCd());
         return scheduleTabRepository.save(requestDto.toEntity(user))
                 .getTabCd();
     }

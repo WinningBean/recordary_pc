@@ -35,9 +35,6 @@ public class PostEntity extends BaseTimeEntity{
     @JoinColumn(name = "POST_SCHEDULE_FK")
     private ScheduleEntity scheduleFK;
 
-    @ManyToOne
-    @JoinColumn(name = "POST_MEDIA_FK")
-    private MediaEntity mediaFK;
 
     @Column(name = "POST_EX")
     @Type(type = "text")
@@ -73,7 +70,6 @@ public class PostEntity extends BaseTimeEntity{
                       GroupEntity groupFK,
                       PostEntity postOriginFK,
                       ScheduleEntity scheduleFK,
-                      MediaEntity mediaFK,
                       String postEx,
                       int postPublicState,
                       String postStrYMD,
@@ -82,7 +78,6 @@ public class PostEntity extends BaseTimeEntity{
         this.groupFK = groupFK;
         this.postOriginFK = postOriginFK;
         this.scheduleFK = scheduleFK;
-        this.mediaFK = mediaFK;
         this.postEx = postEx;
         this.postPublicState = postPublicState;
         this.postStrYMD = postStrYMD;

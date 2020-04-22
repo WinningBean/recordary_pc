@@ -10,12 +10,26 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 
-    h2:
-      console:
-        enabled: true
+  h2:
+    console:
+      enabled: true
 
   session:
     store-type: jdbc
+
+cloud:
+  aws:
+    s3:
+      bucket: recordary-springboot-upload
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+    credentials:
+      instanceProfile: true
+
+
 
   thymeleaf:
     prefix: classpath:static/
