@@ -47,17 +47,22 @@ public class UserController {
     }
 
     @GetMapping("/search/{inputNm}")
-    public List<UserListResponseDto> findNmUser(@PathVariable String inputNm){
+    public List<UserResponseDto> findNmUser(@PathVariable String inputNm){
         return userService.findNmUser(inputNm);
     }
 
-    @GetMapping("/possibleId/{userId}")
-    public Boolean possibleId(@PathVariable String userId){
-        return userService.possibleId(userId);
+    @GetMapping("/existId/{userId}")
+    public Boolean existId(@PathVariable String userId){
+        return userService.existId(userId);
     }
 
     @GetMapping("/currentId")
     public String currentUserId(){
         return userService.currentUserId();
+    }
+
+    @PostMapping("/checkPw")
+    public Boolean checkPw(@RequestBody UserLoginRequestDto requestDto){
+        return userService.checkPw(requestDto);
     }
 }

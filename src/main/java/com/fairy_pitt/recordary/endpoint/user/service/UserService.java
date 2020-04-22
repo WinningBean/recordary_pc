@@ -40,7 +40,10 @@ public class UserService {
         UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(userId))
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
 
-        String hashedPassword = userPasswordHashService.getSHA256(requestDto.getUserPw());
+        String hashedPassword;
+        if (requestDto.getUserPw() == null) hashedPassword = null;
+        else hashedPassword = userPasswordHashService.getSHA256(requestDto.getUserPw());
+
         userEntity.update(hashedPassword, requestDto.getUserNm(), requestDto.getUserEx());
         return userId;
     }
@@ -54,8 +57,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Boolean possibleId(String inputId){
-        return !Optional.ofNullable(userRepository.findByUserId(inputId)).isPresent();
+    public Boolean existId(String inputId){
+        return Optional.ofNullable(userRepository.findByUserId(inputId)).isPresent();
     }
 
     @Transactional(readOnly = true)
@@ -103,16 +106,15 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserResponseDto findById(String userId){
-        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(userId))
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
-
+        UserEntity userEntity = userRepository.findByUserId(userId);
+        if (userEntity == null) return null;
         return new UserResponseDto(userEntity);
     }
 
     @Transactional(readOnly = true)
-    public List<UserListResponseDto> findNmUser(String findNm){
+    public List<UserResponseDto> findNmUser(String findNm){
         return userRepository.findAllByUserNmLike("%"+findNm+"%").stream()
-                .map(UserListResponseDto::new)
+                .map(UserResponseDto::new)
                 .collect(Collectors.toList());
     }
 

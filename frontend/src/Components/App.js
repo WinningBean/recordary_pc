@@ -13,7 +13,7 @@ class App extends React.Component {
         <Switch>
           <Route exact path='/' component={LoginPage} />
           <Route exact path='/main' component={MainPage} />
-          <Route path='/:userId' component={ProfilePage} />
+          <Route path='/user/:userId' component={ProfilePage} location />
           <Redirect path='*' to='/' />
         </Switch>
       </div>
