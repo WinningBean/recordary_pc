@@ -1,8 +1,10 @@
 package com.fairy_pitt.recordary.endpoint.media;
 
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -24,6 +28,11 @@ public class S3Uploader {
 
     @Value("${cloud.aws.s3.bucket}") //해당 값은 application.yml 에서 작성한 cloud.aws.credentials.accessKey 값을 가져옵니다.
     private String bucket;
+
+//    public String postUpload(MultipartFile multipartFile, Long userCd) throws  IOException{
+//        File uploadFile = convert(multipartFile)//S3에 전달할 수 있도록 MultiPartFile 을 File 로 전환
+//                .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
+//    }
 
     public String upload(MultipartFile multipartFile, String dirName) throws IOException {//MultipartFile 을 전달 받고
         File uploadFile = convert(multipartFile)//S3에 전달할 수 있도록 MultiPartFile 을 File 로 전환
@@ -91,5 +100,21 @@ public class S3Uploader {
             return Optional.of(convertFile);
         }
         return Optional.empty();
+    }
+
+    public List<String> listObject(String bucketName)
+    {
+        List<String> resultList = new ArrayList<>();
+        ListObjectsRequest listObjectsRequest = new ListObjectsRequest();
+        listObjectsRequest.setBucketName(bucketName);
+        listObjectsRequest.setPrefix("static");
+
+        ObjectListing  result = amazonS3Client.listObjects(listObjectsRequest);
+        List<S3ObjectSummary> objects = result.getObjectSummaries();
+        for (S3ObjectSummary os : objects) {
+            resultList.add( os.getKey());
+            System.out.println("* " + os.getKey() +"\n");
+        }
+        return  resultList;
     }
 }
