@@ -1,4 +1,4 @@
-package com.fairy_pitt.recordary.endpoint.media;
+package com.fairy_pitt.recordary.endpoint.main;
 
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
@@ -22,7 +22,7 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class S3Uploader {
+public class S3UploadComponent {
 
     private final AmazonS3Client amazonS3Client;
 
