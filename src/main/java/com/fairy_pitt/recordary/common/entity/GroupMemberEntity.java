@@ -16,12 +16,12 @@ import java.io.Serializable;
 public class GroupMemberEntity extends BaseTimeEntity implements Serializable {
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GROUP_FK")
     private GroupEntity groupFK;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GROUP_USER_FK")
     private UserEntity userFK;
 

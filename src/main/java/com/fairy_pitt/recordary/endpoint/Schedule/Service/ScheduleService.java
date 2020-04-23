@@ -33,9 +33,8 @@ public class ScheduleService {
     public Long save(ScheduleSaveRequestDto requestDto)
     {
         ScheduleTabEntity scheduleTabEntity = scheduleTabRepository.findByTabCd(requestDto.getTabCd());
-        PostEntity post = postRepository.findByPostCd(requestDto.getPostCd());
         UserEntity user = userService.findEntity(requestDto.getUserCd());
-        return scheduleRepository.save(requestDto.toEntity(scheduleTabEntity,post,user))
+        return scheduleRepository.save(requestDto.toEntity(scheduleTabEntity,user))
                 .getScheduleCd();
     }
 

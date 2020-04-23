@@ -3,18 +3,17 @@ package com.fairy_pitt.recordary.endpoint.follower.service;
 import com.fairy_pitt.recordary.common.entity.FollowerEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.FollowerRepository;
-import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.follower.dto.FollowerSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserListResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -27,18 +26,21 @@ public class FollowerService {
 
     @Transactional
     public Boolean save(String targetId){
+        UserEntity currentUser = userService.currentUser();
+        if (currentUser == null) return false;
         FollowerSaveRequestDto followerSaveRequestDto = FollowerSaveRequestDto.builder()
-                .userFK(userService.currentUser())
+                .userFK(currentUser)
                 .targetFK(userService.findEntity(targetId))
                 .build();
         return Optional.ofNullable(followerRepository.save(followerSaveRequestDto.toEntity())).isPresent();
     }
 
     @Transactional
-    public void delete(String targetId){
+    public Boolean delete(String targetId){
         FollowerEntity followerEntity = Optional.ofNullable(followerRepository.findByUserFKAndTargetFK(userService.currentUser(), userService.findEntity(targetId)))
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 팔로우하지 않았습니다. id = " + targetId));
         followerRepository.delete(followerEntity);
+        return !Optional.ofNullable(followerRepository.findByUserFKAndTargetFK(followerEntity.getUserFK(), followerEntity.getTargetFK())).isPresent();
     }
 
     @Transactional(readOnly = true)

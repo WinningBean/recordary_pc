@@ -1,20 +1,21 @@
 package com.fairy_pitt.recordary.endpoint.user.service;
 
-import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleResponseDto;
-import com.fairy_pitt.recordary.endpoint.user.dto.*;
+import com.fairy_pitt.recordary.endpoint.media.S3Uploader;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserLoginRequestDto;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserSaveRequestDto;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserPasswordHashService userPasswordHashService;
     private final HttpSession httpSession;
+    private final S3Uploader s3Uploader;
 
     @Transactional
     public Boolean save(UserSaveRequestDto requestDto){
@@ -39,12 +41,17 @@ public class UserService {
     }
 
     @Transactional
-    public String update(String userId, UserUpdateRequestDto requestDto){
+    public String update(String userId, UserUpdateRequestDto requestDto) throws IOException {
         UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(userId))
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
 
-        String hashedPassword = userPasswordHashService.getSHA256(requestDto.getUserPw());
-        userEntity.update(hashedPassword, requestDto.getUserNm(), requestDto.getUserEx());
+        String hashedPassword;
+        if (requestDto.getUserPw() == null) hashedPassword = null;
+        else hashedPassword = userPasswordHashService.getSHA256(requestDto.getUserPw());
+
+        String imgPath = s3Uploader.upload(requestDto.getUserPic(), "user");
+
+        userEntity.update(hashedPassword, requestDto.getUserNm(), imgPath, requestDto.getUserEx());
         return userId;
     }
 
@@ -57,8 +64,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Boolean possibleId(String inputId){
-        return !Optional.ofNullable(userRepository.findByUserId(inputId)).isPresent();
+    public Boolean existId(String inputId){
+        return Optional.ofNullable(userRepository.findByUserId(inputId)).isPresent();
     }
 
     @Transactional(readOnly = true)
@@ -106,16 +113,15 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserResponseDto findById(String userId){
-        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(userId))
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
-
+        UserEntity userEntity = userRepository.findByUserId(userId);
+        if (userEntity == null) return null;
         return new UserResponseDto(userEntity);
     }
 
     @Transactional(readOnly = true)
-    public List<UserListResponseDto> findNmUser(String findNm){
+    public List<UserResponseDto> findNmUser(String findNm){
         return userRepository.findAllByUserNmLike("%"+findNm+"%").stream()
-                .map(UserListResponseDto::new)
+                .map(UserResponseDto::new)
                 .collect(Collectors.toList());
     }
 

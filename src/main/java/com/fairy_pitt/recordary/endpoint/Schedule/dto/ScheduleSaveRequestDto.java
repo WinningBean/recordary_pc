@@ -7,7 +7,6 @@ import com.fairy_pitt.recordary.common.entity.UserEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.Date;
 
@@ -16,7 +15,6 @@ import java.util.Date;
 public class ScheduleSaveRequestDto {
 
     private Long tabCd;
-    private Long postCd;
     private Long userCd;
     private String scheduleNm;
     private String scheduleEx;
@@ -27,7 +25,6 @@ public class ScheduleSaveRequestDto {
 
     @Builder(builderClassName = "createScheduleBuilder", builderMethodName = "createScheduleBuilder")
     public ScheduleSaveRequestDto(Long tabFK,
-                                  Long postFK,
                                   Long userFk,
                                   String scheduleNm,
                                   String scheduleEx,
@@ -36,7 +33,6 @@ public class ScheduleSaveRequestDto {
                                   String scheduleCol,
                                   int schedulePublicState) {
         this.tabCd = tabFK;
-        this.postCd = postFK;
         this.userCd = userFk;
         this.scheduleNm = scheduleNm;
         this.scheduleEx = scheduleEx;
@@ -47,12 +43,10 @@ public class ScheduleSaveRequestDto {
     }
 
     public ScheduleEntity toEntity(ScheduleTabEntity Tab,
-                                   PostEntity Post,
                                    UserEntity user){
         return ScheduleEntity.builder()
                 .userFK(user)
                 .tabFK(Tab)
-                .postFK(Post)
                 .scheduleNm(scheduleNm)
                 .scheduleEx(scheduleEx)
                 .scheduleStr(scheduleStr)

@@ -1,5 +1,6 @@
 package com.fairy_pitt.recordary.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -16,27 +18,28 @@ import java.util.List;
 public class CommentEntity extends BaseTimeEntity{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "COMMENT_CD")
     private Long commentCd;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "COMMENT_USER_FK")
     private UserEntity commentUserFK;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "COMMENT_POST_FK")
     private PostEntity commentPostFK;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "COMMENT_ORIGIN_FK")
     private CommentEntity commentOriginFK;
 
     @Column(name = "COMMENT_CONTENT")
     private String content;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "commentOriginFK")
-    private List<CommentEntity> applyGroups;
+    private List<CommentEntity> commentOriginList;
 
     @Builder
     public CommentEntity(

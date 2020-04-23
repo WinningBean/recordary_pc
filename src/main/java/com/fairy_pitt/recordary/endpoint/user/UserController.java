@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 
 @Transactional
@@ -31,7 +32,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public String update(@PathVariable String userId, @RequestBody UserUpdateRequestDto requestDto){
+    public String update(@PathVariable String userId, @RequestBody UserUpdateRequestDto requestDto) throws IOException {
         return userService.update(userId, requestDto);
     }
 
@@ -47,17 +48,22 @@ public class UserController {
     }
 
     @GetMapping("/search/{inputNm}")
-    public List<UserListResponseDto> findNmUser(@PathVariable String inputNm){
+    public List<UserResponseDto> findNmUser(@PathVariable String inputNm){
         return userService.findNmUser(inputNm);
     }
 
-    @GetMapping("/possibleId/{userId}")
-    public Boolean possibleId(@PathVariable String userId){
-        return userService.possibleId(userId);
+    @GetMapping("/existId/{userId}")
+    public Boolean existId(@PathVariable String userId){
+        return userService.existId(userId);
     }
 
     @GetMapping("/currentId")
     public String currentUserId(){
         return userService.currentUserId();
+    }
+
+    @PostMapping("/checkPw")
+    public Boolean checkPw(@RequestBody UserLoginRequestDto requestDto){
+        return userService.checkPw(requestDto);
     }
 }

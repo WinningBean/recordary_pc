@@ -16,12 +16,12 @@ import java.io.Serializable;
 public class ScheduleMemberEntity extends BaseTimeEntity implements Serializable {
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SCHEDULE_FK")
     private ScheduleEntity scheduleFK;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SCHEDULE_MBR_FK")
     private UserEntity userFK;
 
@@ -32,7 +32,6 @@ public class ScheduleMemberEntity extends BaseTimeEntity implements Serializable
     public ScheduleMemberEntity(ScheduleEntity scheduleFK,
                                 UserEntity userFK,
                                 Boolean scheduleState){
-
       this.scheduleFK = scheduleFK;
       this.userFK = userFK;
       this.scheduleState = scheduleState;

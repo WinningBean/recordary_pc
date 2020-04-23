@@ -1,13 +1,11 @@
 package com.fairy_pitt.recordary.endpoint.schedule;
 
-import com.fairy_pitt.recordary.common.entity.PostEntity;
 import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
+import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.ScheduleRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleUpdateRequestDto;
-import com.fairy_pitt.recordary.endpoint.post.dto.PostSaveRequestDto;
-import com.fairy_pitt.recordary.endpoint.post.dto.PostUpdateRequestDto;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -44,11 +40,14 @@ public class ScheduleControllerTest {
     UserRepository userRepository;
 
     @After
-    public void tearDown(){scheduleRepository.deleteAll();}
+    public void tearDown(){
+        scheduleRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
 
     @Test
-    public void Post_등록된다() throws Exception {
+    public void Schedule_등록된다() throws Exception {
         //given
         String scheduleEx = "테스트 게시글";
         String scheduleNm = "Test 게시글";
@@ -59,7 +58,6 @@ public class ScheduleControllerTest {
         ScheduleSaveRequestDto requestDto = ScheduleSaveRequestDto.createScheduleBuilder()
                 .tabFK(null)
                 .userFk(null)
-                .postFK(null)
                 .scheduleNm(scheduleNm)
                 .scheduleEx(scheduleEx)
                 .scheduleStr(scheduleStr)
@@ -85,6 +83,12 @@ public class ScheduleControllerTest {
     @Test
     public void schedule_수정된다() throws Exception {
         //given
+        UserEntity user1 = userRepository.save(UserEntity.builder()
+                .userId("testUser1")
+                .userPw("testPassword")
+                .userNm("테스트 유저1")
+                .build());
+
         String scheduleEx = "테스트 게시글";
         // int postPublicState = 1;
         Date scheduleStr = Timestamp.valueOf("2020-03-25 12:13:24");
@@ -92,12 +96,13 @@ public class ScheduleControllerTest {
 
         ScheduleEntity saveSchedule = scheduleRepository.save(ScheduleEntity.builder()
                 .tabFK(null)
-                .postFK(null)
+                .userFK(user1)
                 .scheduleNm("Test")
                 .scheduleEx(scheduleEx)
                 .scheduleStr(scheduleStr)
                 .scheduleEnd(scheduleEnd)
                 .scheduleCol(null)
+                .schedulePublicState(1)
                 .build());
 
         Long scheduleCd = saveSchedule.getScheduleCd();

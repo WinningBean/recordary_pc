@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -15,7 +16,7 @@ import java.util.List;
 public class GroupEntity extends BaseTimeEntity{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "GROUP_CD" )
     private Long groupCd;
 
@@ -35,14 +36,17 @@ public class GroupEntity extends BaseTimeEntity{
     @Column(name = "GROUP_EX")
     private String  groupEx;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK")
-    private List<GroupMemberEntity> members;
+    private List<GroupMemberEntity> members = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK")
-    private List<GroupApplyEntity> applyMembers;
+    private List<GroupApplyEntity> applyMembers = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK")
-    private List<PostEntity> postEntityList;
+    private List<PostEntity> postEntityList = new ArrayList<>();
 
     @Builder
     public GroupEntity(UserEntity gMstUserFK,

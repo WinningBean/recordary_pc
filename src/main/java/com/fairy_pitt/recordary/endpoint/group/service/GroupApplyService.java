@@ -23,13 +23,13 @@ import java.util.Optional;
 public class GroupApplyService {
 
     private final GroupApplyRepository groupApplyRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final GroupRepository groupRepository;
 
     @Transactional
     public int save(GroupApplyRequestDto requestDto){
-        UserEntity user = userRepository.findByUserId(requestDto.getUserCodeFK());
-        GroupEntity group = groupRepository.findByGroupCd(requestDto.getGroupCodeFK());
+        UserEntity user = userService.findEntity(requestDto.getUserCd());
+        GroupEntity group = groupRepository.findByGroupCd(requestDto.getGroupCd());
         return groupApplyRepository.save(requestDto.toEntity(user,group))
                 .getApplyState();
     }
@@ -44,8 +44,8 @@ public class GroupApplyService {
     }
 
     @Transactional(readOnly = true)
-    public List<GroupApplyResponseDto> findGroupAppliesToUser(String userId){
-        UserEntity user = userRepository.findByUserId(userId);
+    public List<GroupApplyResponseDto> findGroupAppliesToUser(Long userId){
+        UserEntity user = userService.findEntity(userId);
         List<GroupApplyEntity> groupApplyEntities = groupApplyRepository.findAllByUserFKAndAndApplyState(user,1);
         List<GroupApplyResponseDto> groupApplyResponseDtoList = new ArrayList<>();
 

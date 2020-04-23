@@ -70,7 +70,7 @@ public class GroupApplyControllerTest {
         String groupPic = "asd";
         String  groupEx = "test";
 
-        String user = saveUser.getUserId();
+        Long user = saveUser.getUserCd();
 
         GroupEntity groupEntity = groupRepository.save(  GroupEntity.builder()
                 .gMstUserFK(saveUser)
@@ -82,7 +82,7 @@ public class GroupApplyControllerTest {
         Long group = groupEntity.getGroupCd();
 
         GroupApplyRequestDto requestDto = GroupApplyRequestDto.builder()
-                .userId(user)
+                .userCd(user)
                 .groupCd(group)
                 .applyState(1)
                 .build();
@@ -96,7 +96,7 @@ public class GroupApplyControllerTest {
 
         List<GroupApplyEntity> all = groupApplyRepository.findAll();
         assertThat(all.get(0).getGroupFK().getGroupCd()).isEqualTo(group);
-        assertThat(all.get(0).getUserFK().getUserId()).isEqualTo(user);
+        assertThat(all.get(0).getUserFK().getUserCd()).isEqualTo(user);
     }
 
 
