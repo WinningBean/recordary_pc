@@ -33,12 +33,12 @@ import java.util.stream.Collectors;
 public class GroupService {
 
     private final GroupRepository groupRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final GroupMemberRepository groupMemberRepository;
 
     @Transactional
     public Long save(@RequestBody GroupSaveRequestDto requestDto) {
-        UserEntity user = userRepository.findByUserId(requestDto.getUserId());
+        UserEntity user = userService.findEntity(requestDto.getUserCd());
         return groupRepository.save(requestDto.toEntity(user))
                 .getGroupCd();
     }
@@ -54,11 +54,11 @@ public class GroupService {
     }
 
     @Transactional
-    public Long changGroupMaster(String UserId, Long groupCd) {
+    public Long changGroupMaster(Long UserId, Long groupCd) {
         GroupEntity groupEntity = groupRepository.findById(groupCd)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + groupCd));
 
-        UserEntity User = userRepository.findByUserId(UserId);
+        UserEntity User = userService.findEntity(UserId);
         groupEntity.updateGroupMaster(User);
 
         return groupCd;
@@ -119,8 +119,8 @@ public class GroupService {
     }
 
     @Transactional(readOnly = true)
-    public List<GroupResponseDto> findUserGroups(String userId){
-        List<GroupMemberEntity> groupEntities = userRepository.findByUserId(userId).getGroups();
+    public List<GroupResponseDto> findUserGroups(Long userCd){
+        List<GroupMemberEntity> groupEntities = userService.findEntity(userCd).getGroups();
         List<GroupResponseDto> result = new ArrayList<>();
 
         for (GroupMemberEntity temp: groupEntities) {

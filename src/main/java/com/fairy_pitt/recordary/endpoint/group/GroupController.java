@@ -39,8 +39,8 @@ public class GroupController {
 
     @PostMapping("changeMaster/{groupCd}")
     public Long updateMaster(@PathVariable Long groupCd,
-                                           @RequestBody String userId) {
-        return groupService.changGroupMaster(userId,groupCd);
+                                           @RequestBody Long userCd) {
+        return groupService.changGroupMaster(userCd,groupCd);
     }
 
     @DeleteMapping("{groupCd}")
@@ -65,7 +65,7 @@ public class GroupController {
 
 
     @GetMapping("group/{userId}")
-    public List<GroupResponseDto> findUserGroup(@PathVariable String userId){
+    public List<GroupResponseDto> findUserGroup(@PathVariable Long userId){
 
         return groupService.findUserGroups(userId);
     }
