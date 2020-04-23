@@ -3,7 +3,7 @@ package com.fairy_pitt.recordary.endpoint.user.service;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleResponseDto;
-import com.fairy_pitt.recordary.endpoint.media.S3Uploader;
+import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserLoginRequestDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserSaveRequestDto;
@@ -28,7 +28,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserPasswordHashService userPasswordHashService;
     private final HttpSession httpSession;
-    private final S3Uploader s3Uploader;
+    private final S3UploadComponent s3UploadComponent;
 
     @Transactional
     public Boolean save(UserSaveRequestDto requestDto){
@@ -49,7 +49,7 @@ public class UserService {
         if (requestDto.getUserPw() == null) hashedPassword = null;
         else hashedPassword = userPasswordHashService.getSHA256(requestDto.getUserPw());
 
-        String imgPath = s3Uploader.upload(requestDto.getUserPic(), "user");
+        String imgPath = s3UploadComponent.upload(requestDto.getUserPic(), "user");
 
         userEntity.update(hashedPassword, requestDto.getUserNm(), imgPath, requestDto.getUserEx());
         return userId;
