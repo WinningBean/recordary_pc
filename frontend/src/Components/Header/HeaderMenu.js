@@ -32,7 +32,12 @@ const ColorCircularProgress = withStyles({
 })(CircularProgress);
 
 const HeaderMenu = (props) => {
-  const data = props.data;
+  const [data, setData] = useState({
+    ...props.data,
+    userPic: null,
+  });
+
+  console.log(data);
   const [profileEditForm, setProfileEditForm] = useState(null);
   // const [editor, setEditor] = useState(null);
   const [setting, setSetting] = useState(null);
@@ -88,15 +93,15 @@ const HeaderMenu = (props) => {
   };
 
   const onFriendMenuSelect = (selectedValue, code) => {
-    const value = props.friendList.filter((value) => value.friend_user_id === code)[0];
+    const value = props.friendList.filter((value) => value.userId === code)[0];
     switch (selectedValue) {
       case '친구 관리':
         setMenuDialog(
           <FriendSetting
             onClose={() => setMenuDialog(null)}
             data={{
-              user_id: data.currentUser.user_id,
-              group: value,
+              user_id: data.userId,
+              friend: value,
             }}
           />
         );
@@ -278,18 +283,33 @@ const HeaderMenu = (props) => {
                       fontWeight: 'bold',
                     }}
                   >
-                    <img
-                      alt='friend-img'
-                      style={{
-                        width: '40px',
-                        height: '40px',
-                        objectFit: 'cover',
-                        marginRight: '10px',
-                        borderRadius: '50%',
-                      }}
-                      src={'http://placehold.it/40x40'}
-                    />
-                    {value.userNm}
+                    {/* 우선 redux에 저장하지 않음 */}
+                    {value.userPic === null ? (
+                      <img
+                        alt='friend-img'
+                        style={{
+                          width: '40px',
+                          height: '40px',
+                          objectFit: 'cover',
+                          marginRight: '10px',
+                          borderRadius: '50%',
+                        }}
+                        src={'http://placehold.it/250x250'}
+                      />
+                    ) : (
+                      <img
+                        alt='friend-img'
+                        style={{
+                          width: '40px',
+                          height: '40px',
+                          objectFit: 'cover',
+                          marginRight: '10px',
+                          borderRadius: '50%',
+                        }}
+                        src={value.userPic}
+                      />
+                    )}
+                    {value.userId}({value.userNm})
                   </div>
                 </GroupButton>
                 <div className='LongMenuOpen'>
@@ -377,9 +397,12 @@ const HeaderMenu = (props) => {
         <div className='menu-profile'>
           <div className='menu-profile-pic-nm'>
             <div style={{ marginRight: '10px' }}>
-              <img alt='user img' src='http://placehold.it/40x40' style={{ borderRadius: '50%' }} />
+              {data.userPic === null ? setData({ ...data, userPic: 'http://placehold.it/250x250' }) : null}
+              <img alt='userPic' src={data.userPic} style={{ borderRadius: '50%', width: '30px', overFit: 'cover' }} />
             </div>
-            <span>{data.userId}</span>
+            <span>
+              {data.userId}({data.userNm})
+            </span>
           </div>
           <div className='profile-edit-icon'>
             <CustomIconButton onClick={ShowProfileEditForm}>
