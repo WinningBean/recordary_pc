@@ -41,9 +41,9 @@ public class GroupApplyController {
     }
 
     @GetMapping("find")
-    public @ResponseBody List<GroupApplyResponseDto> findGroupAppliesToUser(String userId){
+    public @ResponseBody List<GroupApplyResponseDto> findGroupAppliesToUser(Long userCd){
 
-        return groupApplyService.findGroupAppliesToUser(userId);
+        return groupApplyService.findGroupAppliesToUser(userCd);
     }
 
     @GetMapping("findGroup")

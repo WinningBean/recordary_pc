@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import LoginPage from 'Components/Login/LoginPage';
+import LoginPage from '../../Components/Login/LoginPage';
 import { withRouter } from 'react-router-dom';
 
 const mapDispatchToProps = dispatch => {

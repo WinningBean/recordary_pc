@@ -11,16 +11,19 @@ import java.io.Serializable;
 @IdClass(GroupMemberPK.class)
 @Table(name="GROUP_APPLY_TB")
 @Entity
-public class GroupApplyEntity  implements Serializable {
+public class GroupApplyEntity extends BaseTimeEntity implements Serializable {
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "GROUP_FK")
     private GroupEntity groupFK;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "GROUP_USER_FK")
     private UserEntity userFK;
 
+    @Column(name = "GROUP_APPLY_ST")
     private int applyState;
 
     @Builder

@@ -23,22 +23,20 @@ import java.util.Optional;
 public class GroupApplyService {
 
     private final GroupApplyRepository groupApplyRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final GroupRepository groupRepository;
 
     @Transactional
     public int save(GroupApplyRequestDto requestDto){
-        UserEntity user = userRepository.findByUserId(requestDto.getUserCodeFK());
-        GroupEntity group = groupRepository.findByGroupCd(requestDto.getGroupCodeFK());
+        UserEntity user = userService.findEntity(requestDto.getUserCd());
+        GroupEntity group = groupRepository.findByGroupCd(requestDto.getGroupCd());
         return groupApplyRepository.save(requestDto.toEntity(user,group))
                 .getApplyState();
     }
 
     @Transactional
     public void delete (GroupMemberRequestDto requestDto) {
-        GroupMemberPK id = new GroupMemberPK(requestDto.getGroupCd(),
-                userRepository.findByUserId(requestDto.getUserId()).getUserCd());
-
+        GroupMemberPK id = new GroupMemberPK(requestDto.getGroupCd(),requestDto.getUserCd());
         GroupApplyEntity groupApplyEntity = groupApplyRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 초대가 없습니다. id=" + id));
 
@@ -46,8 +44,8 @@ public class GroupApplyService {
     }
 
     @Transactional(readOnly = true)
-    public List<GroupApplyResponseDto> findGroupAppliesToUser(String userId){
-        UserEntity user = userRepository.findByUserId(userId);
+    public List<GroupApplyResponseDto> findGroupAppliesToUser(Long userId){
+        UserEntity user = userService.findEntity(userId);
         List<GroupApplyEntity> groupApplyEntities = groupApplyRepository.findAllByUserFKAndAndApplyState(user,1);
         List<GroupApplyResponseDto> groupApplyResponseDtoList = new ArrayList<>();
 

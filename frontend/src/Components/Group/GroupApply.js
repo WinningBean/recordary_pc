@@ -5,8 +5,8 @@ import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
-import GroupMemberSearch from 'Components/Group/GroupMemberSearch';
-import AlertDialog from 'Components/Other/AlertDialog';
+import GroupMemberSearch from './GroupMemberSearch';
+import AlertDialog from '../Other/AlertDialog';
 import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({

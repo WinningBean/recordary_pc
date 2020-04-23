@@ -11,15 +11,15 @@ import lombok.Setter;
 @Getter
 public class ScheduleTabRequestDto {
 
-    private String userFk;
+    private Long userCd;
     private String tabNm;
     private String tabCol;
 
     @Builder(builderClassName = "createScheduleTabBuilder", builderMethodName = "createScheduleTabBuilder")
-    public ScheduleTabRequestDto(String userFk,
+    public ScheduleTabRequestDto(Long userCd,
                                  String tabNm,
                                  String tabCol) {
-        this.userFk = userFk;
+        this.userCd = userCd;
         this.tabCol = tabCol;
         this.tabNm = tabNm;
     }

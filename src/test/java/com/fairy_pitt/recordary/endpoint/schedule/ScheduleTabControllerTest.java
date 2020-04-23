@@ -58,7 +58,7 @@ public class ScheduleTabControllerTest {
         ScheduleTabRequestDto requestDto = ScheduleTabRequestDto.createScheduleTabBuilder()
                 .tabCol(null)
                 .tabNm(tabNm)
-                .userFk(saveUser.getUserId())
+                .userCd(saveUser.getUserCd())
                 .build();
 
         String url = "http://localhost:" + port + "tab/create";

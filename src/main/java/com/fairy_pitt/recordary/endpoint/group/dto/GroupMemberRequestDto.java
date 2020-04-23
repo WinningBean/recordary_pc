@@ -14,13 +14,13 @@ import lombok.Setter;
 public class GroupMemberRequestDto {
 
     private Long groupCd;
-    private String userId;
+    private Long userCd;
 
     @Builder
-    public GroupMemberRequestDto(Long groupCd, String userId){
+    public GroupMemberRequestDto(Long groupCd, Long userCd){
 
         this.groupCd = groupCd;
-        this.userId = userId;
+        this.userCd = userCd;
     }
 
     public GroupMemberEntity toEntity(GroupEntity groupCodeFK, UserEntity userCodeFK){

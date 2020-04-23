@@ -139,7 +139,7 @@ public class GroupControllerTest {
     public void Group_방장위임() throws  Exception{
         //given
         UserEntity saveUser = userRepository.save(UserEntity.builder()
-                .userId("test")
+                .userId("test2")
                 .userPw("test")
                 .userNm("테스트 유저")
                 .build());
@@ -176,7 +176,7 @@ public class GroupControllerTest {
         assertThat(responseEntity.getBody()).isGreaterThan(0L);
 
         List<GroupEntity> all = groupRepository.findAll();
-        assertThat(all.get(0).getGMstUserFK().getUserNm()).isEqualTo(changeUser.getUserNm());
+        assertThat(all.get(0).getGMstUserFK().getUserCd()).isEqualTo(changeUser.getUserCd());
         assertThat(all.get(0).getGroupName()).isEqualTo(groupName);
     }
 

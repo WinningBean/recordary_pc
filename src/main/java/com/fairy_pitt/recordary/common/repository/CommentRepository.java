@@ -13,6 +13,9 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
 
     Long countByCommentOriginFKIsNotNull();
     Long countByCommentOriginFK(CommentEntity commentEntity);
+
+    CommentEntity findByCommentCd(Long CommentCd);
+
     List<CommentEntity> findAllByCommentOriginFK(CommentEntity commentEntity);
     List<CommentEntity> findAllByCommentOriginFKNotNull();
 

@@ -1,8 +1,9 @@
 package com.fairy_pitt.recordary.common.entity;
 
-import com.fairy_pitt.recordary.common.pk.GroupMemberPK;
 import com.fairy_pitt.recordary.common.pk.ScheduleMemberEntityPK;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,14 +13,16 @@ import java.io.Serializable;
 @NoArgsConstructor
 @IdClass(ScheduleMemberEntityPK.class)
 @Entity
-public class ScheduleMemberEntity implements Serializable {
+public class ScheduleMemberEntity extends BaseTimeEntity implements Serializable {
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SCHEDULE_FK")
     private ScheduleEntity scheduleFK;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SCHEDULE_MBR_FK")
     private UserEntity userFK;
 
     @Column(name="SCHEDULE_ACCEPT_ST")
@@ -29,7 +32,6 @@ public class ScheduleMemberEntity implements Serializable {
     public ScheduleMemberEntity(ScheduleEntity scheduleFK,
                                 UserEntity userFK,
                                 Boolean scheduleState){
-
       this.scheduleFK = scheduleFK;
       this.userFK = userFK;
       this.scheduleState = scheduleState;

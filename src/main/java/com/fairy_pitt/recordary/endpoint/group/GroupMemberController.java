@@ -20,14 +20,14 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @RequestMapping("groupMember")
-@Controller
+@RestController
 public class GroupMemberController {
 
     private final GroupMemberService groupMemberService;
     private final GroupApplyService groupApplyService;
 
     @PostMapping("create")
-    public @ResponseBody Boolean groupCreate(@RequestBody GroupMemberRequestDto requestDto)
+    public Boolean groupCreate(@RequestBody GroupMemberRequestDto requestDto)
     {
         groupApplyService.delete(requestDto);
         return groupMemberService.save(requestDto);

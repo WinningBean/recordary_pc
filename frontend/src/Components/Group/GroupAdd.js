@@ -10,12 +10,12 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Tooltip from '@material-ui/core/Tooltip';
-import ImageEditor from 'Components/Other/ImageEditor';
-import AlertDialog from 'Components/Other/AlertDialog';
-import Snackbar from 'Components/UI/Snackbar';
-import Backdrop from 'Components/UI/Backdrop';
+import ImageEditor from '../Other/ImageEditor';
+import AlertDialog from '../Other/AlertDialog';
+import Snackbar from '../UI/Snackbar';
+import Backdrop from '../UI/Backdrop';
 import axios from 'axios';
-import store from 'store';
+import store from '../../store';
 
 const GroupAdd = props => {
   const [openSwitch, setOpenSwitch] = useState({

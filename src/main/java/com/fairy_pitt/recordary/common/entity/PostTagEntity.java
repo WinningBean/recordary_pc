@@ -14,12 +14,12 @@ import javax.persistence.*;
 @IdClass(PostTagPK.class)
 public class PostTagEntity extends BaseTimeEntity{
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_FK")
     private PostEntity postFK;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_TAG_USER_FK")
     private UserEntity userFK;
 

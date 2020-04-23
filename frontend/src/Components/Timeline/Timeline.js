@@ -1,15 +1,15 @@
 import React, { useState, useMemo } from 'react';
 import * as dateFns from 'date-fns';
 import './Timeline.css';
-import LongMenu from 'Components/Other/MoreMenu';
-import PostShare from 'Components/Profile/PostShare';
+import LongMenu from '../Other/MoreMenu';
+import PostShare from '../Profile/PostShare';
 import Avatar from '@material-ui/core/Avatar';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import ThumbUpRoundedIcon from '@material-ui/icons/ThumbUpRounded';
 import ShareIcon from '@material-ui/icons/Share';
 import CommentIcon from '@material-ui/icons/Comment';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import CommentTimeline from 'Components/Timeline/CommentTimeline';
+import CommentTimeline from './CommentTimeline';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 

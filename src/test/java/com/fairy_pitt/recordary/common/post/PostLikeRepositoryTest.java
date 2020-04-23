@@ -69,8 +69,8 @@ public class PostLikeRepositoryTest {
 
         //then
         PostLikeEntity postLikeEntity = postLikeEntityList.get(0);
-        assertThat(postLikeEntity.getPostFK().getPostEx()).isEqualTo(postEntity.getPostEx());
-        assertThat(postLikeEntity.getUserFK().getUserId()).isEqualTo(user2.getUserId());
+        assertThat(postLikeEntity.getPostFK().getPostCd()).isEqualTo(postEntity.getPostCd());
+        assertThat(postLikeEntity.getUserFK().getUserCd()).isEqualTo(user2.getUserCd());
     }
 
     @Test

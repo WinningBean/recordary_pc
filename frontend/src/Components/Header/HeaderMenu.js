@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import './header.css';
-import GroupAdd from 'Containers/Group/GroupAdd';
-import LongMenu from 'Components/Other/MoreMenu';
-import ProfileEditor from 'Components/Profile/ProfileEditor';
-import GroupSetting from 'Components/Group/GroupSetting';
-import GroupInfo from 'Components/Group/GroupInfo';
-import SettingMenu from 'Components/Header/SettingMenu';
-import FriendAdd from 'Components/Group/GroupMemberSearch';
-import FriendSetting from 'Components/Header/FriendSetting';
+import GroupAdd from '../../Containers/Group/GroupAdd';
+import LongMenu from '../Other/MoreMenu';
+import ProfileEditor from '../Profile/ProfileEditor';
+import GroupSetting from '../Group/GroupSetting';
+import GroupInfo from '../Group/GroupInfo';
+import SettingMenu from './SettingMenu';
+import FriendAdd from '../Group/GroupMemberSearch';
+import FriendSetting from './FriendSetting';
+import AlertDialog from '../Other/AlertDialog';
 
 import { styled } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -18,20 +19,36 @@ import ArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import ArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { withStyles } from '@material-ui/core/styles';
 
-const HeaderMenu = props => {
+import { Redirect } from 'react-router-dom';
+import axios from 'axios';
+
+const ColorCircularProgress = withStyles({
+  root: {
+    color: '#00695c',
+  },
+})(CircularProgress);
+
+const HeaderMenu = (props) => {
   const data = props.data;
   const [profileEditForm, setProfileEditForm] = useState(null);
   // const [editor, setEditor] = useState(null);
   const [setting, setSetting] = useState(null);
   const [open, setOpen] = useState({
     group: false,
-    friend: false
+    friend: false,
   });
   const [groupAdd, setGroupAdd] = useState(null);
   const [menuDialog, setMenuDialog] = useState(null);
+  const [isLogout, setIsLogout] = useState(false);
 
-  const showOpen = isGroup => {
+  if (isLogout) {
+    return <Redirect to='/' />;
+  }
+
+  const showOpen = (isGroup) => {
     if (isGroup) {
       setOpen({ ...open, group: !open.group });
       return;
@@ -41,7 +58,7 @@ const HeaderMenu = props => {
   };
 
   const onGroupMenuSelect = (selectedValue, code) => {
-    const value = data.userGroup.filter(value => value.group_cd === code)[0];
+    const value = data.userGroup.filter((value) => value.group_cd === code)[0];
     // 그룹목록에서 현재 선택된 그룹 객체를 찾음
     console.log(selectedValue, code);
     switch (selectedValue) {
@@ -51,7 +68,7 @@ const HeaderMenu = props => {
             onClose={() => setMenuDialog(null)}
             data={{
               user_id: data.currentUser.user_id,
-              group: value
+              group: value,
             }}
           />
         );
@@ -62,7 +79,7 @@ const HeaderMenu = props => {
             onClose={() => setMenuDialog(null)}
             data={{
               user_id: data.currentUser.user_id,
-              group: value
+              group: value,
             }}
           />
         );
@@ -71,7 +88,7 @@ const HeaderMenu = props => {
   };
 
   const onFriendMenuSelect = (selectedValue, code) => {
-    const value = data.friendList.filter(value => value.friend_user_id === code)[0];
+    const value = props.friendList.filter((value) => value.friend_user_id === code)[0];
     switch (selectedValue) {
       case '친구 관리':
         setMenuDialog(
@@ -79,7 +96,7 @@ const HeaderMenu = props => {
             onClose={() => setMenuDialog(null)}
             data={{
               user_id: data.currentUser.user_id,
-              group: value
+              group: value,
             }}
           />
         );
@@ -116,7 +133,7 @@ const HeaderMenu = props => {
 
   const ShowProfileEditForm = () => {
     if (profileEditForm === null) {
-      setProfileEditForm(<ProfileEditor onCancel={() => setProfileEditForm(null)} />);
+      setProfileEditForm(<ProfileEditor data={data} onCancel={() => setProfileEditForm(null)} />);
       return;
     }
     setProfileEditForm(null);
@@ -134,7 +151,7 @@ const HeaderMenu = props => {
                   style={{
                     display: 'flex',
                     width: '250px',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
                   }}
                 >
                   <div
@@ -142,7 +159,7 @@ const HeaderMenu = props => {
                       display: 'flex',
                       alignItems: 'center',
                       marginBottom: '10px',
-                      fontWeight: 'bold'
+                      fontWeight: 'bold',
                     }}
                   >
                     <img
@@ -152,7 +169,7 @@ const HeaderMenu = props => {
                         borderRadius: '50%',
                         width: '40px',
                         height: '40px',
-                        objectFit: 'cover'
+                        objectFit: 'cover',
                       }}
                       src={value.group_pic}
                     />
@@ -181,7 +198,7 @@ const HeaderMenu = props => {
             style={{
               position: 'absolute',
               top: '4px',
-              left: '40px'
+              left: '40px',
             }}
           >
             <IconButton onClick={showGroupAdd}>
@@ -208,7 +225,7 @@ const HeaderMenu = props => {
           style={{
             position: 'absolute',
             top: '4px',
-            left: '40px'
+            left: '40px',
           }}
         >
           <IconButton onClick={showGroupAdd}>
@@ -218,47 +235,75 @@ const HeaderMenu = props => {
       </div>
     );
   };
+  const getFriendList = async () => {
+    try {
+      const { data } = await axios.get(`/friends/${props.data.userId}`);
+      if (data === '') {
+        props.onSaveFriendList([]);
+      }
+      props.onSaveFriendList(data);
+    } catch (error) {
+      console.error(error);
+      setMenuDialog(() => (
+        <AlertDialog
+          severity='error'
+          content='서버에러로 인하여 데이터를 받아오는데 실패하였습니다.'
+          onAlertClose={() => setMenuDialog(null)}
+        />
+      ));
+    }
+  };
 
   const friendList = () => {
     if (open.friend === true) {
-      const friends = data.friendList.map((value, index) => {
-        return (
-          <li key={`friend-${index}`}>
-            <div className='button-wrap'>
-              <GroupButton>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    marginBottom: '10px',
-                    fontWeight: 'bold'
-                  }}
-                >
-                  <img
-                    alt='friend-img'
-                    style={{
-                      width: '40px',
-                      height: '40px',
-                      objectFit: 'cover',
-                      marginRight: '10px',
-                      borderRadius: '50%'
-                    }}
-                    src={value.friend_user_pic}
-                  />
-                  {value.friend_user_nm}
-                </div>
-              </GroupButton>
-              <div className='LongMenuOpen'>
-                <LongMenu
-                  options={['친구 관리', '메시지 보내기']}
-                  code={value.user_id}
-                  returnValue={onFriendMenuSelect}
-                />
-              </div>
-            </div>
-          </li>
+      var friends = undefined;
+      if (props.friendList === undefined) {
+        getFriendList();
+        friends = (
+          <div style={{ width: 250, display: 'flex', justifyContent: 'center' }}>
+            <ColorCircularProgress />
+          </div>
         );
-      });
+      } else {
+        friends = props.friendList.map((value, index) => {
+          return (
+            <li key={`friend-${index}`}>
+              <div className='button-wrap'>
+                <GroupButton>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      marginBottom: '10px',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    <img
+                      alt='friend-img'
+                      style={{
+                        width: '40px',
+                        height: '40px',
+                        objectFit: 'cover',
+                        marginRight: '10px',
+                        borderRadius: '50%',
+                      }}
+                      src={'http://placehold.it/40x40'}
+                    />
+                    {value.userNm}
+                  </div>
+                </GroupButton>
+                <div className='LongMenuOpen'>
+                  <LongMenu
+                    options={['친구 관리', '메시지 보내기']}
+                    code={value.userId}
+                    returnValue={onFriendMenuSelect}
+                  />
+                </div>
+              </div>
+            </li>
+          );
+        });
+      }
       return (
         <div className='button-wrap'>
           <GroupButton style={{ backgroundColor: 'rgba(209, 204, 192,0.4)' }} onClick={() => showOpen(false)}>
@@ -273,7 +318,7 @@ const HeaderMenu = props => {
             style={{
               position: 'absolute',
               top: '4px',
-              left: '40px'
+              left: '40px',
             }}
           >
             <IconButton onClick={showFriendAdd}>
@@ -300,7 +345,7 @@ const HeaderMenu = props => {
           style={{
             position: 'absolute',
             top: '4px',
-            left: '40px'
+            left: '40px',
           }}
         >
           <IconButton onClick={showFriendAdd}>
@@ -313,13 +358,14 @@ const HeaderMenu = props => {
 
   const showSetting = () => {
     if (setting === null) {
-      setSetting(<SettingMenu currentUser={data.currentUser} onClose={() => setSetting(null)} />);
+      setSetting(<SettingMenu data={data} onClose={() => setSetting(null)} />);
       return;
     }
     setSetting(null);
     return;
   };
 
+  console.log(props.data);
   return (
     <Drawer
       open={props.open}
@@ -333,7 +379,7 @@ const HeaderMenu = props => {
             <div style={{ marginRight: '10px' }}>
               <img alt='user img' src='http://placehold.it/40x40' style={{ borderRadius: '50%' }} />
             </div>
-            <span>{data.currentUser.user_id}</span>
+            <span>{data.userId}</span>
           </div>
           <div className='profile-edit-icon'>
             <CustomIconButton onClick={ShowProfileEditForm}>
@@ -350,7 +396,35 @@ const HeaderMenu = props => {
           <CustomIconButton onClick={showSetting}>
             <SettingsIcon />
           </CustomIconButton>
-          <CustomIconButton>Logout</CustomIconButton>
+          <CustomIconButton
+            onClick={async () => {
+              try {
+                const isSuccess = await axios.get('/user/logout');
+                if (isSuccess) {
+                  setIsLogout(true);
+                } else {
+                  setMenuDialog(() => (
+                    <AlertDialog
+                      severity='error'
+                      content='로그아웃에 실패하였습니다.'
+                      onAlertClose={() => setMenuDialog(null)}
+                    />
+                  ));
+                }
+              } catch (error) {
+                console.error(error);
+                setMenuDialog(() => (
+                  <AlertDialog
+                    severity='error'
+                    content='서버에러로 인해 로그아웃에 실패하였습니다.'
+                    onAlertClose={() => setMenuDialog(null)}
+                  />
+                ));
+              }
+            }}
+          >
+            Logout
+          </CustomIconButton>
         </div>
         {/* {editor} */}
         {setting}
@@ -363,7 +437,7 @@ const HeaderMenu = props => {
 
 const CustomIconButton = styled(Button)({
   minWidth: '40px',
-  height: '40px'
+  height: '40px',
 });
 const GroupButton = styled(Button)({
   width: '250px',
@@ -374,7 +448,7 @@ const GroupButton = styled(Button)({
   justifyContent: 'space-between',
   paddingTop: '5px',
   paddingBottom: '5px',
-  paddingLeft: '10px'
+  paddingLeft: '10px',
 });
 
 export default React.memo(HeaderMenu, (props, newProps) => {

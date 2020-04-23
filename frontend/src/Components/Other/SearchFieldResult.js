@@ -11,11 +11,9 @@ import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import GroupIcon from '@material-ui/icons/Group';
-import AlertDialog from 'Components/Other/AlertDialog';
-import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
-import Snackbar from 'Components/UI/Snackbar';
-import store from 'store';
+import Snackbar from '../UI/Snackbar';
+import store from '../../store';
 
 import axios from 'axios';
 
@@ -26,21 +24,20 @@ class SearchFieldResult extends React.Component {
       data: props.data,
       followerIconClick: false,
       clickTab: 0,
-      alert: () => {},
-      alertDialog: () => {}
+      alertDialog: () => {},
     };
   }
 
   followerChange = (index, click) => {
     const array = this.state.data.searchedUser;
-    array[index] = { ...array[index], user_click: click };
+    array[index] = { ...array[index], isClick: click };
 
     this.setState({ searchedUser: array });
   };
 
   groupChange = (index, click) => {
     const array = this.state.data.searchedGroup;
-    array[index] = { ...array[index], group_click: click };
+    array[index] = { ...array[index], isClick: click };
 
     this.setState({ searchedGroup: array });
   };
@@ -48,119 +45,145 @@ class SearchFieldResult extends React.Component {
   exfollowList = () => {
     return this.state.data.searchedUser.map((value, index) => {
       return (
-        <li key={value.user_id}>
+        <li key={value.userId} key={value.userId}>
           <div className='follower_list'>
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                marginBottom: '10px'
+                marginBottom: '10px',
               }}
             >
               <img
                 alt='friend-img'
                 style={{
                   marginRight: '10px',
-                  borderRadius: '50%'
+                  borderRadius: '50%',
                 }}
-                src={value.user_pic}
+                src={'http://placehold.it/40x40'}
               />
-              {value.user_nm}
+              {value.userNm}
             </div>
             <div>
               {(() => {
-                if (!value.user_click) {
+                if (!value.isClick) {
                   return (
                     <FollowButton
-                      onClick={async e => {
-                        console.log(value);
-                        e.preventDefault();
-                        this.followerChange(index, !value.user_click);
-
-                        const { data } = await axios.get(
-                          `http://localhost:8080/${value.user_id}/follow`
-                        );
-                        // .catch();
-                        console.log(data);
-
-                        if (data.isFollow) {
-                          this.setState({
-                            alert: () => {
-                              return (
-                                <Alert severity='success'>
-                                  <AlertTitle>Success</AlertTitle>
-                                  팔로우 되었습니다
-                                </Alert>
-                              );
-                            }
-                          });
-                          return;
-                        } else {
-                          this.setState({
-                            alert: () => {
-                              return (
-                                <Alert severity='error'>
-                                  <AlertTitle>Error</AlertTitle>
-                                  서버 에러로 팔로우에 실패하였습니다
-                                </Alert>
-                              );
-                            }
-                          });
-                          return;
-                        }
-                      }}
-                    >
-                      <AddIcon style={{ fontSize: '20px;' }} />
-                    </FollowButton>
-                  );
-                } else {
-                  return (
-                    <FollowButton
-                      onClick={async e => {
-                        console.log(value);
-                        e.preventDefault();
-                        this.followerChange(index, !value.user_click);
-
-                        const { data } = await axios.get(
-                          `http://localhost:8080/${value.user_id}/unFollow`
-                        );
-                        // .catch();
-                        console.log(data);
-
-                        if (data.isUnFollow) {
-                          this.setState({
-                            alertDialog: () => {
-                              return (
-                                <AlertDialog
-                                  severity='success'
-                                  content='팔로우를 취소하였습니다.'
-                                  onAlertClose={() => {
-                                    this.setState({ alertDialog: () => {} });
-                                  }}
-                                />
-                              );
-                            }
-                          });
-                          return;
-                        } else {
+                      key={`button-${value.userId}`}
+                      onClick={async (e) => {
+                        try {
+                          const isSuccess = await axios.get(`/follow/${value.userId}`);
+                          if (isSuccess) {
+                            this.setState({
+                              alertDialog: () => {
+                                return (
+                                  <Snackbar
+                                    severity='success'
+                                    content='팔로우 하였습니다.'
+                                    onClose={() => {
+                                      this.setState({ alertDialog: () => {} });
+                                    }}
+                                  />
+                                );
+                              },
+                            });
+                            this.followerChange(index, !value.isClick);
+                            this.props.onSaveFriend(value);
+                            return;
+                          } else {
+                            this.setState({
+                              alertDialog: () => {
+                                return (
+                                  <Snackbar
+                                    severity='error'
+                                    content='팔로우에 실패하였습니다.'
+                                    onClose={() => {
+                                      this.setState({ alertDialog: () => {} });
+                                    }}
+                                  />
+                                );
+                              },
+                            });
+                            return;
+                          }
+                        } catch (error) {
+                          console.error(error);
                           this.setState({
                             alertDialog: () => {
                               return (
                                 <Snackbar
                                   severity='error'
-                                  content='서버에러로 팔로우 취소를 실패하였습니다.'
+                                  content='서버에러로 팔로우에 실패하였습니다.'
                                   onClose={() => {
                                     this.setState({ alertDialog: () => {} });
                                   }}
                                 />
                               );
-                            }
+                            },
                           });
-                          return;
                         }
                       }}
                     >
-                      <HowToRegIcon style={{ fontSize: '20px;' }} />
+                      <AddIcon style={{ fontSize: '20px' }} />
+                    </FollowButton>
+                  );
+                } else {
+                  return (
+                    <FollowButton
+                      onClick={async (e) => {
+                        try {
+                          const isSuccess = (await axios.delete(`/unFollow/${value.userId}`)).data;
+                          if (isSuccess) {
+                            this.setState({
+                              alertDialog: () => {
+                                return (
+                                  <Snackbar
+                                    severity='success'
+                                    content='팔로우를 취소하였습니다.'
+                                    onClose={() => {
+                                      this.setState({ alertDialog: () => {} });
+                                    }}
+                                  />
+                                );
+                              },
+                            });
+                            this.followerChange(index, !value.user_click);
+                            return;
+                          } else {
+                            this.setState({
+                              alertDialog: () => {
+                                return (
+                                  <Snackbar
+                                    severity='error'
+                                    content='팔로우 취소에 실패하였습니다.'
+                                    onClose={() => {
+                                      this.setState({ alertDialog: () => {} });
+                                    }}
+                                  />
+                                );
+                              },
+                            });
+                            return;
+                          }
+                        } catch (error) {
+                          console.log(error);
+                          this.setState({
+                            alertDialog: () => {
+                              return (
+                                <Snackbar
+                                  severity='error'
+                                  content='서버에러로 팔로우 취소에 실패하였습니다.'
+                                  onClose={() => {
+                                    this.setState({ alertDialog: () => {} });
+                                  }}
+                                />
+                              );
+                            },
+                          });
+                        }
+                      }}
+                    >
+                      <HowToRegIcon style={{ fontSize: '20px' }} />
                     </FollowButton>
                   );
                 }
@@ -181,14 +204,14 @@ class SearchFieldResult extends React.Component {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                marginBottom: '10px'
+                marginBottom: '10px',
               }}
             >
               <img
                 alt='friend-img'
                 style={{
                   marginRight: '10px',
-                  borderRadius: '50%'
+                  borderRadius: '50%',
                 }}
                 src={value.group_pic}
               />
@@ -199,22 +222,16 @@ class SearchFieldResult extends React.Component {
                 if (!value.group_click) {
                   return (
                     <FollowButton
-                      onClick={async e => {
+                      onClick={async (e) => {
                         console.log(value);
                         e.preventDefault();
                         this.groupChange(index, !value.group_click);
 
                         const form = new FormData();
-                        form.append(
-                          'user_id',
-                          store.getState().user.currentUser.user_id
-                        );
+                        form.append('user_id', store.getState().user.currentUser.user_id);
                         form.append('group_cd', value.group_cd);
                         form.append('apply_state', 1);
-                        const { data } = await axios.post(
-                          'http://localhost:8080/apply',
-                          form
-                        );
+                        const { data } = await axios.post('http://localhost:8080/apply', form);
                         if (data.isSuccess) {
                           console.log('완료');
                           return;
@@ -222,27 +239,21 @@ class SearchFieldResult extends React.Component {
                         console.log('실패');
                       }}
                     >
-                      <HowToRegIcon style={{ fontSize: '20px;' }} />
+                      <HowToRegIcon style={{ fontSize: '20px' }} />
                     </FollowButton>
                   );
                 } else {
                   return (
                     <FollowButton
-                      onClick={async e => {
+                      onClick={async (e) => {
                         console.log(value);
                         e.preventDefault();
                         this.groupChange(index, !value.group_click);
 
                         const form = new FormData();
-                        form.append(
-                          'user_id',
-                          store.getState().user.currentUser.user_id
-                        );
+                        form.append('user_id', store.getState().user.currentUser.user_id);
                         form.append('group_cd', value.group_cd);
-                        const { data } = await axios.post(
-                          'http://localhost:8080/apply/delete',
-                          form
-                        );
+                        const { data } = await axios.post('http://localhost:8080/apply/delete', form);
                         // .catch();
                         if (data.isDelete) {
                           console.log('완료');
@@ -251,7 +262,7 @@ class SearchFieldResult extends React.Component {
                         console.log('실패');
                       }}
                     >
-                      <AddIcon style={{ fontSize: '20px;' }} />
+                      <AddIcon style={{ fontSize: '20px' }} />
                     </FollowButton>
                   );
                 }
@@ -265,18 +276,14 @@ class SearchFieldResult extends React.Component {
 
   render() {
     return (
-      <Dialog
-        open
-        style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}
-        onClose={() => this.props.onCancel()}
-      >
+      <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }} onClose={() => this.props.onCancel()}>
         <div className='searchField-result'>
           <div className='searchField-title'>
             <SearchIcon
               style={{
-                fontSize: '30px;',
+                fontSize: '30px',
                 color: 'white',
-                marginTop: '5px'
+                marginTop: '5px',
               }}
             />
           </div>
@@ -291,7 +298,7 @@ class SearchFieldResult extends React.Component {
                     textColor='primary'
                     onChange={(e, newValue) =>
                       this.setState({
-                        clickTab: newValue
+                        clickTab: newValue,
                       })
                     }
                     aria-label='disabled tabs example'
@@ -302,15 +309,12 @@ class SearchFieldResult extends React.Component {
                 </Paper>
               </div>
               <div className='follower_list'>
-                <ul>
-                  {this.state.clickTab === 0
-                    ? this.exfollowList()
-                    : this.exGroupList()}
-                </ul>
+                <ul>{this.state.clickTab === 0 ? this.exfollowList() : this.exGroupList()}</ul>
               </div>
             </div>
           </div>
         </div>
+        {this.state.alertDialog()}
       </Dialog>
     );
   }
@@ -318,7 +322,7 @@ class SearchFieldResult extends React.Component {
 
 const FollowButton = styled(Button)({
   minWidth: '30px',
-  height: '40px'
+  height: '40px',
 });
 
 export default SearchFieldResult;

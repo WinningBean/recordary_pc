@@ -1,15 +1,18 @@
 import React from 'react';
 import './mainPage.css';
 
-import Timeline from 'Components/Timeline/Timeline';
-import TimelineWeekSchedule from 'Components/Timeline/TimelineWeekSchedule';
+import Timeline from '../Timeline/Timeline';
+import TimelineWeekSchedule from '../Timeline/TimelineWeekSchedule';
 
 class Main extends React.Component {
   render() {
     var data = this.props.data;
     const timelineList = (() => {
       console.log(data);
-      return data.post.map(value => {
+      if (data.post === undefined) {
+        return null;
+      }
+      return data.post.map((value) => {
         switch (value.postForm) {
           case 0:
             return (

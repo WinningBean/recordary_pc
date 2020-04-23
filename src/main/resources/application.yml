@@ -1,16 +1,37 @@
 spring:
 
-  jpa:
-    show-sql: false
-    properties:
-      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-    open-in-view: false
-    hibernate:
-      ddl-auto: create-drop
+  profiles:
+    include: real
+    active: springdataJPA
 
-    h2:
-      console:
-        enabled: true
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+  h2:
+    console:
+      enabled: true
 
   session:
     store-type: jdbc
+
+  thymeleaf:
+    prefix: classpath:static/
+
+cloud:
+
+  aws:
+    s3:
+      bucket: recordary-springboot-upload
+
+    region:
+      static: ap-northeast-2
+      auto: false
+
+    stack:
+      auto: false
+
+    credentials:
+      instanceProfile: true

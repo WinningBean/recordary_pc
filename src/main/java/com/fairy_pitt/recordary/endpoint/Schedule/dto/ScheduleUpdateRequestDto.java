@@ -20,6 +20,7 @@ public class ScheduleUpdateRequestDto {
     private Date scheduleStr;
     private Date scheduleEnd;
     private String scheduleCol;
+    private int schedulePublicState;
 
     @Builder(builderClassName = "updateScheduleBuilder", builderMethodName = "updateScheduleBuilder")
     public ScheduleUpdateRequestDto(Long TabCodeFK,
@@ -27,7 +28,8 @@ public class ScheduleUpdateRequestDto {
                                   String scheduleEx,
                                   Date scheduleStr,
                                   Date scheduleEnd,
-                                  String scheduleCol)
+                                  String scheduleCol,
+                                  int schedulePublicState)
     {
         this.TabCodeFK = TabCodeFK;
         this.scheduleNm = scheduleNm;
@@ -35,5 +37,6 @@ public class ScheduleUpdateRequestDto {
         this.scheduleStr = scheduleStr;
         this.scheduleEnd = scheduleEnd;
         this.scheduleCol = scheduleCol;
+        this.schedulePublicState = schedulePublicState;
     }
 }

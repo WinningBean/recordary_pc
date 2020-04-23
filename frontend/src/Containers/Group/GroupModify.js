@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import GroupModify from 'Components/Group/GroupModify';
+import GroupModify from '../../Components/Group/GroupModify';
 
 const mapDispatchToProps = dispatch => {
     return {

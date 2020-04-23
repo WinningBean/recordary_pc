@@ -80,7 +80,7 @@ public class PostControllerTest {
         assertThat(responseEntity.getBody()).isEqualTo(true);
 
         List<PostEntity> all = postRepository.findAll();
-        assertThat(all.get(0).getUserFK().getUserId()).isEqualTo(user1.getUserId());
+        assertThat(all.get(0).getUserFK().getUserCd()).isEqualTo(user1.getUserCd());
         assertThat(all.get(0).getPostEx()).isEqualTo(postEx);
         assertThat(all.get(0).getPostPublicState()).isEqualTo(postPublicState);
         assertThat(all.get(0).getPostStrYMD()).isEqualTo(postStrYMD);

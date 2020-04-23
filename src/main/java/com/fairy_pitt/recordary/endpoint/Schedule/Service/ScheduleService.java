@@ -9,6 +9,7 @@ import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleMemberResponseDto;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleResponseDto;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,16 +26,15 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final ScheduleTabRepository scheduleTabRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final PostRepository postRepository;
 
     @Transactional
     public Long save(ScheduleSaveRequestDto requestDto)
     {
         ScheduleTabEntity scheduleTabEntity = scheduleTabRepository.findByTabCd(requestDto.getTabCd());
-        PostEntity post = postRepository.findByPostCd(requestDto.getPostCd());
-        UserEntity user = userRepository.findByUserId(requestDto.getUserId());
-        return scheduleRepository.save(requestDto.toEntity(scheduleTabEntity,post,user))
+        UserEntity user = userService.findEntity(requestDto.getUserCd());
+        return scheduleRepository.save(requestDto.toEntity(scheduleTabEntity,user))
                 .getScheduleCd();
     }
 

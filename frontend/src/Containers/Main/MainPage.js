@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import MainPage from 'Components/Main/MainPage';
+import MainPage from '../../Components/Main/MainPage';
 import { withRouter } from 'react-router-dom';
 
 const mapStateToProps = state => {

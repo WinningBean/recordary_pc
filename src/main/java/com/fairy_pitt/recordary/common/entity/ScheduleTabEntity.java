@@ -1,11 +1,12 @@
 package com.fairy_pitt.recordary.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -13,21 +14,26 @@ import java.util.List;
 @Table(name = "SCHEDULE_GB_TB")
 @NoArgsConstructor
 @Entity
-public class ScheduleTabEntity {
+public class ScheduleTabEntity extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "SCHEDULE_GB_CD")
     private Long tabCd;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SCHEDULE_GB_USER_FK")
     private UserEntity userFk;
 
+    @Column(name = "SCHEDULE_GB_NM")
     private String tabNm;
 
+    @Column(name = "SCHEDULE_GB_COLOR")
     private String tabCol;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tabFK")
-    private List<ScheduleEntity> tabSchedules;
+    private List<ScheduleEntity> tabSchedules = new ArrayList<>();
 
     @Builder
     public ScheduleTabEntity(UserEntity userFk,
