@@ -167,9 +167,9 @@ public class GroupControllerTest {
                 .build());
 
         String url = "http://localhost:" + port + "group/changeMaster/" + groupId;
-        String userId  = changeUser.getUserId();
+        Long userCd  = changeUser.getUserCd();
         //when
-        ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url,userId,Long.class);
+        ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url,userCd,Long.class);
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);

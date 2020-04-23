@@ -12,15 +12,17 @@ import lombok.Setter;
 public class GroupSaveRequestDto {
 
     private Long userCd;
+    private String userId;
     private String groupName;
     private Boolean groupState;
     private String groupEx;
     private String groupPic;
 
    @Builder(builderClassName = "createGroupBuilder", builderMethodName = "createGroupBuilder")
-   public GroupSaveRequestDto(Long userCd, String groupName, Boolean groupState, String groupPic, String  groupEx)
+   public GroupSaveRequestDto(Long userCd,String userId,String groupName, Boolean groupState, String groupPic, String  groupEx)
    {
       this.userCd = userCd;
+      this.userId = userId;
       this.groupName = groupName;
       this.groupState = groupState;
       this.groupPic = groupPic;
