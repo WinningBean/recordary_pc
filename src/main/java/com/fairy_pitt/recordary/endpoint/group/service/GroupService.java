@@ -8,10 +8,7 @@ import com.fairy_pitt.recordary.common.repository.GroupMemberRepository;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleResponseDto;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupMemberResponseDto;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupSaveRequestDto;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.group.dto.*;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +36,7 @@ public class GroupService {
     @Transactional
     public Long save(@RequestBody GroupSaveRequestDto requestDto) {
         UserEntity user = userService.findEntity(requestDto.getUserCd());
-        return groupRepository.save(requestDto.toEntity(user))
-                .getGroupCd();
+        return  groupRepository.save(requestDto.toEntity(user)).getGroupCd();
     }
 
     @Transactional

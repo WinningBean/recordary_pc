@@ -1,9 +1,11 @@
 package com.fairy_pitt.recordary.endpoint.group;
 
 import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupMemberRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
@@ -23,17 +25,21 @@ import java.util.List;
 public class GroupController {
 
     private final GroupService groupService;
+    private final GroupMemberService groupMemberService;
     private final UserService userService;
 
     @PostMapping("create")
-    public Long groupCreate(@RequestBody GroupSaveRequestDto requestDto)
+    public Boolean groupCreate(@RequestBody GroupSaveRequestDto requestDto)
     {
-        return groupService.save(requestDto);
+        return groupMemberService.save(GroupMemberRequestDto.builder()
+                .groupCd(groupService.save(requestDto))
+                .userCd(requestDto.getUserCd())
+                .build());
     }
 
     @PostMapping("update/{id}")
     public Long update(@PathVariable Long id,
-                                     @RequestBody GroupUpdateRequestDto requestDto) {
+                       @RequestBody GroupUpdateRequestDto requestDto) {
         return groupService.updateGroupInfo(id, requestDto);
     }
 
@@ -47,6 +53,12 @@ public class GroupController {
     public Long deleteGroup(@PathVariable Long groupCd){
         groupService.delete(groupCd);
         return groupCd;
+    }
+
+    @GetMapping("findGroup/{groupName}")
+    public List<GroupResponseDto> findAllGroup(@PathVariable String  groupName)
+    {
+        return  groupService.findGroupByName(groupName);
     }
 
     @GetMapping("{groupCd}")
