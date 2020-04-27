@@ -69,34 +69,11 @@ public class GroupService {
     }
 
     @Transactional(readOnly = true)
-    public JSONArray findAllGroupInfoById(Long id) {
-        JSONArray group = new JSONArray();
-        JSONArray groupMemberInfoList = new JSONArray();
+    public GroupResponseDto groupInfo(Long id) {
         GroupEntity entity = groupRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
 
-        JSONObject groupInfo = new JSONObject();
-        groupInfo.put("groupCd", entity.getGroupCd());
-        groupInfo.put("groupNm", entity.getGroupName());
-        groupInfo.put("groupEx", entity.getGroupEx());
-        groupInfo.put("groupPic", entity.getGroupPic());
-        groupInfo.put("groupState", entity.getGroupState());
-        groupInfo.put("groupMaster", entity.getGMstUserFK().getUserId());
-
-        List<UserEntity> members = groupMemberRepository.findAllByGroupFK(entity);
-        for (UserEntity groupMember : members) {
-            if (!entity.getGMstUserFK().getUserId().equals(groupMember.getUserId())) {
-                JSONObject groupMemberInfo = new JSONObject();
-                groupMemberInfo.put("user_id", groupMember.getUserId());
-                groupMemberInfo.put("user_nm", groupMember.getUserNm());
-                groupMemberInfo.put("user_ex", groupMember.getUserEx());
-                groupMemberInfo.put("user_pic", (Collection<?>) null);
-                groupMemberInfoList.put(groupMemberInfo);
-            }
-        }
-        group.put(groupInfo);
-        group.put(groupMemberInfoList);
-        return group;
+        return new GroupResponseDto(entity);
     }
 
     @Transactional(readOnly = true)
