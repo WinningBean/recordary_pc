@@ -102,14 +102,18 @@ public class GroupService {
         }
         return  result;
     }
-/*   
  @Transactional(readOnly = true)
-    public List<GroupMemberResponseDto> findGroupMembers(Long groupCd){
+    public List<UserResponseDto> findGroupMembers(Long groupCd){
 
-        return groupRepository.findByGroupCd(groupCd).getMembers().stream()
-                .map(GroupMemberResponseDto::new)
-                .collect(Collectors.toList());
-    }*/
+     List<GroupMemberEntity> groupEntities = groupRepository.findByGroupCd(groupCd).getMembers();
+     List<UserResponseDto> result = new ArrayList<>();
+
+     for (GroupMemberEntity temp: groupEntities) {
+         UserResponseDto groupResponseDto = new UserResponseDto(temp.getUserFK());
+         result.add(groupResponseDto);
+     }
+     return  result;
+    }
 
     @Transactional(readOnly = true)
     public GroupEntity findEntity(Long groupCd){

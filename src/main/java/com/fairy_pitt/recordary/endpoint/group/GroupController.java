@@ -73,7 +73,6 @@ public class GroupController {
         return groupService.groupInfo(groupCd);
     }
 
-
     @GetMapping("readAll")
     public @ResponseBody
     List<GroupResponseDto> findAllGroup() {
@@ -85,6 +84,12 @@ public class GroupController {
     public List<GroupResponseDto> findUserGroup(@PathVariable Long userId) {
 
         return groupService.findUserGroups(userId);
+    }
+
+    @GetMapping("member/{groupId}")
+    public  List<UserResponseDto> findGroupMember(@PathVariable Long groupId)
+    {
+        return groupService.findGroupMembers(groupId);
     }
 
 }
