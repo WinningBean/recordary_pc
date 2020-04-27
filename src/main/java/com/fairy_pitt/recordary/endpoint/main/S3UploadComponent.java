@@ -29,10 +29,16 @@ public class S3UploadComponent {
     @Value("${cloud.aws.s3.bucket}") //해당 값은 application.yml 에서 작성한 cloud.aws.credentials.accessKey 값을 가져옵니다.
     private String bucket;
 
-//    public String postUpload(MultipartFile multipartFile, Long userCd) throws  IOException{
-//        File uploadFile = convert(multipartFile)//S3에 전달할 수 있도록 MultiPartFile 을 File 로 전환
-//                .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
-//    }
+    public List<String> postUpload(MultipartFile[] multipartFiles, Long userCd) throws IOException {
+        List<String> uploadImageUrl = new ArrayList<>();
+        String dirName = userCd + "_" + System.currentTimeMillis(); // 유저코드 + 현재시간 으로 폴더 만듬
+        for (MultipartFile multipartFile : multipartFiles) {
+            File uploadFile = convert(multipartFile)//S3에 전달할 수 있도록 MultiPartFile 을 File 로 전환
+                    .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
+            uploadImageUrl.add(upload(uploadFile, dirName));
+        }
+        return uploadImageUrl;
+    }
 
     public String upload(MultipartFile multipartFile, String dirName) throws IOException {//MultipartFile 을 전달 받고
         File uploadFile = convert(multipartFile)//S3에 전달할 수 있도록 MultiPartFile 을 File 로 전환
@@ -113,7 +119,6 @@ public class S3UploadComponent {
         List<S3ObjectSummary> objects = result.getObjectSummaries();
         for (S3ObjectSummary os : objects) {
             resultList.add( os.getKey());
-            System.out.println("* " + os.getKey() +"\n");
         }
         return  resultList;
     }
