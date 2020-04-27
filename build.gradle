@@ -79,7 +79,7 @@ task copyWebApp(type: Copy) {
     from 'frontend/build'
     into 'build/resources/main/static/.'
 }
-//
-//npmBuild.dependsOn("appNpmInstall")
-//copyWebApp.dependsOn("npmBuild")
+
+npmBuild.dependsOn("appNpmInstall")
+copyWebApp.dependsOn("npmBuild")
 compileJava.dependsOn("copyWebApp")
