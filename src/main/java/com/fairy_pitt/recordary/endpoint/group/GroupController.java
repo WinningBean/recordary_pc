@@ -7,6 +7,7 @@ import com.fairy_pitt.recordary.endpoint.group.dto.GroupSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupUpdateRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
+import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +15,10 @@ import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 
 @Transactional
@@ -26,6 +29,7 @@ public class GroupController {
 
     private final GroupService groupService;
     private final GroupMemberService groupMemberService;
+    private final S3UploadComponent s3UploadComponent;
     private final UserService userService;
 
     @PostMapping("create")
@@ -43,9 +47,14 @@ public class GroupController {
         return groupService.updateGroupInfo(id, requestDto);
     }
 
+    @PostMapping("updateProfile")
+    public  String updateProfile(@RequestParam("data") MultipartFile multipartFile) throws IOException {
+        return s3UploadComponent.upload(multipartFile, "group");
+    }
+
     @PostMapping("changeMaster/{groupCd}")
     public Long updateMaster(@PathVariable Long groupCd,
-                                           @RequestBody Long userCd) {
+                             @RequestBody Long userCd) {
         return groupService.changGroupMaster(userCd,groupCd);
     }
 
@@ -81,6 +90,8 @@ public class GroupController {
 
         return groupService.findUserGroups(userId);
     }
+
+
 
 
 //    public @ResponseBody GroupDto groupShow()
