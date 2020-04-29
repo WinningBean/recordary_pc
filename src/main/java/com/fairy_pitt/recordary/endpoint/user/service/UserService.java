@@ -7,11 +7,12 @@ import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserLoginRequestDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserSaveRequestDto;
-import com.fairy_pitt.recordary.endpoint.user.dto.UserUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserSettingUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class UserService {
     }
 
     @Transactional
-    public String update(String userId, UserUpdateRequestDto requestDto) throws IOException {
+    public String settingUpdate(String userId, UserSettingUpdateRequestDto requestDto){
         UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(userId))
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
 
@@ -49,11 +50,20 @@ public class UserService {
         if (requestDto.getUserPw() == null) hashedPassword = null;
         else hashedPassword = userPasswordHashService.getSHA256(requestDto.getUserPw());
 
-        String imgPath = s3UploadComponent.upload(requestDto.getUserPic(), "user");
-
-        userEntity.update(hashedPassword, requestDto.getUserNm(), imgPath, requestDto.getUserEx());
+        userEntity.settingUpdate(hashedPassword, requestDto.getUserNm());
         return userId;
     }
+
+    @Transactional
+    public String profileUpdate(String userId, MultipartFile userPic, String userEx) throws IOException {
+        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(userId))
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
+
+        String imgPath = s3Uploader.upload(userPic, "user");
+
+        userEntity.profileUpdate(imgPath, userEx);
+        return userId;
+}
 
     @Transactional
     public void delete(String userId){

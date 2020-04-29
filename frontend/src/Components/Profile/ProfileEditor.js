@@ -29,7 +29,7 @@ class ProfileEditor extends React.Component {
       alert: () => {},
       user_id: props.data.userId,
       user_ex: props.data.userEx,
-      user_pic: 'http://placehold.it/250x250',
+      user_pic: props.data.userPic,
     };
   }
 
@@ -87,6 +87,7 @@ class ProfileEditor extends React.Component {
                   height: '250px',
                   objectFit: 'cover',
                 }}
+                id={`${this.state.user_id}-BigImg`}
                 alt='profile-img'
                 src={this.state.user_pic}
               />
@@ -161,13 +162,37 @@ class ProfileEditor extends React.Component {
                   // canvas 에 있는 이미지를 img 태그로 넣어줍니다
                   var dataurl = canvas.toDataURL('image/jpg');
                   this.setState({ user_pic: dataurl });
+                  console.log(this.state);
 
                   try {
+                    const formData = new FormData();
+                    formData.append('userPw', null);
+                    formData.append('userNm', this.props.data.userNm);
+                    formData.append('userPic', this.state.user_pic);
+                    formData.append('userEx', this.state.user_ex);
+
+                    for (var key of formData.entries()) {
+                      console.log(`${key}`);
+                    }
+
                     const { data } = await axios.put(`user/${this.state.user_id}`, {
-                      userPw: null,
-                      userNm: this.props.data.userNm,
-                      userEx: this.state.user_ex,
+                      headers: { 'Content-Type': 'multipart/form-data' },
+                      data: formData,
                     });
+
+                    // const { data } = await axios.put(
+                    //   `user/${this.state.user_id}`,
+                    //   {
+                    //     userPw: null,
+                    //     userNm: this.props.data.userNm,
+                    //     userPic: this.state.user_pic,
+                    //     userEx: this.state.user_ex,
+                    //   },
+                    //   { headers: { 'Content-Type': 'multipart/form-data' } }
+                    // );
+
+                    console.log(data);
+
                     if (data === this.state.user_id) {
                       this.setState({
                         alert: () => {

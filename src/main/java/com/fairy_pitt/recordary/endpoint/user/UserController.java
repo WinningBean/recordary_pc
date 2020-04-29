@@ -4,6 +4,7 @@ import com.fairy_pitt.recordary.endpoint.user.dto.*;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -32,8 +33,13 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public String update(@PathVariable String userId, @RequestBody UserUpdateRequestDto requestDto) throws IOException {
-        return userService.update(userId, requestDto);
+    public String settingUpdate(@PathVariable String userId, @RequestBody UserSettingUpdateRequestDto requestDto){
+        return userService.settingUpdate(userId, requestDto);
+    }
+
+    @PostMapping("/{userId}/profileUpdate")
+    public String profileUpdate(@PathVariable String userId, @RequestPart MultipartFile userPic, @RequestPart String userEx) throws IOException {
+        return userService.profileUpdate(userId, userPic, userEx);
     }
 
     @DeleteMapping("/{userId}")
