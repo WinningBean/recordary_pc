@@ -96,6 +96,7 @@ class ProfileEditor extends React.Component {
                 &nbsp; Upload
               </EditorButton>
               <input
+                name='file'
                 type='file'
                 accept='image/*'
                 style={{ display: 'none' }}
@@ -166,8 +167,6 @@ class ProfileEditor extends React.Component {
 
                   try {
                     const formData = new FormData();
-                    formData.append('userPw', null);
-                    formData.append('userNm', this.props.data.userNm);
                     formData.append('userPic', this.state.user_pic);
                     formData.append('userEx', this.state.user_ex);
 
@@ -175,21 +174,18 @@ class ProfileEditor extends React.Component {
                       console.log(`${key}`);
                     }
 
-                    const { data } = await axios.put(`user/${this.state.user_id}`, {
-                      headers: { 'Content-Type': 'multipart/form-data' },
-                      data: formData,
-                    });
-
-                    // const { data } = await axios.put(
-                    //   `user/${this.state.user_id}`,
-                    //   {
-                    //     userPw: null,
-                    //     userNm: this.props.data.userNm,
-                    //     userPic: this.state.user_pic,
-                    //     userEx: this.state.user_ex,
-                    //   },
-                    //   { headers: { 'Content-Type': 'multipart/form-data' } }
-                    // );
+                    const { data } = await axios.post(
+                      `user/${this.state.user_id}/profileUpdate`,
+                      {
+                        userPic: this.state.user_pic,
+                        userEx: this.state.user_ex,
+                      },
+                      {
+                        headers: {
+                          'Content-Type': 'multipart/form-data; boundary=-----------------------123456789',
+                        },
+                      }
+                    );
 
                     console.log(data);
 

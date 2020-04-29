@@ -164,14 +164,18 @@ const FriendSetting = (props) => {
                 padding: '20px',
               }}
             >
-              <div style={{ fontSize: '18px', fontWeight: 'bold' }}>
+              <div style={{ fontSize: '18px', fontWeight: 'bold', color: 'gray', marginBottom: '20px' }}>
                 {data.friend.userId}({data.friend.userNm})
               </div>
 
               {data.friend.userEx === null ? (
-                <div style={{ fontSize: '18px', fontWeight: 'bold' }}>상태메시지 없어어어어어어어</div>
+                <div style={{ fontSize: '18px', fontWeight: 'bold', color: 'gray', marginBottom: '20px' }}>
+                  상태메시지 없어어어어어어어
+                </div>
               ) : (
-                <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{data.friend.userEx}</div>
+                <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'gray', marginBottom: '20px' }}>
+                  {data.friend.userEx}
+                </div>
               )}
 
               {console.log(data.friend)}

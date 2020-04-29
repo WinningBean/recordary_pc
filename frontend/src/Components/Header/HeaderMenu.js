@@ -34,7 +34,7 @@ const ColorCircularProgress = withStyles({
 const HeaderMenu = (props) => {
   const [data, setData] = useState({
     ...props.data,
-    userPic: null,
+    // userPic: null,
   });
 
   console.log(data);
