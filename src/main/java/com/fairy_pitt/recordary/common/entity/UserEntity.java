@@ -89,9 +89,12 @@ public class UserEntity extends BaseTimeEntity{
         this.userNm = userNm;
     }
 
-    public void update(String userPw, String userNm, String userPic, String userEx){
+    public void settingUpdate(String userPw, String userNm){
         if (userPw != null) this.userPw = userPw;
         this.userNm = userNm;
+    }
+
+    public void profileUpdate(String userPic, String userEx){
         this.userPic = userPic;
         this.userEx = userEx;
     }
