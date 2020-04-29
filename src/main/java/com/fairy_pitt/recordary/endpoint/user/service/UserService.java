@@ -59,7 +59,7 @@ public class UserService {
         UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(userId))
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
 
-        String imgPath = s3Uploader.upload(userPic, "user");
+        String imgPath = s3UploadComponent.upload(userPic, "user");
 
         userEntity.profileUpdate(imgPath, userEx);
         return userId;
