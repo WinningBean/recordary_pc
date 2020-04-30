@@ -21,7 +21,7 @@ class MainPage extends React.Component {
             <Main data={data}></Main>
             <Aside></Aside>
           </div>
-          <MainPageButton></MainPageButton>
+          <MainPageButton data={data}></MainPageButton>
         </div>
       </>
     );

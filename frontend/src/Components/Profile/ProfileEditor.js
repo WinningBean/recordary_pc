@@ -68,6 +68,36 @@ class ProfileEditor extends React.Component {
   // }
 
   render() {
+    const dataURLToBlob = (dataURL) => {
+      const BASE64_MARKER = ';base64,';
+
+      // base64로 인코딩 되어있지 않을 경우
+      if (dataURL.indexOf(BASE64_MARKER) === -1) {
+        const parts = dataURL.split(',');
+        const contentType = parts[0].split(':')[1];
+        const raw = parts[1];
+        return new Blob([raw], {
+          type: contentType,
+        });
+      }
+
+      // base64로 인코딩 된 이진데이터일 경우
+      const parts = dataURL.split(BASE64_MARKER);
+      const contentType = parts[0].split(':')[1];
+      const raw = window.atob(parts[1]);
+      // atob()는 Base64를 디코딩하는 메서드
+      const rawLength = raw.length;
+      // 부호 없는 1byte 정수 배열을 생성
+      const uInt8Array = new Uint8Array(rawLength); // 길이만 지정된 배열
+      let i = 0;
+      while (i < rawLength) {
+        uInt8Array[i] = raw.charCodeAt(i);
+        i++;
+      }
+      return new Blob([uInt8Array], {
+        type: contentType,
+      });
+    };
     return (
       <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
         <div className='dialog-wrap'>
@@ -96,7 +126,7 @@ class ProfileEditor extends React.Component {
                 &nbsp; Upload
               </EditorButton>
               <input
-                name='file'
+                name='userPic'
                 type='file'
                 accept='image/*'
                 style={{ display: 'none' }}
@@ -128,7 +158,7 @@ class ProfileEditor extends React.Component {
                   fontSize: '30px',
                   marginBottom: '10px',
                 }}
-                defaultValue={this.state.user_id}
+                defaultValue={`${this.state.user_id}(${this.props.data.userNm})`}
               />
               <TextField
                 name='user_ex'
@@ -147,45 +177,50 @@ class ProfileEditor extends React.Component {
               <EditorButton
                 color='secondary'
                 onClick={async () => {
-                  var canvas = document.createElement('canvas');
-                  var ctx = canvas.getContext('2d');
+                  if (this.props.data.userPic !== this.state.user_pic) {
+                    var canvas = document.createElement('canvas');
+                    var ctx = canvas.getContext('2d');
 
-                  const cut = new Image();
-                  cut.src = this.state.user_pic;
-                  let height = cut.height;
-                  let width = cut.width;
-                  height *= 250 / width;
-                  width = 250;
-                  canvas.width = width;
-                  canvas.height = height;
-                  // canvas에 변경된 크기의 이미지를 다시 그려줍니다.
-                  ctx.drawImage(cut, 0, 0, width, height);
-                  // canvas 에 있는 이미지를 img 태그로 넣어줍니다
-                  var dataurl = canvas.toDataURL('image/jpg');
-                  this.setState({ user_pic: dataurl });
-                  console.log(this.state);
+                    const cut = new Image();
+                    cut.src = this.state.user_pic;
+
+                    let height = cut.height;
+                    let width = cut.width;
+                    height *= 250 / width;
+                    width = 250;
+                    canvas.width = width;
+                    canvas.height = height;
+                    // canvas에 변경된 크기의 이미지를 다시 그려줍니다.
+                    ctx.drawImage(cut, 0, 0, width, height);
+                    // canvas 에 있는 이미지를 img 태그로 넣어줍니다
+                    var dataurl = canvas.toDataURL('image/jpg');
+
+                    this.setState({ user_pic: dataurl });
+
+                    console.log(this.state.user_pic);
+                  } else {
+                    this.setState({ user_pic: this.props.data.userPic });
+                  }
 
                   try {
                     const formData = new FormData();
-                    formData.append('userPic', this.state.user_pic);
-                    formData.append('userEx', this.state.user_ex);
+                    formData.append('userPic', dataURLToBlob(this.state.user_pic));
 
-                    for (var key of formData.entries()) {
-                      console.log(`${key}`);
-                    }
-
-                    const { data } = await axios.post(
-                      `user/${this.state.user_id}/profileUpdate`,
-                      {
-                        userPic: this.state.user_pic,
-                        userEx: this.state.user_ex,
+                    const userPicUrl = await axios.post(`user/${this.props.data.userCd}/profileUpload`, formData, {
+                      headers: {
+                        'Content-Type': 'multipart/form-data; boundary=------WebKitFormBoundary7MA4YWxkTrZu0gW',
                       },
-                      {
-                        headers: {
-                          'Content-Type': 'multipart/form-data; boundary=-----------------------123456789',
-                        },
-                      }
-                    );
+                    });
+
+                    console.log(userPicUrl.data);
+                    // this.setState({ user_pic: userPicUrl.data });
+
+                    const { data } = await axios.put(`user/${this.state.user_id}`, {
+                      userPw: null,
+                      userNm: this.props.data.userNm,
+                      userPic: userPicUrl.data,
+                      userEx: this.state.user_ex,
+                    });
 
                     console.log(data);
 
@@ -195,7 +230,7 @@ class ProfileEditor extends React.Component {
                           return (
                             <AlertDialog
                               severity='success'
-                              content='회원정보가 수정되었습니다.'
+                              content='프로필이 수정되었습니다.'
                               onAlertClose={() => {
                                 this.setState({
                                   alert: () => {},
@@ -214,7 +249,7 @@ class ProfileEditor extends React.Component {
                         return (
                           <AlertDialog
                             severity='error'
-                            content='서버 오류로인해 로그인에 실패하였습니다.'
+                            content='서버 오류로인해 프로필 수정 실패하였습니다.'
                             onAlertClose={() => {
                               this.setState({ alert: () => {} });
                             }}

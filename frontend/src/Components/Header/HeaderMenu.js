@@ -34,10 +34,10 @@ const ColorCircularProgress = withStyles({
 const HeaderMenu = (props) => {
   const [data, setData] = useState({
     ...props.data,
-    // userPic: null,
   });
 
   console.log(data);
+
   const [profileEditForm, setProfileEditForm] = useState(null);
   // const [editor, setEditor] = useState(null);
   const [setting, setSetting] = useState(null);
@@ -385,7 +385,6 @@ const HeaderMenu = (props) => {
     return;
   };
 
-  console.log(props.data);
   return (
     <Drawer
       open={props.open}
@@ -397,7 +396,12 @@ const HeaderMenu = (props) => {
         <div className='menu-profile'>
           <div className='menu-profile-pic-nm'>
             <div style={{ marginRight: '10px' }}>
-              {data.userPic === null ? setData({ ...data, userPic: 'http://placehold.it/250x250' }) : null}
+              {data.userPic === null
+                ? setData({
+                    ...data,
+                    userPic: 'https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/user/basic.png',
+                  })
+                : null}
               <img alt='userPic' src={data.userPic} style={{ borderRadius: '50%', width: '30px', overFit: 'cover' }} />
             </div>
             <span>
