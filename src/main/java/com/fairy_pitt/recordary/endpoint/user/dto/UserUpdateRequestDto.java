@@ -8,15 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Getter
 @NoArgsConstructor
-public class UserSettingUpdateRequestDto {
+public class UserUpdateRequestDto {
     @Autowired private UserPasswordHashService userPasswordHashService;
 
     private String userPw;
     private String userNm;
+    private String userPic;
+    private String userEx;
 
     @Builder
-    public UserSettingUpdateRequestDto(String userPw, String userNm){
+    public UserUpdateRequestDto(String userPw, String userNm, String userPic, String userEx){
         this.userPw = userPw;
         this.userNm = userNm;
+        this.userPic = userPic;
+        this.userEx = userEx;
     }
 }

@@ -33,13 +33,13 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public String settingUpdate(@PathVariable String userId, @RequestBody UserSettingUpdateRequestDto requestDto){
-        return userService.settingUpdate(userId, requestDto);
+    public String update(@PathVariable String userId, @RequestBody UserUpdateRequestDto requestDto){
+        return userService.update(userId, requestDto);
     }
 
-    @PostMapping("/{userId}/profileUpdate")
-    public String profileUpdate(@PathVariable String userId, @RequestPart MultipartFile userPic, @RequestPart String userEx) throws IOException {
-        return userService.profileUpdate(userId, userPic, userEx);
+    @PostMapping("/{userId}/profileUpload")
+    public String profileUpload(@PathVariable String userId, @RequestParam MultipartFile userPic) throws IOException {
+        return userService.profileUpload(userId, userPic);
     }
 
     @DeleteMapping("/{userId}")

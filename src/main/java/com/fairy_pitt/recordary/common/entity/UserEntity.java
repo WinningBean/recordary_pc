@@ -83,18 +83,16 @@ public class UserEntity extends BaseTimeEntity{
     private List<CommentEntity> userComments = new ArrayList<>();
 
     @Builder
-    public UserEntity(String userId, String userPw, String userNm){
+    public UserEntity(String userId, String userPw, String userNm, String userPic){
         this.userId = userId;
         this.userPw = userPw;
         this.userNm = userNm;
+        this.userPic = userPic;
     }
 
-    public void settingUpdate(String userPw, String userNm){
+    public void update(String userPw, String userNm, String userPic, String userEx){
         if (userPw != null) this.userPw = userPw;
         this.userNm = userNm;
-    }
-
-    public void profileUpdate(String userPic, String userEx){
         this.userPic = userPic;
         this.userEx = userEx;
     }

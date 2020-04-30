@@ -7,7 +7,7 @@ import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserLoginRequestDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserSaveRequestDto;
-import com.fairy_pitt.recordary.endpoint.user.dto.UserSettingUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -42,7 +42,7 @@ public class UserService {
     }
 
     @Transactional
-    public String settingUpdate(String userId, UserSettingUpdateRequestDto requestDto){
+    public String update(String userId, UserUpdateRequestDto requestDto){
         UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(userId))
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
 
@@ -50,12 +50,12 @@ public class UserService {
         if (requestDto.getUserPw() == null) hashedPassword = null;
         else hashedPassword = userPasswordHashService.getSHA256(requestDto.getUserPw());
 
-        userEntity.settingUpdate(hashedPassword, requestDto.getUserNm());
+        userEntity.update(hashedPassword, requestDto.getUserNm(), requestDto.getUserPic(), requestDto.getUserEx());
         return userId;
     }
 
     @Transactional
-    public String profileUpdate(String userId, MultipartFile userPic, String userEx) throws IOException {
+    public String profileUpload(String userId, MultipartFile userPic) throws IOException {
         UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(userId))
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
 
@@ -64,9 +64,8 @@ public class UserService {
         if (userPic.isEmpty()) imgPath = null;
         else imgPath = s3UploadComponent.upload(userPic, "user");
 
-        userEntity.profileUpdate(imgPath, userEx);
-        return userId;
-}
+        return imgPath;
+    }
 
     @Transactional
     public void delete(String userId){

@@ -5,7 +5,7 @@ import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserLoginRequestDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserSaveRequestDto;
-import com.fairy_pitt.recordary.endpoint.user.dto.UserSettingUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserUpdateRequestDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserPasswordHashService;
 import org.junit.After;
 import org.junit.Test;
@@ -115,14 +115,14 @@ public class UserControllerTest {
         String expectedUserNm = "테스트 유저2";
         String expectedUserEx = "상태 메세지";
 
-        UserSettingUpdateRequestDto requestDto = UserSettingUpdateRequestDto.builder()
+        UserUpdateRequestDto requestDto = UserUpdateRequestDto.builder()
                 .userPw(expectedUserPw)
                 .userNm(expectedUserNm)
                 .build();
 
         String url = "http://localhost:" + port + "/user/ " + updateId;
 
-        HttpEntity<UserSettingUpdateRequestDto> requestDtoHttpEntity = new HttpEntity<>(requestDto);
+        HttpEntity<UserUpdateRequestDto> requestDtoHttpEntity = new HttpEntity<>(requestDto);
 
         //when
         ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.PUT, requestDtoHttpEntity, String.class);
