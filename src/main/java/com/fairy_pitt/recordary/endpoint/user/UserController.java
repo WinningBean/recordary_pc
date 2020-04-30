@@ -37,9 +37,9 @@ public class UserController {
         return userService.update(userId, requestDto);
     }
 
-    @PostMapping("/{userId}/profileUpload")
-    public String profileUpload(@PathVariable String userId, @RequestParam MultipartFile userPic) throws IOException {
-        return userService.profileUpload(userId, userPic);
+    @PostMapping("/{userCd}/profileUpload")
+    public String profileUpload(@PathVariable Long userCd, @RequestParam MultipartFile userPic) throws IOException {
+        return userService.profileUpload(userCd, userPic);
     }
 
     @DeleteMapping("/{userId}")

@@ -55,10 +55,7 @@ public class UserService {
     }
 
     @Transactional
-    public String profileUpload(String userId, MultipartFile userPic) throws IOException {
-        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(userId))
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
-
+    public String profileUpload(Long userCd, MultipartFile userPic) throws IOException {
         String imgPath;
 
         if (userPic.isEmpty()) imgPath = null;
