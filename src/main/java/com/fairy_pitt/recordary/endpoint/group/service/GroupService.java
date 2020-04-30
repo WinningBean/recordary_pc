@@ -8,10 +8,7 @@ import com.fairy_pitt.recordary.common.repository.GroupMemberRepository;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleResponseDto;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupMemberResponseDto;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupSaveRequestDto;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.group.dto.*;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -33,14 +30,13 @@ import java.util.stream.Collectors;
 public class GroupService {
 
     private final GroupRepository groupRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final GroupMemberRepository groupMemberRepository;
 
     @Transactional
     public Long save(@RequestBody GroupSaveRequestDto requestDto) {
-        UserEntity user = userRepository.findByUserId(requestDto.getUserId());
-        return groupRepository.save(requestDto.toEntity(user))
-                .getGroupCd();
+        UserEntity user = userService.findEntity(requestDto.getUserCd());
+        return  groupRepository.save(requestDto.toEntity(user)).getGroupCd();
     }
 
     @Transactional
@@ -54,11 +50,11 @@ public class GroupService {
     }
 
     @Transactional
-    public Long changGroupMaster(String UserId, Long groupCd) {
+    public Long changGroupMaster(Long UserId, Long groupCd) {
         GroupEntity groupEntity = groupRepository.findById(groupCd)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + groupCd));
 
-        UserEntity User = userRepository.findByUserId(UserId);
+        UserEntity User = userService.findEntity(UserId);
         groupEntity.updateGroupMaster(User);
 
         return groupCd;
@@ -73,34 +69,11 @@ public class GroupService {
     }
 
     @Transactional(readOnly = true)
-    public JSONArray findAllGroupInfoById(Long id) {
-        JSONArray group = new JSONArray();
-        JSONArray groupMemberInfoList = new JSONArray();
+    public GroupResponseDto groupInfo(Long id) {
         GroupEntity entity = groupRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
 
-        JSONObject groupInfo = new JSONObject();
-        groupInfo.put("groupCd", entity.getGroupCd());
-        groupInfo.put("groupNm", entity.getGroupName());
-        groupInfo.put("groupEx", entity.getGroupEx());
-        groupInfo.put("groupPic", entity.getGroupPic());
-        groupInfo.put("groupState", entity.getGroupState());
-        groupInfo.put("groupMaster", entity.getGMstUserFK().getUserId());
-
-        List<UserEntity> members = groupMemberRepository.findAllByGroupFK(entity);
-        for (UserEntity groupMember : members) {
-            if (!entity.getGMstUserFK().getUserId().equals(groupMember.getUserId())) {
-                JSONObject groupMemberInfo = new JSONObject();
-                groupMemberInfo.put("user_id", groupMember.getUserId());
-                groupMemberInfo.put("user_nm", groupMember.getUserNm());
-                groupMemberInfo.put("user_ex", groupMember.getUserEx());
-                groupMemberInfo.put("user_pic", (Collection<?>) null);
-                groupMemberInfoList.put(groupMemberInfo);
-            }
-        }
-        group.put(groupInfo);
-        group.put(groupMemberInfoList);
-        return group;
+        return new GroupResponseDto(entity);
     }
 
     @Transactional(readOnly = true)
@@ -119,8 +92,8 @@ public class GroupService {
     }
 
     @Transactional(readOnly = true)
-    public List<GroupResponseDto> findUserGroups(String userId){
-        List<GroupMemberEntity> groupEntities = userRepository.findByUserId(userId).getGroups();
+    public List<GroupResponseDto> findUserGroups(Long userCd){
+        List<GroupMemberEntity> groupEntities = userService.findEntity(userCd).getGroups();
         List<GroupResponseDto> result = new ArrayList<>();
 
         for (GroupMemberEntity temp: groupEntities) {

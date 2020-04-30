@@ -1,9 +1,14 @@
 package com.fairy_pitt.recordary.endpoint.group;
 
+import com.fairy_pitt.recordary.common.entity.GroupApplyEntity;
 import com.fairy_pitt.recordary.common.entity.GroupEntity;
+import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.repository.GroupMemberRepository;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
+import com.fairy_pitt.recordary.endpoint.Schedule.Service.ScheduleTabService;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupMemberRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupSaveRequestDto;
 
@@ -44,8 +49,12 @@ public class GroupControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private GroupMemberRepository groupMemberRepository;
+
     @After
     public void tearDown() throws Exception{
+        groupMemberRepository.deleteAll();
         groupRepository.deleteAll();
         userRepository.deleteAll();
     }
@@ -66,7 +75,7 @@ public class GroupControllerTest {
         String  groupEx = "test";
 
         GroupSaveRequestDto requestDto = GroupSaveRequestDto.createGroupBuilder()
-                .userId(saveUser.getUserId())
+                .userCd(saveUser.getUserCd())
                 .groupName(groupName)
                 .groupState(true)
                 .groupPic(groupPic)
@@ -76,11 +85,11 @@ public class GroupControllerTest {
         String url = "http://localhost:" + port + "group/create";
 
         //when
-        ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url, requestDto, Long.class);
+        ResponseEntity<Boolean> responseEntity = restTemplate.postForEntity(url, requestDto, Boolean.class);
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).isGreaterThan(0L);
+       // assertThat(responseEntity.getBody()).isGreaterThan(0L);
 
         List<GroupEntity> all = groupRepository.findAll();
         assertThat(all.get(0).getGroupEx()).isEqualTo(groupEx);
@@ -167,9 +176,9 @@ public class GroupControllerTest {
                 .build());
 
         String url = "http://localhost:" + port + "group/changeMaster/" + groupId;
-        String userId  = changeUser.getUserId();
+        Long userCd  = changeUser.getUserCd();
         //when
-        ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url,userId,Long.class);
+        ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url,userCd,Long.class);
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -195,7 +204,7 @@ public class GroupControllerTest {
         String groupPic = "asd";
         String  groupEx = "test";
 
-        GroupEntity groupEntity = groupRepository.save(  GroupEntity.builder()
+        GroupEntity groupEntity = groupRepository.save(GroupEntity.builder()
                 .gMstUserFK(saveUser)
                 .groupName(groupName)
                 .groupState(true)
@@ -203,7 +212,7 @@ public class GroupControllerTest {
                 .groupEx(groupEx)
                 .build());
 
-        GroupEntity groupEntity2 = groupRepository.save(  GroupEntity.builder()
+        GroupEntity groupEntity2 = groupRepository.save(GroupEntity.builder()
                 .gMstUserFK(saveUser)
                 .groupName(groupName)
                 .groupState(true)
@@ -221,6 +230,56 @@ public class GroupControllerTest {
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody().size()).isEqualTo(2);
+    }
 
+    @Test
+    public void Gorup_가져오기() throws Exception{
+
+        //given
+        UserEntity saveUser = userRepository.save(UserEntity.builder()
+                .userId("test")
+                .userPw("test")
+                .userNm("테스트 유저")
+                .build());
+
+        String groupName ="test";
+        Boolean groupState = true;
+        String groupPic = "asd";
+        String  groupEx = "test";
+
+        GroupEntity groupEntity = groupRepository.save(GroupEntity.builder()
+                .gMstUserFK(saveUser)
+                .groupName(groupName)
+                .groupState(true)
+                .groupPic(groupPic)
+                .groupEx(groupEx)
+                .build());
+
+
+        GroupMemberEntity groupMemberEntity = groupMemberRepository.save(GroupMemberEntity.builder()
+                .groupFK(groupEntity)
+                .userFK(saveUser)
+                .build());
+
+
+//        GroupMemberRequestDto requestDto = GroupMemberRequestDto.builder()
+//                .userCd(user)
+//                .groupCd(group)
+//                .build();
+
+        Long userCd  = saveUser.getUserCd();
+        String url = "http://localhost:" + port + "group/group/" + userCd;
+
+        //when
+        ResponseEntity<List> responseEntity = restTemplate.getForEntity(url,List.class);
+
+
+        //then
+        //System.out.print(responseEntity);
+        List<GroupEntity> all = groupRepository.findAll();
+        assertThat(all.get(0).getGMstUserFK().getUserCd()).isEqualTo(saveUser.getUserCd());
+//        assertThat(all.get(0).getGroupName()).isEqualTo(groupName);
+//        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+//        assertThat(responseEntity.getBody().size()).isEqualTo(2);
     }
 }
