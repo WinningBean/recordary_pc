@@ -24,6 +24,7 @@ public class UserSaveRequestDto {
                 .userId(userId)
                 .userPw(userPw)
                 .userNm(userNm)
+                .userPic("https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/user/basic.png")
                 .build();
     }
 }

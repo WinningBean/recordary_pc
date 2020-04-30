@@ -14,7 +14,6 @@ class UserEditor extends React.Component {
       user_nm: '',
       user_id: props.data.userId,
       user_pw: '',
-      user_ex: props.data.userEx,
       user_change_pw: '',
       user_change_pw_check: '',
       isSamePw: undefined,
@@ -286,7 +285,6 @@ class UserEditor extends React.Component {
                   const { data } = await axios.put(`user/${this.state.user_id}`, {
                     userPw: this.state.user_change_pw,
                     userNm: this.state.user_nm,
-                    userEx: this.state.user_ex,
                   });
                   if (data === this.state.user_id) {
                     this.setState({

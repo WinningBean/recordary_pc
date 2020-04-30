@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class UserService {
     }
 
     @Transactional
-    public String update(String userId, UserUpdateRequestDto requestDto) throws IOException {
+    public String update(String userId, UserUpdateRequestDto requestDto){
         UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(userId))
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
 
@@ -49,10 +50,18 @@ public class UserService {
         if (requestDto.getUserPw() == null) hashedPassword = null;
         else hashedPassword = userPasswordHashService.getSHA256(requestDto.getUserPw());
 
-        String imgPath = s3UploadComponent.upload(requestDto.getUserPic(), "user");
-
-        userEntity.update(hashedPassword, requestDto.getUserNm(), imgPath, requestDto.getUserEx());
+        userEntity.update(hashedPassword, requestDto.getUserNm(), requestDto.getUserPic(), requestDto.getUserEx());
         return userId;
+    }
+
+    @Transactional
+    public String profileUpload(Long userCd, MultipartFile userPic) throws IOException {
+        String imgPath;
+
+        if (userPic.isEmpty()) imgPath = null;
+        else imgPath = s3UploadComponent.upload(userPic, "user");
+
+        return imgPath;
     }
 
     @Transactional

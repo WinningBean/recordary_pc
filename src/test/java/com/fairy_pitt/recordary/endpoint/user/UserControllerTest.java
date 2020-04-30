@@ -118,7 +118,6 @@ public class UserControllerTest {
         UserUpdateRequestDto requestDto = UserUpdateRequestDto.builder()
                 .userPw(expectedUserPw)
                 .userNm(expectedUserNm)
-                .userEx(expectedUserEx)
                 .build();
 
         String url = "http://localhost:" + port + "/user/ " + updateId;
