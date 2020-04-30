@@ -29,7 +29,7 @@ public class MediaController {
         String imgPath = s3UploadComponent.upload(multipartFile, "static"); // bucket 의 static 디렉토리로 파일을 전달
         MediaRequestDto mediaRequestDto = new MediaRequestDto(imgPath);
         mediaService.save(mediaRequestDto);
-        return  "";
+        return  imgPath;
     }
 
     @GetMapping("{bucketName}")
