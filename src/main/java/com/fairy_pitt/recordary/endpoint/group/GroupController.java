@@ -8,6 +8,7 @@ import com.fairy_pitt.recordary.endpoint.group.dto.GroupUpdateRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
 import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
+import com.fairy_pitt.recordary.endpoint.media.service.MediaService;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class GroupController {
     private final GroupService groupService;
     private final GroupMemberService groupMemberService;
     private final S3UploadComponent s3UploadComponent;
+    private final MediaService mediaService;
     private final UserService userService;
 
     @PostMapping("create")
@@ -46,9 +48,10 @@ public class GroupController {
         return groupService.updateGroupInfo(id, requestDto);
     }
 
-    @PostMapping("updateProfile")
-    public String updateProfile(@RequestParam("data") MultipartFile multipartFile) throws IOException {
-        return s3UploadComponent.upload(multipartFile, "group");
+    @PostMapping("updateProfile/{groupCd}")
+    public String updateProfile(@RequestParam("data") MultipartFile multipartFile, @PathVariable Long groupCd) throws IOException {
+        String url = s3UploadComponent.upload(multipartFile, "group");
+        return groupService.updateProfile(groupCd,url);
     }
 
     @PostMapping("changeMaster/{groupCd}")
@@ -74,8 +77,7 @@ public class GroupController {
     }
 
     @GetMapping("readAll")
-    public @ResponseBody
-    List<GroupResponseDto> findAllGroup() {
+    public @ResponseBody List<GroupResponseDto> findAllGroup() {
         return groupService.findAllGroup();
     }
 
@@ -87,7 +89,7 @@ public class GroupController {
     }
 
     @GetMapping("member/{groupId}")
-    public  List<UserResponseDto> findGroupMember(@PathVariable Long groupId)
+    public List<UserResponseDto> findGroupMember(@PathVariable Long groupId)
     {
         return groupService.findGroupMembers(groupId);
     }

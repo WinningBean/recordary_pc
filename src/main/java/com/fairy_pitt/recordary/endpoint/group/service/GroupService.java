@@ -36,7 +36,7 @@ public class GroupService {
     @Transactional
     public Long save(@RequestBody GroupSaveRequestDto requestDto) {
         UserEntity user = userService.findEntity(requestDto.getUserCd());
-        return  groupRepository.save(requestDto.toEntity(user)).getGroupCd();
+        return  groupRepository.save(requestDto.toEntity(user,"https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/group/basic.png")).getGroupCd();
     }
 
     @Transactional
@@ -50,14 +50,24 @@ public class GroupService {
     }
 
     @Transactional
-    public Long changGroupMaster(Long UserId, Long groupCd) {
+    public Long changGroupMaster(Long userId, Long groupCd) {
         GroupEntity groupEntity = groupRepository.findById(groupCd)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + groupCd));
 
-        UserEntity User = userService.findEntity(UserId);
+        UserEntity User = userService.findEntity(userId);
         groupEntity.updateGroupMaster(User);
 
         return groupCd;
+    }
+
+    @Transactional
+    public String updateProfile(Long groupId,String url)
+    {
+        GroupEntity groupEntity = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + groupId));
+
+        groupEntity.updateGroupPic(url);
+        return url;
     }
 
     @Transactional

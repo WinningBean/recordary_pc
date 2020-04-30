@@ -33,8 +33,8 @@ public class GroupMemberController {
         return groupMemberService.save(requestDto);
     }
 
-    @DeleteMapping("check")
-    public @ResponseBody Boolean checkApply(@RequestBody GroupMemberPK id) {
+    @DeleteMapping("delete")
+    public @ResponseBody Boolean checkApply(@RequestBody GroupMemberRequestDto id) {
         return groupMemberService.delete(id);
     }
 
