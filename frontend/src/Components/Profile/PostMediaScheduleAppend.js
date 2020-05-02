@@ -61,23 +61,24 @@ const PostMediaScheduleAppend = (props) => {
     b: '51',
     a: '1',
   });
-  const [userPost, setUserPost] = useState({
-    // user_id: store.getState().user.user_id,
-    user_id: props.data.userId,
+
+  const [post, setPost] = useState({
+    user_id: store.getState().user.userId,
     // group_cd: store.getState().user.userGroup[0].group_cd,
     group_cd: null,
-    inputPost: {
-      post_ex: null,
-      post_pb_st: null,
-      post_str_ymd: null,
-      post_end_ymd: null,
-    },
+    postOriginCd: null,
+    scheduleCd: null,
+    mediaCd: null,
+    postEx: null,
+    postPublicState: null,
+    postStrYMD: null,
+    postEndYMD: null,
   });
 
   const changeHandle = (e) => {
-    setUserPost({
-      ...userPost,
-      inputPost: { ...userPost.inputPost, [e.target.name]: e.target.value },
+    setPost({
+      ...post,
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -93,35 +94,33 @@ const PostMediaScheduleAppend = (props) => {
     setAlert(<Backdrop />);
 
     try {
-      // const form = new FormData();
-      // form.append('userId', userPost.user_id);
-      // form.append('groupCd', userPost.group_cd);
-      // form.append('postOriginCd', null);
-      // form.append('scheduleCd', null);
-      // form.append('mediaCd', null);
-      // form.append('postEx', userPost.inputPost.post_ex);
-      // form.append('postPublicState', userPost.inputPost.post_pb_st);
-      // form.append('postStrYMD', userPost.inputPost.post_str_ymd);
-      // form.append('postEndYMD', userPost.inputPost.post_end_ymd);
+      const form = new FormData();
+      form.append('userId', post.user_id);
+      form.append('groupCd', post.group_cd);
+      form.append('postOriginCd', null);
+      form.append('scheduleCd', null);
+      form.append('mediaCd', null);
+      form.append('postEx', post.post_ex);
+      form.append('postPublicState', post.post_pb_st);
+      form.append('postStrYMD', post.post_str_ymd);
+      form.append('postEndYMD', post.post_end_ymd);
 
-      // for (var value of form.values()) {
-      //   console.log(value);
-      // }
-
-      // const { data } = await axios.post(`post/`, form);
+      for (var value of form.values()) {
+        console.log(value);
+      }
 
       const { data } = await axios.post(
         `post/`,
         {
-          userId: userPost.user_id,
-          groupCd: userPost.group_cd,
+          userId: post.user_id,
+          groupCd: post.group_cd,
           postOriginCd: null,
           scheduleCd: null,
           mediaCd: null,
-          postEx: userPost.inputPost.post_ex,
-          postPublicState: userPost.inputPost.post_pb_st,
-          postStrYMD: userPost.inputPost.post_str_ymd,
-          postEndYMD: userPost.inputPost.post_end_ymd,
+          postEx: post.post_ex,
+          postPublicState: post.post_pb_st,
+          postStrYMD: post.post_str_ymd,
+          postEndYMD: post.post_end_ymd,
         },
         {
           headers: {
