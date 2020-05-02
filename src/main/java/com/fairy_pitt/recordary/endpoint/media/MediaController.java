@@ -23,13 +23,13 @@ public class MediaController {
 //        return "index";
 //    }
 
-    @PostMapping("/upload")
+    @PostMapping("/upload/{id}")
     @ResponseBody
-    public String upload(@RequestParam("data") MultipartFile multipartFile) throws IOException {
-        String imgPath = s3UploadComponent.upload(multipartFile, "static"); // bucket 의 static 디렉토리로 파일을 전달
+    public String upload(@RequestParam("data") MultipartFile multipartFile,@PathVariable Long id) throws IOException {
+        String imgPath = s3UploadComponent.upload(multipartFile, "static", id); // bucket 의 static 디렉토리로 파일을 전달
         MediaRequestDto mediaRequestDto = new MediaRequestDto(imgPath);
         mediaService.save(mediaRequestDto);
-        return  "";
+        return  imgPath;
     }
 
     @GetMapping("{bucketName}")
