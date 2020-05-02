@@ -133,8 +133,13 @@ const PostMediaScheduleAppend = (props) => {
 
       if (data) {
         setAlert(
-          <AlertDialog severity='success' content='게시물이 추가되었습니다.' onAlertClose={() => setAlert(null)} />
+          <AlertDialog
+            severity='success'
+            content='게시물이 추가되었습니다.'
+            onAlertClose={(() => setAlert(null), this.props.onCancel())}
+          />
         );
+        console.log(store.getState());
       } else {
         setAlert(<Snackbar severity='error' content='게시물을 추가하지 못했습니다.' onClose={() => setAlert(null)} />);
       }
@@ -188,7 +193,6 @@ const PostMediaScheduleAppend = (props) => {
           <div>
             <SelectGroup />
           </div>
-
           <div className='schedule-media-button '>
             <PublicRange />
             <div className='plus-button-design' onClick={() => setScheduleOpen(!scheduleOpen)}>

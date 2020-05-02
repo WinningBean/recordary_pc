@@ -2,23 +2,23 @@ import React from 'react';
 import './mainPage.css';
 
 class Aside extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: props.data,
+    };
+  }
+
   render() {
     return (
       <aside>
         <div className='aside-profile'>
           <div className='timeline-profile'>
-            <img
-              alt='user-img'
-              src='https://i.pinimg.com/originals/0d/e8/86/0de8869350e89fd300edaeef3b659674.jpg'
-            />
+            <img alt='user-img' src={this.state.data.userPic} />
           </div>
           <div className='aside-profile-info'>
-            <div className='aside-profile-name'>Water_Glasses</div>
-            <div className='aside-profile-statusMsg'>
-              #카르페디엠 #현재를 즐겨라
-              <br />
-              #OMG #새벽 5시 13분ㅠㅠ
-            </div>
+            <div className='aside-profile-name'>{this.state.data.userId}</div>
+            <div className='aside-profile-statusMsg'>{this.state.data.userEx}</div>
             <div className='aside-profile-TodaySchedule'>
               <hr />
               <div>Today's schedule</div>

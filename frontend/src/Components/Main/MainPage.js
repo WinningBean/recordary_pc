@@ -8,7 +8,7 @@ import { Redirect } from 'react-router-dom';
 
 class MainPage extends React.Component {
   render() {
-    var data = this.props.data;
+    var data = this.props;
     console.log(this.props);
     if (!this.props.isLogin) {
       return <Redirect to='/' />;
@@ -19,7 +19,7 @@ class MainPage extends React.Component {
         <div id='main-page'>
           <div id='main-wrap'>
             <Main data={data}></Main>
-            <Aside></Aside>
+            <Aside data={data.data}></Aside>
           </div>
           <MainPageButton data={data}></MainPageButton>
         </div>

@@ -402,6 +402,7 @@ const HeaderMenu = (props) => {
                     userPic: 'https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/user/basic.png',
                   })
                 : null}
+              {/* <img src="recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/user/13_profile"></img> */}
               <img alt='userPic' src={data.userPic} style={{ borderRadius: '50%', width: '30px', overFit: 'cover' }} />
             </div>
             <span>

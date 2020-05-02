@@ -128,7 +128,7 @@ class ProfileEditor extends React.Component {
               <input
                 name='userPic'
                 type='file'
-                accept='image/*'
+                accept='image/jpeg'
                 style={{ display: 'none' }}
                 ref={(fileUpload) => {
                   this.fileUpload = fileUpload;
@@ -193,7 +193,7 @@ class ProfileEditor extends React.Component {
                     // canvas에 변경된 크기의 이미지를 다시 그려줍니다.
                     ctx.drawImage(cut, 0, 0, width, height);
                     // canvas 에 있는 이미지를 img 태그로 넣어줍니다
-                    var dataurl = canvas.toDataURL('image/jpg');
+                    var dataurl = canvas.toDataURL('image/jpeg');
 
                     this.setState({ user_pic: dataurl });
 
