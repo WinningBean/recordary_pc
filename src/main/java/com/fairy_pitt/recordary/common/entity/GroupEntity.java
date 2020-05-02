@@ -75,6 +75,4 @@ public class GroupEntity extends BaseTimeEntity{
     public void updateGroupMaster(UserEntity User) {
         this.gMstUserFK = User;
     }
-
-    public void updateGroupPic(String url){this.groupPic = url;}
 }

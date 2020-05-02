@@ -34,20 +34,20 @@ public class GroupApplyController {
         return groupApplyService.save(requestDto);
     }
 
-    @DeleteMapping("delete")
+    @DeleteMapping("check")
     public @ResponseBody Boolean checkApply(@RequestBody GroupMemberRequestDto id){
         groupApplyService.delete(id);
         return true;
     }
 
-    @GetMapping("findGroupApply/{userCd}")
-    public @ResponseBody List<GroupApplyResponseDto> findGroupAppliesToUser(@PathVariable Long userCd){
+    @GetMapping("find")
+    public @ResponseBody List<GroupApplyResponseDto> findGroupAppliesToUser(Long userCd){
 
         return groupApplyService.findGroupAppliesToUser(userCd);
     }
 
-    @GetMapping("findUserApply/{groupCd}")
-    public @ResponseBody List<GroupApplyResponseDto> findUserAppliesToGroup(@PathVariable Long groupCd)
+    @GetMapping("findGroup")
+    public @ResponseBody List<GroupApplyResponseDto> findUserAppliesToGroup(Long groupCd)
     {
         return groupApplyService.findUserAppliesToGroup(groupCd);
     }
