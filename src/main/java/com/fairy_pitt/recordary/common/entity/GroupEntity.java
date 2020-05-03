@@ -37,15 +37,15 @@ public class GroupEntity extends BaseTimeEntity{
     private String  groupEx;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK", cascade = CascadeType.REMOVE)
     private List<GroupMemberEntity> members = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK", cascade = CascadeType.REMOVE)
     private List<GroupApplyEntity> applyMembers = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK", cascade = CascadeType.REMOVE)
     private List<PostEntity> postEntityList = new ArrayList<>();
 
     @Builder
