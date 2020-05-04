@@ -32,7 +32,7 @@ public class CommentEntity extends BaseTimeEntity{
     private CommentEntity commentOriginFK;
 
     @Column(name = "COMMENT_CONTENT")
-    private String content;
+    private String commentContent;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "commentOriginFK", cascade = CascadeType.REMOVE)
@@ -43,16 +43,16 @@ public class CommentEntity extends BaseTimeEntity{
                          UserEntity commentUserFK,
                          PostEntity commentPostFK,
                          CommentEntity commentOriginFK,
-                         String content) {
+                         String commentContent) {
                              
         this.commentUserFK = commentUserFK;
         this.commentPostFK = commentPostFK;
         this.commentOriginFK = commentOriginFK;
-        this.content = content;
+        this.commentContent = commentContent;
     }
 
-    public void updateContent(String content)
+    public void updateContent(String commentContent)
     {
-        this.content = content;
+        this.commentContent = commentContent;
     }
 }

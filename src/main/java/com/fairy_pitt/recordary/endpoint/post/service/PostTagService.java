@@ -3,14 +3,11 @@ package com.fairy_pitt.recordary.endpoint.post.service;
 import com.fairy_pitt.recordary.common.entity.PostEntity;
 import com.fairy_pitt.recordary.common.entity.PostTagEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
-import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.common.repository.PostTagRepository;
-import com.fairy_pitt.recordary.common.repository.UserRepository;
-import com.fairy_pitt.recordary.endpoint.post.dto.PostListResponseDto;
-import com.fairy_pitt.recordary.endpoint.user.dto.UserListResponseDto;
+import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,26 +44,26 @@ public class PostTagService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserListResponseDto> postTagUser(Long postCd){
+    public List<UserResponseDto> postTagUser(Long postCd){
         PostEntity postEntity = postService.findEntity(postCd);
         List<UserEntity> userEntityList = new ArrayList<>();
         for (PostTagEntity postTagEntity : postTagRepository.findAllByPostFK(postEntity)){
             userEntityList.add(postTagEntity.getUserFK());
         }
         return userEntityList.stream()
-                .map(UserListResponseDto::new)
+                .map(UserResponseDto::new)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<PostListResponseDto> userTagPost(String userId){
+    public List<PostResponseDto> userTagPost(String userId){
         UserEntity userEntity = userService.findEntity(userId);
         List<PostEntity> postEntityList = new ArrayList<>();
         for (PostTagEntity postTagEntity : postTagRepository.findAllByUserFK(userEntity)){
             postEntityList.add(postTagEntity.getPostFK());
         }
         return postEntityList.stream()
-                .map(PostListResponseDto::new)
+                .map(PostResponseDto::new)
                 .collect(Collectors.toList());
     }
 }

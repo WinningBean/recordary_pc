@@ -4,8 +4,6 @@ import com.fairy_pitt.recordary.common.entity.CommentEntity;
 import com.fairy_pitt.recordary.common.entity.PostEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.CommentRepository;
-import com.fairy_pitt.recordary.common.repository.PostRepository;
-import com.fairy_pitt.recordary.common.repository.ScheduleRepository;
 import com.fairy_pitt.recordary.endpoint.comment.dto.CommentRequestDto;
 import com.fairy_pitt.recordary.endpoint.comment.dto.CommentResponseDto;
 import com.fairy_pitt.recordary.endpoint.comment.dto.CommentUpdateRequestDto;
@@ -15,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,8 +23,6 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserService userService;
     private final PostService postService;
-    private final PostRepository postRepository;
-    private final ScheduleRepository scheduleRepository;
 
 
     @Transactional
@@ -46,7 +41,7 @@ public class CommentService {
     public Long update(Long commentCd, CommentUpdateRequestDto requestDto)
     {
         CommentEntity commentEntity = commentRepository.findByCommentCd(commentCd);
-        commentEntity.updateContent(requestDto.getContent());
+        commentEntity.updateContent(requestDto.getCommentContent());
         return  commentRepository.save(commentEntity).getCommentCd();
     }
 

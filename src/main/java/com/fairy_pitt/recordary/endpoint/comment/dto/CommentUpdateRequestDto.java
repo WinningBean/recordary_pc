@@ -6,11 +6,11 @@ import lombok.Getter;
 @Getter
 public class CommentUpdateRequestDto {
 
-    private String content;
+    private String commentContent;
 
     @Builder
-    public CommentUpdateRequestDto(String content)
+    public CommentUpdateRequestDto(String commentContent)
     {
-        this.content = content;
+        this.commentContent = commentContent;
     }
 }

@@ -110,7 +110,7 @@ public class UserControllerTest {
                 .userNm("테스트 유저")
                 .build());
 
-        String updateId = saveUser.getUserId();
+        Long updateCd = saveUser.getUserCd();
         String expectedUserPw = "testPassword2";
         String expectedUserNm = "테스트 유저2";
         String expectedUserEx = "상태 메세지";
@@ -120,7 +120,7 @@ public class UserControllerTest {
                 .userNm(expectedUserNm)
                 .build();
 
-        String url = "http://localhost:" + port + "/user/ " + updateId;
+        String url = "http://localhost:" + port + "/user/ " + updateCd;
 
         HttpEntity<UserUpdateRequestDto> requestDtoHttpEntity = new HttpEntity<>(requestDto);
 
