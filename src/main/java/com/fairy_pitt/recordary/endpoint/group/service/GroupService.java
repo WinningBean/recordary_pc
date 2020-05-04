@@ -75,8 +75,8 @@ public class GroupService {
     public GroupResponseDto groupInfo(Long id) {
         GroupEntity entity = groupRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
-
-        return new GroupResponseDto(entity);
+        UserEntity user = userService.findEntity(entity.getGMstUserFK().getUserCd());
+        return new GroupResponseDto(entity,user);
     }
 
     @Transactional(readOnly = true)
