@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './header.css';
 import GroupAdd from '../../Containers/Group/GroupAdd';
 import LongMenu from '../Other/MoreMenu';
-import ProfileEditor from '../Profile/ProfileEditor';
+import ProfileEditor from '../../Containers/Profile/ProfileEditor';
 import GroupSetting from '../Group/GroupSetting';
 import GroupInfo from '../Group/GroupInfo';
 import SettingMenu from './SettingMenu';
@@ -34,11 +34,6 @@ const ColorCircularProgress = withStyles({
 const HeaderMenu = (props) => {
   const [data, setData] = useState({
     ...props.data,
-  });
-
-  useEffect(() => {
-    setData(props.data);
-    console.log(data);
   });
 
   const [profileEditForm, setProfileEditForm] = useState(null);

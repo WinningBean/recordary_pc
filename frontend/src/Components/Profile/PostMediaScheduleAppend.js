@@ -26,7 +26,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Popover from '@material-ui/core/Popover';
 import axios from 'axios';
 import store from '../../store';
-
 const useStyles = makeStyles((theme) => ({
   content: {
     width: '552px',

@@ -67,7 +67,7 @@ export default function SearchAppBar() {
 
   const handleKeyPress = async (e) => {
     if (e.key === 'Enter') {
-      const userData = (await axios.get(`/user/search/${userSearch}`)).data;
+      const userData = (await axios.get(`/followState/search/${userSearch}`)).data;
       console.log(userData);
       // const userData = {
       //   searchedUser: [

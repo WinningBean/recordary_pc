@@ -18,22 +18,23 @@ class Main extends React.Component {
       if (this.state.data.post === undefined) {
         return null;
       }
+      // const postList = axait axios.get()
       return this.state.data.post.map((value) => {
-        if (value.mediaCd !== null ? (this.state.postForm = 0) : (this.state.postForm = 1))
-          switch (this.state.postForm) {
-            case 0:
-              return (
-                <div className='timeline-Margin' key={value.postOriginCd}>
-                  <Timeline data={value} />
-                </div>
-              );
-            default:
-              return (
-                <div className='timeline-Margin' key={value.postOriginCd}>
-                  <TimelineWeekSchedule data={value}></TimelineWeekSchedule>
-                </div>
-              );
-          }
+        // if (value.mediaCd !== null ? (this.state.postForm = 0) : (this.state.postForm = 1))
+        switch (this.state.postForm) {
+          case 0:
+            return (
+              <div className='timeline-Margin' key={value.postOriginCd}>
+                <Timeline data={value} />
+              </div>
+            );
+          default:
+            return (
+              <div className='timeline-Margin' key={value.postOriginCd}>
+                <TimelineWeekSchedule data={value}></TimelineWeekSchedule>
+              </div>
+            );
+        }
       });
     })();
     return (

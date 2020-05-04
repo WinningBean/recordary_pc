@@ -84,11 +84,11 @@ const reducer = (state, action) => {
     //     ...state,
     //     groupList: state.groupList === undefined ? state.groupList : state.groupList.concat(action.group),
     //   };
-    case 'ADD_POST':
-      return {
-        ...state,
-        postList: state.postList === undefined ? state.postList : state.PostList.concat(action.post),
-      };
+    // case 'ADD_POST':
+    //   return {
+    //     ...state,
+    //     postList: state.postList === undefined ? state.postList : state.PostList.concat(action.post),
+    //   };
   }
 
   return state;

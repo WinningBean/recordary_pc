@@ -15,7 +15,7 @@ class Header extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      openMenu: false
+      openMenu: false,
     };
   }
 
@@ -77,10 +77,10 @@ class Header extends React.Component {
           <div className='profile-icon'>
             <Link
               to={{
-                pathname: `/${this.props.user_id}`,
+                pathname: `/user/ ${this.props.user_id}`,
                 state: {
-                  profile_type: 0
-                }
+                  profile_type: 0,
+                },
               }}
             >
               <AccountCircleIcon style={{ fontSize: 40, color: 'white' }}>Profile</AccountCircleIcon>
@@ -94,7 +94,7 @@ class Header extends React.Component {
 
 const IconButton = styled(Button)({
   minWidth: '40px',
-  height: '40px'
+  height: '40px',
 });
 
 export default Header;
