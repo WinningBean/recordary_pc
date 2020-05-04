@@ -136,7 +136,7 @@ const PostMediaScheduleAppend = (props) => {
           <AlertDialog
             severity='success'
             content='게시물이 추가되었습니다.'
-            onAlertClose={(() => setAlert(null), this.props.onCancel())}
+            onAlertClose={(() => setAlert(null), () => props.onCancel())}
           />
         );
         console.log(store.getState());

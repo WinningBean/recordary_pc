@@ -5,7 +5,7 @@ class Aside extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: props.data,
+      user: props.data,
     };
   }
 
@@ -14,11 +14,13 @@ class Aside extends React.Component {
       <aside>
         <div className='aside-profile'>
           <div className='timeline-profile'>
-            <img alt='user-img' src={this.state.data.userPic} />
+            <img alt='user-img' src={this.state.user.userPic} />
           </div>
           <div className='aside-profile-info'>
-            <div className='aside-profile-name'>{this.state.data.userId}</div>
-            <div className='aside-profile-statusMsg'>{this.state.data.userEx}</div>
+            <div className='aside-profile-name'>
+              {this.state.user.userId}({this.state.user.userNm})
+            </div>
+            <div className='aside-profile-statusMsg'>{this.state.user.userEx}</div>
             <div className='aside-profile-TodaySchedule'>
               <hr />
               <div>Today's schedule</div>

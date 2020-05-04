@@ -98,6 +98,7 @@ class ProfileEditor extends React.Component {
         type: contentType,
       });
     };
+
     return (
       <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
         <div className='dialog-wrap'>
@@ -196,8 +197,6 @@ class ProfileEditor extends React.Component {
                     var dataurl = canvas.toDataURL('image/jpeg');
 
                     this.setState({ user_pic: dataurl });
-
-                    console.log(this.state.user_pic);
                   } else {
                     this.setState({ user_pic: this.props.data.userPic });
                   }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './header.css';
 import GroupAdd from '../../Containers/Group/GroupAdd';
 import LongMenu from '../Other/MoreMenu';
@@ -36,7 +36,10 @@ const HeaderMenu = (props) => {
     ...props.data,
   });
 
-  console.log(data);
+  useEffect(() => {
+    setData(props.data);
+    console.log(data);
+  });
 
   const [profileEditForm, setProfileEditForm] = useState(null);
   // const [editor, setEditor] = useState(null);
@@ -402,7 +405,7 @@ const HeaderMenu = (props) => {
                     userPic: 'https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/user/basic.png',
                   })
                 : null}
-              {/* <img src="recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/user/13_profile"></img> */}
+
               <img alt='userPic' src={data.userPic} style={{ borderRadius: '50%', width: '30px', overFit: 'cover' }} />
             </div>
             <span>
@@ -479,9 +482,11 @@ const GroupButton = styled(Button)({
   paddingLeft: '10px',
 });
 
-export default React.memo(HeaderMenu, (props, newProps) => {
-  console.log(props, newProps);
-  return props === newProps;
-  // false 일시 랜더링
-  // true 일시 비랜더링
-});
+export default HeaderMenu;
+
+// export default React.memo(HeaderMenu, (props, newProps) => {
+//   console.log(props, newProps);
+//   return props === newProps;
+//   // false 일시 랜더링
+//   // true 일시 비랜더링
+// });
