@@ -27,11 +27,15 @@ public class GroupApplyService {
     private final GroupRepository groupRepository;
 
     @Transactional
-    public int save(GroupApplyRequestDto requestDto){
-        UserEntity user = userService.findEntity(requestDto.getUserCd());
-        GroupEntity group = groupRepository.findByGroupCd(requestDto.getGroupCd());
-        return groupApplyRepository.save(requestDto.toEntity(user,group))
-                .getApplyState();
+    public Boolean save(GroupApplyRequestDto requestDto){
+        if(!checkApply(requestDto.getGroupCd(),requestDto.getUserCd()))
+        {
+            UserEntity user = userService.findEntity(requestDto.getUserCd());
+            GroupEntity group = groupRepository.findByGroupCd(requestDto.getGroupCd());
+            groupApplyRepository.save(requestDto.toEntity(user,group));
+            return true;
+        }
+        else return false;
     }
 
     @Transactional
@@ -53,7 +57,6 @@ public class GroupApplyService {
             GroupApplyResponseDto groupApplyResponseDto = new GroupApplyResponseDto(groupApplyEntity);
             groupApplyResponseDtoList.add(groupApplyResponseDto);
         }
-
         return groupApplyResponseDtoList;
     }
 
@@ -68,6 +71,12 @@ public class GroupApplyService {
             groupApplyResponseDtoList.add(groupApplyResponseDto);
         }
         return groupApplyResponseDtoList;
+    }
+
+    private Boolean checkApply(Long groupCd, Long userCd)
+    {
+        GroupMemberPK id = new GroupMemberPK(groupCd, userCd);
+        return groupApplyRepository.findById(id).isPresent();
     }
 
 }

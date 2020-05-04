@@ -30,11 +30,12 @@ public class GroupMemberController {
     public Boolean groupCreate(@RequestBody GroupMemberRequestDto requestDto)
     {
         groupApplyService.delete(requestDto);
-        return groupMemberService.save(requestDto);
+        groupMemberService.save(requestDto);
+        return true;
     }
 
-    @DeleteMapping("check")
-    public @ResponseBody Boolean checkApply(@RequestBody GroupMemberPK id) {
+    @DeleteMapping("/")
+    public Boolean checkApply(@RequestBody GroupMemberRequestDto id) {
         return groupMemberService.delete(id);
     }
 

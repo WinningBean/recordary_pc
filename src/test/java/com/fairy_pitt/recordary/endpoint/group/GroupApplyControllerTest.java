@@ -89,7 +89,7 @@ public class GroupApplyControllerTest {
 
         String url = "http://localhost:" + port + "groupApply/create";
         //when
-        ResponseEntity<Integer> responseEntity = restTemplate.postForEntity(url, requestDto, Integer.class);
+        ResponseEntity<Boolean> responseEntity = restTemplate.postForEntity(url, requestDto, Boolean.class);
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);

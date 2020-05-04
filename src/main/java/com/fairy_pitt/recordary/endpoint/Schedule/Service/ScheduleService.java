@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequestMapping("schedule")
@@ -63,9 +64,9 @@ public class ScheduleService {
     }
 
     @Transactional
-    public List<ScheduleResponseDto> findScheduleByDate(Date fromData, Date ToData)
+    public List<ScheduleResponseDto> findScheduleByDate(Date fromDate, Date ToDate)
     {
-        List<ScheduleEntity> entityList = scheduleRepository.findByScheduleStrBetween(fromData, ToData);
+        List<ScheduleEntity> entityList = scheduleRepository.findByScheduleStrBetween(fromDate, ToDate);
         List<ScheduleResponseDto> result = new ArrayList<>();
         for (ScheduleEntity temp: entityList) {
             ScheduleResponseDto scheduleResponseDto = new ScheduleResponseDto(temp);
@@ -73,6 +74,17 @@ public class ScheduleService {
         }
         return result;
     }
+
+    @Transactional
+    public  List<ScheduleResponseDto> showUserSchedule(Long userCd, int state, Date fromDate, Date toDate)
+    {
+        UserEntity user = userService.findEntity(userCd);
+       return scheduleRepository.findByUserFkAndSchedulePublicStateGreaterThanEqualAndScheduleStrBetween(user, state, fromDate, toDate)
+                .stream()
+                .map(ScheduleResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
 
 //    public List<ScheduleMemberResponseDto> getScheduleMember(Long id) {
 //        return scheduleRepository.findById(id).get().getScheduleMembers();

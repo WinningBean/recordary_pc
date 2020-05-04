@@ -27,12 +27,12 @@ public class GroupMemberService {
     private final GroupRepository groupRepository;
 
     @Transactional
-    public Boolean save(GroupMemberRequestDto groupMemberRequestDto)
+    public Long save(GroupMemberRequestDto groupMemberRequestDto)
     {
         UserEntity user = userService.findEntity(groupMemberRequestDto.getUserCd());
         GroupEntity group = groupRepository.findByGroupCd(groupMemberRequestDto.getGroupCd());
         GroupMemberEntity groupMemberEntity = groupMemberRequestDto.toEntity(group,user);
-        return Optional.ofNullable(groupMemberRepository.save(groupMemberEntity)).isPresent();
+       return groupMemberRepository.save(groupMemberEntity).getGroupFK().getGroupCd();
     }
 
     @Transactional

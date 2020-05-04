@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,7 +37,9 @@ public class GroupService {
     @Transactional
     public Long save(@RequestBody GroupSaveRequestDto requestDto) {
         UserEntity user = userService.findEntity(requestDto.getUserCd());
-        return  groupRepository.save(requestDto.toEntity(user)).getGroupCd();
+            return  groupRepository.save(
+                    requestDto.toEntity(user,"https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/group/basic.png"))
+                    .getGroupCd();
     }
 
     @Transactional
@@ -44,7 +47,7 @@ public class GroupService {
         GroupEntity groupEntity = groupRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
 
-        groupEntity.updateGroupInfo(groupDto.getGroupName(), groupDto.getGroupState(), groupDto.getGroupPic(), groupDto.getGroupEx());
+        groupEntity.updateGroupInfo(groupDto.getGroupNm(), groupDto.getGroupState(), groupDto.getGroupPic(), groupDto.getGroupEx());
 
         return id;
     }
@@ -105,6 +108,9 @@ public class GroupService {
 /*   
  @Transactional(readOnly = true)
     public List<GroupMemberResponseDto> findGroupMembers(Long groupCd){
+
+    @Transactional(readOnly = true)
+    public List<UserResponseDto> findGroupMembers(Long groupCd){
 
         return groupRepository.findByGroupCd(groupCd).getMembers().stream()
                 .map(GroupMemberResponseDto::new)
