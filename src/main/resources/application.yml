@@ -2,7 +2,6 @@ spring:
 
   profiles:
     include: real
-    active: springdataJPA
 
   jpa:
     show-sql: true
@@ -28,7 +27,6 @@ cloud:
 
     region:
       static: ap-northeast-2
-      auto: false
 
     stack:
       auto: false
