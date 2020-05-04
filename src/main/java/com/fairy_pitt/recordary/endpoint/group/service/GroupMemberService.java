@@ -36,7 +36,8 @@ public class GroupMemberService {
     }
 
     @Transactional
-    public Boolean delete (GroupMemberPK id) {
+    public Boolean delete (GroupMemberRequestDto requestDto) {
+        GroupMemberPK id = new GroupMemberPK(requestDto.getGroupCd(),requestDto.getUserCd());
         GroupMemberEntity groupApplyEntity = groupMemberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
 
