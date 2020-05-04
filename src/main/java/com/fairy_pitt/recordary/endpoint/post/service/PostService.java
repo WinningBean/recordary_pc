@@ -114,11 +114,11 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public List<PostResponseDto> timeLine(Long userCd){ // 수정 필요
+    public List<PostEntity> timeLinePostList(Long userCd){ // 수정 필요
         List<UserResponseDto> followingList = followerService.followingList(userCd);
         List<GroupResponseDto> groupList = groupService.findUserGroups(userCd);
 
-        List<PostResponseDto> postList = new ArrayList<>();
+        List<PostEntity> postList = new ArrayList<>();
 
         for (UserResponseDto userResponseDto : followingList){
             List<PostEntity> followingPost = postRepository.findAllByUserFKOrderByCreatedDateDesc(userService.findEntity(userResponseDto.getUserCd()));
@@ -126,14 +126,14 @@ public class PostService {
             int publicState = 2;
             if (friendState) publicState = 3;
             for (PostEntity post : followingPost){
-                if (post.getPostPublicState() < publicState) postList.add(new PostResponseDto(post));
+                if (post.getPostPublicState() < publicState) postList.add(post);
             }
         }
 
         for (GroupResponseDto groupResponseDto : groupList){
             List<PostEntity> groupPost = postRepository.findAllByGroupFKOrderByCreatedDateDesc(groupService.findEntity(groupResponseDto.getGroupCd()));
             for (PostEntity post : groupPost){
-                postList.add(new PostResponseDto(post));
+                postList.add(post);
             }
         }
 

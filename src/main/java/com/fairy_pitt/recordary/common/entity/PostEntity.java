@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "POST_TB")
-public class PostEntity extends BaseTimeEntity{
+public class PostEntity extends BaseTimeEntity implements Comparable<PostEntity>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "POST_CD")
@@ -93,5 +93,16 @@ public class PostEntity extends BaseTimeEntity{
     public void update(String postEx, int postPublicState) {
         this.postEx = postEx;
         this.postPublicState = postPublicState;
+    }
+
+    @Override
+    public int compareTo(PostEntity postEntity){
+        if (this.getCreatedDate().isAfter(postEntity.getCreatedDate())){
+            return 1;
+        }else if (this.getCreatedDate().isBefore(postEntity.getCreatedDate())){
+            return -1;
+        }else{
+            return 0;
+        }
     }
 }

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-public class PostResponseDto implements Comparable<PostResponseDto>{
+public class PostResponseDto {
     private Long postCd;
     private UserResponseDto userFK;
     private GroupResponseDto groupFK;
@@ -44,16 +44,5 @@ public class PostResponseDto implements Comparable<PostResponseDto>{
         this.postEndYMD = postEntity.getPostEndYMD();
         this.createdDate = postEntity.getCreatedDate();
         this.modifiedDate = postEntity.getModifiedDate();
-    }
-
-    @Override
-    public int compareTo(PostResponseDto postResponseDto){
-        if (this.getCreatedDate().isAfter(postResponseDto.getCreatedDate())){
-            return 1;
-        }else if (this.getCreatedDate().isBefore(postResponseDto.getCreatedDate())){
-            return -1;
-        }else{
-            return 0;
-        }
     }
 }
