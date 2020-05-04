@@ -224,6 +224,7 @@ class ProfileEditor extends React.Component {
                     console.log(data);
 
                     if (data === this.state.user_id) {
+                      this.props.updateUserData(userPicUrl.data, this.state.user_ex);
                       this.setState({
                         alert: () => {
                           return (

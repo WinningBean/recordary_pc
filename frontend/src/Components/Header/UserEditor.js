@@ -153,7 +153,6 @@ class UserEditor extends React.Component {
                         );
                       },
                     });
-
                     return;
                   }
                 } catch (error) {

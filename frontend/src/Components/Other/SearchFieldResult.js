@@ -22,6 +22,7 @@ class SearchFieldResult extends React.Component {
     super(props);
     this.state = {
       data: props.data,
+      userSearch: props.userSearch,
       followerIconClick: false,
       clickTab: 0,
       alertDialog: () => {},
@@ -44,118 +45,79 @@ class SearchFieldResult extends React.Component {
 
   exfollowList = () => {
     return this.state.data.searchedUser.map((value, index) => {
-      return (
-        <li key={value.userId} key={value.userId}>
-          <div className='follower_list'>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                marginBottom: '10px',
-              }}
-            >
-              <img
-                alt='friend-img'
+      if (value.userCd !== store.getState().user.userCd) {
+        return (
+          <li key={value.userId} key={value.userId}>
+            <div className='follower_list'>
+              <div
                 style={{
-                  marginRight: '10px',
-                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '10px',
                 }}
-                src={'http://placehold.it/40x40'}
-              />
-              {value.userNm}
-            </div>
-            <div>
-              {(() => {
-                if (!value.isClick) {
-                  return (
-                    <FollowButton
-                      key={`button-${value.userId}`}
-                      onClick={async (e) => {
-                        try {
-                          const isSuccess = await axios.get(`/follow/${value.userId}`);
-                          if (isSuccess) {
-                            this.setState({
-                              alertDialog: () => {
-                                return (
-                                  <Snackbar
-                                    severity='success'
-                                    content='팔로우 하였습니다.'
-                                    onClose={() => {
-                                      this.setState({ alertDialog: () => {} });
-                                    }}
-                                  />
-                                );
-                              },
-                            });
-                            this.followerChange(index, !value.isClick);
-                            this.props.onSaveFriend(value);
-                            return;
-                          } else {
-                            this.setState({
-                              alertDialog: () => {
-                                return (
-                                  <Snackbar
-                                    severity='error'
-                                    content='팔로우에 실패하였습니다.'
-                                    onClose={() => {
-                                      this.setState({ alertDialog: () => {} });
-                                    }}
-                                  />
-                                );
-                              },
-                            });
-                            return;
-                          }
-                        } catch (error) {
-                          console.error(error);
-                          this.setState({
-                            alertDialog: () => {
-                              return (
-                                <Snackbar
-                                  severity='error'
-                                  content='서버에러로 팔로우에 실패하였습니다.'
-                                  onClose={() => {
-                                    this.setState({ alertDialog: () => {} });
-                                  }}
-                                />
-                              );
-                            },
-                          });
-                        }
-                      }}
-                    >
-                      <AddIcon style={{ fontSize: '20px' }} />
-                    </FollowButton>
-                  );
-                } else {
-                  return (
-                    <FollowButton
-                      onClick={async (e) => {
-                        try {
-                          const isSuccess = (await axios.delete(`/unFollow/${value.userId}`)).data;
-                          if (isSuccess) {
-                            this.setState({
-                              alertDialog: () => {
-                                return (
-                                  <Snackbar
-                                    severity='success'
-                                    content='팔로우를 취소하였습니다.'
-                                    onClose={() => {
-                                      this.setState({ alertDialog: () => {} });
-                                    }}
-                                  />
-                                );
-                              },
-                            });
-                            this.followerChange(index, !value.user_click);
-                            return;
-                          } else {
+              >
+                <img
+                  alt='friend-img'
+                  style={{
+                    height: '40px',
+                    marginRight: '10px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                  }}
+                  src={value.userPic}
+                />
+                <div style={{ fontSize: '15px' }}>{value.userNm}</div>
+              </div>
+              <div>
+                {(() => {
+                  if (!value.isClick) {
+                    return (
+                      <FollowButton
+                        key={`button-${value.userId}`}
+                        onClick={async (e) => {
+                          try {
+                            const isSuccess = await axios.get(`/follow/${value.userId}`);
+                            if (isSuccess) {
+                              this.setState({
+                                alertDialog: () => {
+                                  return (
+                                    <Snackbar
+                                      severity='success'
+                                      content='팔로우 하였습니다.'
+                                      onClose={() => {
+                                        this.setState({ alertDialog: () => {} });
+                                      }}
+                                    />
+                                  );
+                                },
+                              });
+                              this.followerChange(index, !value.isClick);
+                              this.props.onSaveFriend(value);
+                              return;
+                            } else {
+                              this.setState({
+                                alertDialog: () => {
+                                  return (
+                                    <Snackbar
+                                      severity='error'
+                                      content='팔로우에 실패하였습니다.'
+                                      onClose={() => {
+                                        this.setState({ alertDialog: () => {} });
+                                      }}
+                                    />
+                                  );
+                                },
+                              });
+                              return;
+                            }
+                          } catch (error) {
+                            console.error(error);
                             this.setState({
                               alertDialog: () => {
                                 return (
                                   <Snackbar
                                     severity='error'
-                                    content='팔로우 취소에 실패하였습니다.'
+                                    content='서버에러로 팔로우에 실패하였습니다.'
                                     onClose={() => {
                                       this.setState({ alertDialog: () => {} });
                                     }}
@@ -163,35 +125,78 @@ class SearchFieldResult extends React.Component {
                                 );
                               },
                             });
-                            return;
                           }
-                        } catch (error) {
-                          console.log(error);
-                          this.setState({
-                            alertDialog: () => {
-                              return (
-                                <Snackbar
-                                  severity='error'
-                                  content='서버에러로 팔로우 취소에 실패하였습니다.'
-                                  onClose={() => {
-                                    this.setState({ alertDialog: () => {} });
-                                  }}
-                                />
-                              );
-                            },
-                          });
-                        }
-                      }}
-                    >
-                      <HowToRegIcon style={{ fontSize: '20px' }} />
-                    </FollowButton>
-                  );
-                }
-              })()}
+                        }}
+                      >
+                        <AddIcon style={{ fontSize: '20px' }} />
+                      </FollowButton>
+                    );
+                  } else {
+                    return (
+                      <FollowButton
+                        onClick={async (e) => {
+                          try {
+                            const isSuccess = (await axios.delete(`/unFollow/${value.userId}`)).data;
+                            if (isSuccess) {
+                              this.setState({
+                                alertDialog: () => {
+                                  return (
+                                    <Snackbar
+                                      severity='success'
+                                      content='팔로우를 취소하였습니다.'
+                                      onClose={() => {
+                                        this.setState({ alertDialog: () => {} });
+                                      }}
+                                    />
+                                  );
+                                },
+                              });
+                              this.followerChange(index, !value.user_click);
+                              return;
+                            } else {
+                              this.setState({
+                                alertDialog: () => {
+                                  return (
+                                    <Snackbar
+                                      severity='error'
+                                      content='팔로우 취소에 실패하였습니다.'
+                                      onClose={() => {
+                                        this.setState({ alertDialog: () => {} });
+                                      }}
+                                    />
+                                  );
+                                },
+                              });
+                              return;
+                            }
+                          } catch (error) {
+                            console.log(error);
+                            this.setState({
+                              alertDialog: () => {
+                                return (
+                                  <Snackbar
+                                    severity='error'
+                                    content='서버에러로 팔로우 취소에 실패하였습니다.'
+                                    onClose={() => {
+                                      this.setState({ alertDialog: () => {} });
+                                    }}
+                                  />
+                                );
+                              },
+                            });
+                          }
+                        }}
+                      >
+                        <HowToRegIcon style={{ fontSize: '20px' }} />
+                      </FollowButton>
+                    );
+                  }
+                })()}
+              </div>
             </div>
-          </div>
-        </li>
-      );
+          </li>
+        );
+      }
     });
   };
 
@@ -278,14 +283,17 @@ class SearchFieldResult extends React.Component {
     return (
       <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }} onClose={() => this.props.onCancel()}>
         <div className='searchField-result'>
-          <div className='searchField-title'>
+          <div className='searchField-title' style={{ display: 'flex', alignItems: 'center' }}>
             <SearchIcon
               style={{
                 fontSize: '30px',
                 color: 'white',
-                marginTop: '5px',
+                // marginTop: '5px',
               }}
             />
+            <div style={{ marginLeft: '10px', color: 'white', fontSize: '20px' }}>
+              '{this.state.userSearch}'(으)로 검색한 결과
+            </div>
           </div>
           <hr />
           <div className='searchField-result-list'>

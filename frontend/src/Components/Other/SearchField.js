@@ -4,7 +4,6 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import SearchFieldResult from '../../Containers/Other/SearchFieldResult';
 import axios from 'axios';
-
 const useStyles = makeStyles((theme) => ({
   search: {
     position: 'relative',
@@ -55,7 +54,13 @@ export default function SearchAppBar() {
 
   const setEnterKeyPress = () => {
     if (searchState === true) {
-      return <SearchFieldResult data={data} onCancel={() => setsearchState(false)}></SearchFieldResult>;
+      return (
+        <SearchFieldResult
+          data={data}
+          userSearch={userSearch}
+          onCancel={() => setsearchState(false)}
+        ></SearchFieldResult>
+      );
     }
     return null;
   };
@@ -63,7 +68,7 @@ export default function SearchAppBar() {
   const handleKeyPress = async (e) => {
     if (e.key === 'Enter') {
       const userData = (await axios.get(`/user/search/${userSearch}`)).data;
-      // console.log(data);
+      console.log(userData);
       // const userData = {
       //   searchedUser: [
       //     {
@@ -107,11 +112,12 @@ export default function SearchAppBar() {
       //     group_click: false
       //   };
       // });
-      console.log(userSearch);
+
       setData({
         ...data,
         searchedUser: addedUserData,
       });
+
       setsearchState(true);
     }
   };

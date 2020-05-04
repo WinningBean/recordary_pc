@@ -21,6 +21,15 @@ const reducer = (state, action) => {
         ...state,
         user: action.userData,
       };
+    case 'UPDATE_USER':
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          userPic: action.userData.userPic,
+          userEx: action.userData.userEx,
+        },
+      };
     case 'ADD_GROUP':
       return {
         ...state,
