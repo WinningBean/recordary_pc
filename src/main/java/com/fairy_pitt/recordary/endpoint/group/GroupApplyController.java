@@ -23,31 +23,31 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @RequestMapping("groupApply")
-@Controller
+@RestController
 public class GroupApplyController {
 
     private final  GroupApplyService groupApplyService;
 
     @PostMapping("create")
-    public @ResponseBody int groupCreate(@RequestBody GroupApplyRequestDto requestDto)
+    public Boolean applyCreate(@RequestBody GroupApplyRequestDto requestDto)
     {
         return groupApplyService.save(requestDto);
     }
 
-    @DeleteMapping("delete")
-    public @ResponseBody Boolean checkApply(@RequestBody GroupMemberRequestDto id){
+    @DeleteMapping("/")
+    public Boolean applyDelete(@RequestBody GroupMemberRequestDto id){
         groupApplyService.delete(id);
         return true;
     }
 
     @GetMapping("findGroupApply/{userCd}")
-    public @ResponseBody List<GroupApplyResponseDto> findGroupAppliesToUser(@PathVariable Long userCd){
+    public List<GroupApplyResponseDto> findGroupAppliesToUser(@PathVariable Long userCd){
 
         return groupApplyService.findGroupAppliesToUser(userCd);
     }
 
     @GetMapping("findUserApply/{groupCd}")
-    public @ResponseBody List<GroupApplyResponseDto> findUserAppliesToGroup(@PathVariable Long groupCd)
+    public List<GroupApplyResponseDto> findUserAppliesToGroup(@PathVariable Long groupCd)
     {
         return groupApplyService.findUserAppliesToGroup(groupCd);
     }

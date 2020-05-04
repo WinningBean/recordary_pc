@@ -76,7 +76,7 @@ public class GroupControllerTest {
 
         GroupSaveRequestDto requestDto = GroupSaveRequestDto.createGroupBuilder()
                 .userCd(saveUser.getUserCd())
-                .groupName(groupName)
+                .groupNm(groupName)
                 .groupState(true)
                 .groupPic(groupPic)
                 .groupEx(groupEx)
@@ -125,7 +125,7 @@ public class GroupControllerTest {
 
         GroupUpdateRequestDto groupUpdateRequestDto = GroupUpdateRequestDto.updateGroupBuilder()
                 .groupEx(groupEx2)
-                .groupName(groupName)
+                .groupNm(groupName)
                 .groupPic(groupPic2)
                 .groupState(true)
                 .build();

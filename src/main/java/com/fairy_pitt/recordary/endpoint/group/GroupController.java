@@ -35,7 +35,7 @@ public class GroupController {
     private final UserService userService;
 
     @PostMapping("create")
-    public Boolean groupCreate(@RequestBody GroupSaveRequestDto requestDto) {
+    public Long groupCreate(@RequestBody GroupSaveRequestDto requestDto) {
         return groupMemberService.save(GroupMemberRequestDto.builder()
                 .groupCd(groupService.save(requestDto))
                 .userCd(requestDto.getUserCd())
@@ -88,10 +88,10 @@ public class GroupController {
         return groupService.findUserGroups(userId);
     }
 
-    @GetMapping("member/{groupId}")
-    public List<UserResponseDto> findGroupMember(@PathVariable Long groupId)
+    @GetMapping("member/{groupCd}")
+    public List<UserResponseDto> findGroupMember(@PathVariable Long groupCd)
     {
-        return groupService.findGroupMembers(groupId);
+        return groupService.findGroupMembers(groupCd);
     }
 
 }
