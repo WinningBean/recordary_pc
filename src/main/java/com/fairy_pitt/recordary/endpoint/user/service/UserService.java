@@ -42,16 +42,16 @@ public class UserService {
     }
 
     @Transactional
-    public String update(String userId, UserUpdateRequestDto requestDto){
-        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(userId))
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
+    public Long update(Long userCd, UserUpdateRequestDto requestDto){
+        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserCd(userCd))
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. cd = " + userCd));
 
         String hashedPassword;
         if (requestDto.getUserPw() == null) hashedPassword = null;
         else hashedPassword = userPasswordHashService.getSHA256(requestDto.getUserPw());
 
         userEntity.update(hashedPassword, requestDto.getUserNm(), requestDto.getUserPic(), requestDto.getUserEx());
-        return userId;
+        return userCd;
     }
 
     @Transactional
@@ -61,13 +61,15 @@ public class UserService {
         if (userPic.isEmpty()) imgPath = null;
         else imgPath = s3UploadComponent.upload(userPic, "user");
 
+        log.info(imgPath);
+
         return imgPath;
     }
 
     @Transactional
-    public void delete(String userId){
-        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(userId))
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
+    public void delete(Long userCd){
+        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserCd(userCd))
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. cd = " + userCd));
 
         userRepository.delete(userEntity);
     }
@@ -93,8 +95,8 @@ public class UserService {
 
         Boolean userState = checkPw(requestDto);
         if (userState){
-            httpSession.setAttribute("loginUser", userEntity.getUserId());
-            log.info("set userId = {}", httpSession.getAttribute("loginUser"));
+            httpSession.setAttribute("loginUser", userEntity.getUserCd());
+            log.info("set userCd = {}", httpSession.getAttribute("loginUser"));
             return new UserResponseDto(userEntity);
         }else return null;
     }
@@ -111,8 +113,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public String currentUserId(){
-        return String.valueOf(httpSession.getAttribute("loginUser"));
+    public Long currentUserCd(){
+        return Long.parseLong(String.valueOf(httpSession.getAttribute("loginUser")));
     }
 
     @Transactional(readOnly = true)

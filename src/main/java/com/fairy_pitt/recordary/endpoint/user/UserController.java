@@ -32,9 +32,9 @@ public class UserController {
         return userService.logout();
     }
 
-    @PutMapping("/{userId}")
-    public String update(@PathVariable String userId, @RequestBody UserUpdateRequestDto requestDto){
-        return userService.update(userId, requestDto);
+    @PutMapping("/{userCd}")
+    public Long update(@PathVariable Long userCd, @RequestBody UserUpdateRequestDto requestDto){
+        return userService.update(userCd, requestDto);
     }
 
     @PostMapping("/{userCd}/profileUpload")
@@ -42,10 +42,10 @@ public class UserController {
         return userService.profileUpload(userCd, userPic);
     }
 
-    @DeleteMapping("/{userId}")
-    public String delete(@PathVariable String userId){
-        userService.delete(userId);
-        return userId;
+    @DeleteMapping("/{userCd}")
+    public Long delete(@PathVariable Long userCd){
+        userService.delete(userCd);
+        return userCd;
     }
 
     @GetMapping("/{userId}")
@@ -63,9 +63,9 @@ public class UserController {
         return userService.existId(userId);
     }
 
-    @GetMapping("/currentId")
-    public String currentUserId(){
-        return userService.currentUserId();
+    @GetMapping("/currentCd")
+    public Long currentUserCd(){
+        return userService.currentUserCd();
     }
 
     @PostMapping("/checkPw")
