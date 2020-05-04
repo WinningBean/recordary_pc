@@ -1,16 +1,12 @@
 package com.fairy_pitt.recordary.endpoint.post;
 
-import com.fairy_pitt.recordary.endpoint.post.dto.PostListResponseDto;
+import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
 import com.fairy_pitt.recordary.endpoint.post.service.PostLikeService;
-import com.fairy_pitt.recordary.endpoint.user.dto.UserListResponseDto;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.MappedSuperclass;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RequestMapping("post")
 @RequiredArgsConstructor
@@ -31,12 +27,12 @@ public class PostLikeController {
     }
 
     @GetMapping("/{postCd}/likeUser")
-    public List<UserListResponseDto> postLikeUser(@PathVariable Long postCd){
+    public List<UserResponseDto> postLikeUser(@PathVariable Long postCd){
         return postLikeService.postLikeUser(postCd);
     }
 
     @GetMapping("/like/{userId}")
-    public List<PostListResponseDto> userLikePost(@PathVariable String userId){
+    public List<PostResponseDto> userLikePost(@PathVariable String userId){
         return postLikeService.userLikePost(userId);
     }
 }

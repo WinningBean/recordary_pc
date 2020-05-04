@@ -9,14 +9,14 @@ public class CommentResponseDto {
     private Long commentCd;
     private Long commentUserFK;
     private Long commentPostFK;
-    private String content;
+    private String commentContent;
     private Long commentOriginFK;
 
     public CommentResponseDto(CommentEntity comment)
     {
         this.commentCd = comment.getCommentCd();
         this.commentOriginFK = comment.getCommentOriginFK().getCommentCd();
-        this.content = comment.getContent();
+        this.commentContent = comment.getCommentContent();
         this.commentPostFK = comment.getCommentPostFK().getPostCd();
         this.commentUserFK = comment.getCommentUserFK().getUserCd();
        // this.commentOriginFK = commentOriginFK;

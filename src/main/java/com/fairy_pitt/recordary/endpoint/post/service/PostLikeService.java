@@ -4,8 +4,8 @@ import com.fairy_pitt.recordary.common.entity.PostEntity;
 import com.fairy_pitt.recordary.common.entity.PostLikeEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.PostLikeRepository;
-import com.fairy_pitt.recordary.endpoint.post.dto.PostListResponseDto;
-import com.fairy_pitt.recordary.endpoint.user.dto.UserListResponseDto;
+import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -44,19 +44,19 @@ public class PostLikeService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserListResponseDto> postLikeUser(Long postCd){
+    public List<UserResponseDto> postLikeUser(Long postCd){
         PostEntity postEntity = postService.findEntity(postCd);
         List<UserEntity> userEntityList = new ArrayList<>();
         for (PostLikeEntity postLikeEntity : postLikeRepository.findAllByPostFK(postEntity)){
             userEntityList.add(postLikeEntity.getUserFK());
         }
         return userEntityList.stream()
-                .map(UserListResponseDto::new)
+                .map(UserResponseDto::new)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<PostListResponseDto> userLikePost(String userId){
+    public List<PostResponseDto> userLikePost(String userId){
         UserEntity userEntity = userService.findEntity(userId);
         List<PostEntity> postEntityList = new ArrayList<>();;
         for (PostLikeEntity postLikeEntity : postLikeRepository.findAllByUserFK(userEntity)){
@@ -64,7 +64,7 @@ public class PostLikeService {
         }
         System.out.println("================");
         return postEntityList.stream()
-                .map(PostListResponseDto::new)
+                .map(PostResponseDto::new)
                 .collect(Collectors.toList());
     }
 }
