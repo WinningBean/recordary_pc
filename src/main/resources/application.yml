@@ -2,7 +2,6 @@ spring:
 
   profiles:
     include: real
-    active: springdataJPA
 
   jpa:
     show-sql: true
