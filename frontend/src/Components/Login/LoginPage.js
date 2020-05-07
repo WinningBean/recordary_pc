@@ -83,6 +83,7 @@ class Login extends React.Component {
         userId: this.state.user_id,
         userPw: this.state.user_pw,
       });
+      console.log(data, 'is data');
 
       if (data === '') {
         this.setState({

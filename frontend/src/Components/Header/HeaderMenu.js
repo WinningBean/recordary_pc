@@ -66,7 +66,7 @@ const HeaderMenu = (props) => {
   };
 
   const onGroupMenuSelect = (selectedValue, code) => {
-    const value = data.userGroup.filter((value) => value.group_cd === code)[0];
+    const value = props.groupList.filter((value) => value.groupCd === code)[0];
     // 그룹목록에서 현재 선택된 그룹 객체를 찾음
     console.log(selectedValue, code);
     switch (selectedValue) {
@@ -75,7 +75,7 @@ const HeaderMenu = (props) => {
           <GroupInfo
             onClose={() => setMenuDialog(null)}
             data={{
-              user_id: data.currentUser.user_id,
+              userCd: props.data.userCd,
               group: value,
             }}
           />
@@ -86,7 +86,7 @@ const HeaderMenu = (props) => {
           <GroupSetting
             onClose={() => setMenuDialog(null)}
             data={{
-              user_id: data.currentUser.user_id,
+              userCd: data.userCd,
               group: value,
             }}
           />
@@ -115,7 +115,7 @@ const HeaderMenu = (props) => {
   };
   const showGroupAdd = () => {
     if (groupAdd === null) {
-      setGroupAdd(<GroupAdd onCancel={() => setGroupAdd(null)} />);
+      setGroupAdd(<GroupAdd data={data} onCancel={() => setGroupAdd(null)} />);
       return;
     }
     setGroupAdd(null);
@@ -150,48 +150,59 @@ const HeaderMenu = (props) => {
 
   const GroupList = () => {
     if (open.group === true) {
-      const groups = data.userGroup.map((value, index) => {
-        return (
-          <li key={`groups-${index}`}>
-            <div className='button-wrap'>
-              <GroupButton>
-                <div
-                  style={{
-                    display: 'flex',
-                    width: '250px',
-                    justifyContent: 'space-between',
-                  }}
-                >
+      var groups = undefined;
+      if (props.groupList === undefined) {
+        getGroupList();
+        console.log('helloworld');
+        groups = (
+          <div style={{ width: 250, display: 'flex', justifyContent: 'center' }}>
+            <ColorCircularProgress />
+          </div>
+        );
+      } else {
+        groups = props.groupList.map((value, index) => {
+          return (
+            <li key={`groups-${index}`}>
+              <div className='button-wrap'>
+                <GroupButton>
                   <div
                     style={{
                       display: 'flex',
-                      alignItems: 'center',
-                      marginBottom: '10px',
-                      fontWeight: 'bold',
+                      width: '250px',
+                      justifyContent: 'space-between',
                     }}
                   >
-                    <img
-                      alt='group-img'
+                    <div
                       style={{
-                        marginRight: '10px',
-                        borderRadius: '50%',
-                        width: '40px',
-                        height: '40px',
-                        objectFit: 'cover',
+                        display: 'flex',
+                        alignItems: 'center',
+                        marginBottom: '10px',
+                        fontWeight: 'bold',
                       }}
-                      src={value.group_pic}
-                    />
-                    {value.group_nm}
+                    >
+                      <img
+                        alt='group-img'
+                        style={{
+                          marginRight: '10px',
+                          borderRadius: '50%',
+                          width: '40px',
+                          height: '40px',
+                          objectFit: 'cover',
+                        }}
+                        src={'http://placehold.it/40x40'}
+                      />
+                      {value.groupNm}
+                    </div>
                   </div>
+                </GroupButton>
+                <div className='LongMenuOpen'>
+                  <LongMenu options={['그룹 정보', '그룹 관리']} code={value.groupCd} returnValue={onGroupMenuSelect} />
                 </div>
-              </GroupButton>
-              <div className='LongMenuOpen'>
-                <LongMenu options={['그룹 정보', '그룹 관리']} code={value.group_cd} returnValue={onGroupMenuSelect} />
               </div>
-            </div>
-          </li>
-        );
-      });
+            </li>
+          );
+        });
+      }
       return (
         <div className='button-wrap'>
           <GroupButton style={{ backgroundColor: 'rgba(209, 204, 192,0.4)' }} onClick={() => showOpen(true)}>
@@ -243,6 +254,28 @@ const HeaderMenu = (props) => {
       </div>
     );
   };
+
+  const getGroupList = async () => {
+    try {
+      console.log(props.data.userCd);
+      const { data } = await axios.get(`group/group/${props.data.userCd}`);
+      console.log(data, 'isData');
+      if (data.length === 0) {
+        props.onSaveGroupList([]);
+      }
+      props.onSaveGroupList(data);
+    } catch (error) {
+      console.error(error);
+      setMenuDialog(() => (
+        <AlertDialog
+          severity='error'
+          content='서버에러로 인하여 데이터를 받아오는데 실패하였습니다.'
+          onAlertClose={() => setMenuDialog(null)}
+        />
+      ));
+    }
+  };
+
   const getFriendList = async () => {
     try {
       const { data } = await axios.get(`/friends/${props.data.userId}`);

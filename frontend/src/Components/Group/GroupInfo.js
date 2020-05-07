@@ -14,40 +14,52 @@ import CloseIcon from '@material-ui/icons/Close';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   content: {
     width: '552px',
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   marginBottom: {
-    marginBottom: '10px'
+    marginBottom: '10px',
   },
   middleCenter: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '250px;'
+    width: '250px;',
   },
   chip: {
     marginRight: '4px',
-    marginBottom: '4px'
-  }
+    marginBottom: '4px',
+  },
 }));
-
-const GroupInfo = props => {
+// data : {
+//   user_id: data.currentUser.user_id,
+//   group: value,
+// }
+const GroupInfo = ({ data, onClose }) => {
   const classes = useStyles();
-  const data = props.data;
   const [info, setInfo] = useState(undefined);
+  // groupCd: 10
+  // userCd: 10
+  // groupName: "abcd"
+  // groupState: true
+  // groupEx: "abcd"
+  // groupPic: "https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/group/basic.png"
+  // userPic: "https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/user/basic.png"
+  // userId: "wsh"
+  // userName: "wsh"
 
   useEffect(() => {
     // 그룹 대표사진 250x250 img, 유저 리스트, 유저 40x40 img
     (async () => {
       try {
-        const groupInfo = (
-          await axios.post('/group/info', { params: { group_cd: data.group.group_cd } })
-        ).data;
-        setInfo(groupInfo);
+        const groupInfo = (await axios.get(`group/${data.group.groupCd}`)).data;
+        console.log(groupInfo);
+        const groupMember = (await axios.get(`group/member/${data.group.groupCd}`)).data;
+        console.log(groupMember);
+        setInfo({ ...groupInfo, groupMember: groupMember });
       } catch (e) {
         console.error(e);
         setInfo(null);
@@ -56,16 +68,10 @@ const GroupInfo = props => {
   }, []);
 
   if (info === undefined) {
-    return (
-      <Snackbar onClose={() => props.onClose()} severity='success' content='데이터 요청중...' />
-    );
+    return <Snackbar onClose={() => onClose()} severity='success' content='데이터 요청중...' />;
   } else if (info === null) {
     return (
-      <Snackbar
-        onClose={() => props.onClose()}
-        severity='error'
-        content='서버에러로 인하여 데이터 요청에 실패하였습니다.'
-      />
+      <Snackbar onClose={() => onClose()} severity='error' content='서버에러로 인하여 데이터 요청에 실패하였습니다.' />
     );
   }
   return (
@@ -78,7 +84,7 @@ const GroupInfo = props => {
           &nbsp;
           <span>그룹 정보</span>
           <div className='dialog-header-icon' style={{ position: 'absolute', right: '5px' }}>
-            <IconButton onClick={() => props.onClose()}>
+            <IconButton onClick={() => onClose()}>
               <CloseIcon style={{ color: '#ffffff', fontSize: '20px' }} />
             </IconButton>
           </div>
@@ -92,7 +98,7 @@ const GroupInfo = props => {
                 width: '250px',
                 height: '250px',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
               }}
             >
               <img
@@ -100,10 +106,10 @@ const GroupInfo = props => {
                   width: '250px',
                   height: '250px',
                   objectFit: 'cover',
-                  borderRadius: '50%'
+                  borderRadius: '50%',
                 }}
                 alt='profile-img'
-                src={info.group_pic}
+                src={info.userPic}
               />
             </div>
             <div
@@ -113,16 +119,16 @@ const GroupInfo = props => {
                 width: '250px',
                 height: '250px',
                 justifyContent: 'center',
-                padding: '20px'
+                padding: '20px',
               }}
             >
               <TextField
                 className={classes.marginBottom}
                 label='그룹명'
                 name='group_nm'
-                defaultValue={data.group.group_nm}
+                defaultValue={info.groupNm}
                 InputProps={{
-                  readOnly: true
+                  readOnly: true,
                 }}
               />
               <TextField
@@ -132,17 +138,17 @@ const GroupInfo = props => {
                 multiline={true}
                 rows={4}
                 rowsMax={4}
-                defaultValue={data.group.group_ex}
+                defaultValue={info.groupEx}
                 InputProps={{
-                  readOnly: true
+                  readOnly: true,
                 }}
               />
               <TextField
                 label='그룹장'
                 name='group_ex'
-                defaultValue={data.group.group_admin}
+                defaultValue={info.userName}
                 InputProps={{
-                  readOnly: true
+                  readOnly: true,
                 }}
               />
             </div>
@@ -154,26 +160,26 @@ const GroupInfo = props => {
               <span>그룹 멤버</span>
             </div>
             <div style={{ padding: '4px', minHeight: '180px' }}>
-              <Link to={`/${info.admin.user_id}`}>
+              <Link to={`/profile/${info.userCd}`}>
                 <Chip
-                  avatar={<Avatar alt={`${info.admin.user_id} img`} src={info.admin.user_pic} />}
+                  avatar={<Avatar alt={`${info.userName} img`} src={info.userPic} />}
                   className={classes.chip}
-                  label={info.admin.user_nm}
+                  label={info.userName}
                   style={{
                     backgroundColor: 'rgba(20, 81, 51, 0.8)',
-                    color: '#ffffff'
+                    color: '#ffffff',
                   }}
                   clickable
                 />
               </Link>
               {(() => {
-                return info.member.map(value => {
+                return info.groupMember.map((value) => {
                   return (
-                    <Link to={`/${value.user_id}`}>
+                    <Link to={`/${value.userId}`}>
                       <Chip
-                        avatar={<Avatar alt={`${value.user_id} img`} src={value.user_pic} />}
+                        avatar={<Avatar alt={`${value.userNm} img`} src={value.userPic} />}
                         className={classes.chip}
-                        label={value.user_nm}
+                        label={value.userNm}
                         clickable
                       />
                     </Link>
