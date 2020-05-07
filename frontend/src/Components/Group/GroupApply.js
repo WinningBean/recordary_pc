@@ -9,21 +9,21 @@ import GroupMemberSearch from './GroupMemberSearch';
 import AlertDialog from '../Other/AlertDialog';
 import axios from 'axios';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   content: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   marginBottom: {
-    marginBottom: '10px'
+    marginBottom: '10px',
   },
   chip: {
     marginBottom: '4px',
-    marginRight: '4px'
-  }
+    marginRight: '4px',
+  },
 }));
 
-const GroupApply = props => {
+const GroupApply = (props) => {
   const classes = useStyles();
   const [dialog, setDialog] = useState(null);
   const [info, setInfo] = useState(props.info);
@@ -36,12 +36,12 @@ const GroupApply = props => {
           &nbsp;&nbsp;
           <div>
             <Chip
-              avatar={<Avatar alt={`${info.user_id} img`} src={info.user_pic} />}
+              avatar={<Avatar alt={`${info.userId} img`} src={info.userPic} />}
               className={classes.chip}
-              label={info.user_nm}
+              label={info.userNm}
               style={{
                 backgroundColor: 'rgba(20, 81, 51, 0.8)',
-                color: '#ffffff'
+                color: '#ffffff',
               }}
             />
           </div>
@@ -51,12 +51,12 @@ const GroupApply = props => {
           &nbsp;&nbsp;
           <div>
             {(() => {
-              return info.group_member.map((value, index) => {
+              return info.groupMember.map((value, index) => {
                 return (
                   <Chip
-                    avatar={<Avatar alt={`${value.user_id} img`} src={value.user_pic} />}
+                    avatar={<Avatar alt={`${value.userNm} img`} src={value.userPic} />}
                     className={classes.chip}
-                    label={value.user_nm}
+                    label={value.userNm}
                     clickable
                     variant='outlined'
                     onDelete={() => {
@@ -88,7 +88,7 @@ const GroupApply = props => {
                               k.splice(index, 1);
                               setInfo({
                                 ...info,
-                                group_member: k
+                                group_member: k,
                               });
                               setDialog(null);
                             } catch (error) {
@@ -118,15 +118,8 @@ const GroupApply = props => {
                 setDialog(
                   <GroupMemberSearch
                     onCancel={() => setDialog(false)}
-                    onAdd={value => {
-                      setInfo({
-                        ...info,
-                        group_member: info.group_member.concat({
-                          user_id: value.user_id,
-                          user_nm: value.user_nm,
-                          user_pic: value.user_pic
-                        })
-                      });
+                    info={info}
+                    onAdd={() => {
                       setDialog(false);
                     }}
                   />
