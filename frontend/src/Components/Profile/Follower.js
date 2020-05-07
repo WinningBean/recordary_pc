@@ -38,12 +38,12 @@ class Follower extends React.Component {
   }
 
   getFollower = async () => {
-    const { data } = await axios.get(`/follower/${this.props.userId}`);
+    const { data } = await axios.get(`/follower/${this.props.userCd}`);
     this.setState({ ...this.state, userFollower: data });
   };
 
   getFollowing = async () => {
-    const { data } = await axios.get(`/following/${this.props.userId}`);
+    const { data } = await axios.get(`/following/${this.props.userCd}`);
     this.setState({ ...this.state, userFollower: data });
   };
 

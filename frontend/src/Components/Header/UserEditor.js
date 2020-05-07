@@ -134,7 +134,7 @@ class UserEditor extends React.Component {
                     return;
                   }
 
-                  const userId = (await axios.delete(`user/${this.state.user_id}`)).data;
+                  const userId = (await axios.delete(`user/${this.props.data.userCd}`)).data;
                   if (userId === this.state.user_id) {
                     this.setState({
                       alertDialog: () => {
@@ -283,7 +283,7 @@ class UserEditor extends React.Component {
                     return;
                   }
 
-                  const { data } = await axios.put(`user/${this.state.user_id}`, {
+                  const { data } = await axios.put(`user/${this.props.data.userCd}`, {
                     userPw: this.state.user_change_pw,
                     userNm: this.state.user_nm,
                     userPic: this.state.user_pic,

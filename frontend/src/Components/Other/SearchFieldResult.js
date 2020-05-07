@@ -76,7 +76,7 @@ class SearchFieldResult extends React.Component {
                         key={`button-${value.userId}`}
                         onClick={async (e) => {
                           try {
-                            const isSuccess = await axios.get(`/follow/${value.userId}`);
+                            const isSuccess = await axios.get(`/follow/${value.userCd}`);
                             if (isSuccess) {
                               this.setState({
                                 alertDialog: () => {
@@ -136,7 +136,7 @@ class SearchFieldResult extends React.Component {
                       <FollowButton
                         onClick={async (e) => {
                           try {
-                            const isSuccess = (await axios.delete(`/unFollow/${value.userId}`)).data;
+                            const isSuccess = (await axios.delete(`/unFollow/${value.userCd}`)).data;
                             if (isSuccess) {
                               this.setState({
                                 alertDialog: () => {
