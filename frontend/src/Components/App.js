@@ -2,7 +2,7 @@ import React from 'react';
 import './default.css';
 import LoginPage from '../Containers/Login/LoginPage';
 import MainPage from '../Containers/Main/MainPage';
-import ProfilePage from './Profile/Profile';
+import ProfilePage from '../Containers/Profile/Profile';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
 class App extends React.Component {
@@ -13,7 +13,8 @@ class App extends React.Component {
         <Switch>
           <Route exact path='/' component={LoginPage} />
           <Route exact path='/main' component={MainPage} />
-          <Route path='/user/:userId' component={ProfilePage} location />
+          <Route path='/profile/:userId' component={ProfilePage} />
+          <Route path='/group/:groupCd' component={ProfilePage} />
           <Redirect path='*' to='/' />
         </Switch>
       </div>

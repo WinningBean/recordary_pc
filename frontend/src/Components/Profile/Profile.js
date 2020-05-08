@@ -19,12 +19,15 @@ import Link from '@material-ui/core/Link';
 
 import { Redirect } from 'react-router-dom';
 
-import axois from 'axios';
+import axios from 'axios';
 
 class Profile extends React.Component {
+  // this.state.type
   // 0 : 내 프로필
-  // 1 : 내 그룹 프로필
-  // 2 : 남의 프로필 (그룹도 포함)
+  // 1 : 남의 프로필
+  // 2 : 마스터 그룹 프로필
+  // 3 : 일반 그룹 프로필
+
   constructor(props) {
     super(props);
     this.state = {
@@ -34,20 +37,67 @@ class Profile extends React.Component {
       followerNumClick: false,
       followingNumClick: false,
       isLoading: true,
-      userInfo: undefined,
+      type: undefined,
+      info: undefined,
       redirect: false,
     };
   }
   getUserInfo = async () => {
-    const { data } = await axois.get(`/user/${this.props.match.params.userId}`);
+    const { data } = await axios.get(`/user/${this.props.match.params.userId}`);
     if (data === '') {
       this.setState({ ...this.state, redirect: true });
       return;
     }
-    this.setState({ ...this.state, userInfo: data, isLoading: false });
+    this.setState({
+      ...this.state,
+      info: {
+        id: data.userId,
+        cd: data.userCd,
+        nm: data.userNm,
+        pic: data.userPic,
+        ex: data.userEx,
+      },
+      isLoading: false,
+    });
   };
+
+  getGroupInfo = async () => {
+    try {
+      const groupInfo = (await axios.get(`/group/${this.props.match.params.groupCd}`)).data;
+      console.log(groupInfo);
+      const groupMember = (await axios.get(`/group/member/${this.props.match.params.groupCd}`)).data;
+      console.log(groupMember);
+      var type = 3;
+      console.log(this.props.isLogin);
+      if (this.props.isLogin && groupInfo.userCd === this.props.user.userCd) {
+        type = 2;
+      }
+      this.setState({
+        ...this.state,
+        info: {
+          cd: groupInfo.groupCd,
+          nm: groupInfo.groupNm,
+          pic: groupInfo.groupPic,
+          ex: groupInfo.groupEx,
+          member: groupMember,
+        },
+        type: type,
+        isLoading: false,
+      });
+    } catch (error) {
+      console.error(error);
+      this.setState({ ...this.state, redirect: true });
+    }
+  };
+
   componentDidMount() {
-    this.getUserInfo();
+    if (this.props.match.params.userId !== undefined) {
+      console.log('user');
+      this.getUserInfo();
+    } else if (this.props.match.params.groupCd !== undefined) {
+      console.log('group');
+      this.getGroupInfo();
+    }
   }
   setProfileScheduleOpen = () => {
     if (this.state.profileScheduleClick === true) {
@@ -217,7 +267,7 @@ class Profile extends React.Component {
                     {console.log(this.state.postIt)} */}
                   </ul>
                 </div>
-                <div id='main-profile-info'>
+                <div id='main-profile-info' style={this.state.type >= 2 ? { borderTop: '4px solid tomato' } : null}>
                   <div id='userinfo'>
                     <div id='user-image'>
                       <img
@@ -229,38 +279,60 @@ class Profile extends React.Component {
                       <div className='info'>
                         <ul>
                           <li>
-                            <span className='name'>{`${this.state.userInfo.userId}(${this.state.userInfo.userNm})`}</span>
+                            <span className='name'>
+                              {this.state.type >= 2
+                                ? this.state.info.nm
+                                : `${this.state.info.id}(${this.state.info.nm})`}
+                            </span>
                           </li>
-                          <li>
-                            <span className='followerName'>팔로워</span>
-                            <Link
-                              component='button'
-                              onClick={() =>
-                                this.setState({
-                                  followerNumClick: true,
-                                })
-                              }
-                            >
-                              <span className='followerNum'>50</span>
-                            </Link>
-                            {FollowerShow()}
-                          </li>
-                          <li>
-                            <span className='followerName'>팔로우</span>
-                            <Link
-                              component='button'
-                              onClick={() =>
-                                this.setState({
-                                  followingNumClick: true,
-                                })
-                              }
-                            >
-                              <span className='followNum'>18</span>
-                            </Link>
-                          </li>
+                          {this.state.type >= 2 ? (
+                            <li>
+                              <span className='followerName'>그룹 멤버</span>
+                              <Link
+                                component='button'
+                                onClick={() =>
+                                  this.setState({
+                                    followerNumClick: true,
+                                  })
+                                }
+                              >
+                                <span className='followerNum'>{this.state.info.member.length}</span>
+                              </Link>
+                            </li>
+                          ) : (
+                            <>
+                              <li>
+                                <span className='followerName'>팔로워</span>
+                                <Link
+                                  component='button'
+                                  onClick={() =>
+                                    this.setState({
+                                      followerNumClick: true,
+                                    })
+                                  }
+                                >
+                                  <span className='followerNum'>50</span>
+                                </Link>
+                                {/* {FollowerShow()} */}
+                              </li>
+                              <li>
+                                <span className='followerName'>팔로우</span>
+                                <Link
+                                  component='button'
+                                  onClick={() =>
+                                    this.setState({
+                                      followingNumClick: true,
+                                    })
+                                  }
+                                >
+                                  <span className='followNum'>18</span>
+                                </Link>
+                              </li>
+                            </>
+                          )}
                         </ul>
                         <div className='status-content'>
-                          <div>{this.state.userInfo.userEx}</div>
+                          <div>{this.state.info.ex}</div>
                         </div>
                       </div>
                     </div>

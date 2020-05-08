@@ -20,7 +20,6 @@ class Header extends React.Component {
   }
 
   render() {
-    console.log(this.props);
     if (!this.props.isLogin) {
       return (
         <header>
@@ -75,14 +74,7 @@ class Header extends React.Component {
           </div>
           <ToDoList />
           <div className='profile-icon'>
-            <Link
-              to={{
-                pathname: `/${this.props.user_id}`,
-                state: {
-                  profile_type: 0,
-                },
-              }}
-            >
+            <Link to={`/profile/${this.props.userId}`}>
               <AccountCircleIcon style={{ fontSize: 40, color: 'white' }}>Profile</AccountCircleIcon>
             </Link>
           </div>
