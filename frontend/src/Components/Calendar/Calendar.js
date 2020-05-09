@@ -13,7 +13,7 @@ import './Calendar.css';
 import produce from 'immer';
 
 // 600x475, 85x74
-const Calendar = props => {
+const Calendar = (props) => {
   const type = props.type;
   // 0 : 내 캘린더
   // 1 : 내 그룹 캘린더
@@ -24,28 +24,28 @@ const Calendar = props => {
       cd: '01',
       start: new Date('2020-03-02'),
       end: new Date('2020-03-02'),
-      ex: '안녕하세요'
+      ex: '안녕하세요',
     },
     {
       cd: '04',
       start: new Date('2020-03-02'),
       end: new Date('2020-03-02'),
-      ex: 'Hello World'
+      ex: 'Hello World',
     },
     {
       cd: '03',
       start: new Date('2020-03-12'),
       end: new Date('2020-03-14'),
-      ex: 'ex3'
+      ex: 'ex3',
     },
     {
       cd: '02',
       start: new Date('2020-03-18'),
       end: new Date('2020-04-05'),
-      ex: '발닦고 잠자기'
-    }
+      ex: '발닦고 잠자기',
+    },
   ]);
-  
+
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [dayLocation, setDayLocation] = useState(null);
   const [popover, setPopover] = useState(null);
@@ -65,24 +65,24 @@ const Calendar = props => {
 
   console.log('render');
 
-  const onChoice = useCallback(currDay => props.onChoice(currDay, userDate), [props, userDate]);
+  const onChoice = useCallback((currDay) => props.onChoice(currDay, userDate), [props, userDate]);
 
   //#region Handler
   var id = undefined;
   var x = null;
   var y = null;
 
-  const onMouseDownCell = e => {
+  const onMouseDownCell = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     x = e.clientX - rect.left;
     y = e.clientY - rect.top;
   };
-  const onScMouseDown = e => {
+  const onScMouseDown = (e) => {
     id = e.currentTarget.className;
     console.log('start holding', id);
   };
 
-  const onScMouseUp = e => {
+  const onScMouseUp = (e) => {
     console.log('stop holding', id);
     if (isMove) {
       const rect = e.currentTarget.getBoundingClientRect();
@@ -101,14 +101,14 @@ const Calendar = props => {
       } else {
         moveBlockY = -(parseInt(y / 74) - parseInt(moveY / 74));
       }
-      const moveObjDate = userDate.filter(value => value.cd === id.substring(2))[0];
+      const moveObjDate = userDate.filter((value) => value.cd === id.substring(2))[0];
       setUserDate(
-        userDate.map(value => {
+        userDate.map((value) => {
           if (moveObjDate.cd === value.cd) {
             return {
               ...value,
               start: dateFns.addWeeks(dateFns.addDays(value.start, moveBlockX), moveBlockY),
-              end: dateFns.addWeeks(dateFns.addDays(value.end, moveBlockX), moveBlockY)
+              end: dateFns.addWeeks(dateFns.addDays(value.end, moveBlockX), moveBlockY),
             };
           }
           return value;
@@ -128,7 +128,7 @@ const Calendar = props => {
   var moveLife = 5;
   var isMove = false;
 
-  const MouseMoveHandler = e => {
+  const MouseMoveHandler = (e) => {
     if (id !== undefined) {
       if (moveLife-- < 0) {
         if (!isMove) {
@@ -182,7 +182,7 @@ const Calendar = props => {
               justifyContent: 'center',
               alignItems: 'center',
               minWidth: '40px',
-              height: '75px'
+              height: '75px',
             }}
             onClick={() => setCurrentMonth(dateFns.subMonths(currentMonth, 1))}
           >
@@ -199,7 +199,7 @@ const Calendar = props => {
               justifyContent: 'center',
               alignItems: 'center',
               minWidth: '40px',
-              height: '75px'
+              height: '75px',
             }}
             onClick={() => setCurrentMonth(dateFns.addMonths(currentMonth, 1))}
           >
@@ -250,7 +250,7 @@ const Calendar = props => {
           overlap: 0,
           isSecondBlock: false,
           x: x,
-          y: y
+          y: y,
         });
         formattedDate = dateFns.format(day, 'd');
         const currDay = day; // 클로저
@@ -276,7 +276,7 @@ const Calendar = props => {
                 if (
                   dateFns.isWithinInterval(currDay, {
                     start: props.choiceSharedStartDate,
-                    end: props.choiceSharedEndDate
+                    end: props.choiceSharedEndDate,
                   })
                 ) {
                   return { backgroundColor: 'rgba(20, 81, 51, 0.1)' };
@@ -287,7 +287,7 @@ const Calendar = props => {
             {dateFns.isSameDay(day, selectedDate) ? <div className='selected' /> : null}
             <span className='bg'>{formattedDate}</span>
             <span className='number'>{formattedDate}</span>
-            <div className='more' onClick={e => setPopover({ event: e.currentTarget, date: currDay })} />
+            <div className='more' onClick={(e) => setPopover({ event: e.currentTarget, date: currDay })} />
           </div>
         );
         day = dateFns.addDays(day, 1);
@@ -321,16 +321,16 @@ const Calendar = props => {
         left: `${x}px`,
         cursor: 'pointer',
         userSelect: 'none',
-        backgroundColor: '#9e5fff80'
+        backgroundColor: '#9e5fff80',
       }}
       onMouseDown={type === 0 ? onScMouseDown : null}
-      onClick={e => setDetailedSC({ event: e.currentTarget, cd: cd })}
+      onClick={(e) => setDetailedSC({ event: e.currentTarget, cd: cd })}
     >
       <div
         style={{
           position: 'relative',
           lineHeight: '24px',
-          margin: '0 5px'
+          margin: '0 5px',
         }}
       >
         <span
@@ -341,7 +341,7 @@ const Calendar = props => {
             backgroundColor: '#9e5fff',
             width: '6px',
             height: '6px',
-            borderRadius: '50%'
+            borderRadius: '50%',
           }}
         />
         <span
@@ -352,7 +352,7 @@ const Calendar = props => {
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
             fontWeight: 'bold',
-            fontSize: '12px'
+            fontSize: '12px',
           }}
         >
           {ex}
@@ -376,10 +376,10 @@ const Calendar = props => {
           left: `${x}px`,
           cursor: 'pointer',
           userSelect: 'none',
-          backgroundColor: '#9e5fff80'
+          backgroundColor: '#9e5fff80',
         }}
         onMouseDown={type === 0 ? onScMouseDown : null}
-        onClick={e => setDetailedSC({ event: e.currentTarget, cd: cd })}
+        onClick={(e) => setDetailedSC({ event: e.currentTarget, cd: cd })}
       >
         <div
           style={{
@@ -387,7 +387,7 @@ const Calendar = props => {
             // width: '69px',
             // height: '24px',
             lineHeight: '20px',
-            margin: '0 5px'
+            margin: '0 5px',
           }}
         >
           <span
@@ -400,7 +400,7 @@ const Calendar = props => {
               fontSize: '12px',
               backgroundColor: '#9e5fff80',
               paddingLeft: '2px',
-              borderLeft: borderLeft
+              borderLeft: borderLeft,
             }}
           >
             {ex}
@@ -419,7 +419,7 @@ const Calendar = props => {
     console.log('render schedual');
     const sc = [];
 
-    const copyDraft = produce(userDate, draft => {
+    const copyDraft = produce(userDate, (draft) => {
       draft.sort((a, b) => {
         if (dateFns.isSameDay(a.start, b.start)) {
           if (dateFns.isSameDay(a.end, b.end)) {
@@ -436,15 +436,15 @@ const Calendar = props => {
       moreList[i].style.display = 'none';
     }
 
-    var copyDayLocation = dayLocation.map(value => ({ ...value }));
-    copyDraft.forEach(value => {
+    var copyDayLocation = dayLocation.map((value) => ({ ...value }));
+    copyDraft.forEach((value) => {
       var index = null;
       var secondBlock = false;
       var beforeStartDay = false;
       if (
         dateFns.isWithinInterval(value.start, {
           start: copyDayLocation[0].day,
-          end: dateFns.endOfDay(copyDayLocation[copyDayLocation.length - 1].day)
+          end: dateFns.endOfDay(copyDayLocation[copyDayLocation.length - 1].day),
         })
       ) {
         for (let i = 0; i < copyDayLocation.length; i++) {
@@ -457,7 +457,7 @@ const Calendar = props => {
         if (
           dateFns.isWithinInterval(value.end, {
             start: copyDayLocation[0].day,
-            end: dateFns.endOfDay(copyDayLocation[copyDayLocation.length - 1].day)
+            end: dateFns.endOfDay(copyDayLocation[copyDayLocation.length - 1].day),
           })
         ) {
           index = 0;
@@ -528,13 +528,13 @@ const Calendar = props => {
               const cloneElement = React.cloneElement(
                 sc[sc.length - 1],
                 { style: sc[sc.length - 1].props.style },
-                React.Children.map(sc[sc.length - 1].props.children, child =>
+                React.Children.map(sc[sc.length - 1].props.children, (child) =>
                   React.cloneElement(child, {
                     style: {
                       ...child.props.style,
                       marginRight: 0,
-                      borderRight: '3px solid gray'
-                    }
+                      borderRight: '3px solid gray',
+                    },
                   })
                 )
               );
@@ -562,13 +562,13 @@ const Calendar = props => {
             const cloneElement = React.cloneElement(
               sc[sc.length - 1],
               { style: sc[sc.length - 1].props.style },
-              React.Children.map(sc[sc.length - 1].props.children, child =>
+              React.Children.map(sc[sc.length - 1].props.children, (child) =>
                 React.cloneElement(child, {
                   style: {
                     ...child.props.style,
                     marginRight: 0,
-                    borderRight: '3px solid gray'
-                  }
+                    borderRight: '3px solid gray',
+                  },
                 })
               )
             );
@@ -649,11 +649,11 @@ const Calendar = props => {
         anchorEl={popover === null ? null : popover.event}
         anchorOrigin={{
           vertical: 'top',
-          horizontal: 'left'
+          horizontal: 'left',
         }}
         transformOrigin={{
           vertical: 'top',
-          horizontal: 'left'
+          horizontal: 'left',
         }}
         disableRestoreFocus
         onClose={() => setPopover(null)}
@@ -667,7 +667,7 @@ const Calendar = props => {
                   style={{
                     fontSize: '12px',
                     textAlign: 'center',
-                    textTransform: 'uppercase'
+                    textTransform: 'uppercase',
                   }}
                 >
                   {dateFns.format(popover.date, 'EEE')}
@@ -680,13 +680,13 @@ const Calendar = props => {
               ? null
               : (() =>
                   userDate
-                    .filter(value =>
+                    .filter((value) =>
                       dateFns.isWithinInterval(popover.date, {
                         start: dateFns.startOfDay(value.start),
-                        end: dateFns.endOfDay(value.end)
+                        end: dateFns.endOfDay(value.end),
                       })
                     )
-                    .map(value => (
+                    .map((value) => (
                       <div
                         className={`sc${value.cd}`}
                         key={value.cd}
@@ -696,13 +696,13 @@ const Calendar = props => {
                           width: '190px',
                           height: '30px',
                           cursor: 'pointer',
-                          userSelect: 'none'
+                          userSelect: 'none',
                         }}
                         // onMouseDown={onScMouseDown}
-                        onClick={e =>
+                        onClick={(e) =>
                           setDetailedSC({
                             event: e.currentTarget,
-                            cd: value.cd
+                            cd: value.cd,
                           })
                         }
                       >
@@ -710,7 +710,7 @@ const Calendar = props => {
                           style={{
                             position: 'absolute',
                             lineHeight: '24px',
-                            margin: '0 5px'
+                            margin: '0 5px',
                           }}
                         >
                           <span
@@ -721,7 +721,7 @@ const Calendar = props => {
                               backgroundColor: '#9e5fff',
                               width: '6px',
                               height: '6px',
-                              borderRadius: '50%'
+                              borderRadius: '50%',
                             }}
                           />
                           <span
@@ -732,7 +732,7 @@ const Calendar = props => {
                               textOverflow: 'ellipsis',
                               whiteSpace: 'nowrap',
                               fontWeight: 'bold',
-                              fontSize: '14px'
+                              fontSize: '14px',
                             }}
                           >
                             {value.ex}
@@ -747,7 +747,7 @@ const Calendar = props => {
                               whiteSpace: 'nowrap',
                               fontWeight: 'bold',
                               fontSize: '10px',
-                              color: 'gray'
+                              color: 'gray',
                             }}
                           >
                             {dateFns.format(value.start, 'a ') === 'AM' ? '오전' : '오후'}
@@ -766,11 +766,11 @@ const Calendar = props => {
         anchorEl={detailedSC === null ? null : detailedSC.event}
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'center'
+          horizontal: 'center',
         }}
         transformOrigin={{
           vertical: 'top',
-          horizontal: 'left'
+          horizontal: 'left',
         }}
         disableRestoreFocus
         onClose={() => setDetailedSC(null)}
@@ -782,7 +782,7 @@ const Calendar = props => {
                 position: 'relative',
                 display: 'flex',
                 justifyContent: 'space-between',
-                fontSize: '16px'
+                fontSize: '16px',
               }}
             >
               <strong>{selectedDetailedSC !== null ? selectedDetailedSC.ex : null}</strong>
@@ -803,7 +803,7 @@ const Calendar = props => {
                 marginTop: '5px',
                 fontSize: '14px',
                 width: '220px',
-                whiteSpace: 'normal'
+                whiteSpace: 'normal',
               }}
             >
               {selectedDetailedSC !== null ? selectedDetailedSC.ex : null}
@@ -811,7 +811,7 @@ const Calendar = props => {
           </div>
           {type === 0 ? (
             <div className='calendar-detailedsc-buttons'>
-              <div className='calendar-detailedsc-buttons-button' onClick={userDate => setScheduleEditOpen(true)}>
+              <div className='calendar-detailedsc-buttons-button' onClick={(userDate) => setScheduleEditOpen(true)}>
                 <CreateIcon fontSize='small' />
                 수정
               </div>
@@ -823,13 +823,13 @@ const Calendar = props => {
                   height: '14px',
                   verticalAlign: 'middle',
                   display: 'inline-block',
-                  marginTop: '7px'
+                  marginTop: '7px',
                 }}
               />
               <div
                 className='calendar-detailedsc-buttons-button'
                 onClick={() => {
-                  setUserDate(userDate.filter(value => value.cd !== selectedDetailedSC.cd));
+                  setUserDate(userDate.filter((value) => value.cd !== selectedDetailedSC.cd));
                   setDetailedSC(null);
                 }}
               >

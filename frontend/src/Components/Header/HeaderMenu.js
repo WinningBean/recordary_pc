@@ -22,7 +22,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
 
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import axios from 'axios';
 
 const ColorCircularProgress = withStyles({
@@ -162,35 +162,37 @@ const HeaderMenu = (props) => {
             <li key={`groups-${index}`}>
               <div className='button-wrap'>
                 <GroupButton>
-                  <div
-                    style={{
-                      display: 'flex',
-                      width: '250px',
-                      justifyContent: 'space-between',
-                    }}
-                  >
+                  <Link to={`/group/${value.groupCd}`}>
                     <div
                       style={{
                         display: 'flex',
-                        alignItems: 'center',
-                        marginBottom: '10px',
-                        fontWeight: 'bold',
+                        width: '250px',
+                        justifyContent: 'space-between',
                       }}
                     >
-                      <img
-                        alt='group-img'
+                      <div
                         style={{
-                          marginRight: '10px',
-                          borderRadius: '50%',
-                          width: '40px',
-                          height: '40px',
-                          objectFit: 'cover',
+                          display: 'flex',
+                          alignItems: 'center',
+                          marginBottom: '10px',
+                          fontWeight: 'bold',
                         }}
-                        src={'http://placehold.it/40x40'}
-                      />
-                      {value.groupNm}
+                      >
+                        <img
+                          alt='group-img'
+                          style={{
+                            marginRight: '10px',
+                            borderRadius: '50%',
+                            width: '40px',
+                            height: '40px',
+                            objectFit: 'cover',
+                          }}
+                          src={'http://placehold.it/40x40'}
+                        />
+                        {value.groupNm}
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                 </GroupButton>
                 <div className='LongMenuOpen'>
                   <LongMenu options={['그룹 정보', '그룹 관리']} code={value.groupCd} returnValue={onGroupMenuSelect} />

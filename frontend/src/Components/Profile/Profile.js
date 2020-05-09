@@ -11,6 +11,8 @@ import Calendar from '../Calendar/Calendar';
 import TimelineWeekSchedule from '../Timeline/TimelineWeekSchedule';
 import Timeline from '../Timeline/Timeline';
 import Loading from '../Loading/Loading';
+import NotifyPopup from '../UI/NotifyPopup';
+import Snackbar from '../UI/Snackbar';
 import { Dialog } from '@material-ui/core';
 
 import Button from '@material-ui/core/Button';
@@ -40,6 +42,7 @@ class Profile extends React.Component {
       type: undefined,
       info: undefined,
       redirect: false,
+      alert: null,
     };
   }
   getUserInfo = async () => {
@@ -50,13 +53,7 @@ class Profile extends React.Component {
     }
     this.setState({
       ...this.state,
-      info: {
-        id: data.userId,
-        cd: data.userCd,
-        nm: data.userNm,
-        pic: data.userPic,
-        ex: data.userEx,
-      },
+      info: data,
       isLoading: false,
     });
   };
@@ -64,22 +61,25 @@ class Profile extends React.Component {
   getGroupInfo = async () => {
     try {
       const groupInfo = (await axios.get(`/group/${this.props.match.params.groupCd}`)).data;
-      console.log(groupInfo);
+
       const groupMember = (await axios.get(`/group/member/${this.props.match.params.groupCd}`)).data;
-      console.log(groupMember);
+
+      console.log(groupApply, 'groupApply');
+
+      var groupApply = null;
       var type = 3;
-      console.log(this.props.isLogin);
+
       if (this.props.isLogin && groupInfo.userCd === this.props.user.userCd) {
         type = 2;
+        groupApply = (await axios.get(`/groupApply/findUserApply/${this.props.match.params.groupCd}`)).data;
       }
+      console.log('type = ', type);
       this.setState({
         ...this.state,
         info: {
-          cd: groupInfo.groupCd,
-          nm: groupInfo.groupNm,
-          pic: groupInfo.groupPic,
-          ex: groupInfo.groupEx,
+          ...groupInfo,
           member: groupMember,
+          groupApply: groupApply,
         },
         type: type,
         isLoading: false,
@@ -124,6 +124,7 @@ class Profile extends React.Component {
       profileScheduleClick: false,
     });
   };
+
   render() {
     if (this.state.redirect) {
       return <Redirect to='/' />;
@@ -269,6 +270,86 @@ class Profile extends React.Component {
                 </div>
                 <div id='main-profile-info' style={this.state.type >= 2 ? { borderTop: '4px solid tomato' } : null}>
                   <div id='userinfo'>
+                    {this.state.type !== 2 ? null : (
+                      <div style={{ position: 'absolute', top: 0, left: 0 }}>
+                        <NotifyPopup
+                          data={this.state.info.groupApply}
+                          onAccept={async (index) => {
+                            try {
+                              const { data } = await axios.post('/groupApply/create', {
+                                groupCd: this.state.info.groupCd,
+                                userCd: this.state.info.groupApply[index].userCd,
+                                applyState: 1,
+                              });
+                              const copyList = this.state.info.groupApply.slice();
+                              copyList.splice(index, 1);
+                              this.setState({
+                                ...this.state,
+                                info: { ...this.state.info, groupApply: copyList },
+                                alert: (
+                                  <Snackbar
+                                    severity={data ? 'sucess' : 'error'}
+                                    content={
+                                      data
+                                        ? `${this.state.info.groupApply[index].userNm}님의 신청을 수락하였습니다.`
+                                        : '이미 신청을 수락하였습니다.'
+                                    }
+                                    onClose={() => this.setState({ alert: null })}
+                                  />
+                                ),
+                              });
+                            } catch (error) {
+                              this.setState({
+                                ...this.state,
+                                alert: (
+                                  <Snackbar
+                                    severity='error'
+                                    content='서버에러로 인해 거절에 실패하였습니다.'
+                                    onClose={() => this.setState({ alert: null })}
+                                  />
+                                ),
+                              });
+                            }
+                          }}
+                          onDenial={async (index) => {
+                            try {
+                              console.log({
+                                groupCd: this.state.info.groupCd,
+                                userCd: this.state.info.groupApply[index].userCd,
+                              });
+                              await axios.delete('/groupApply/', {
+                                groupCd: this.state.info.groupCd,
+                                userCd: this.state.info.groupApply[index].userCd,
+                              });
+                              const copyList = this.state.info.groupApply.slice();
+                              copyList.splice(index, 1);
+                              this.setState({
+                                ...this.state,
+                                info: { ...this.state.info, groupApply: copyList },
+                                alert: (
+                                  <Snackbar
+                                    severity='sucess'
+                                    content={`${this.state.info.groupApply[index].userNm}님의 신청을 거절하였습니다.`}
+                                    onClose={() => this.setState({ alert: null })}
+                                  />
+                                ),
+                              });
+                            } catch (error) {
+                              this.setState({
+                                ...this.state,
+                                alert: (
+                                  <Snackbar
+                                    severity='error'
+                                    content='서버에러로 인해 거절에 실패하였습니다.'
+                                    onClose={() => this.setState({ alert: null })}
+                                  />
+                                ),
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                    )}
                     <div id='user-image'>
                       <img
                         alt='profile-img'
@@ -276,17 +357,15 @@ class Profile extends React.Component {
                       />
                     </div>
                     <div id='userinfo-text'>
-                      <div className='info'>
-                        <ul>
-                          <li>
-                            <span className='name'>
-                              {this.state.type >= 2
-                                ? this.state.info.nm
-                                : `${this.state.info.id}(${this.state.info.nm})`}
-                            </span>
-                          </li>
-                          {this.state.type >= 2 ? (
-                            <li>
+                      <div style={{ flexDirection: 'column', alignItems: 'center' }}>
+                        <div className='name' style={{ textAlign: 'center', paddingBottom: '16px' }}>
+                          {this.state.type >= 2
+                            ? this.state.info.groupNm
+                            : `${this.state.info.userId}(${this.state.info.userNm})`}
+                        </div>
+                        {this.state.type >= 2 ? (
+                          <>
+                            <div>
                               <span className='followerName'>그룹 멤버</span>
                               <Link
                                 component='button'
@@ -298,47 +377,60 @@ class Profile extends React.Component {
                               >
                                 <span className='followerNum'>{this.state.info.member.length}</span>
                               </Link>
-                            </li>
-                          ) : (
-                            <>
-                              <li>
-                                <span className='followerName'>팔로워</span>
-                                <Link
-                                  component='button'
-                                  onClick={() =>
-                                    this.setState({
-                                      followerNumClick: true,
-                                    })
-                                  }
-                                >
-                                  <span className='followerNum'>50</span>
-                                </Link>
-                                {/* {FollowerShow()} */}
-                              </li>
-                              <li>
-                                <span className='followerName'>팔로우</span>
-                                <Link
-                                  component='button'
-                                  onClick={() =>
-                                    this.setState({
-                                      followingNumClick: true,
-                                    })
-                                  }
-                                >
-                                  <span className='followNum'>18</span>
-                                </Link>
-                              </li>
-                            </>
-                          )}
-                        </ul>
-                        <div className='status-content'>
-                          <div>{this.state.info.ex}</div>
-                        </div>
+                            </div>
+                            <div>
+                              <span className='followerName'>그룹장</span>
+                              <Link
+                                component='button'
+                                onClick={() =>
+                                  this.setState({
+                                    followerNumClick: true,
+                                  })
+                                }
+                              >
+                                <span className='followerNum'>{this.state.info.userNm}</span>
+                              </Link>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div>
+                              <span className='followerName'>팔로워</span>
+                              <Link
+                                component='button'
+                                onClick={() =>
+                                  this.setState({
+                                    followerNumClick: true,
+                                  })
+                                }
+                              >
+                                <span className='followerNum'>50</span>
+                              </Link>
+                            </div>
+                            {/* {FollowerShow()} */}
+                            <div>
+                              <span className='followerName'>팔로우</span>
+                              <Link
+                                component='button'
+                                onClick={() =>
+                                  this.setState({
+                                    followingNumClick: true,
+                                  })
+                                }
+                              >
+                                <span className='followNum'>18</span>
+                              </Link>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                      <div className='status-content'>
+                        <div>{this.state.type >= 2 ? this.state.info.groupEx : this.state.info.userEx}</div>
                       </div>
                     </div>
                   </div>
                   <div id='schedule-area'>
-                    <Calendar type={0} />
+                    <Calendar type={this.state.type === 0 ? 0 : this.state.type === 2 ? 1 : 2} />
                   </div>
                 </div>
               </div>
@@ -370,6 +462,7 @@ class Profile extends React.Component {
               </div>
             </nav>
             {ProfileDownTimeLine()}
+            {this.state.alert}
           </main>
         ) : null}
       </>
