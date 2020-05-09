@@ -41,10 +41,7 @@ const HeaderMenu = (props) => {
   const [profileEditForm, setProfileEditForm] = useState(null);
   // const [editor, setEditor] = useState(null);
   const [setting, setSetting] = useState(null);
-  const [open, setOpen] = useState({
-    group: false,
-    friend: false,
-  });
+  const [isGroup, setIsGroup] = useState(true);
   const [groupAdd, setGroupAdd] = useState(null);
   const [menuDialog, setMenuDialog] = useState(null);
   const [isLogout, setIsLogout] = useState(false);
@@ -52,15 +49,6 @@ const HeaderMenu = (props) => {
   if (isLogout) {
     return <Redirect to='/' />;
   }
-
-  const showOpen = (isGroup) => {
-    if (isGroup) {
-      setOpen({ ...open, group: !open.group });
-      return;
-    }
-    setOpen({ ...open, friend: !open.friend });
-    return;
-  };
 
   const onGroupMenuSelect = (selectedValue, code) => {
     const value = props.groupList.filter((value) => value.groupCd === code)[0];
@@ -146,112 +134,59 @@ const HeaderMenu = (props) => {
   };
 
   const GroupList = () => {
-    if (open.group === true) {
-      var groups = undefined;
-      if (props.groupList === undefined) {
-        getGroupList();
-        console.log('helloworld');
-        groups = (
-          <div style={{ width: 250, display: 'flex', justifyContent: 'center' }}>
-            <ColorCircularProgress />
-          </div>
-        );
-      } else {
-        groups = props.groupList.map((value, index) => {
-          return (
-            <li key={`groups-${index}`}>
-              <div className='button-wrap'>
+    if (props.groupList === undefined) {
+      getGroupList();
+      return (
+        <div style={{ width: 250, display: 'flex', justifyContent: 'center' }}>
+          <ColorCircularProgress />
+        </div>
+      );
+    } else {
+      return props.groupList.map((value, index) => {
+        return (
+          <li key={`groups-${index}`}>
+            <div className='button-wrap'>
+              <Link to={`/group/${value.groupCd}`}>
                 <GroupButton>
-                  <Link to={`/group/${value.groupCd}`}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      // width: '232px',
+                      justifyContent: 'space-between',
+                    }}
+                  >
                     <div
                       style={{
                         display: 'flex',
-                        width: '250px',
-                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '10px',
+                        fontWeight: 'bold',
                       }}
                     >
-                      <div
+                      <img
+                        alt='group-img'
                         style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          marginBottom: '10px',
-                          fontWeight: 'bold',
+                          marginRight: '10px',
+                          borderRadius: '50%',
+                          width: '40px',
+                          height: '40px',
+                          objectFit: 'cover',
                         }}
-                      >
-                        <img
-                          alt='group-img'
-                          style={{
-                            marginRight: '10px',
-                            borderRadius: '50%',
-                            width: '40px',
-                            height: '40px',
-                            objectFit: 'cover',
-                          }}
-                          src={'http://placehold.it/40x40'}
-                        />
-                        {value.groupNm}
-                      </div>
+                        src={'http://placehold.it/40x40'}
+                      />
+                      {value.groupNm}
                     </div>
-                  </Link>
+                  </div>
                 </GroupButton>
-                <div className='LongMenuOpen'>
-                  <LongMenu options={['그룹 정보', '그룹 관리']} code={value.groupCd} returnValue={onGroupMenuSelect} />
-                </div>
+              </Link>
+              <div className='LongMenuOpen'>
+                <LongMenu options={['그룹 정보', '그룹 관리']} code={value.groupCd} returnValue={onGroupMenuSelect} />
               </div>
-            </li>
-          );
-        });
-      }
-      return (
-        <div className='button-wrap'>
-          <GroupButton style={{ backgroundColor: 'rgba(209, 204, 192,0.4)' }} onClick={() => showOpen(true)}>
-            <div>
-              <span style={{ fontSize: '18px', paddingTop: '5px', fontWeight: 'bold' }}>그룹</span>
             </div>
-            <span style={{ marginTop: '5px' }}>
-              <ArrowUp style={{ fontSize: '30px' }} />
-            </span>
-          </GroupButton>
-          <div
-            style={{
-              position: 'absolute',
-              top: '4px',
-              left: '40px',
-            }}
-          >
-            <IconButton onClick={showGroupAdd}>
-              <AddIcon style={{ fontSize: '20px' }} />
-            </IconButton>
-          </div>
-          <div>
-            <ul>{groups}</ul>
-          </div>
-        </div>
-      );
+          </li>
+        );
+      });
     }
-    return (
-      <div className='button-wrap'>
-        <GroupButton onClick={() => showOpen(true)}>
-          <div>
-            <span style={{ fontSize: '18px', paddingTop: '5px', fontWeight: 'bold' }}>그룹</span>
-          </div>
-          <span style={{ marginTop: '5px' }}>
-            <ArrowDown style={{ fontSize: '30px' }} />
-          </span>
-        </GroupButton>
-        <div
-          style={{
-            position: 'absolute',
-            top: '4px',
-            left: '40px',
-          }}
-        >
-          <IconButton onClick={showGroupAdd}>
-            <AddIcon style={{ fontSize: '20px' }} />
-          </IconButton>
-        </div>
-      </div>
-    );
   };
 
   const getGroupList = async () => {
@@ -294,121 +229,69 @@ const HeaderMenu = (props) => {
     }
   };
 
-  const friendList = () => {
-    if (open.friend === true) {
-      var friends = undefined;
-      if (props.friendList === undefined) {
-        getFriendList();
-        friends = (
-          <div style={{ width: 250, display: 'flex', justifyContent: 'center' }}>
-            <ColorCircularProgress />
-          </div>
-        );
-      } else {
-        friends = props.friendList.map((value, index) => {
-          return (
-            <li key={`friend-${index}`}>
-              <div className='button-wrap'>
-                <GroupButton>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      marginBottom: '10px',
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    {/* 우선 redux에 저장하지 않음 */}
-                    {value.userPic === null ? (
-                      <img
-                        alt='friend-img'
-                        style={{
-                          width: '40px',
-                          height: '40px',
-                          objectFit: 'cover',
-                          marginRight: '10px',
-                          borderRadius: '50%',
-                        }}
-                        src={'http://placehold.it/250x250'}
-                      />
-                    ) : (
-                      <img
-                        alt='friend-img'
-                        style={{
-                          width: '40px',
-                          height: '40px',
-                          objectFit: 'cover',
-                          marginRight: '10px',
-                          borderRadius: '50%',
-                        }}
-                        src={value.userPic}
-                      />
-                    )}
-                    {value.userId}({value.userNm})
-                  </div>
-                </GroupButton>
-                <div className='LongMenuOpen'>
-                  <LongMenu
-                    options={['친구 관리', '메시지 보내기']}
-                    code={value.userId}
-                    returnValue={onFriendMenuSelect}
-                  />
-                </div>
-              </div>
-            </li>
-          );
-        });
-      }
+  const FriendList = () => {
+    if (props.friendList === undefined) {
+      getFriendList();
       return (
-        <div className='button-wrap'>
-          <GroupButton style={{ backgroundColor: 'rgba(209, 204, 192,0.4)' }} onClick={() => showOpen(false)}>
-            <div>
-              <span style={{ fontSize: '18px', paddingTop: '5px', fontWeight: 'bold' }}>친구</span>
-            </div>
-            <span style={{ marginTop: '5px' }}>
-              <ArrowUp style={{ fontSize: '30px' }} />
-            </span>
-          </GroupButton>
-          <div
-            style={{
-              position: 'absolute',
-              top: '4px',
-              left: '40px',
-            }}
-          >
-            <IconButton onClick={showFriendAdd}>
-              <AddIcon style={{ fontSize: '20px' }} />
-            </IconButton>
-          </div>
-          <div>
-            <ul>{friends}</ul>
-          </div>
+        <div style={{ width: 250, display: 'flex', justifyContent: 'center' }}>
+          <ColorCircularProgress />
         </div>
       );
+    } else {
+      return props.friendList.map((value, index) => {
+        return (
+          <li key={`friend-${index}`}>
+            <div className='button-wrap'>
+              <GroupButton>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginBottom: '10px',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  {/* 우선 redux에 저장하지 않음 */}
+                  {value.userPic === null ? (
+                    <img
+                      alt='friend-img'
+                      style={{
+                        width: '40px',
+                        height: '40px',
+                        objectFit: 'cover',
+                        marginRight: '10px',
+                        borderRadius: '50%',
+                      }}
+                      src={'http://placehold.it/250x250'}
+                    />
+                  ) : (
+                    <img
+                      alt='friend-img'
+                      style={{
+                        width: '40px',
+                        height: '40px',
+                        objectFit: 'cover',
+                        marginRight: '10px',
+                        borderRadius: '50%',
+                      }}
+                      src={value.userPic}
+                    />
+                  )}
+                  {value.userId}({value.userNm})
+                </div>
+              </GroupButton>
+              <div className='LongMenuOpen'>
+                <LongMenu
+                  options={['친구 관리', '메시지 보내기']}
+                  code={value.userId}
+                  returnValue={onFriendMenuSelect}
+                />
+              </div>
+            </div>
+          </li>
+        );
+      });
     }
-    return (
-      <div className='button-wrap'>
-        <GroupButton onClick={() => showOpen(false)}>
-          <div>
-            <span style={{ fontSize: '18px', paddingTop: '5px', fontWeight: 'bold' }}>친구</span>
-          </div>
-          <span style={{ marginTop: '5px' }}>
-            <ArrowDown style={{ fontSize: '30px' }} />
-          </span>
-        </GroupButton>
-        <div
-          style={{
-            position: 'absolute',
-            top: '4px',
-            left: '40px',
-          }}
-        >
-          <IconButton onClick={showFriendAdd}>
-            <AddIcon style={{ fontSize: '20px' }} />
-          </IconButton>
-        </div>
-      </div>
-    );
   };
 
   const showSetting = () => {
@@ -446,10 +329,66 @@ const HeaderMenu = (props) => {
           </div>
           {profileEditForm}
         </div>
-        <div className='menu-buttons'>
-          {GroupList()}
-          {friendList()}
+        <div style={{ display: 'flex', height: '62px' }}>
+          <Button
+            style={{
+              flex: 1,
+              height: '62px',
+            }}
+            onClick={() => {
+              if (isGroup) {
+                return;
+              }
+              setIsGroup(true);
+            }}
+          >
+            <div
+              style={{
+                height: '50px',
+                textAlign: 'center',
+                lineHeight: '50px',
+                fontSize: '18px',
+                fontWeight: 'bold',
+              }}
+            >
+              그룹
+            </div>
+          </Button>
+          <Button
+            style={{
+              flex: 1,
+              height: '62px',
+            }}
+            onClick={() => {
+              if (!isGroup) {
+                return;
+              }
+              setIsGroup(false);
+            }}
+          >
+            <div
+              style={{
+                height: '50px',
+                textAlign: 'center',
+                lineHeight: '50px',
+                fontSize: '18px',
+                fontWeight: 'bold',
+              }}
+            >
+              친구
+            </div>
+          </Button>
         </div>
+        <div
+          className='transition-all'
+          style={{
+            width: '125px',
+            height: '1px',
+            backgroundColor: 'black',
+            transform: isGroup ? 'translateX(0px)' : 'translateX(125px)',
+          }}
+        />
+        <ul>{isGroup ? GroupList() : FriendList()}</ul>
         <div className='menu-bottom'>
           <CustomIconButton onClick={showSetting}>
             <SettingsIcon />

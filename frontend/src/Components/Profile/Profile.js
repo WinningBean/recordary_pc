@@ -18,6 +18,7 @@ import { Dialog } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
+import RouterLink from 'react-router-dom/Link';
 
 import { Redirect } from 'react-router-dom';
 
@@ -83,6 +84,7 @@ class Profile extends React.Component {
         },
         type: type,
         isLoading: false,
+        isHover: false,
       });
     } catch (error) {
       console.error(error);
@@ -99,6 +101,21 @@ class Profile extends React.Component {
       this.getGroupInfo();
     }
   }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.match.params.userId !== undefined) {
+      if (this.props.match.params.userId !== prevProps.match.params.userId) {
+        this.setState({ ...this.state, isLoading: true });
+        this.getUserInfo();
+      }
+    } else if (this.props.match.params.groupCd !== undefined) {
+      if (this.props.match.params.groupCd !== prevProps.match.params.groupCd) {
+        this.setState({ ...this.state, isLoading: true });
+        this.getGroupInfo();
+      }
+    }
+  }
+
   setProfileScheduleOpen = () => {
     if (this.state.profileScheduleClick === true) {
       return this.setState({
@@ -378,18 +395,57 @@ class Profile extends React.Component {
                                 <span className='followerNum'>{this.state.info.member.length}</span>
                               </Link>
                             </div>
-                            <div>
+                            <div style={{ position: 'relative' }}>
                               <span className='followerName'>그룹장</span>
-                              <Link
-                                component='button'
-                                onClick={() =>
-                                  this.setState({
-                                    followerNumClick: true,
-                                  })
-                                }
+                              <RouterLink to={`/profile/${this.state.info.userCd}`}>
+                                <Link component='button'>
+                                  <span
+                                    className='followerNum'
+                                    onMouseEnter={() => this.setState({ ...this.state, isHover: true })}
+                                    onMouseOut={() => this.setState({ ...this.state, isHover: false })}
+                                  >
+                                    {this.state.info.userNm}
+                                  </span>
+                                </Link>
+                              </RouterLink>
+                              <div
+                                className='transition-all'
+                                style={{
+                                  position: 'absolute',
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  bottom: '-100px',
+                                  left: 0,
+                                  // padding: '6px 8px',
+                                  height: '100px',
+                                  width: '160px',
+                                  border: '1px solid gray',
+                                  // backgroundColor: '#eee',
+                                  zIndex: this.state.isHover ? 6 : -6,
+                                  opacity: this.state.isHover ? 100 : 0,
+                                  transform: this.state.isHover ? 'translateY(18px)' : 'translateX(0px)',
+                                }}
                               >
-                                <span className='followerNum'>{this.state.info.userNm}</span>
-                              </Link>
+                                <div style={{ height: '60px', display: 'flex' }}>
+                                  <img
+                                    style={{ height: '60px', width: '60px', objectFit: 'cover', borderRadius: '50%' }}
+                                    alt='admin img'
+                                    src='https://i.pinimg.com/originals/0d/e8/86/0de8869350e89fd300edaeef3b659674.jpg'
+                                  />
+                                  <div
+                                    style={{
+                                      flex: 1,
+                                      textAlign: 'center',
+                                      lineHeight: '60px',
+                                      fontSize: '18px',
+                                      fontWeight: 'bold',
+                                    }}
+                                  >
+                                    {this.state.info.userNm}
+                                  </div>
+                                </div>
+                                <div style={{ flex: 1, backgroundColor: 'tomato' }}>hello world</div>
+                              </div>
                             </div>
                           </>
                         ) : (

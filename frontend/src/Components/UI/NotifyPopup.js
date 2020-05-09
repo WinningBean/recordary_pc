@@ -24,7 +24,6 @@ const NotifyPopup = ({ data, onAccept, onDenial }) => {
         </IconButton>
         <Menu
           {...bindMenu(popupState)}
-          style={{ marginTop: '5px' }}
           getContentAnchorEl={null}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -41,7 +40,10 @@ const NotifyPopup = ({ data, onAccept, onDenial }) => {
             </MenuItem>
           ) : (
             data.map((value, index) => (
-              <div key={index}>
+              <div
+                key={index}
+                style={{ margin: '5px 10px', paddingBottom: '5px', borderBottom: '1px solid lightgray' }}
+              >
                 <MenuItem>
                   <div className='notify-list'>
                     <div className='notify-list-time'>시간도 보내줘야돼</div>
