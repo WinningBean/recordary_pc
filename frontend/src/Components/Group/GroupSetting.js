@@ -57,11 +57,11 @@ const GroupSetting = (props) => {
   useEffect(() => {
     (async () => {
       try {
-        const groupInfo = (await axios.get(`group/${data.group.groupCd}`)).data;
+        const groupInfo = (await axios.get(`/group/${data.group.groupCd}`)).data;
         console.log(groupInfo);
-        const groupMember = (await axios.get(`group/member/${data.group.groupCd}`)).data;
+        const groupMember = (await axios.get(`/group/member/${data.group.groupCd}`)).data;
         console.log(groupMember);
-        setInfo({ ...groupInfo, groupMember: groupMember });
+        setInfo({ ...groupInfo, member: groupMember });
       } catch (e) {
         console.error(e);
         setInfo(null);

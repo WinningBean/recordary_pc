@@ -36,7 +36,7 @@ const SearchFieldResult = (props) => {
   };
 
   const getGroupList = async () => {
-    const { data } = await axios.get(`group/findGroup/${props.searchText}`);
+    const { data } = await axios.get(`/group/findGroup/${props.searchText}`);
     const groupData = data.map((value) => {
       return {
         ...value,
@@ -220,7 +220,7 @@ const SearchFieldResult = (props) => {
                       <FollowButton
                         onClick={async (e) => {
                           try {
-                            const { data } = await axios.post('groupApply/create', {
+                            const { data } = await axios.post('/groupApply/create', {
                               groupCd: value.groupCd,
                               userCd: props.userCd,
                               applyState: 2,
@@ -236,16 +236,17 @@ const SearchFieldResult = (props) => {
                                   }}
                                 />
                               );
+                            } else {
+                              setAlertDialog(
+                                <Snackbar
+                                  severity='error'
+                                  content='이미 신청을 보냈습니다.'
+                                  onClose={() => {
+                                    setAlertDialog(null);
+                                  }}
+                                />
+                              );
                             }
-                            setAlertDialog(
-                              <Snackbar
-                                severity='error'
-                                content='이미 신청을 보냈습니다.'
-                                onClose={() => {
-                                  setAlertDialog(null);
-                                }}
-                              />
-                            );
                             groupChange(index, !value.isClick);
                           } catch (error) {
                             setAlertDialog(
@@ -270,10 +271,11 @@ const SearchFieldResult = (props) => {
                         onClick={async (e) => {
                           try {
                             console.log({ groupCd: value.groupCd, userCd: props.userCd });
-                            const { data } = await axios.delete('groupApply', {
+                            const { data } = await axios.post('/groupApply/delete', {
                               groupCd: value.groupCd,
                               userCd: props.userCd,
                             });
+                            console.log(data);
 
                             if (data) {
                               setAlertDialog(

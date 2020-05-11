@@ -35,7 +35,12 @@ class Header extends React.Component {
                     </div> */}
             <div className='title-name'>
               <a href='http://localhost:3000/main'>
-                <img className='title-image' alt='Recordary icon' src='img/Recordary.png' style={{ height: '40px' }} />
+                <img
+                  className='title-image'
+                  alt='Recordary icon'
+                  // src='../../../public/img/Recordary.png'
+                  style={{ height: '40px' }}
+                />
               </a>
             </div>
           </div>
@@ -61,7 +66,12 @@ class Header extends React.Component {
           </div>
           <div className='title-name'>
             <a href='http://localhost:3000/main'>
-              <img className='title-image' alt='Recordary icon' src='img/Recordary.png' style={{ height: '40px' }} />
+              <img
+                className='title-image'
+                alt='Recordary icon'
+                // src='../../../public/img/Recordary.png'
+                style={{ height: '40px' }}
+              />
             </a>
           </div>
         </div>

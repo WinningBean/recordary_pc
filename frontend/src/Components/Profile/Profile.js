@@ -11,15 +11,27 @@ import Calendar from '../Calendar/Calendar';
 import TimelineWeekSchedule from '../Timeline/TimelineWeekSchedule';
 import Timeline from '../Timeline/Timeline';
 import Loading from '../Loading/Loading';
+import NotifyPopup from '../UI/NotifyPopup';
+import Snackbar from '../UI/Snackbar';
+import GroupSetting from '../Group/GroupSetting';
 import { Dialog } from '@material-ui/core';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
+import RouterLink from 'react-router-dom/Link';
 
 import { Redirect } from 'react-router-dom';
 
 import axios from 'axios';
+
+const IconButton = styled(Button)({
+  minWidth: '30px',
+  minHeight: '30px',
+  padding: '0 0',
+  margin: '0 0',
+});
 
 class Profile extends React.Component {
   // this.state.type
@@ -40,6 +52,7 @@ class Profile extends React.Component {
       type: undefined,
       info: undefined,
       redirect: false,
+      alert: null,
     };
   }
   getUserInfo = async () => {
@@ -50,13 +63,7 @@ class Profile extends React.Component {
     }
     this.setState({
       ...this.state,
-      info: {
-        id: data.userId,
-        cd: data.userCd,
-        nm: data.userNm,
-        pic: data.userPic,
-        ex: data.userEx,
-      },
+      info: data,
       isLoading: false,
     });
   };
@@ -64,25 +71,29 @@ class Profile extends React.Component {
   getGroupInfo = async () => {
     try {
       const groupInfo = (await axios.get(`/group/${this.props.match.params.groupCd}`)).data;
-      console.log(groupInfo);
+
       const groupMember = (await axios.get(`/group/member/${this.props.match.params.groupCd}`)).data;
-      console.log(groupMember);
+
+      var groupApply = null;
       var type = 3;
-      console.log(this.props.isLogin);
+
       if (this.props.isLogin && groupInfo.userCd === this.props.user.userCd) {
         type = 2;
+        groupApply = (await axios.get(`/groupApply/findUserApply/${this.props.match.params.groupCd}`)).data;
+        console.log(groupApply, 'groupApply');
       }
+      console.log('type = ', type);
       this.setState({
         ...this.state,
         info: {
-          cd: groupInfo.groupCd,
-          nm: groupInfo.groupNm,
-          pic: groupInfo.groupPic,
-          ex: groupInfo.groupEx,
+          ...groupInfo,
           member: groupMember,
+          groupApply: groupApply,
         },
         type: type,
         isLoading: false,
+        isHover: false,
+        isClickMember: false,
       });
     } catch (error) {
       console.error(error);
@@ -99,6 +110,21 @@ class Profile extends React.Component {
       this.getGroupInfo();
     }
   }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.match.params.userId !== undefined) {
+      if (this.props.match.params.userId !== prevProps.match.params.userId) {
+        this.setState({ ...this.state, isLoading: true });
+        this.getUserInfo();
+      }
+    } else if (this.props.match.params.groupCd !== undefined) {
+      if (this.props.match.params.groupCd !== prevProps.match.params.groupCd) {
+        this.setState({ ...this.state, isLoading: true });
+        this.getGroupInfo();
+      }
+    }
+  }
+
   setProfileScheduleOpen = () => {
     if (this.state.profileScheduleClick === true) {
       return this.setState({
@@ -124,6 +150,7 @@ class Profile extends React.Component {
       profileScheduleClick: false,
     });
   };
+
   render() {
     if (this.state.redirect) {
       return <Redirect to='/' />;
@@ -267,8 +294,94 @@ class Profile extends React.Component {
                     {console.log(this.state.postIt)} */}
                   </ul>
                 </div>
-                <div id='main-profile-info' style={this.state.type >= 2 ? { borderTop: '4px solid tomato' } : null}>
+                <div
+                  id='main-profile-info'
+                  style={
+                    this.state.type >= 2
+                      ? { borderTop: '4px solid tomato' }
+                      : { borderTop: '4px solid rgba(20, 81, 51, 0.8)' }
+                  }
+                >
                   <div id='userinfo'>
+                    {this.state.type !== 2 ? null : (
+                      <div style={{ position: 'absolute', top: 0, left: 0 }}>
+                        <NotifyPopup
+                          data={this.state.info.groupApply}
+                          onAccept={async (index) => {
+                            try {
+                              const { data } = await axios.post('/groupMember/create', {
+                                groupCd: this.state.info.groupCd,
+                                userCd: this.state.info.groupApply[index].userCd,
+                              });
+                              const copyList = this.state.info.groupApply.slice();
+                              copyList.splice(index, 1);
+                              this.setState({
+                                ...this.state,
+                                info: { ...this.state.info, groupApply: copyList },
+                                alert: (
+                                  <Snackbar
+                                    severity={data ? 'sucess' : 'error'}
+                                    content={
+                                      data
+                                        ? `${this.state.info.groupApply[index].userNm}님의 신청을 수락하였습니다.`
+                                        : '이미 신청을 수락하였습니다.'
+                                    }
+                                    onClose={() => this.setState({ alert: null })}
+                                  />
+                                ),
+                              });
+                            } catch (error) {
+                              this.setState({
+                                ...this.state,
+                                alert: (
+                                  <Snackbar
+                                    severity='error'
+                                    content='서버에러로 인해 거절에 실패하였습니다.'
+                                    onClose={() => this.setState({ alert: null })}
+                                  />
+                                ),
+                              });
+                            }
+                          }}
+                          onDenial={async (index) => {
+                            try {
+                              console.log({
+                                groupCd: this.state.info.groupCd,
+                                userCd: this.state.info.groupApply[index].userCd,
+                              });
+                              await axios.post('/groupApply/delete', {
+                                groupCd: this.state.info.groupCd,
+                                userCd: this.state.info.groupApply[index].userCd,
+                              });
+                              const copyList = this.state.info.groupApply.slice();
+                              copyList.splice(index, 1);
+                              this.setState({
+                                ...this.state,
+                                info: { ...this.state.info, groupApply: copyList },
+                                alert: (
+                                  <Snackbar
+                                    severity='sucess'
+                                    content={`${this.state.info.groupApply[index].userNm}님의 신청을 거절하였습니다.`}
+                                    onClose={() => this.setState({ alert: null })}
+                                  />
+                                ),
+                              });
+                            } catch (error) {
+                              this.setState({
+                                ...this.state,
+                                alert: (
+                                  <Snackbar
+                                    severity='error'
+                                    content='서버에러로 인해 거절에 실패하였습니다.'
+                                    onClose={() => this.setState({ alert: null })}
+                                  />
+                                ),
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                    )}
                     <div id='user-image'>
                       <img
                         alt='profile-img'
@@ -276,18 +389,159 @@ class Profile extends React.Component {
                       />
                     </div>
                     <div id='userinfo-text'>
-                      <div className='info'>
-                        <ul>
-                          <li>
-                            <span className='name'>
-                              {this.state.type >= 2
-                                ? this.state.info.nm
-                                : `${this.state.info.id}(${this.state.info.nm})`}
-                            </span>
-                          </li>
+                      <div style={{ flexDirection: 'column', alignItems: 'center' }}>
+                        <div className='name' style={{ textAlign: 'center', paddingBottom: '16px' }}>
                           {this.state.type >= 2 ? (
-                            <li>
+                            <>
+                              {this.state.info.groupNm}
+                              {this.state.type !== 2 ? null : (
+                                <IconButton
+                                  onClick={() =>
+                                    this.setState({
+                                      alert: (
+                                        <GroupSetting
+                                          onClose={() => this.setState({ alert: null })}
+                                          data={{
+                                            userCd: this.props.user.userCd,
+                                            group: this.state.info,
+                                          }}
+                                        />
+                                      ),
+                                    })
+                                  }
+                                >
+                                  <SettingsIcon fontSize='small' />
+                                </IconButton>
+                              )}
+                            </>
+                          ) : (
+                            `${this.state.info.userId}(${this.state.info.userNm})`
+                          )}
+                        </div>
+                        {this.state.type >= 2 ? (
+                          <>
+                            <div>
                               <span className='followerName'>그룹 멤버</span>
+                              <Link
+                                component='button'
+                                onClick={() =>
+                                  this.setState({
+                                    isClickMember: true,
+                                  })
+                                }
+                              >
+                                <span className='followerNum'>{this.state.info.member.length}</span>
+                              </Link>
+                              {this.state.isClickMember ? (
+                                <Dialog
+                                  open
+                                  onClose={() =>
+                                    this.setState({
+                                      isClickMember: false,
+                                    })
+                                  }
+                                >
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      flexDirection: 'column',
+                                      padding: '6px 8px',
+                                      maxHeight: '600px',
+                                    }}
+                                  >
+                                    {this.state.info.member.map((value, index) => {
+                                      return (
+                                        <div
+                                          style={{
+                                            height: '60px',
+                                            padding: '0px 2px',
+                                            display: 'flex',
+                                            borderBottom: '1px solid #eee',
+                                            padding: '5px 0',
+                                          }}
+                                        >
+                                          <img
+                                            style={{
+                                              height: '50px',
+                                              width: '50px',
+                                              objectFit: 'cover',
+                                              borderRadius: '50%',
+                                            }}
+                                            src={value.userPic}
+                                            alt='user img'
+                                          />
+                                          <div
+                                            style={{
+                                              flex: 1,
+                                              paddingLeft: '18px',
+                                              lineHeight: '50px',
+                                              fontWeight: 'bold',
+                                            }}
+                                          >{`${value.userId}(${value.userNm})`}</div>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                </Dialog>
+                              ) : null}
+                            </div>
+                            <div style={{ position: 'relative' }}>
+                              <span className='followerName'>그룹장</span>
+                              <RouterLink to={`/profile/${this.state.info.userCd}`}>
+                                <Link component='button'>
+                                  <span
+                                    className='followerNum'
+                                    onMouseEnter={() => this.setState({ ...this.state, isHover: true })}
+                                    onMouseOut={() => this.setState({ ...this.state, isHover: false })}
+                                  >
+                                    {this.state.info.userNm}
+                                  </span>
+                                </Link>
+                              </RouterLink>
+                              <div
+                                className='transition-all'
+                                style={{
+                                  position: 'absolute',
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  bottom: '-100px',
+                                  left: 0,
+                                  // padding: '6px 8px',
+                                  height: '100px',
+                                  width: '160px',
+                                  border: '1px solid gray',
+                                  // backgroundColor: '#eee',
+                                  zIndex: this.state.isHover ? 6 : -6,
+                                  opacity: this.state.isHover ? 100 : 0,
+                                  transform: this.state.isHover ? 'translateY(18px)' : 'translateX(0px)',
+                                }}
+                              >
+                                <div style={{ height: '60px', display: 'flex' }}>
+                                  <img
+                                    style={{ height: '60px', width: '60px', objectFit: 'cover', borderRadius: '50%' }}
+                                    alt='admin img'
+                                    src='https://i.pinimg.com/originals/0d/e8/86/0de8869350e89fd300edaeef3b659674.jpg'
+                                  />
+                                  <div
+                                    style={{
+                                      flex: 1,
+                                      textAlign: 'center',
+                                      lineHeight: '60px',
+                                      fontSize: '18px',
+                                      fontWeight: 'bold',
+                                    }}
+                                  >
+                                    {this.state.info.userNm}
+                                  </div>
+                                </div>
+                                <div style={{ flex: 1, backgroundColor: 'tomato' }}>hello world</div>
+                              </div>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div>
+                              <span className='followerName'>팔로워</span>
                               <Link
                                 component='button'
                                 onClick={() =>
@@ -296,49 +550,33 @@ class Profile extends React.Component {
                                   })
                                 }
                               >
-                                <span className='followerNum'>{this.state.info.member.length}</span>
+                                <span className='followerNum'>50</span>
                               </Link>
-                            </li>
-                          ) : (
-                            <>
-                              <li>
-                                <span className='followerName'>팔로워</span>
-                                <Link
-                                  component='button'
-                                  onClick={() =>
-                                    this.setState({
-                                      followerNumClick: true,
-                                    })
-                                  }
-                                >
-                                  <span className='followerNum'>50</span>
-                                </Link>
-                                {/* {FollowerShow()} */}
-                              </li>
-                              <li>
-                                <span className='followerName'>팔로우</span>
-                                <Link
-                                  component='button'
-                                  onClick={() =>
-                                    this.setState({
-                                      followingNumClick: true,
-                                    })
-                                  }
-                                >
-                                  <span className='followNum'>18</span>
-                                </Link>
-                              </li>
-                            </>
-                          )}
-                        </ul>
-                        <div className='status-content'>
-                          <div>{this.state.info.ex}</div>
-                        </div>
+                            </div>
+                            {/* {FollowerShow()} */}
+                            <div>
+                              <span className='followerName'>팔로우</span>
+                              <Link
+                                component='button'
+                                onClick={() =>
+                                  this.setState({
+                                    followingNumClick: true,
+                                  })
+                                }
+                              >
+                                <span className='followNum'>18</span>
+                              </Link>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                      <div className='status-content'>
+                        <div>{this.state.type >= 2 ? this.state.info.groupEx : this.state.info.userEx}</div>
                       </div>
                     </div>
                   </div>
                   <div id='schedule-area'>
-                    <Calendar type={0} />
+                    <Calendar type={this.state.type} />
                   </div>
                 </div>
               </div>
@@ -370,6 +608,7 @@ class Profile extends React.Component {
               </div>
             </nav>
             {ProfileDownTimeLine()}
+            {this.state.alert}
           </main>
         ) : null}
       </>

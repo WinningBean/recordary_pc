@@ -55,9 +55,9 @@ const GroupInfo = ({ data, onClose }) => {
     // 그룹 대표사진 250x250 img, 유저 리스트, 유저 40x40 img
     (async () => {
       try {
-        const groupInfo = (await axios.get(`group/${data.group.groupCd}`)).data;
+        const groupInfo = (await axios.get(`/group/${data.group.groupCd}`)).data;
         console.log(groupInfo);
-        const groupMember = (await axios.get(`group/member/${data.group.groupCd}`)).data;
+        const groupMember = (await axios.get(`/group/member/${data.group.groupCd}`)).data;
         console.log(groupMember);
         setInfo({ ...groupInfo, groupMember: groupMember });
       } catch (e) {

@@ -4,10 +4,21 @@ import LoginPage from '../Containers/Login/LoginPage';
 import MainPage from '../Containers/Main/MainPage';
 import ProfilePage from '../Containers/Profile/Profile';
 import { Route, Switch, Redirect } from 'react-router-dom';
+import axios from 'axios';
 
 class App extends React.Component {
+  connectSession = async () => {
+    const { data } = await axios.get('/user/currentId');
+    if (data === null) {
+      return;
+    }
+  };
+  componentDidMount() {
+    this.connectSession();
+  }
   render() {
     console.log('aa');
+
     return (
       <div id='wrapper'>
         <Switch>

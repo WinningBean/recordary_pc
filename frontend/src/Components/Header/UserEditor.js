@@ -103,7 +103,7 @@ class UserEditor extends React.Component {
               onClick={async () => {
                 try {
                   const checkPw = (
-                    await axios.post('user/checkPw', {
+                    await axios.post('/user/checkPw', {
                       userId: this.state.user_id,
                       userPw: this.state.user_pw,
                     })
@@ -134,7 +134,7 @@ class UserEditor extends React.Component {
                     return;
                   }
 
-                  const userId = (await axios.delete(`user/${this.state.user_id}`)).data;
+                  const userId = (await axios.delete(`/user/${this.state.user_id}`)).data;
                   if (userId === this.state.user_id) {
                     this.setState({
                       alertDialog: () => {
@@ -258,7 +258,7 @@ class UserEditor extends React.Component {
                 // }
                 try {
                   const checkPw = (
-                    await axios.post('user/checkPw', {
+                    await axios.post('/user/checkPw', {
                       userId: this.state.user_id,
                       userPw: this.state.user_pw,
                     })

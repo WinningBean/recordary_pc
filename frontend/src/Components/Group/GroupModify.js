@@ -66,7 +66,7 @@ const GroupModify = (props) => {
         groupPic: null,
         groupState: openSwitch.open,
       });
-      const { data } = await axios.post(`group/update/${changeData.groupCd}`, {
+      const { data } = await axios.post(`/group/update/${changeData.groupCd}`, {
         groupNm: changeData.groupNm,
         groupEx: changeData.groupEx,
         groupPic: null,

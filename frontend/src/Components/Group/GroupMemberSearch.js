@@ -94,7 +94,7 @@ const GroupMemberSearch = (props) => {
                           try {
                             (async () => {
                               console.log({ groupCd: props.info.groupCd, userCd: props.info.userCd });
-                              const { data } = await axios.post('groupApply/create', {
+                              const { data } = await axios.post('/groupApply/create', {
                                 groupCd: props.info.groupCd,
                                 userCd: props.info.userCd,
                                 applyState: 1,

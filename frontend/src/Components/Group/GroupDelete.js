@@ -30,7 +30,7 @@ const GroupDelete = ({ info }) => {
 
   const onDelete = async () => {
     try {
-      const { data } = await axios.delete('group');
+      const { data } = await axios.delete('/group');
     } catch (error) {
       console.error(error);
       setAlert(
