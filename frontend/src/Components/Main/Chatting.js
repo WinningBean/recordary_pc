@@ -36,52 +36,52 @@ const Chatting = ({ isOpen }) => {
         },
         {
           ex: 'hello world',
-          date: new Date(),
+          date: new Date('2020-03-28'),
           isMyMessage: true,
         },
         {
           ex: 'hello world',
-          date: new Date(),
+          date: new Date('2020-03-28'),
           isMyMessage: true,
         },
         {
           ex: 'hello world',
-          date: new Date(),
+          date: new Date('2020-03-28'),
           isMyMessage: false,
         },
         {
           ex: 'hello world',
-          date: new Date(),
+          date: new Date('2020-03-28'),
           isMyMessage: true,
         },
         {
           ex: 'hello world',
-          date: new Date(),
+          date: new Date('2020-04-01'),
           isMyMessage: true,
         },
         {
           ex: 'hello world',
-          date: new Date(),
+          date: new Date('2020-04-01'),
           isMyMessage: false,
         },
         {
           ex: 'hello world',
-          date: new Date(),
+          date: new Date('2020-04-01'),
           isMyMessage: true,
         },
         {
           ex: 'hello world',
-          date: new Date(),
+          date: new Date('2020-04-01'),
           isMyMessage: true,
         },
         {
           ex: 'hello world',
-          date: new Date(),
+          date: new Date('2020-04-01'),
           isMyMessage: false,
         },
         {
           ex: 'hello world',
-          date: new Date(),
+          date: new Date('2020-04-01'),
           isMyMessage: true,
         },
         {
@@ -235,7 +235,7 @@ const Chatting = ({ isOpen }) => {
               style={{
                 height: '10%',
                 display: 'flex',
-                backgroundColor: '#910033',
+                backgroundColor: '#40739e',
                 borderTopLeftRadius: '5px',
                 borderTopRightRadius: '5px',
               }}
@@ -244,7 +244,7 @@ const Chatting = ({ isOpen }) => {
                 style={{ flex: '1', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'white' }}
                 onClick={() => setSelectedUser(undefined)}
               >
-                <ArrowBackIcon fontSize='large' />
+                <ArrowBackIcon fontSize='large' style={{ marginLeft: '10px' }} />
               </div>
               <div
                 style={{
@@ -275,6 +275,18 @@ const Chatting = ({ isOpen }) => {
                 <div
                   style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', minHeight: '100%' }}
                 >
+                  {/* {()=> {
+                    for(let i = 0; value.message.length; i++){
+                      if(value.message[i].date !== value.message[i+1].date){
+                        return(<div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <div style={{ backgroundColor: 'rgba(64, 115, 158,0.6)', color: 'white' }}>
+                          {format(chatList.date, 'yyyy-MM-dd')}
+                        </div>
+                      </div>                      
+                      )
+                      }
+                    }
+                  }} */}
                   {value.message.map((val, index) => {
                     return val.isMyMessage ? (
                       <div
@@ -291,7 +303,7 @@ const Chatting = ({ isOpen }) => {
                             alignItems: 'flex-end',
                             paddingTop: '13px',
                             paddingRight: '2px',
-                            color: '#938a8a',
+                            color: '#40739e',
                           }}
                         >
                           {isSameDay(new Date(), val.date)
@@ -306,9 +318,9 @@ const Chatting = ({ isOpen }) => {
                           style={{
                             padding: '7px 15px',
                             maxWidth: '70%',
-                            backgroundColor: 'rgba(245, 0, 87, 0.2)',
-                            borderRight: '4px solid rgba(245, 0, 87, 1)',
-                            borderRadius: '5px',
+                            backgroundColor: 'rgba(64, 115, 158,0.2)',
+                            borderRight: '4px solid rgba(64, 115, 158,1.0)',
+                            // borderRadius: '5px',
                             fontWeight: 'bold',
                             fontSize: '14px',
                             overflowWrap: 'break-word',
@@ -336,7 +348,7 @@ const Chatting = ({ isOpen }) => {
                             maxWidth: '70%',
                             backgroundColor: '#eee',
                             borderLeft: '4px solid #aaa',
-                            borderRadius: '5px',
+                            // borderRadius: '5px',
                             fontWeight: 'bold',
                             fontSize: '14px',
                             overflowWrap: 'break-word',
@@ -459,7 +471,7 @@ const Chatting = ({ isOpen }) => {
         Chatting
       </div>
       <div style={{ height: '7%', backgroundColor: '#fff', display: 'flex' }}>
-        <div style={{ display: 'flex', alignItems: 'center',margin:'0px 3px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', margin: '0px 3px' }}>
           <SearchIcon />
         </div>
         <input

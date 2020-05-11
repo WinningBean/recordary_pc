@@ -147,7 +147,8 @@ const PostMediaScheduleAppend = (props) => {
       );
 
       console.log(getMediaCd);
-      setPost({ ...post, mediaCd: getMediaCd });
+
+      setPost({ ...post, mediaCd: getMediaCd.data });
 
       const { data } = await axios.post(
         `post/`,
