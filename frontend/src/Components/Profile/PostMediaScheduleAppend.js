@@ -127,19 +127,19 @@ const PostMediaScheduleAppend = (props) => {
     setAlert(<Backdrop />);
 
     try {
-      console.log(
-        postAddMediaListSrc.map((value) => {
-          dataURLToBlob(value);
-        })
-      );
+      let postAddMediaListFile = [];
+      for (var i = 0; i < postAddMediaListSrc.length; i++) {
+        postAddMediaListFile.push(dataURLToBlob(postAddMediaListSrc[i]));
+      }
 
-      console.log(store.getState().user.userCd);
-      const { getMediaCd } = await axios.post(
+      console.log(postAddMediaListFile);
+      const formData = new FormData();
+      formData.append('mediaFiles', postAddMediaListFile);
+
+      const getMediaCd = await axios.post(
         `media/${store.getState().user.userCd}`,
         {
-          mediaFiles: postAddMediaListSrc.map((value) => {
-            dataURLToBlob(value);
-          }),
+          formData,
         },
         {
           headers: { 'Content-Type': 'multipart/form-data; boundary=------WebKitFormBoundary7MA4YWxkTrZu0gW' },
@@ -316,7 +316,9 @@ const PostMediaScheduleAppend = (props) => {
         {mediaOpen === true ? (
           <div className='Post-Append-Media post-Append'>
             <div
+              className=' Post-Append-Media2'
               style={{
+                padding: '0px 10px',
                 width: '60px',
                 height: '60px',
                 display: 'flex',
@@ -353,6 +355,7 @@ const PostMediaScheduleAppend = (props) => {
               <div style={{ marginLeft: '10px' }} key={`${index}-postAddImg`}>
                 <img
                   style={{
+                    boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
                     width: '60px',
                     height: '60px',
                     objectFit: 'cover',

@@ -32,80 +32,80 @@ const Chatting = ({ isOpen }) => {
         {
           ex: 'hello world',
           date: new Date('2020-03-28'),
-          isMyMessage: false
+          isMyMessage: false,
         },
         {
           ex: 'hello world',
           date: new Date(),
-          isMyMessage: true
+          isMyMessage: true,
         },
         {
           ex: 'hello world',
           date: new Date(),
-          isMyMessage: true
+          isMyMessage: true,
         },
         {
           ex: 'hello world',
           date: new Date(),
-          isMyMessage: false
+          isMyMessage: false,
         },
         {
           ex: 'hello world',
           date: new Date(),
-          isMyMessage: true
+          isMyMessage: true,
         },
         {
           ex: 'hello world',
           date: new Date(),
-          isMyMessage: true
+          isMyMessage: true,
         },
         {
           ex: 'hello world',
           date: new Date(),
-          isMyMessage: false
+          isMyMessage: false,
         },
         {
           ex: 'hello world',
           date: new Date(),
-          isMyMessage: true
+          isMyMessage: true,
         },
         {
           ex: 'hello world',
           date: new Date(),
-          isMyMessage: true
+          isMyMessage: true,
         },
         {
           ex: 'hello world',
           date: new Date(),
-          isMyMessage: false
+          isMyMessage: false,
         },
         {
           ex: 'hello world',
           date: new Date(),
-          isMyMessage: true
+          isMyMessage: true,
         },
         {
           ex: 'hello world',
           date: new Date(),
-          isMyMessage: true
+          isMyMessage: true,
         },
         {
           ex: 'hello world',
           date: new Date(),
-          isMyMessage: false
+          isMyMessage: false,
         },
         {
           ex: 'hello world',
           date: new Date(),
-          isMyMessage: true
+          isMyMessage: true,
         },
         {
           ex: 'hello world',
           date: new Date(),
-          isMyMessage: true
-        }
+          isMyMessage: true,
+        },
       ],
-      isLogin: true
+      isLogin: true,
     },
     {
       id: '142213',
@@ -116,10 +116,10 @@ const Chatting = ({ isOpen }) => {
       message: [
         {
           ex: 'hello world',
-          date: new Date()
-        }
+          date: new Date(),
+        },
       ],
-      isLogin: false
+      isLogin: false,
     },
     {
       id: '64315',
@@ -130,10 +130,10 @@ const Chatting = ({ isOpen }) => {
       message: [
         {
           ex: 'hello world',
-          date: new Date()
-        }
+          date: new Date(),
+        },
       ],
-      isLogin: true
+      isLogin: true,
     },
     {
       id: '73453',
@@ -144,17 +144,17 @@ const Chatting = ({ isOpen }) => {
       message: [
         {
           ex: 'hello world',
-          date: new Date()
-        }
+          date: new Date(),
+        },
       ],
-      isLogin: true
-    }
+      isLogin: true,
+    },
   ]);
 
   const listView = () => {
     const copyChatList =
-      searchText === '' ? [...chatList] : chatList.filter(value => new RegExp(searchText, 'i').exec(value.nm));
-    return copyChatList.map(value => {
+      searchText === '' ? [...chatList] : chatList.filter((value) => new RegExp(searchText, 'i').exec(value.nm));
+    return copyChatList.map((value) => {
       return (
         <div
           key={value.nm}
@@ -162,9 +162,8 @@ const Chatting = ({ isOpen }) => {
           style={{
             height: '60px',
             display: 'flex',
-            borderBottom: '1px solid lightgray',
-            borderLeft: value.isLogin ? '5px solid rgb(145, 0, 51)' : 'none',
-            paddingLeft: value.isLogin ? '5px' : '10px'
+            borderLeft: value.isLogin ? '5px solid #40739e' : 'none',
+            paddingLeft: value.isLogin ? '5px' : '10px',
           }}
           onClick={() => setSelectedUser(value.id)}
         >
@@ -174,7 +173,7 @@ const Chatting = ({ isOpen }) => {
           <div
             style={{
               flex: '6',
-              paddingLeft: '5px'
+              paddingLeft: '5px',
             }}
           >
             <div style={{ paddingTop: '10px', fontWeight: 'bold' }}>{value.nm}</div>
@@ -183,7 +182,7 @@ const Chatting = ({ isOpen }) => {
                 paddingTop: '5px',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap'
+                whiteSpace: 'nowrap',
               }}
             >
               {value.content}
@@ -194,9 +193,9 @@ const Chatting = ({ isOpen }) => {
     });
   };
 
-  const sendMassge = e => {
+  const sendMassge = (e) => {
     if (writedMessage === '') return null;
-    setChatList(draft => {
+    setChatList((draft) => {
       var value = undefined;
       for (let i = 0; i < draft.length; i++) {
         if (draft[i].id === selectedUser) {
@@ -208,7 +207,7 @@ const Chatting = ({ isOpen }) => {
       value.message.push({
         ex: writedMessage,
         date: new Date(),
-        isMyMessage: true
+        isMyMessage: true,
       });
     });
     textareaRef.current.focus();
@@ -237,8 +236,8 @@ const Chatting = ({ isOpen }) => {
                 height: '10%',
                 display: 'flex',
                 backgroundColor: '#910033',
-                borderTopLeftRadius: '10px',
-                borderTopRightRadius: '10px'
+                borderTopLeftRadius: '5px',
+                borderTopRightRadius: '5px',
               }}
             >
               <div
@@ -252,7 +251,7 @@ const Chatting = ({ isOpen }) => {
                   flex: '7',
                   display: 'flex',
                   alignItems: 'center',
-                  paddingLeft: '10px'
+                  paddingLeft: '10px',
                 }}
               >
                 <img
@@ -269,7 +268,7 @@ const Chatting = ({ isOpen }) => {
                 style={{
                   height: '85%',
                   backgroundColor: 'rgba(226, 226, 226, 0.1)',
-                  overflowY: 'scroll'
+                  overflowY: 'scroll',
                 }}
                 ref={chatListRef}
               >
@@ -283,7 +282,7 @@ const Chatting = ({ isOpen }) => {
                         style={{
                           margin: '5px 10px',
                           display: 'flex',
-                          justifyContent: 'flex-end'
+                          justifyContent: 'flex-end',
                         }}
                       >
                         <div
@@ -292,7 +291,7 @@ const Chatting = ({ isOpen }) => {
                             alignItems: 'flex-end',
                             paddingTop: '13px',
                             paddingRight: '2px',
-                            color: '#938a8a'
+                            color: '#938a8a',
                           }}
                         >
                           {isSameDay(new Date(), val.date)
@@ -312,10 +311,10 @@ const Chatting = ({ isOpen }) => {
                             borderRadius: '5px',
                             fontWeight: 'bold',
                             fontSize: '14px',
-                            overflowWrap: 'break-word'
+                            overflowWrap: 'break-word',
                           }}
                         >
-                          {val.ex.split('\n').map(line => {
+                          {val.ex.split('\n').map((line) => {
                             return (
                               <span>
                                 {line}
@@ -340,10 +339,10 @@ const Chatting = ({ isOpen }) => {
                             borderRadius: '5px',
                             fontWeight: 'bold',
                             fontSize: '14px',
-                            overflowWrap: 'break-word'
+                            overflowWrap: 'break-word',
                           }}
                         >
-                          {val.ex.split('\n').map(line => {
+                          {val.ex.split('\n').map((line) => {
                             return (
                               <span>
                                 {line}
@@ -357,7 +356,7 @@ const Chatting = ({ isOpen }) => {
                             alignItems: 'flex-end',
                             paddingTop: '13px',
                             paddingLeft: '2px',
-                            color: '#938a8a'
+                            color: '#938a8a',
                           }}
                         >
                           {isSameDay(new Date(), val.date)
@@ -382,13 +381,13 @@ const Chatting = ({ isOpen }) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   borderBottomLeftRadius: '5px',
-                  borderBottomRightRadius: '5px'
+                  borderBottomRightRadius: '5px',
                 }}
               >
                 <textarea
                   autoFocus={true}
                   ref={textareaRef}
-                  onChange={e => setWritedMessage(e.target.value)}
+                  onChange={(e) => setWritedMessage(e.target.value)}
                   style={{
                     resize: 'none',
                     width: '75%',
@@ -396,9 +395,9 @@ const Chatting = ({ isOpen }) => {
                     backgroundColor: 'transparent',
                     border: 'none',
                     outline: 'none',
-                    fontSize: '16px'
+                    fontSize: '16px',
                   }}
-                  onKeyPress={e => {
+                  onKeyPress={(e) => {
                     if (!e.shiftKey) {
                       if (e.key === 'Enter') {
                         e.preventDefault();
@@ -430,14 +429,14 @@ const Chatting = ({ isOpen }) => {
               right: '-40px',
               width: `${window.innerWidth * 0.2}px`,
               height: `${window.innerHeight * 0.75}px`,
-              boxShadow: `0px 1px 5px rgba(161, 159, 159, 0.8)`
+              boxShadow: `0px 1px 5px rgba(161, 159, 159, 0.8)`,
             }
           : {
               top: `-${window.innerHeight * 0.75 + 20}px`,
               right: '-40px',
               width: '0',
               height: `${window.innerHeight * 0.75}px`,
-              overflow: 'hidden'
+              overflow: 'hidden',
             }
       }
     >
@@ -450,23 +449,23 @@ const Chatting = ({ isOpen }) => {
           height: '10%',
           borderBottom: '1px solid lightgray',
           fontSize: '20px',
-          backgroundColor: '#910033',
+          backgroundColor: '#40739e',
           boxShadow: '0px 1px 5px lightgrey',
-          borderTopLeftRadius: '10px',
-          borderTopRightRadius: '10px',
-          color: 'white'
+          borderTopLeftRadius: '5px',
+          borderTopRightRadius: '5px',
+          color: 'white',
         }}
       >
-        Message
+        Chatting
       </div>
-      <div style={{ height: '5%', backgroundColor: '#fff', border: '1px solid #ccc', display: 'flex' }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ height: '7%', backgroundColor: '#fff', display: 'flex' }}>
+        <div style={{ display: 'flex', alignItems: 'center',margin:'0px 3px' }}>
           <SearchIcon />
         </div>
         <input
           placeholder='검색'
           style={{ border: 'none', width: '100%', fontSize: '16px' }}
-          onChange={e => setSearchText(e.target.value)}
+          onChange={(e) => setSearchText(e.target.value)}
         />
       </div>
       <div style={{ display: 'flex', height: '85%', flexDirection: 'column' }}>{listView()}</div>

@@ -324,10 +324,9 @@ const ToDoList = () => {
                 </div>
                 {listOpen.third === true
                   ? doList.map((value) => {
-                      const diffDay = Math.abs(dateFns.differenceInCalendarDays(value.day, today));
+                      const diffDay = dateFns.differenceInCalendarDays(value.day, today);
                       // console.log(value.day);
                       // console.log(today);
-                      //이부분 고치기
                       if (diffDay >= 3) {
                         return (
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
