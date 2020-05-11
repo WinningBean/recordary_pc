@@ -54,24 +54,14 @@ public class GroupService {
     }
 
     @Transactional
-    public Long changGroupMaster(Long userId, Long groupCd) {
+    public Long changGroupMaster(Long UserId, Long groupCd) {
         GroupEntity groupEntity = groupRepository.findById(groupCd)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + groupCd));
 
-        UserEntity User = userService.findEntity(userId);
+        UserEntity User = userService.findEntity(UserId);
         groupEntity.updateGroupMaster(User);
 
         return groupCd;
-    }
-
-    @Transactional
-    public String updateProfile(Long groupId,String url)
-    {
-        GroupEntity groupEntity = groupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + groupId));
-
-        groupEntity.updateGroupPic(url);
-        return url;
     }
 
     @Transactional
@@ -87,7 +77,6 @@ public class GroupService {
         GroupEntity entity = groupRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
         UserEntity user = userService.findEntity(entity.getGMstUserFK().getUserCd());
-
         return new GroupResponseDto(entity,user);
     }
 
@@ -121,14 +110,14 @@ public class GroupService {
     @Transactional(readOnly = true)
     public List<UserResponseDto> findGroupMembers(Long groupCd){
 
-     List<GroupMemberEntity> groupEntities = groupRepository.findByGroupCd(groupCd).getMembers();
-     List<UserResponseDto> result = new ArrayList<>();
+        List<GroupMemberEntity> groupEntities = groupRepository.findByGroupCd(groupCd).getMembers();
+        List<UserResponseDto> result = new ArrayList<>();
 
-     for (GroupMemberEntity temp: groupEntities) {
-         UserResponseDto groupResponseDto = new UserResponseDto(temp.getUserFK());
-         result.add(groupResponseDto);
-     }
-     return  result;
+        for (GroupMemberEntity temp: groupEntities) {
+            UserResponseDto groupResponseDto = new UserResponseDto(temp.getUserFK());
+            result.add(groupResponseDto);
+        }
+        return  result;
     }
 
     @Transactional(readOnly = true)

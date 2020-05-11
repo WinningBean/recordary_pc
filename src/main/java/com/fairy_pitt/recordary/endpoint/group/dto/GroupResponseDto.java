@@ -3,7 +3,6 @@ package com.fairy_pitt.recordary.endpoint.group.dto;
 import com.fairy_pitt.recordary.common.entity.GroupEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import lombok.Getter;
-import org.h2.engine.User;
 
 @Getter
 public class GroupResponseDto { // 응답(요청에대한 답)

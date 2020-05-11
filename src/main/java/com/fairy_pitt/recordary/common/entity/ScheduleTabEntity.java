@@ -32,7 +32,7 @@ public class ScheduleTabEntity extends BaseTimeEntity {
     private String tabCol;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tabFK")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tabFK", cascade = CascadeType.REMOVE)
     private List<ScheduleEntity> tabSchedules = new ArrayList<>();
 
     @Builder

@@ -31,7 +31,6 @@ public class GroupMemberService {
     {
         UserEntity user = userService.findEntity(groupMemberRequestDto.getUserCd());
         GroupEntity group = groupRepository.findByGroupCd(groupMemberRequestDto.getGroupCd());
-
         GroupMemberEntity groupMemberEntity = groupMemberRequestDto.toEntity(group,user);
        return groupMemberRepository.save(groupMemberEntity).getGroupFK().getGroupCd();
     }

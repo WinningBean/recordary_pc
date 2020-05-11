@@ -85,22 +85,22 @@ class Login extends React.Component {
       });
       console.log(data, 'is data');
 
-      // if (data === '') {
-      //   this.setState({
-      //     failedLogin: () => {
-      //       return (
-      //         <AlertDialog
-      //           severity='error'
-      //           content='로그인에 실패하였습니다.'
-      //           onAlertClose={() => {
-      //             this.setState({ failedLogin: () => {} });
-      //           }}
-      //         />
-      //       );
-      //     },
-      //   });
-      //   return;
-      // }
+      if (data === '') {
+        this.setState({
+          failedLogin: () => {
+            return (
+              <AlertDialog
+                severity='error'
+                content='로그인에 실패하였습니다.'
+                onAlertClose={() => {
+                  this.setState({ failedLogin: () => {} });
+                }}
+              />
+            );
+          },
+        });
+        return;
+      }
 
       this.setState({ isLoading: true });
       // 유저에 대한 정보를 가져오고 그 결과값을 state 에 저장
