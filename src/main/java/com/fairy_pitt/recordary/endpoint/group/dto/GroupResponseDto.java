@@ -21,7 +21,7 @@ public class GroupResponseDto { // 응답(요청에대한 답)
     {
         this.groupCd = entity.getGroupCd();
         this.userCd = entity.getGMstUserFK().getUserCd();
-        this.groupNm = entity.getGroupName();
+        this.groupNm = entity.getGroupNm();
         this.groupState = entity.getGroupState();
         this.groupEx = entity.getGroupEx();
         this.groupPic = entity.getGroupPic();
@@ -32,7 +32,7 @@ public class GroupResponseDto { // 응답(요청에대한 답)
     {
         this.groupCd = entity.getGroupCd();
         this.userCd = entity.getGMstUserFK().getUserCd();
-        this.groupNm = entity.getGroupName();
+        this.groupNm = entity.getGroupNm();
         this.groupState = entity.getGroupState();
         this.groupEx = entity.getGroupEx();
         this.groupPic = entity.getGroupPic();

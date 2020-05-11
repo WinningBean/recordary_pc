@@ -63,9 +63,9 @@ public class GroupController {
         return groupCd;
     }
 
-    @GetMapping("findGroup/{groupName}")
-    public List<GroupResponseDto> findAllGroup(@PathVariable String groupName) {
-        return groupService.findGroupByName(groupName);
+    @GetMapping("findGroup/{groupNm}")
+    public List<GroupResponseDto> findAllGroup(@PathVariable String groupNm) {
+        return groupService.findGroupByName(groupNm);
     }
 
     @GetMapping("{groupCd}")
@@ -81,10 +81,10 @@ public class GroupController {
     }
 
 
-    @GetMapping("group/{userId}")
-    public List<GroupResponseDto> findUserGroup(@PathVariable Long userId) {
+    @GetMapping("group/{userCd}")
+    public List<GroupResponseDto> findUserGroup(@PathVariable Long userCd) {
 
-        return groupService.findUserGroups(userId);
+        return groupService.findUserGroups(userCd);
     }
 
     @GetMapping("member/{groupCd}")

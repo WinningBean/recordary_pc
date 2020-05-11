@@ -25,7 +25,7 @@ public class GroupEntity extends BaseTimeEntity{
     private UserEntity gMstUserFK;
 
     @Column(name = "GROUP_NM")
-    private String groupName;
+    private String groupNm;
 
     @Column(name = "GROUP_PB_ST" )
     private Boolean groupState;
@@ -50,23 +50,23 @@ public class GroupEntity extends BaseTimeEntity{
 
     @Builder
     public GroupEntity(UserEntity gMstUserFK,
-                       String groupName,
+                       String groupNm,
                        Boolean groupState,
                        String groupPic,
                        String  groupEx) {
 
         this.gMstUserFK = gMstUserFK;
-        this.groupName = groupName;
+        this.groupNm = groupNm;
         this.groupState = groupState;
         this.groupPic = groupPic;
         this.groupEx = groupEx;
     }
 
-    public void updateGroupInfo(String groupName,
+    public void updateGroupInfo(String groupNm,
                                 Boolean groupState,
                                 String groupPic,
                                 String  groupEx) {
-        this.groupName = groupName;
+        this.groupNm = groupNm;
         this.groupState = groupState;
         this.groupPic = groupPic;
         this.groupEx = groupEx;

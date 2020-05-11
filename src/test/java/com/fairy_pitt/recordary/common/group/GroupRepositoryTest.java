@@ -39,7 +39,7 @@ public class GroupRepositoryTest {
 
         groupRepository.save(GroupEntity.builder()
                 .gMstUserFK(null)
-                .groupName(groupName)
+                .groupNm(groupName)
                 .groupState(true)
                 .groupPic(null)
                 .groupEx(groupEx)
@@ -51,7 +51,7 @@ public class GroupRepositoryTest {
         //then
         GroupEntity groupEntity = groupList.get(0);
         assertThat(groupEntity.getGroupEx()).isEqualTo(groupEx);
-        assertThat(groupEntity.getGroupName()).isEqualTo(groupName);
+        assertThat(groupEntity.getGroupNm()).isEqualTo(groupName);
 
     }
 

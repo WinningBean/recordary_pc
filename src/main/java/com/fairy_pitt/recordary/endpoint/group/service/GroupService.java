@@ -54,11 +54,11 @@ public class GroupService {
     }
 
     @Transactional
-    public Long changGroupMaster(Long UserId, Long groupCd) {
+    public Long changGroupMaster(Long userCd, Long groupCd) {
         GroupEntity groupEntity = groupRepository.findById(groupCd)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + groupCd));
 
-        UserEntity User = userService.findEntity(UserId);
+        UserEntity User = userService.findEntity(userCd);
         groupEntity.updateGroupMaster(User);
 
         return groupCd;
@@ -90,7 +90,7 @@ public class GroupService {
 
     @Transactional(readOnly = true)
     public List<GroupResponseDto> findGroupByName(String groupName){
-        return groupRepository.findByGroupNameLike("%"+groupName+"%").stream()
+        return groupRepository.findByGroupNmLike("%"+groupName+"%").stream()
                 .map(GroupResponseDto::new)
                 .collect(Collectors.toList());
     }

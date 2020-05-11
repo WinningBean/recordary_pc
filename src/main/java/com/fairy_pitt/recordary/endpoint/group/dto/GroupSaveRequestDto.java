@@ -31,7 +31,7 @@ public class GroupSaveRequestDto {
     return GroupEntity.builder()
             .gMstUserFK(user)
             .groupEx(groupEx)
-            .groupName(groupNm)
+            .groupNm(groupNm)
             .groupState(groupState)
             .groupPic(url)
             .build();

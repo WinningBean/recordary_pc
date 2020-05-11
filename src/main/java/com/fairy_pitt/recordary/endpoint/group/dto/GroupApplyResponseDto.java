@@ -27,6 +27,6 @@ public class GroupApplyResponseDto {
         this.userNm = entity.getUserFK().getUserNm();
         this.userId = entity.getUserFK().getUserId();
         this.userPic= entity.getUserFK().getUserPic();
-        this.groupNm = entity.getGroupFK().getGroupName();
+        this.groupNm = entity.getGroupFK().getGroupNm();
     }
 }
