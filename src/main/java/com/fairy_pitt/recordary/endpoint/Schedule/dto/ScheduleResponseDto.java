@@ -18,6 +18,7 @@ public class ScheduleResponseDto {
     private Date scheduleStr;
     private Date scheduleEnd;
     private String scheduleCol;
+    private String tabCol;
     private int schedulePublicState;
 
     public ScheduleResponseDto(ScheduleEntity entity) {
@@ -29,6 +30,7 @@ public class ScheduleResponseDto {
         this.scheduleStr = entity.getScheduleStr();
         this.scheduleEnd = entity.getScheduleEnd();
         this.scheduleCol = entity.getScheduleCol();
+        this.tabCol = entity.getTabFK().getTabCol();
         this.schedulePublicState = entity.getSchedulePublicState();
     }
 }
