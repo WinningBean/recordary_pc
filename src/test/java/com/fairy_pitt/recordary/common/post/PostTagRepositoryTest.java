@@ -74,8 +74,8 @@ public class PostTagRepositoryTest {
 
         //then
         PostTagEntity postTagEntity = postTagEntityList.get(0);
-        assertThat(postTagEntity.getPostFK().getPostEx()).isEqualTo(postEntity.getPostEx());
-        assertThat(postTagEntity.getUserFK().getUserId()).isEqualTo(user2.getUserId());
+        assertThat(postTagEntity.getPostFK().getPostCd()).isEqualTo(postEntity.getPostCd());
+        assertThat(postTagEntity.getUserFK().getUserCd()).isEqualTo(user2.getUserCd());
     }
 
     @Test

@@ -2,22 +2,22 @@ import React, { useState } from 'react';
 import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
-import SearchFieldResult from 'Components/Other/SearchFieldResult';
+import SearchFieldResult from '../../Containers/Other/SearchFieldResult';
 import axios from 'axios';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   search: {
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.white, 0.1),
     '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.2)
+      backgroundColor: fade(theme.palette.common.white, 0.2),
     },
     marginLeft: 0,
     width: '100%',
     [theme.breakpoints.up('sm')]: {
-      width: 'auto'
-    }
+      width: 'auto',
+    },
     // border: '1px solid rgba(255,255,255,0.8)'
   },
   searchIcon: {
@@ -28,10 +28,10 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: fade(theme.palette.common.white, 0.8)
+    color: fade(theme.palette.common.white, 0.8),
   },
   inputRoot: {
-    color: 'inherit'
+    color: 'inherit',
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 7),
@@ -40,14 +40,14 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up('sm')]: {
       width: 120,
       '&:focus': {
-        width: 200
-      }
+        width: 200,
+      },
     },
-    color: 'white'
-  }
+    color: 'white',
+  },
 }));
 
-export default function SearchAppBar() {
+export default function SearchAppBar(props) {
   const classes = useStyles();
   const [searchState, setsearchState] = useState(false);
   const [userSearch, setUserSearch] = useState('');
@@ -56,66 +56,65 @@ export default function SearchAppBar() {
   const setEnterKeyPress = () => {
     if (searchState === true) {
       return (
-        <SearchFieldResult data={data} onCancel={() => setsearchState(false)}></SearchFieldResult>
+        <SearchFieldResult
+          userCd={props.userCd}
+          data={data}
+          searchText={userSearch}
+          onCancel={() => setsearchState(false)}
+        ></SearchFieldResult>
       );
     }
     return null;
   };
 
-  const handleKeyPress = async e => {
+  const handleKeyPress = async (e) => {
     if (e.key === 'Enter') {
-      // const userData = (await axios.get("http://172.30.1.47:8080/user/search", {params : { userSearch : userSearch}})).data;
-      // const groupData = (await axios.get("http://172.30.1.47:8080/group/search", {params : { groupSearch : userSearch}})).data;
+      const userData = (await axios.get(`/user/search/${userSearch}`)).data;
       // console.log(data);
-      const userData = {
-        searchedUser: [
-          {
-            user_id: 'hgd',
-            user_nm: '홍길동',
-            user_pic: null,
-            user_ex: '안녕하세요'
-          },
-          {
-            user_id: 'wsh',
-            user_nm: '위성홍',
-            user_pic: null,
-            user_ex: '안녕하세요222'
-          }
-        ]
-      };
-      const groupData = {
-        searchedGroup: [
-          {
-            group_cd: '2',
-            group_nm: 'sd',
-            group_pic: null
-          },
-          {
-            group_cd: '3',
-            group_nm: 'sd',
-            group_pic: null
-          }
-        ]
-      };
+      // const userData = {
+      //   searchedUser: [
+      //     {
+      //       user_id: 'hgd',
+      //       user_nm: '홍길동',
+      //       user_pic: null,
+      //       user_ex: '안녕하세요'
+      //     },
+      //     {
+      //       user_id: 'wsh',
+      //       user_nm: '위성홍',
+      //       user_pic: null,
+      //       user_ex: '안녕하세요222'
+      //     }
+      //   ]
+      // };
+      // const groupData = {
+      //   searchedGroup: [
+      //     {
+      //       group_cd: '2',
+      //       group_nm: 'sd',
+      //       group_pic: null
+      //     },
+      //     {
+      //       group_cd: '3',
+      //       group_nm: 'sd',
+      //       group_pic: null
+      //     }
+      //   ]
+      // };
 
-      const addedUserData = userData.searchedUser.map(value => {
+      const addedUserData = userData.map((value) => {
         return {
           ...value,
-          user_click: false
+          isClick: false,
         };
       });
-      const addedGroupData = groupData.searchedGroup.map(value => {
-        return {
-          ...value,
-          group_click: false
-        };
-      });
-      console.log(userSearch);
-      setData({
-        ...data,
-        searchedUser: addedUserData,
-        searchedGroup: addedGroupData
-      });
+      // const addedGroupData = groupData.searchedGroup.map(value => {
+      //   return {
+      //     ...value,
+      //     group_click: false
+      //   };
+      // });
+      setData(addedUserData);
       setsearchState(true);
     }
   };
@@ -130,11 +129,11 @@ export default function SearchAppBar() {
           placeholder='Search…'
           classes={{
             root: classes.inputRoot,
-            input: classes.inputInput
+            input: classes.inputInput,
           }}
           inputProps={{ 'aria-label': 'search' }}
           onKeyPress={handleKeyPress}
-          onChange={e => {
+          onChange={(e) => {
             setUserSearch(e.target.value);
           }}
         />

@@ -1,26 +1,24 @@
 import React, { useState, useMemo } from 'react';
 import * as dateFns from 'date-fns';
 import './Timeline.css';
-import LongMenu from 'Components/Other/MoreMenu';
-import PostShare from 'Components/Profile/PostShare';
+import LongMenu from '../Other/MoreMenu';
+import PostShare from '../Profile/PostShare';
 import Avatar from '@material-ui/core/Avatar';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import ThumbUpRoundedIcon from '@material-ui/icons/ThumbUpRounded';
-import ShareIcon from '@material-ui/icons/Share';
 import CommentIcon from '@material-ui/icons/Comment';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import CommentTimeline from 'Components/Timeline/CommentTimeline';
+import CommentTimeline from './CommentTimeline';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
-const Timeline = props => {
+const Timeline = (props) => {
   const data = props.data;
   const [isClickList, setIsClickList] = useState(data.comment.map(() => false));
-  const [commentOpen, setCommentOpen] = useState(false);
   const [menuDialog, setMenuDialog] = useState(null);
   const [pictureCount, setPictureCount] = useState(0);
 
-  const userPostMoreButtonClick = selectedValue => {
+  const userPostMoreButtonClick = (selectedValue) => {
     switch (selectedValue) {
       case '나에게 공유':
         setMenuDialog(<PostShare onCancel={() => setMenuDialog(null)} />);
@@ -50,7 +48,7 @@ const Timeline = props => {
         <MoreHorizIcon
           style={{
             fontSize: '15',
-            paddingTop: '3px'
+            paddingTop: '3px',
           }}
         />
         {isClickList[index] === false ? <span>{`댓글 ${list.length}개 모두 보기`}</span> : <span>{`댓글 접기`}</span>}
@@ -58,8 +56,8 @@ const Timeline = props => {
     </div>
   );
 
-  const MoreComment = list => {
-    return list.map(value => (
+  const MoreComment = (list) => {
+    return list.map((value) => (
       <div key={value.id}>
         <div className='comment-reply-users more-comment-reply-users'>
           <div className='comment-reply-users-img'>
@@ -72,7 +70,7 @@ const Timeline = props => {
               <ThumbUpRoundedIcon
                 style={{
                   fontSize: '20',
-                  paddingRight: '5px'
+                  paddingRight: '5px',
                 }}
               />
             </div>
@@ -96,13 +94,13 @@ const Timeline = props => {
               <ThumbUpRoundedIcon
                 style={{
                   fontSize: '20',
-                  paddingRight: '5px'
+                  paddingRight: '5px',
                 }}
               />
               <CommentIcon
                 style={{
                   fontSize: '20',
-                  paddingRight: '5px'
+                  paddingRight: '5px',
                 }}
               />
             </div>
@@ -125,7 +123,7 @@ const Timeline = props => {
             style={{
               transition: 'transform 363.693ms cubic-bezier(0.215, 0.61, 0.355, 1) 0s',
               transform: `translateX(${-500 * pictureCount}px)`,
-              position: 'relative'
+              position: 'relative',
             }}
           >
             <ul style={{ height: '100%', position: 'relative' }}>
@@ -152,7 +150,7 @@ const Timeline = props => {
               height: '30px',
               width: '100%',
               display: 'flex',
-              justifyContent: 'space-between'
+              justifyContent: 'space-between',
             }}
           >
             {pictureCount === 0 ? (
@@ -164,7 +162,7 @@ const Timeline = props => {
                   height: '25px',
                   backgroundColor: 'rgba(253,253,253,.7)',
                   borderRadius: '50%',
-                  marginLeft: '5px'
+                  marginLeft: '5px',
                 }}
                 onClick={() => setPictureCount(pictureCount - 1)}
               >
@@ -180,7 +178,7 @@ const Timeline = props => {
                   height: '25px',
                   backgroundColor: 'rgba(253,253,253,.7)',
                   borderRadius: '50%',
-                  marginRight: '5px'
+                  marginRight: '5px',
                 }}
                 onClick={() => setPictureCount(pictureCount + 1)}
               >
@@ -196,7 +194,7 @@ const Timeline = props => {
               right: '6px',
               display: 'flex',
               justifyContent: 'center',
-              alignItems: 'center'
+              alignItems: 'center',
             }}
           >
             {data.post_pic.map((value, index) => {
@@ -206,7 +204,7 @@ const Timeline = props => {
                     key={`post-bottom-${data.post_cd}-${index}`}
                     className='timeline-picture-bottom'
                     style={{
-                      opacity: '1'
+                      opacity: '1',
                     }}
                   />
                 );
@@ -216,7 +214,7 @@ const Timeline = props => {
                   key={`post-bottom-${data.post_cd}-${index}`}
                   className='timeline-picture-bottom'
                   style={{
-                    opacity: '.4'
+                    opacity: '.4',
                   }}
                 />
               );
@@ -255,7 +253,7 @@ const Timeline = props => {
                 flex: 1,
                 marginLeft: '6px',
                 display: 'flex',
-                justifyContent: 'flex-end'
+                justifyContent: 'flex-end',
               }}
             >
               <AvatarGroup>

@@ -4,12 +4,10 @@ import com.fairy_pitt.recordary.common.entity.FollowerEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.FollowerRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
-import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -20,11 +18,9 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -74,7 +70,7 @@ public class FollowerControllerTest {
                 .userNm("테스트 유저2")
                 .build());
 
-        String url = "http://localhost:" + port + "/" + targetFK.getUserId() + "/follow";
+        String url = "http://localhost:" + port + "/follow/" + targetFK.getUserId();
 
 //        //when
 //        ResponseEntity<Boolean> responseEntity = restTemplate.getForEntity(url, Boolean.class);
@@ -116,7 +112,7 @@ public class FollowerControllerTest {
                 .targetFK(user1)
                 .build());
 
-        String url = "http://localhost:" + port + "/" + user1.getUserId() + "/follower";
+        String url = "http://localhost:" + port + "/follower/" + user1.getUserId();
 
         //when
         ResponseEntity<List> responseEntity = restTemplate.getForEntity(url, List.class);
@@ -154,7 +150,7 @@ public class FollowerControllerTest {
                 .targetFK(user3)
                 .build());
 
-        String url = "http://localhost:" + port + "/" + user1.getUserId() + "/following";
+        String url = "http://localhost:" + port + "/following/" + user1.getUserId();
 
         //when
         ResponseEntity<List> responseEntity = restTemplate.getForEntity(url, List.class);
@@ -209,7 +205,7 @@ public class FollowerControllerTest {
                 .targetFK(user4)
                 .build());
 
-        String url = "http://localhost:" + port + "/" + user1.getUserId() + "/friends";
+        String url = "http://localhost:" + port + "/friends/" + user1.getUserId();
 
         //when
         ResponseEntity<List> responseEntity = restTemplate.getForEntity(url, List.class);

@@ -9,6 +9,7 @@ import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleMemberResponseDto;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleResponseDto;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequestMapping("schedule")
@@ -25,16 +27,15 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final ScheduleTabRepository scheduleTabRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final PostRepository postRepository;
 
     @Transactional
     public Long save(ScheduleSaveRequestDto requestDto)
     {
         ScheduleTabEntity scheduleTabEntity = scheduleTabRepository.findByTabCd(requestDto.getTabCd());
-        PostEntity post = postRepository.findByPostCd(requestDto.getPostCd());
-        UserEntity user = userRepository.findByUserId(requestDto.getUserId());
-        return scheduleRepository.save(requestDto.toEntity(scheduleTabEntity,post,user))
+        UserEntity user = userService.findEntity(requestDto.getUserCd());
+        return scheduleRepository.save(requestDto.toEntity(scheduleTabEntity,user))
                 .getScheduleCd();
     }
 
@@ -63,9 +64,9 @@ public class ScheduleService {
     }
 
     @Transactional
-    public List<ScheduleResponseDto> findScheduleByDate(Date fromData, Date ToData)
+    public List<ScheduleResponseDto> findScheduleByDate(Date fromDate, Date ToDate)
     {
-        List<ScheduleEntity> entityList = scheduleRepository.findByScheduleStrBetween(fromData, ToData);
+        List<ScheduleEntity> entityList = scheduleRepository.findByScheduleStrBetween(fromDate, ToDate);
         List<ScheduleResponseDto> result = new ArrayList<>();
         for (ScheduleEntity temp: entityList) {
             ScheduleResponseDto scheduleResponseDto = new ScheduleResponseDto(temp);
@@ -74,31 +75,45 @@ public class ScheduleService {
         return result;
     }
 
-//    public List<ScheduleMemberResponseDto> getScheduleMember(Long id) {
-//        return scheduleRepository.findById(id).get().getScheduleMembers();
-//    }
-
-/*
-    public List<ScheduleEntity> findScheduleByDate(Date fromData, Date ToData)
+    @Transactional
+    public  List<ScheduleResponseDto> showUserSchedule(Long userCd, int state, Date fromDate, Date toDate)
     {
-        return scheduleRepository.findByScheduleStrBetween(fromData, ToData);
+        UserEntity user = userService.findEntity(userCd);
+        return scheduleRepository.findByUserFkAndSchedulePublicStateGreaterThanEqualAndScheduleStrBetween(user, state, fromDate, toDate)
+                .stream()
+                .map(ScheduleResponseDto::new)
+                .collect(Collectors.toList());
     }
 
-    public Boolean updateSchedule(long PostId, ScheduleEntity scheduleEntity)
-    {
-        ScheduleEntity schedule = scheduleRepository.findById(PostId).get();
-        schedule.setScheduleStr(scheduleEntity.getScheduleStr());
-        schedule.setTabCodeFK(scheduleEntity.getTabCodeFK());
-        schedule.setScheduleEx(scheduleEntity.getScheduleEx());
-        schedule.setScheduleNm(scheduleEntity.getScheduleNm());
 
-        return true;
+    public List<ScheduleMemberResponseDto> getScheduleMember(Long id) {
+        return scheduleRepository.findByScheduleCd(id).getScheduleMembers()
+                .stream()
+                .map(ScheduleMemberResponseDto::new)
+                .collect(Collectors.toList());
     }
 
-    public List<ScheduleMemberEntity> getScheduleMember(long scheduleCode)
-    {
-        return scheduleRepository.findById(scheduleCode).get().getScheduleMembers();
-    }*/
+    /*
+        public List<ScheduleEntity> findScheduleByDate(Date fromData, Date ToData)
+        {
+            return scheduleRepository.findByScheduleStrBetween(fromData, ToData);
+        }
+
+        public Boolean updateSchedule(long PostId, ScheduleEntity scheduleEntity)
+        {
+            ScheduleEntity schedule = scheduleRepository.findById(PostId).get();
+            schedule.setScheduleStr(scheduleEntity.getScheduleStr());
+            schedule.setTabCodeFK(scheduleEntity.getTabCodeFK());
+            schedule.setScheduleEx(scheduleEntity.getScheduleEx());
+            schedule.setScheduleNm(scheduleEntity.getScheduleNm());
+
+            return true;
+        }
+
+        public List<ScheduleMemberEntity> getScheduleMember(long scheduleCode)
+        {
+            return scheduleRepository.findById(scheduleCode).get().getScheduleMembers();
+        }*/
     public ScheduleEntity findEntity(Long ScheduleCd){
         return scheduleRepository.findByScheduleCd(ScheduleCd);
     }

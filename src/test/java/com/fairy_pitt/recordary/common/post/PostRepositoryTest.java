@@ -59,7 +59,7 @@ public class PostRepositoryTest {
 
         //then
         PostEntity postEntity = postEntityList.get(0);
-        assertThat(postEntity.getUserFK().getUserId()).isEqualTo(user1.getUserId());
+        assertThat(postEntity.getUserFK().getUserCd()).isEqualTo(user1.getUserCd());
         assertThat(postEntity.getPostEx()).isEqualTo(postEx);
         assertThat(postEntity.getPostPublicState()).isEqualTo(postPublicState);
         assertThat(postEntity.getPostStrYMD()).isEqualTo(postStrYMD);

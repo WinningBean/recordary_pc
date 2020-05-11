@@ -70,11 +70,11 @@ public class GroupApplyControllerTest {
         String groupPic = "asd";
         String  groupEx = "test";
 
-        String user = saveUser.getUserId();
+        Long user = saveUser.getUserCd();
 
         GroupEntity groupEntity = groupRepository.save(  GroupEntity.builder()
                 .gMstUserFK(saveUser)
-                .groupName(groupName)
+                .groupNm(groupName)
                 .groupState(true)
                 .groupPic(groupPic)
                 .groupEx(groupEx)
@@ -82,21 +82,21 @@ public class GroupApplyControllerTest {
         Long group = groupEntity.getGroupCd();
 
         GroupApplyRequestDto requestDto = GroupApplyRequestDto.builder()
-                .userId(user)
+                .userCd(user)
                 .groupCd(group)
                 .applyState(1)
                 .build();
 
         String url = "http://localhost:" + port + "groupApply/create";
         //when
-        ResponseEntity<Integer> responseEntity = restTemplate.postForEntity(url, requestDto, Integer.class);
+        ResponseEntity<Boolean> responseEntity = restTemplate.postForEntity(url, requestDto, Boolean.class);
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         List<GroupApplyEntity> all = groupApplyRepository.findAll();
         assertThat(all.get(0).getGroupFK().getGroupCd()).isEqualTo(group);
-        assertThat(all.get(0).getUserFK().getUserId()).isEqualTo(user);
+        assertThat(all.get(0).getUserFK().getUserCd()).isEqualTo(user);
     }
 
 

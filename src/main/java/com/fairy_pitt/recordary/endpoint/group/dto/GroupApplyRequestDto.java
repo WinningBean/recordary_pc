@@ -12,15 +12,15 @@ import lombok.Setter;
 @NoArgsConstructor
 public class GroupApplyRequestDto {
 
-    private Long groupCodeFK;
-    private String userCodeFK;
+    private Long groupCd;
+    private Long userCd;
     private int applyState;
 
     @Builder
-    public GroupApplyRequestDto(String userId, Long groupCd, int applyState)
+    public GroupApplyRequestDto(Long userCd, Long groupCd, int applyState)
     {
-        this.groupCodeFK = groupCd;
-        this.userCodeFK = userId;
+        this.groupCd = groupCd;
+        this.userCd = userCd;
         this.applyState =  applyState;
     }
 

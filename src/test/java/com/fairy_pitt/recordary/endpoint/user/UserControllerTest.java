@@ -14,10 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.HashMap;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,22 +45,8 @@ public class UserControllerTest {
     private static String staticUserId = "testUser";
 
     @Test
-    public void User_가능한아이디() throws Exception{
-        String url = "http://localhost:" + port + "/user/possibleId/" + staticUserId;
-
-        //when
-        ResponseEntity<Boolean> responseEntity = restTemplate.getForEntity(url, Boolean.class);
-
-        //then
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).isEqualTo(true);
-    }
-
-    @Test
-    public void User_불가능한아이디() throws Exception{
-        User_회원가입();
-
-        String url = "http://localhost:" + port + "/user/possibleId/" + staticUserId;
+    public void User_존재하는아이디() throws Exception{
+        String url = "http://localhost:" + port + "/user/existId/" + staticUserId;
 
         //when
         ResponseEntity<Boolean> responseEntity = restTemplate.getForEntity(url, Boolean.class);
@@ -66,6 +54,20 @@ public class UserControllerTest {
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isEqualTo(false);
+    }
+
+    @Test
+    public void User_존재하지않는아이디() throws Exception{
+        User_회원가입();
+
+        String url = "http://localhost:" + port + "/user/existId/" + staticUserId;
+
+        //when
+        ResponseEntity<Boolean> responseEntity = restTemplate.getForEntity(url, Boolean.class);
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isEqualTo(true);
     }
 
     @Test
@@ -82,7 +84,7 @@ public class UserControllerTest {
                 .userNm(userNm)
                 .build();
 
-        User_가능한아이디();
+        User_존재하는아이디();
 
         String url = "http://localhost:" + port + "/user/join";
 
@@ -116,7 +118,6 @@ public class UserControllerTest {
         UserUpdateRequestDto requestDto = UserUpdateRequestDto.builder()
                 .userPw(expectedUserPw)
                 .userNm(expectedUserNm)
-                .userEx(expectedUserEx)
                 .build();
 
         String url = "http://localhost:" + port + "/user/ " + updateId;

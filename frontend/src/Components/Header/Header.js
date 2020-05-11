@@ -5,22 +5,21 @@ import { styled } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
-import SearchAppBar from 'Components/Other/SearchField';
-import HeaderMenu from 'Containers/Header/HeaderMenu';
-import NotifyPopup from 'Components/UI/NotifyPopup';
-import ToDoList from 'Components/Header/ToDoList';
+import SearchAppBar from '../Other/SearchField';
+import HeaderMenu from '../../Containers/Header/HeaderMenu';
+import NotifyPopup from '../UI/NotifyPopup';
+import ToDoList from './ToDoList';
 import { Link } from 'react-router-dom';
 
 class Header extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      openMenu: false
+      openMenu: false,
     };
   }
 
   render() {
-    console.log(this.props);
     if (!this.props.isLogin) {
       return (
         <header>
@@ -42,7 +41,7 @@ class Header extends React.Component {
           </div>
           <div id='header-right'>
             <div className='search-user'>
-              <SearchAppBar></SearchAppBar>
+              <SearchAppBar userCd={this.props.userCd}></SearchAppBar>
             </div>
             <Link to='/'>
               <Button style={{ color: '#ffffff' }}>로그인</Button>
@@ -68,21 +67,14 @@ class Header extends React.Component {
         </div>
         <div id='header-right'>
           <div className='search-user' style={{ marginRight: '10px' }}>
-            <SearchAppBar />
+            <SearchAppBar userCd={this.props.userCd} />
           </div>
           <div className='header-ring'>
             <NotifyPopup style={{ fontSize: 40, color: 'white' }}></NotifyPopup>
           </div>
           <ToDoList />
           <div className='profile-icon'>
-            <Link
-              to={{
-                pathname: `/${this.props.user_id}`,
-                state: {
-                  profile_type: 0
-                }
-              }}
-            >
+            <Link to={`/profile/${this.props.userId}`}>
               <AccountCircleIcon style={{ fontSize: 40, color: 'white' }}>Profile</AccountCircleIcon>
             </Link>
           </div>
@@ -94,7 +86,7 @@ class Header extends React.Component {
 
 const IconButton = styled(Button)({
   minWidth: '40px',
-  height: '40px'
+  height: '40px',
 });
 
 export default Header;

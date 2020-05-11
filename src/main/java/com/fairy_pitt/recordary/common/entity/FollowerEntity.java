@@ -14,12 +14,12 @@ import javax.persistence.*;
 @IdClass(FollowerPK.class)
 public class FollowerEntity extends BaseTimeEntity{
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "FOLLOWER_USER_FK", nullable = false)
     private UserEntity userFK;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "FOLLOWER_TARGET_FK", nullable = false)
     private UserEntity targetFK;
 

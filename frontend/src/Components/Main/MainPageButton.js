@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import './mainPage.css';
-import ChattingButton from 'Components/Other/ChattingButton';
-import SpeedDials from 'Components/UI/SimpleSpeedDial';
-import Chatting from 'Components/Main/Chatting';
+import ChattingButton from '../Other/ChattingButton';
+import SpeedDials from '../UI/SimpleSpeedDial';
+import Chatting from './Chatting';
 
-const MainPageButton = () => {
+const MainPageButton = (props) => {
   const [isChatClick, setIsChatClick] = useState(false);
   console.log(isChatClick);
   return (
     <div>
       <div className='timeline-plus-button'>
-        <SpeedDials />
+        <SpeedDials data={props.data} />
       </div>
       <div className='timeline-chatting-button'>
         <Chatting isOpen={isChatClick} />
         <div onClick={() => setIsChatClick(!isChatClick)}>
-          <ChattingButton />
+          <ChattingButton style={{ backgroundColor: 'rgb(245, 0, 87)' }} />
         </div>
       </div>
     </div>

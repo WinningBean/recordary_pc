@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
-import 'Components/Other/SearchField.css';
-import Snackbar from 'Components/UI/Snackbar';
+import '../Other/SearchField.css';
+import Snackbar from '../UI/Snackbar';
 
 import IconButton from '@material-ui/core/IconButton';
 import Dialog from '@material-ui/core/Dialog';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
-import AlertDialog from 'Components/Other/AlertDialog';
+import AlertDialog from '../Other/AlertDialog';
 import axios from 'axios';
 import { Button, Avatar } from '@material-ui/core';
 
-const GroupMemberSearch = props => {
+const GroupMemberSearch = (props) => {
   const [input, setInput] = useState('');
   const [alert, setAlert] = useState(null);
   const [list, setList] = useState(null);
 
-  const onSearch = async insert => {
+  const onSearch = async (insert) => {
     if (insert === '') {
       setAlert(
         <AlertDialog
           severity='error'
-          content='아이디를 입력하세요'
+          content='이름를 입력하세요'
           onAlertClose={() => {
             setAlert(null);
           }}
@@ -30,12 +30,10 @@ const GroupMemberSearch = props => {
     }
     setAlert(<Snackbar onClose={() => setAlert(null)} severity='success' content='데이터 요청중...' />);
     try {
-      const { data } = await axios.get('/user/search', {
-        params: { userSearch: input }
-      });
+      const { data } = await axios.get(`/user/search/${input}`);
 
       console.log(data);
-      if (data.searchedCount === 0) {
+      if (data.length < 1) {
         setAlert(
           <AlertDialog
             severity='error'
@@ -47,21 +45,8 @@ const GroupMemberSearch = props => {
         );
         return;
       }
-
-      // const data = [
-      //   {
-      //     user_id: 'ABCD1234',
-      //     user_pic: 'http://placehold.it/40x40',
-      //     user_nm: '김길동'
-      //   },
-      //   {
-      //     user_id: 'POIU7894',
-      //     user_pic: 'http://placehold.it/40x40',
-      //     user_nm: '이길동'
-      //   }
-      // ];
-      // setList(data);
-      setList(data.searedUser);
+      setAlert(null);
+      setList(data);
     } catch (error) {
       setAlert(
         <AlertDialog
@@ -81,9 +66,9 @@ const GroupMemberSearch = props => {
         <div className='searchField-title'>
           <InputBase
             placeholder='아이디를 입력하세요'
-            onChange={e => setInput(e.target.value)}
+            onChange={(e) => setInput(e.target.value)}
             style={{ color: '#ffffff' }}
-            onKeyDown={e => {
+            onKeyDown={(e) => {
               if (e.keyCode === 13) {
                 onSearch(input);
               }
@@ -97,21 +82,49 @@ const GroupMemberSearch = props => {
           <div style={{ maxHeight: '400px' }}>
             <ul>
               {(() => {
-                return list.map(value => {
+                return list.map((value) => {
                   return (
-                    <li key={value.user_id}>
+                    <li key={value.userId}>
                       <Button
                         style={{
                           width: '100%',
-                          justifyContent: 'flex-start'
+                          justifyContent: 'flex-start',
                         }}
                         onClick={() => {
-                          props.onAdd(value);
+                          try {
+                            (async () => {
+                              console.log({ groupCd: props.info.groupCd, userCd: props.info.userCd });
+                              const { data } = await axios.post('groupApply/create', {
+                                groupCd: props.info.groupCd,
+                                userCd: props.info.userCd,
+                                applyState: 1,
+                              });
+                              if (data) {
+                                props.onAdd();
+                              } else {
+                                setAlert(
+                                  <Snackbar
+                                    onClose={() => setAlert(null)}
+                                    severity='success'
+                                    content='이미 초대를 보내거나 받았습니다.'
+                                  />
+                                );
+                              }
+                            })();
+                          } catch (error) {
+                            setAlert(
+                              <Snackbar
+                                onClose={() => setAlert(null)}
+                                severity='error'
+                                content={`서버 에러 발생 ${error}`}
+                              />
+                            );
+                          }
                         }}
                       >
-                        <Avatar alt={`${value.user_id} img`} src={value.user_pic} />
+                        <Avatar alt={`${value.userId} img`} src={value.userPic} />
                         &nbsp;&nbsp;&nbsp;
-                        <span>{value.user_id}</span>
+                        <span>{value.userId}</span>
                       </Button>
                     </li>
                   );

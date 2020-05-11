@@ -14,13 +14,13 @@ import javax.persistence.*;
 @IdClass(PostLikePK.class)
 public class PostLikeEntity extends BaseTimeEntity{
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_FK")
     private PostEntity postFK;
 
     @Id
-    @ManyToOne
-    @JoinColumn(name = "USER_FK")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "POST_LIKE_USER_FK")
     private UserEntity userFK;
 
     @Builder

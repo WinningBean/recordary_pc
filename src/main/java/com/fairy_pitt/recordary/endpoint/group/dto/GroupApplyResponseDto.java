@@ -5,17 +5,28 @@ import com.fairy_pitt.recordary.common.entity.GroupEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 public class GroupApplyResponseDto {
 
-    private Long groupCodeFK;
-    private Long userCodeFK;
-    private int applyState;
+    private Long userCd;
+    private String userId;
+    private String userPic;
+    private String userNm;
+    private Long groupCd;
+    private String groupNm;
+    private LocalDateTime date;
+
 
     public GroupApplyResponseDto(GroupApplyEntity entity)
     {
-        this.groupCodeFK = entity.getGroupFK().getGroupCd();
-        this.userCodeFK = entity.getUserFK().getUserCd();
-        this.applyState = entity.getApplyState();
+        this.groupCd = entity.getGroupFK().getGroupCd();
+        this.userCd = entity.getUserFK().getUserCd();
+        this.date = entity.getCreatedDate();
+        this.userNm = entity.getUserFK().getUserNm();
+        this.userId = entity.getUserFK().getUserId();
+        this.userPic= entity.getUserFK().getUserPic();
+        this.groupNm = entity.getGroupFK().getGroupNm();
     }
 }

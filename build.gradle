@@ -4,6 +4,8 @@ buildscript {
         mooworkVersion = '1.2.0'
     }
     repositories {
+        mavenCentral()
+        jcenter()
         maven {
             url "https://plugins.gradle.org/m2/"
         }
@@ -22,18 +24,21 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'com.moowork.node'
 
 group 'com.fairy_pitt'
-version '1.0-SNAPSHOT'
+version '1.0.1-SNAPSHOT-' + new Date().format("yyyyMMddHHmmss")
 
 mainClassName = 'com.fairy_pitt.recordary.RecordaryApplication'
 sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    maven { url 'https://repo.spring.io/libs-milestone'}
+    jcenter()
 }
 
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
+    implementation('org.springframework.boot:spring-boot-starter-jdbc')
     implementation('org.projectlombok:lombok')
     implementation('org.springframework.boot:spring-boot-configuration-processor')
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')
@@ -43,6 +48,7 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-devtools')
     implementation('org.json:json:20180813')
     implementation('joda-time:joda-time:2.2')
+    implementation('org.springframework.cloud:spring-cloud-starter-aws:2.2.1.RELEASE')
 
     annotationProcessor ('org.projectlombok:lombok')
     annotationProcessor ('org.springframework.boot:spring-boot-configuration-processor')
@@ -59,17 +65,14 @@ dependencies {
 
 def webappDir = "$projectDir/frontend"
 
-task frontBuild {
-    doLast {
-        exec {
-            workingDir "${webappDir}"
-            commandLine "npm", "install"
-        }
-        exec {
-            workingDir "${webappDir}"
-            commandLine "npm", "run-script", "build"
-        }
-    }
+task appNpmInstall(type: NpmTask) {
+    workingDir = file("${webappDir}")
+    args = ['install']
+}
+
+task npmBuild(type: NpmTask) {
+    workingDir = file("${webappDir}")
+    args = ['run', 'build']
 }
 
 task copyWebApp(type: Copy) {
@@ -77,5 +80,6 @@ task copyWebApp(type: Copy) {
     into 'build/resources/main/static/.'
 }
 
-copyWebApp.dependsOn frontBuild
-compileJava.dependsOn copyWebApp
+npmBuild.dependsOn("appNpmInstall")
+copyWebApp.dependsOn("npmBuild")
+compileJava.dependsOn("copyWebApp")

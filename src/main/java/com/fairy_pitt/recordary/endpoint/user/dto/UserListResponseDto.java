@@ -7,9 +7,11 @@ import lombok.Getter;
 public class UserListResponseDto {
     private String userId;
     private String userNm;
+    private String userPic;
 
     public UserListResponseDto(UserEntity userEntity){
         this.userId = userEntity.getUserId();
         this.userNm = userEntity.getUserNm();
+        this.userPic = userEntity.getUserPic();
     }
 }

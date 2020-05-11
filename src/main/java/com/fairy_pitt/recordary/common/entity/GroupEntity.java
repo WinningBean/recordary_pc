@@ -1,10 +1,12 @@
 package com.fairy_pitt.recordary.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -14,16 +16,16 @@ import java.util.List;
 public class GroupEntity extends BaseTimeEntity{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "GROUP_CD" )
     private Long groupCd;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GROUP_MST_FK")
     private UserEntity gMstUserFK;
 
     @Column(name = "GROUP_NM")
-    private String groupName;
+    private String groupNm;
 
     @Column(name = "GROUP_PB_ST" )
     private Boolean groupState;
@@ -34,34 +36,37 @@ public class GroupEntity extends BaseTimeEntity{
     @Column(name = "GROUP_EX")
     private String  groupEx;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK")
-    private List<GroupMemberEntity> members;
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK", cascade = CascadeType.REMOVE)
+    private List<GroupMemberEntity> members = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK")
-    private List<GroupApplyEntity> applyMembers;
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK", cascade = CascadeType.REMOVE)
+    private List<GroupApplyEntity> applyMembers = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK")
-    private List<PostEntity> postEntityList;
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK", cascade = CascadeType.REMOVE)
+    private List<PostEntity> postEntityList = new ArrayList<>();
 
     @Builder
     public GroupEntity(UserEntity gMstUserFK,
-                       String groupName,
+                       String groupNm,
                        Boolean groupState,
                        String groupPic,
                        String  groupEx) {
 
         this.gMstUserFK = gMstUserFK;
-        this.groupName = groupName;
+        this.groupNm = groupNm;
         this.groupState = groupState;
         this.groupPic = groupPic;
         this.groupEx = groupEx;
     }
 
-    public void updateGroupInfo(String groupName,
+    public void updateGroupInfo(String groupNm,
                                 Boolean groupState,
                                 String groupPic,
                                 String  groupEx) {
-        this.groupName = groupName;
+        this.groupNm = groupNm;
         this.groupState = groupState;
         this.groupPic = groupPic;
         this.groupEx = groupEx;

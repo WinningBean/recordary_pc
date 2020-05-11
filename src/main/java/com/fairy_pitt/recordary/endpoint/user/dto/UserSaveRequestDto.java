@@ -1,11 +1,9 @@
 package com.fairy_pitt.recordary.endpoint.user.dto;
 
 import com.fairy_pitt.recordary.common.entity.UserEntity;
-import com.fairy_pitt.recordary.endpoint.user.service.UserPasswordHashService;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Getter
 @NoArgsConstructor
@@ -26,6 +24,7 @@ public class UserSaveRequestDto {
                 .userId(userId)
                 .userPw(userPw)
                 .userNm(userNm)
+                .userPic("https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/user/basic.png")
                 .build();
     }
 }

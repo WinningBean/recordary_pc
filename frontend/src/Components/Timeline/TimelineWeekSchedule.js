@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import * as dateFns from 'date-fns';
 import './Timeline.css';
-import LongMenu from 'Components/Other/MoreMenu';
-import PostShare from 'Components/Profile/PostShare';
-import TimelineOneday from 'Components/Timeline/TimelineOneDay';
-import TimelineMultiDay from 'Components/Timeline/TimelineMultiDay';
+import LongMenu from '../Other/MoreMenu';
+import PostShare from '../Profile/PostShare';
+import TimelineOneday from './TimelineOneDay';
+import TimelineMultiDay from './TimelineMultiDay';
 import ThumbUpRoundedIcon from '@material-ui/icons/ThumbUpRounded';
 import CommentIcon from '@material-ui/icons/Comment';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 
-import CommentTimeline from 'Components/Timeline/CommentTimeline';
+import CommentTimeline from './CommentTimeline';
 
 const TimelineWeekSchedule = props => {
   const data = props.data;

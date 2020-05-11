@@ -2,13 +2,14 @@ import React from 'react';
 import './mainPage.css';
 import Main from './Main';
 import Aside from './Aside';
-import MainPageButton from 'Components/Main/MainPageButton';
-import Header from 'Containers/Header/Header';
+import MainPageButton from './MainPageButton';
+import Header from '../../Containers/Header/Header';
 import { Redirect } from 'react-router-dom';
 
 class MainPage extends React.Component {
   render() {
-    var data = this.props.data;
+    var data = this.props;
+    var user = this.props.data;
     console.log(this.props);
     if (!this.props.isLogin) {
       return <Redirect to='/' />;
@@ -19,9 +20,9 @@ class MainPage extends React.Component {
         <div id='main-page'>
           <div id='main-wrap'>
             <Main data={data}></Main>
-            <Aside></Aside>
+            <Aside data={user}></Aside>
           </div>
-          <MainPageButton></MainPageButton>
+          <MainPageButton data={data}></MainPageButton>
         </div>
       </>
     );

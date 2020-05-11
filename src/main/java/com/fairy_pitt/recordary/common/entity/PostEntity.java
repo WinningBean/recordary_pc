@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -15,27 +16,27 @@ import java.util.List;
 @Table(name = "POST_TB")
 public class PostEntity extends BaseTimeEntity{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "POST_CD")
     private Long postCd;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_USER_FK")
     private UserEntity userFK;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_GROUP_FK")
     private GroupEntity groupFK;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_ORIGIN_FK")
     private PostEntity postOriginFK;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_SCHEDULE_FK")
     private ScheduleEntity scheduleFK;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_MEDIA_FK")
     private MediaEntity mediaFK;
 
@@ -53,20 +54,20 @@ public class PostEntity extends BaseTimeEntity{
     private String postEndYMD;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postFK", cascade = {CascadeType.ALL})
-    private List<PostTagEntity> postTagList;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postFK", cascade = CascadeType.REMOVE)
+    private List<PostTagEntity> postTagList = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postOriginFK", cascade = {CascadeType.ALL})
-    private List<PostEntity> postOriginList;
-
-    @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "commentPostFK")
-    private List<CommentEntity> postComments;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postOriginFK")
+    private List<PostEntity> postOriginList = new ArrayList<>();
     
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postFK", cascade = {CascadeType.ALL})
-    private List<PostLikeEntity> postLikList;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postFK", cascade = CascadeType.REMOVE)
+    private List<PostLikeEntity> postLikList = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "commentPostFK", cascade = CascadeType.REMOVE)
+    private List<CommentEntity> postComments = new ArrayList<>();
 
     @Builder
     public PostEntity(UserEntity userFK,
