@@ -54,19 +54,19 @@ public class PostEntity extends BaseTimeEntity{
     private String postEndYMD;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postFK", cascade = {CascadeType.ALL})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postFK", cascade = CascadeType.REMOVE)
     private List<PostTagEntity> postTagList = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postOriginFK", cascade = {CascadeType.ALL})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postOriginFK")
     private List<PostEntity> postOriginList = new ArrayList<>();
     
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postFK", cascade = {CascadeType.ALL})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postFK", cascade = CascadeType.REMOVE)
     private List<PostLikeEntity> postLikList = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "commentPostFK")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "commentPostFK", cascade = CascadeType.REMOVE)
     private List<CommentEntity> postComments = new ArrayList<>();
 
     @Builder

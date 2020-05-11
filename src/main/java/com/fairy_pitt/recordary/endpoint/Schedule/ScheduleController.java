@@ -48,7 +48,7 @@ public class ScheduleController {
 
     @GetMapping("showUserSchedule")
     public List<ScheduleResponseDto> showUserSchedule(Long user, int state, Date fromDate, Date toDate){
-       return scheduleService.showUserSchedule(user, state, fromDate, toDate);
+        return scheduleService.showUserSchedule(user, state, fromDate, toDate);
     }
 
 //    @GetMapping("showMySchedule")

@@ -27,15 +27,15 @@ public class GroupMemberController {
     private final GroupApplyService groupApplyService;
 
     @PostMapping("create")
-    public Boolean groupCreate(@RequestBody GroupMemberRequestDto requestDto)
+    public Boolean groupMember(@RequestBody GroupMemberRequestDto requestDto)
     {
         groupApplyService.delete(requestDto);
         groupMemberService.save(requestDto);
         return true;
     }
 
-    @DeleteMapping("/")
-    public Boolean checkApply(@RequestBody GroupMemberRequestDto id) {
+    @PostMapping("delete")
+    public Boolean deleteApply(@RequestBody GroupMemberRequestDto id) {
         return groupMemberService.delete(id);
     }
 

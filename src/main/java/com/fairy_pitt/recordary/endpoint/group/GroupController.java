@@ -8,7 +8,6 @@ import com.fairy_pitt.recordary.endpoint.group.dto.GroupUpdateRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
 import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
-import com.fairy_pitt.recordary.endpoint.media.service.MediaService;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +30,6 @@ public class GroupController {
     private final GroupService groupService;
     private final GroupMemberService groupMemberService;
     private final S3UploadComponent s3UploadComponent;
-    private final MediaService mediaService;
     private final UserService userService;
 
     @PostMapping("create")
@@ -50,8 +48,7 @@ public class GroupController {
 
     @PostMapping("updateProfile/{groupCd}")
     public String updateProfile(@RequestParam("data") MultipartFile multipartFile, @PathVariable Long groupCd) throws IOException {
-        String url = s3UploadComponent.upload(multipartFile, "group", groupCd);
-        return groupService.updateProfile(groupCd, url);
+        return s3UploadComponent.upload(multipartFile, "group", groupCd);
     }
 
     @PostMapping("changeMaster/{groupCd}")
@@ -66,9 +63,9 @@ public class GroupController {
         return groupCd;
     }
 
-    @GetMapping("findGroup/{groupName}")
-    public List<GroupResponseDto> findAllGroup(@PathVariable String groupName) {
-        return groupService.findGroupByName(groupName);
+    @GetMapping("findGroup/{groupNm}")
+    public List<GroupResponseDto> findAllGroup(@PathVariable String groupNm) {
+        return groupService.findGroupByName(groupNm);
     }
 
     @GetMapping("{groupCd}")
@@ -76,16 +73,18 @@ public class GroupController {
         return groupService.groupInfo(groupCd);
     }
 
+
     @GetMapping("readAll")
-    public @ResponseBody List<GroupResponseDto> findAllGroup() {
+    public @ResponseBody
+    List<GroupResponseDto> findAllGroup() {
         return groupService.findAllGroup();
     }
 
 
-    @GetMapping("group/{userId}")
-    public List<GroupResponseDto> findUserGroup(@PathVariable Long userId) {
+    @GetMapping("group/{userCd}")
+    public List<GroupResponseDto> findUserGroup(@PathVariable Long userCd) {
 
-        return groupService.findUserGroups(userId);
+        return groupService.findUserGroups(userCd);
     }
 
     @GetMapping("member/{groupCd}")

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './header.css';
 import GroupAdd from '../../Containers/Group/GroupAdd';
 import LongMenu from '../Other/MoreMenu';
@@ -34,10 +34,13 @@ const ColorCircularProgress = withStyles({
 const HeaderMenu = (props) => {
   const [data, setData] = useState({
     ...props.data,
-    // userPic: null,
   });
 
-  console.log(data);
+  useEffect(() => {
+    setData(props.data);
+    console.log(data);
+  });
+
   const [profileEditForm, setProfileEditForm] = useState(null);
   // const [editor, setEditor] = useState(null);
   const [setting, setSetting] = useState(null);
@@ -303,7 +306,6 @@ const HeaderMenu = (props) => {
     return;
   };
 
-  console.log(props.data);
   return (
     <Drawer
       open={props.open}
@@ -315,7 +317,13 @@ const HeaderMenu = (props) => {
         <div className='menu-profile'>
           <div className='menu-profile-pic-nm'>
             <div style={{ marginRight: '10px' }}>
-              {data.userPic === null ? setData({ ...data, userPic: 'http://placehold.it/250x250' }) : null}
+              {data.userPic === null
+                ? setData({
+                    ...data,
+                    userPic: 'https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/user/basic.png',
+                  })
+                : null}
+
               <img alt='userPic' src={data.userPic} style={{ borderRadius: '50%', width: '30px', overFit: 'cover' }} />
             </div>
             <span>
@@ -448,9 +456,11 @@ const GroupButton = styled(Button)({
   paddingLeft: '10px',
 });
 
-export default React.memo(HeaderMenu, (props, newProps) => {
-  console.log(props, newProps);
-  return props === newProps;
-  // false 일시 랜더링
-  // true 일시 비랜더링
-});
+export default HeaderMenu;
+
+// export default React.memo(HeaderMenu, (props, newProps) => {
+//   console.log(props, newProps);
+//   return props === newProps;
+//   // false 일시 랜더링
+//   // true 일시 비랜더링
+// });

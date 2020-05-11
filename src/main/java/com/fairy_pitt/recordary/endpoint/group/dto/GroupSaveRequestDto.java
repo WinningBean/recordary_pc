@@ -27,11 +27,11 @@ public class GroupSaveRequestDto {
       this.groupEx = groupEx;
    }
 
-   public GroupEntity toEntity(UserEntity user,String url){
+   public GroupEntity toEntity(UserEntity user, String url){
     return GroupEntity.builder()
             .gMstUserFK(user)
             .groupEx(groupEx)
-            .groupName(groupNm)
+            .groupNm(groupNm)
             .groupState(groupState)
             .groupPic(url)
             .build();

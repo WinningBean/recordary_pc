@@ -25,7 +25,7 @@ public class GroupEntity extends BaseTimeEntity{
     private UserEntity gMstUserFK;
 
     @Column(name = "GROUP_NM")
-    private String groupName;
+    private String groupNm;
 
     @Column(name = "GROUP_PB_ST" )
     private Boolean groupState;
@@ -37,36 +37,36 @@ public class GroupEntity extends BaseTimeEntity{
     private String  groupEx;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK", cascade = CascadeType.REMOVE)
     private List<GroupMemberEntity> members = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK", cascade = CascadeType.REMOVE)
     private List<GroupApplyEntity> applyMembers = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK", cascade = CascadeType.REMOVE)
     private List<PostEntity> postEntityList = new ArrayList<>();
 
     @Builder
     public GroupEntity(UserEntity gMstUserFK,
-                       String groupName,
+                       String groupNm,
                        Boolean groupState,
                        String groupPic,
                        String  groupEx) {
 
         this.gMstUserFK = gMstUserFK;
-        this.groupName = groupName;
+        this.groupNm = groupNm;
         this.groupState = groupState;
         this.groupPic = groupPic;
         this.groupEx = groupEx;
     }
 
-    public void updateGroupInfo(String groupName,
+    public void updateGroupInfo(String groupNm,
                                 Boolean groupState,
                                 String groupPic,
                                 String  groupEx) {
-        this.groupName = groupName;
+        this.groupNm = groupNm;
         this.groupState = groupState;
         this.groupPic = groupPic;
         this.groupEx = groupEx;
@@ -75,6 +75,4 @@ public class GroupEntity extends BaseTimeEntity{
     public void updateGroupMaster(UserEntity User) {
         this.gMstUserFK = User;
     }
-
-    public void updateGroupPic(String url){this.groupPic = url;}
 }

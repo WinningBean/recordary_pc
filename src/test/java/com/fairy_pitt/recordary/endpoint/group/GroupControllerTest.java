@@ -93,7 +93,7 @@ public class GroupControllerTest {
 
         List<GroupEntity> all = groupRepository.findAll();
         assertThat(all.get(0).getGroupEx()).isEqualTo(groupEx);
-        assertThat(all.get(0).getGroupName()).isEqualTo(groupName);
+        assertThat(all.get(0).getGroupNm()).isEqualTo(groupName);
     }
 
 
@@ -113,7 +113,7 @@ public class GroupControllerTest {
 
         GroupEntity groupEntity = groupRepository.save(  GroupEntity.builder()
                 .gMstUserFK(saveUser)
-                .groupName(groupName)
+                .groupNm(groupName)
                 .groupState(true)
                 .groupPic(groupPic)
                 .groupEx(groupEx)
@@ -141,7 +141,7 @@ public class GroupControllerTest {
 
         List<GroupEntity> all = groupRepository.findAll();
         assertThat(all.get(0).getGroupEx()).isEqualTo(groupEx2);
-        assertThat(all.get(0).getGroupName()).isEqualTo(groupName);
+        assertThat(all.get(0).getGroupNm()).isEqualTo(groupName);
     }
 
     @Test
@@ -160,13 +160,13 @@ public class GroupControllerTest {
 
         GroupEntity groupEntity = groupRepository.save(  GroupEntity.builder()
                 .gMstUserFK(saveUser)
-                .groupName(groupName)
+                .groupNm(groupName)
                 .groupState(true)
                 .groupPic(groupPic)
                 .groupEx(groupEx)
                 .build());
 
-        Long groupId = groupEntity.getGroupCd();
+        Long groupCd = groupEntity.getGroupCd();
 
 
         UserEntity changeUser = userRepository.save(UserEntity.builder()
@@ -175,7 +175,7 @@ public class GroupControllerTest {
                 .userNm("테스트 유저222222")
                 .build());
 
-        String url = "http://localhost:" + port + "group/changeMaster/" + groupId;
+        String url = "http://localhost:" + port + "group/changeMaster/" + groupCd;
         Long userCd  = changeUser.getUserCd();
         //when
         ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url,userCd,Long.class);
@@ -186,7 +186,7 @@ public class GroupControllerTest {
 
         List<GroupEntity> all = groupRepository.findAll();
         assertThat(all.get(0).getGMstUserFK().getUserCd()).isEqualTo(changeUser.getUserCd());
-        assertThat(all.get(0).getGroupName()).isEqualTo(groupName);
+        assertThat(all.get(0).getGroupNm()).isEqualTo(groupName);
     }
 
     @Test
@@ -206,7 +206,7 @@ public class GroupControllerTest {
 
         GroupEntity groupEntity = groupRepository.save(GroupEntity.builder()
                 .gMstUserFK(saveUser)
-                .groupName(groupName)
+                .groupNm(groupName)
                 .groupState(true)
                 .groupPic(groupPic)
                 .groupEx(groupEx)
@@ -214,7 +214,7 @@ public class GroupControllerTest {
 
         GroupEntity groupEntity2 = groupRepository.save(GroupEntity.builder()
                 .gMstUserFK(saveUser)
-                .groupName(groupName)
+                .groupNm(groupName)
                 .groupState(true)
                 .groupPic(groupPic)
                 .groupEx(groupEx)
@@ -249,7 +249,7 @@ public class GroupControllerTest {
 
         GroupEntity groupEntity = groupRepository.save(GroupEntity.builder()
                 .gMstUserFK(saveUser)
-                .groupName(groupName)
+                .groupNm(groupName)
                 .groupState(true)
                 .groupPic(groupPic)
                 .groupEx(groupEx)

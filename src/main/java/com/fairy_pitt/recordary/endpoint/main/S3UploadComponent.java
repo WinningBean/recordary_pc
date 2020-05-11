@@ -53,7 +53,7 @@ public class S3UploadComponent {
     }
 
     private String upload(File uploadFile, String dirName, String fileName) {
-       // String fileName = dirName + "/" + id + "_" + "profile";
+        // String fileName = dirName + "/" + id + "_" + "profile";
         String uploadImageUrl = putS3(uploadFile, fileName); // 전환된 File 을 S3에 public 읽기 권한으로 put
         //->외부에서 정적 파일을 읽을 수 있도록 하기 위함.
         removeNewFile(uploadFile);
@@ -97,7 +97,7 @@ public class S3UploadComponent {
 //        // 파일 업로드
 //         upload(uploadFile, dirName);
 
-        //fileName
+    //fileName
 //    }
 
     private Optional<File> convert(MultipartFile file) throws IOException { //MultiPartFile 을 File 로 전환

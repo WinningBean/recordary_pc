@@ -7,6 +7,7 @@ const reducer = (state, action) => {
       user: {},
       friendList: undefined,
       groupList: undefined,
+      postList: undefined,
     };
   }
   switch (action.type) {
@@ -74,6 +75,11 @@ const reducer = (state, action) => {
     //     ...state,
     //     groupList: state.groupList === undefined ? state.groupList : state.groupList.concat(action.group),
     //   };
+    case 'ADD_POST':
+      return {
+        ...state,
+        postList: state.postList === undefined ? state.postList : state.PostList.concat(action.post),
+      };
   }
 
   return state;

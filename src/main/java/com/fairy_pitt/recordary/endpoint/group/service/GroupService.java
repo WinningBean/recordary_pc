@@ -9,6 +9,7 @@ import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.*;
+import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -53,24 +54,14 @@ public class GroupService {
     }
 
     @Transactional
-    public Long changGroupMaster(Long userId, Long groupCd) {
+    public Long changGroupMaster(Long userCd, Long groupCd) {
         GroupEntity groupEntity = groupRepository.findById(groupCd)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + groupCd));
 
-        UserEntity User = userService.findEntity(userId);
+        UserEntity User = userService.findEntity(userCd);
         groupEntity.updateGroupMaster(User);
 
         return groupCd;
-    }
-
-    @Transactional
-    public String updateProfile(Long groupId,String url)
-    {
-        GroupEntity groupEntity = groupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + groupId));
-
-        groupEntity.updateGroupPic(url);
-        return url;
     }
 
     @Transactional
@@ -86,7 +77,6 @@ public class GroupService {
         GroupEntity entity = groupRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
         UserEntity user = userService.findEntity(entity.getGMstUserFK().getUserCd());
-
         return new GroupResponseDto(entity,user);
     }
 
@@ -100,7 +90,7 @@ public class GroupService {
 
     @Transactional(readOnly = true)
     public List<GroupResponseDto> findGroupByName(String groupName){
-        return groupRepository.findByGroupNameLike("%"+groupName+"%").stream()
+        return groupRepository.findByGroupNmLike("%"+groupName+"%").stream()
                 .map(GroupResponseDto::new)
                 .collect(Collectors.toList());
     }
@@ -120,18 +110,19 @@ public class GroupService {
     @Transactional(readOnly = true)
     public List<UserResponseDto> findGroupMembers(Long groupCd){
 
-     List<GroupMemberEntity> groupEntities = groupRepository.findByGroupCd(groupCd).getMembers();
-     List<UserResponseDto> result = new ArrayList<>();
+        List<GroupMemberEntity> groupEntities = groupRepository.findByGroupCd(groupCd).getMembers();
+        List<UserResponseDto> result = new ArrayList<>();
 
-     for (GroupMemberEntity temp: groupEntities) {
-         UserResponseDto groupResponseDto = new UserResponseDto(temp.getUserFK());
-         result.add(groupResponseDto);
-     }
-     return  result;
+        for (GroupMemberEntity temp: groupEntities) {
+            UserResponseDto groupResponseDto = new UserResponseDto(temp.getUserFK());
+            result.add(groupResponseDto);
+        }
+        return  result;
     }
 
     @Transactional(readOnly = true)
     public GroupEntity findEntity(Long groupCd){
         return groupRepository.findByGroupCd(groupCd);
     }
+
 }

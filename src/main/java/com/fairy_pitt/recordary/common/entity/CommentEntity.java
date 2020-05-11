@@ -2,13 +2,10 @@ package com.fairy_pitt.recordary.common.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -38,7 +35,7 @@ public class CommentEntity extends BaseTimeEntity{
     private String content;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "commentOriginFK")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "commentOriginFK", cascade = CascadeType.REMOVE)
     private List<CommentEntity> commentOriginList;
 
     @Builder

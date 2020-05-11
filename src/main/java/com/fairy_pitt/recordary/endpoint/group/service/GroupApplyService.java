@@ -8,6 +8,7 @@ import com.fairy_pitt.recordary.common.repository.GroupApplyRepository;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.group.dto.*;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -50,27 +52,18 @@ public class GroupApplyService {
     @Transactional(readOnly = true)
     public List<GroupApplyResponseDto> findGroupAppliesToUser(Long userId){
         UserEntity user = userService.findEntity(userId);
-        List<GroupApplyEntity> groupApplyEntities = groupApplyRepository.findAllByUserFKAndAndApplyState(user,1);
-        List<GroupApplyResponseDto> groupApplyResponseDtoList = new ArrayList<>();
+     return groupApplyRepository.findAllByUserFKAndAndApplyState(user,1).stream()
+                .map(GroupApplyResponseDto :: new)
+                .collect(Collectors.toList());
 
-        for (GroupApplyEntity groupApplyEntity : groupApplyEntities){
-            GroupApplyResponseDto groupApplyResponseDto = new GroupApplyResponseDto(groupApplyEntity);
-            groupApplyResponseDtoList.add(groupApplyResponseDto);
-        }
-        return groupApplyResponseDtoList;
     }
 
     @Transactional(readOnly = true)
     public List<GroupApplyResponseDto> findUserAppliesToGroup(Long groupCd){
         GroupEntity group = groupRepository.findByGroupCd(groupCd);
-        List<GroupApplyEntity> groupApplyEntities = groupApplyRepository.findAllByGroupFKAndApplyState(group,2);
-        List<GroupApplyResponseDto> groupApplyResponseDtoList = new ArrayList<>();
-
-        for (GroupApplyEntity groupApplyEntity : groupApplyEntities){
-            GroupApplyResponseDto groupApplyResponseDto = new GroupApplyResponseDto(groupApplyEntity);
-            groupApplyResponseDtoList.add(groupApplyResponseDto);
-        }
-        return groupApplyResponseDtoList;
+        return groupApplyRepository.findAllByGroupFKAndApplyState(group,2).stream()
+                .map(GroupApplyResponseDto :: new)
+                .collect(Collectors.toList());
     }
 
     private Boolean checkApply(Long groupCd, Long userCd)
