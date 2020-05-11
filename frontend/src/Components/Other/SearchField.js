@@ -58,7 +58,7 @@ export default function SearchAppBar(props) {
         <SearchFieldResult
           userCd={props.userCd}
           data={data}
-          userSearch={userSearch}
+          searchText={userSearch}
           onCancel={() => setsearchState(false)}
         ></SearchFieldResult>
       );
@@ -68,7 +68,7 @@ export default function SearchAppBar(props) {
 
   const handleKeyPress = async (e) => {
     if (e.key === 'Enter') {
-      const userData = (await axios.get(`/followState/search/${userSearch}`)).data;
+      const userData = (await axios.get(`/user/search/${userSearch}`)).data;
       console.log(userData);
       // const userData = {
       //   searchedUser: [

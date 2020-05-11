@@ -336,7 +336,7 @@ const SearchFieldResult = (props) => {
             }}
           />
           <div style={{ marginLeft: '10px', color: 'white', fontSize: '20px' }}>
-            '{props.userSearch}'(으)로 검색한 결과
+            '{props.searchText}'(으)로 검색한 결과
           </div>
         </div>
         <hr />
