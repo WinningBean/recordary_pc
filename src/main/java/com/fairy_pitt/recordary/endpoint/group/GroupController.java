@@ -33,7 +33,7 @@ public class GroupController {
     private final UserService userService;
 
     @PostMapping("create")
-    public Boolean groupCreate(@RequestBody GroupSaveRequestDto requestDto) {
+    public Long groupCreate(@RequestBody GroupSaveRequestDto requestDto) {
         return groupMemberService.save(GroupMemberRequestDto.builder()
                 .groupCd(groupService.save(requestDto))
                 .userCd(requestDto.getUserCd())
@@ -46,9 +46,9 @@ public class GroupController {
         return groupService.updateGroupInfo(id, requestDto);
     }
 
-    @PostMapping("updateProfile")
-    public String updateProfile(@RequestParam("data") MultipartFile multipartFile) throws IOException {
-        return s3UploadComponent.upload(multipartFile, "group");
+    @PostMapping("updateProfile/{groupCd}")
+    public String updateProfile(@RequestParam("data") MultipartFile multipartFile, @PathVariable Long groupCd) throws IOException {
+        return s3UploadComponent.upload(multipartFile, "group", groupCd);
     }
 
     @PostMapping("changeMaster/{groupCd}")
@@ -63,9 +63,9 @@ public class GroupController {
         return groupCd;
     }
 
-    @GetMapping("findGroup/{groupName}")
-    public List<GroupResponseDto> findAllGroup(@PathVariable String groupName) {
-        return groupService.findGroupByName(groupName);
+    @GetMapping("findGroup/{groupNm}")
+    public List<GroupResponseDto> findAllGroup(@PathVariable String groupNm) {
+        return groupService.findGroupByName(groupNm);
     }
 
     @GetMapping("{groupCd}")
@@ -81,10 +81,16 @@ public class GroupController {
     }
 
 
-    @GetMapping("group/{userId}")
-    public List<GroupResponseDto> findUserGroup(@PathVariable Long userId) {
+    @GetMapping("group/{userCd}")
+    public List<GroupResponseDto> findUserGroup(@PathVariable Long userCd) {
 
-        return groupService.findUserGroups(userId);
+        return groupService.findUserGroups(userCd);
+    }
+
+    @GetMapping("member/{groupCd}")
+    public List<UserResponseDto> findGroupMember(@PathVariable Long groupCd)
+    {
+        return groupService.findGroupMembers(groupCd);
     }
 
 }

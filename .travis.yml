@@ -8,6 +8,9 @@ branches:
     - master
     - try-ci
 
+env:
+  - TRAVIS_NODE_VERSION="lts/*"
+
 # Travis CI 서버의 Home
 cache:
   directories:
@@ -17,7 +20,7 @@ cache:
 before_install:
   - chmod +x gradlew
 
-script: "./gradlew -x clean build"
+script: './gradlew -x clean build'
 
 before_deploy:
   - rm -rf frontend/node_modules

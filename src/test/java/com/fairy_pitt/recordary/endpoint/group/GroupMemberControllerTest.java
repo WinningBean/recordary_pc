@@ -73,7 +73,7 @@ public class GroupMemberControllerTest {
 
             GroupEntity groupEntity = groupRepository.save(GroupEntity.builder()
                     .gMstUserFK(saveUser)
-                    .groupName(groupName)
+                    .groupNm(groupName)
                     .groupState(true)
                     .groupPic(groupPic)
                     .groupEx(groupEx)

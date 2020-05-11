@@ -35,22 +35,25 @@ public class S3UploadComponent {
         for (MultipartFile multipartFile : multipartFiles) {
             File uploadFile = convert(multipartFile)//S3에 전달할 수 있도록 MultiPartFile 을 File 로 전환
                     .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
-            uploadImageUrl.add(upload(uploadFile, dirName));
+
+            String fileName = dirName + "/" + uploadFile.getName();
+            uploadImageUrl.add(upload(uploadFile, dirName, fileName));
         }
         return uploadImageUrl;
     }
 
-    public String upload(MultipartFile multipartFile, String dirName) throws IOException {//MultipartFile 을 전달 받고
+    public String upload(MultipartFile multipartFile, String dirName, Long id) throws IOException {//MultipartFile 을 전달 받고
         File uploadFile = convert(multipartFile)//S3에 전달할 수 있도록 MultiPartFile 을 File 로 전환
                 .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
         //S3에 MultipartFile 타입은 전송이 안됨
 
-        return upload(uploadFile, dirName);
+        String fileName = dirName + "/" + id + "_" + "profile";
+        return upload(uploadFile, dirName, fileName);
         //업로드된 파일의 S3 URL 주소를 반환
     }
 
-    private String upload(File uploadFile, String dirName) {
-        String fileName = dirName + "/" + uploadFile.getName();
+    private String upload(File uploadFile, String dirName, String fileName) {
+        // String fileName = dirName + "/" + id + "_" + "profile";
         String uploadImageUrl = putS3(uploadFile, fileName); // 전환된 File 을 S3에 public 읽기 권한으로 put
         //->외부에서 정적 파일을 읽을 수 있도록 하기 위함.
         removeNewFile(uploadFile);
@@ -66,7 +69,7 @@ public class S3UploadComponent {
 
     private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
-            log.info("파일이 삭제되었습니다.");
+            log.info("임시파일이 삭제되었습니다");
         } else {
             log.info("파일이 삭제되지 못했습니다.");
         }
@@ -94,7 +97,7 @@ public class S3UploadComponent {
 //        // 파일 업로드
 //         upload(uploadFile, dirName);
 
-        //fileName
+    //fileName
 //    }
 
     private Optional<File> convert(MultipartFile file) throws IOException { //MultiPartFile 을 File 로 전환

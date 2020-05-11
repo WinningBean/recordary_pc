@@ -59,7 +59,7 @@ public class UserService {
         String imgPath;
 
         if (userPic.isEmpty()) imgPath = null;
-        else imgPath = s3UploadComponent.upload(userPic, "user");
+        else imgPath = s3UploadComponent.upload(userPic, "user", userCd);
 
         log.info(imgPath);
 

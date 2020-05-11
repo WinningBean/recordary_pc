@@ -20,7 +20,6 @@ class Header extends React.Component {
   }
 
   render() {
-    console.log(this.props);
     if (!this.props.isLogin) {
       return (
         <header>
@@ -36,13 +35,18 @@ class Header extends React.Component {
                     </div> */}
             <div className='title-name'>
               <a href='http://localhost:3000/main'>
-                <img className='title-image' alt='Recordary icon' src='img/Recordary.png' style={{ height: '40px' }} />
+                <img
+                  className='title-image'
+                  alt='Recordary icon'
+                  // src='../../../public/img/Recordary.png'
+                  style={{ height: '40px' }}
+                />
               </a>
             </div>
           </div>
           <div id='header-right'>
             <div className='search-user'>
-              <SearchAppBar></SearchAppBar>
+              <SearchAppBar userCd={this.props.userCd}></SearchAppBar>
             </div>
             <Link to='/'>
               <Button style={{ color: '#ffffff' }}>로그인</Button>
@@ -68,21 +72,14 @@ class Header extends React.Component {
         </div>
         <div id='header-right'>
           <div className='search-user' style={{ marginRight: '10px' }}>
-            <SearchAppBar />
+            <SearchAppBar userCd={this.props.userCd} />
           </div>
           <div className='header-ring'>
             <NotifyPopup style={{ fontSize: 40, color: 'white' }}></NotifyPopup>
           </div>
           <ToDoList />
           <div className='profile-icon'>
-            <Link
-              to={{
-                pathname: `/user/ ${this.props.user_id}`,
-                state: {
-                  profile_type: 0,
-                },
-              }}
-            >
+            <Link to={`/profile/${this.props.userId}`}>
               <AccountCircleIcon style={{ fontSize: 40, color: 'white' }}>Profile</AccountCircleIcon>
             </Link>
           </div>

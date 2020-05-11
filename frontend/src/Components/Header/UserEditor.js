@@ -103,7 +103,7 @@ class UserEditor extends React.Component {
               onClick={async () => {
                 try {
                   const checkPw = (
-                    await axios.post('user/checkPw', {
+                    await axios.post('/user/checkPw', {
                       userId: this.state.user_id,
                       userPw: this.state.user_pw,
                     })
@@ -257,7 +257,7 @@ class UserEditor extends React.Component {
                 // }
                 try {
                   const checkPw = (
-                    await axios.post('user/checkPw', {
+                    await axios.post('/user/checkPw', {
                       userId: this.state.user_id,
                       userPw: this.state.user_pw,
                     })

@@ -14,21 +14,21 @@ import Snackbar from '../UI/Snackbar';
 import Backdrop from '../UI/Backdrop';
 import axios from 'axios';
 
-const GroupModify = props => {
+const GroupModify = (props) => {
+  console.log(props.data);
   const [changeData, setChangeData] = useState(props.data);
-  const [changePic, setChangePic] = useState(props.pic);
   const [openSwitch, setOpenSwitch] = useState({
-    open: props.data.group.group_open
+    open: props.data.groupState,
   });
   const [imageSrc, setImageSrc] = useState(null);
   const [alert, setAlert] = useState(null);
 
   let fileUpload = null;
 
-  const changeHandel = e => {
+  const changeHandel = (e) => {
     setChangeData({
       ...changeData,
-      group: { ...changeData.group, [e.target.name]: e.target.value }
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -41,11 +41,11 @@ const GroupModify = props => {
       //     />
       <Backdrop />
     );
-    if (changePic !== props.pic) {
+    if (changeData.groupPic !== props.data.pic) {
       var canvas = document.createElement('canvas');
       var ctx = canvas.getContext('2d');
       const cut = new Image();
-      cut.src = changePic;
+      cut.src = changeData.groupPic;
       let height = cut.height;
       let width = cut.width;
       height *= 250 / width;
@@ -60,31 +60,29 @@ const GroupModify = props => {
       var dataUrl = null;
     }
     try {
-      // const form = new FormData();
-      // form.append('group_nm', Changedata.group.group_nm);
-      // form.append('group_ex', Chagnedata.group.group_ex);
-      // form.append('group_pic', dataUrl);
-      // const { data } = await axios.post("/group/modify", form);
-      const data = { success: true };
-      if (data.success) {
-        props.onChange({
-          ...changeData.group,
-          group_pic: dataUrl
-        });
+      console.log({
+        groupName: changeData.groupName,
+        groupEx: changeData.groupEx,
+        groupPic: null,
+        groupState: openSwitch.open,
+      });
+      const { data } = await axios.post(`/group/update/${changeData.groupCd}`, {
+        groupNm: changeData.groupNm,
+        groupEx: changeData.groupEx,
+        groupPic: null,
+        groupState: openSwitch.open,
+      });
+      if (Number.isInteger(data)) {
+        // props.onChange({
+        //   ...changeData.group,
+        //   group_pic: dataUrl,
+        // });
         setAlert(
-          <AlertDialog
-            severity='success'
-            content='그룹정보를 변경하였습니다.'
-            onAlertClose={() => setAlert(null)}
-          />
+          <AlertDialog severity='success' content='그룹정보를 변경하였습니다.' onAlertClose={() => setAlert(null)} />
         );
       } else {
         setAlert(
-          <Snackbar
-            severity='error'
-            content='그룹정보 변경에 실패하였습니다.'
-            onClose={() => setAlert(null)}
-          />
+          <Snackbar severity='error' content='그룹정보 변경에 실패하였습니다.' onClose={() => setAlert(null)} />
         );
       }
     } catch (error) {
@@ -106,9 +104,7 @@ const GroupModify = props => {
                     &nbsp;
                     <span>그룹 수정</span>
                 </div> */}
-      <DialogContent
-        style={{ display: 'flex', justifyContent: 'space-between' }}
-      >
+      <DialogContent style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div className='dialog-content'>
           <div>
             <img
@@ -116,10 +112,10 @@ const GroupModify = props => {
                 width: '250px',
                 height: '250px',
                 objectFit: 'cover',
-                borderRadius: '50%'
+                borderRadius: '50%',
               }}
               alt='profile-img'
-              src={changePic}
+              src={changeData.groupPic}
             />
           </div>
           <Button
@@ -143,10 +139,10 @@ const GroupModify = props => {
           type='file'
           accept='image/*'
           style={{ display: 'none' }}
-          ref={file => {
+          ref={(file) => {
             fileUpload = file;
           }}
-          onChange={e => {
+          onChange={(e) => {
             if (e.target.files && e.target.files.length > 0) {
               const reader = new FileReader();
               reader.addEventListener('load', () => setImageSrc(reader.result));
@@ -156,20 +152,15 @@ const GroupModify = props => {
           }}
         />
         <div className='dialog-content'>
-          <TextField
-            label='그룹명'
-            name='group_nm'
-            onChange={changeHandel}
-            defaultValue={changeData.group.group_nm}
-          />
+          <TextField label='그룹명' name='groupNm' onChange={changeHandel} defaultValue={changeData.groupNm} />
           <TextField
             label='그룹 설명'
-            name='group_ex'
+            name='groupEx'
             multiline={true}
             rows={10}
             rowsMax={10}
             onChange={changeHandel}
-            defaultValue={changeData.group.group_ex}
+            defaultValue={changeData.groupEx}
           />
         </div>
       </DialogContent>
@@ -179,9 +170,9 @@ const GroupModify = props => {
             control={
               <Switch
                 checked={openSwitch.open}
-                onChange={event =>
+                onChange={(event) =>
                   setOpenSwitch({
-                    open: event.target.checked
+                    open: event.target.checked,
                   })
                 }
                 color='primary'
@@ -198,10 +189,10 @@ const GroupModify = props => {
         <ImageEditor
           src={imageSrc}
           onClose={() => setImageSrc(null)}
-          onComplete={src => {
+          onComplete={(src) => {
             setImageSrc(null);
             // setChangeData({ ...changeData, group : {...changeData.group , group_pic: src} });
-            setChangePic(src);
+            // setChangePic(src);
           }}
         />
       )}

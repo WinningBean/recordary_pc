@@ -1,9 +1,11 @@
 package com.fairy_pitt.recordary.endpoint.Schedule;
 
 import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
+import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.endpoint.Schedule.Service.ScheduleService;
 import com.fairy_pitt.recordary.endpoint.Schedule.Service.ScheduleTabService;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleMemberUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleResponseDto;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleUpdateRequestDto;
 import com.fairy_pitt.recordary.endpoint.post.service.PostService;
@@ -26,7 +28,6 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
     private final ScheduleTabService scheduleTabService;
 
-
     @PostMapping("create")
     public Long groupCreate(@RequestBody ScheduleSaveRequestDto requestDto)
     {
@@ -44,6 +45,18 @@ public class ScheduleController {
         scheduleService.delete(id);
         return true;
     }
+
+    @GetMapping("showUserSchedule")
+    public List<ScheduleResponseDto> showUserSchedule(Long user, int state, Date fromDate, Date toDate){
+        return scheduleService.showUserSchedule(user, state, fromDate, toDate);
+    }
+
+//    @GetMapping("showMySchedule")
+//    public List<ScheduleResponseDto> showMySchedule()
+//    {
+//
+//    }
+//
 
     //스케줄을 가져오는건 user에서 .getschedules
 

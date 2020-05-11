@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SearchAppBar() {
+export default function SearchAppBar(props) {
   const classes = useStyles();
   const [searchState, setsearchState] = useState(false);
   const [userSearch, setUserSearch] = useState('');
@@ -56,6 +56,7 @@ export default function SearchAppBar() {
     if (searchState === true) {
       return (
         <SearchFieldResult
+          userCd={props.userCd}
           data={data}
           userSearch={userSearch}
           onCancel={() => setsearchState(false)}
@@ -112,12 +113,7 @@ export default function SearchAppBar() {
       //     group_click: false
       //   };
       // });
-
-      setData({
-        ...data,
-        searchedUser: addedUserData,
-      });
-
+      setData(addedUserData);
       setsearchState(true);
     }
   };
