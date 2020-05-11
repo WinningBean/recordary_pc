@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { ChromePicker } from 'react-color';
+import { styled } from '@material-ui/styles';
 
 import './PostAppend.css';
 import DTP from '../UI/DTP';
@@ -17,13 +18,13 @@ import PostAddIcon from '@material-ui/icons/PostAdd';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 import DateRangeIcon from '@material-ui/icons/DateRange';
-import PermMediaIcon from '@material-ui/icons/PermMedia';
 import { makeStyles } from '@material-ui/core/styles';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Popover from '@material-ui/core/Popover';
+
 import axios from 'axios';
 import store from '../../store';
 const useStyles = makeStyles((theme) => ({
@@ -49,7 +50,8 @@ const useStyles = makeStyles((theme) => ({
 
 const PostMediaScheduleAppend = (props) => {
   const classes = useStyles();
-  const [mediaOpen, setMediaOpen] = useState(null);
+  const [postAddMediaListSrc, setPostAddMediaListSrc] = useState([]);
+  const [mediaOpen, setMediaOpen] = useState(false);
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const [open, setOpen] = React.useState(false);
   const [alert, setAlert] = useState(null);
@@ -60,6 +62,7 @@ const PostMediaScheduleAppend = (props) => {
     b: '51',
     a: '1',
   });
+  let fileUpload = useRef(null);
 
   const [post, setPost] = useState({
     user_id: store.getState().user.userId,
@@ -81,7 +84,38 @@ const PostMediaScheduleAppend = (props) => {
     });
   };
 
-  const handleClickOpen = () => {
+  const dataURLToBlob = (dataURL) => {
+    const BASE64_MARKER = ';base64,';
+
+    // base64로 인코딩 되어있지 않을 경우
+    if (dataURL.indexOf(BASE64_MARKER) === -1) {
+      const parts = dataURL.split(',');
+      const contentType = parts[0].split(':')[1];
+      const raw = parts[1];
+      return new Blob([raw], {
+        type: contentType,
+      });
+    }
+
+    // base64로 인코딩 된 이진데이터일 경우
+    const parts = dataURL.split(BASE64_MARKER);
+    const contentType = parts[0].split(':')[1];
+    const raw = window.atob(parts[1]);
+    // atob()는 Base64를 디코딩하는 메서드
+    const rawLength = raw.length;
+    // 부호 없는 1byte 정수 배열을 생성
+    const uInt8Array = new Uint8Array(rawLength); // 길이만 지정된 배열
+    let i = 0;
+    while (i < rawLength) {
+      uInt8Array[i] = raw.charCodeAt(i);
+      i++;
+    }
+    return new Blob([uInt8Array], {
+      type: contentType,
+    });
+  };
+
+  const handleClickOpen = async () => {
     setOpen(true);
   };
 
@@ -93,33 +127,32 @@ const PostMediaScheduleAppend = (props) => {
     setAlert(<Backdrop />);
 
     try {
-      const form = new FormData();
-      form.append('userId', post.user_id);
-      form.append('groupCd', post.group_cd);
-      form.append('postOriginCd', null);
-      form.append('scheduleCd', null);
-      form.append('mediaCd', null);
-      form.append('postEx', post.post_ex);
-      form.append('postPublicState', post.post_pb_st);
-      form.append('postStrYMD', post.post_str_ymd);
-      form.append('postEndYMD', post.post_end_ymd);
+      console.log(
+        postAddMediaListSrc.map((value) => {
+          dataURLToBlob(value);
+        })
+      );
 
-      for (var value of form.values()) {
-        console.log(value);
-      }
+      console.log(store.getState().user.userCd);
+      const { getMediaCd } = await axios.post(
+        `media/${store.getState().user.userCd}`,
+        {
+          mediaFiles: postAddMediaListSrc.map((value) => {
+            dataURLToBlob(value);
+          }),
+        },
+        {
+          headers: { 'Content-Type': 'multipart/form-data; boundary=------WebKitFormBoundary7MA4YWxkTrZu0gW' },
+        }
+      );
+
+      console.log(getMediaCd);
+      setPost({ ...post, mediaCd: getMediaCd });
 
       const { data } = await axios.post(
         `post/`,
         {
-          userId: post.user_id,
-          groupCd: post.group_cd,
-          postOriginCd: null,
-          scheduleCd: null,
-          mediaCd: null,
-          postEx: post.post_ex,
-          postPublicState: post.post_pb_st,
-          postStrYMD: post.post_str_ymd,
-          postEndYMD: post.post_end_ymd,
+          post,
         },
         {
           headers: {
@@ -152,21 +185,6 @@ const PostMediaScheduleAppend = (props) => {
         />
       );
     }
-  };
-
-  const showMedia = () => {
-    if (mediaOpen === null) {
-      setMediaOpen(
-        <div onClose={() => setMediaOpen(null)}>
-          <div className='Post-Append-Media post-Append'>
-            <AddPhotoAlternateIcon style={{ fontSize: '50px' }}></AddPhotoAlternateIcon>
-          </div>
-        </div>
-      );
-      return;
-    }
-    setMediaOpen(null);
-    return;
   };
 
   return (
@@ -213,28 +231,21 @@ const PostMediaScheduleAppend = (props) => {
                 }
               })()}
             </div>
-            <div className='plus-button-design' onClick={showMedia}>
-              {(() => {
-                if (mediaOpen === null) {
-                  return (
-                    <div className='plus-button-design-2'>
-                      <PermMediaIcon style={{ fontSize: '30px' }} />
-                      <span style={{ fontSize: '15px', marginLeft: '10px' }}>미디어</span>
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div className='plus-button-design-2 clicked'>
-                      <PermMediaIcon style={{ fontSize: '30px' }} />
-                      <span style={{ fontSize: '15px', marginLeft: '10px' }}>미디어</span>
-                    </div>
-                  );
-                }
-              })()}
+            <div className='plus-button-design' onClick={() => setMediaOpen(!mediaOpen)}>
+              {mediaOpen === true ? (
+                <div className='plus-button-design-2 clicked'>
+                  <AddPhotoAlternateIcon style={{ fontSize: '30px' }} />
+                  <span style={{ fontSize: '15px', marginLeft: '10px' }}>미디어</span>
+                </div>
+              ) : (
+                <div className='plus-button-design-2 '>
+                  <AddPhotoAlternateIcon style={{ fontSize: '30px' }} />
+                  <span style={{ fontSize: '15px', marginLeft: '10px' }}>미디어</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
-
         <div className='Post-Append-text post-Append'>
           <TextField
             id='post_text'
@@ -262,6 +273,7 @@ const PostMediaScheduleAppend = (props) => {
             <ChromePicker color={scheduleColor} onChange={(color) => setScheduleColor(color.rgb)} />
           </Popover>
         ) : null}
+
         {scheduleOpen === false ? null : (
           <div onClose={() => setScheduleOpen(null)}>
             <div className='Post-Append-title post-Append'>
@@ -301,7 +313,57 @@ const PostMediaScheduleAppend = (props) => {
             </div>
           </div>
         )}
-        {mediaOpen}
+        {mediaOpen === true ? (
+          <div className='Post-Append-Media post-Append'>
+            <div
+              style={{
+                width: '60px',
+                height: '60px',
+                display: 'flex',
+                boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onClick={() => fileUpload.current.click()}
+            >
+              <AddPhotoAlternateIcon style={{ fontSize: '50px' }}></AddPhotoAlternateIcon>
+            </div>
+            <input
+              type='file'
+              accept='image/*'
+              required
+              multiple
+              style={{ display: 'none' }}
+              ref={fileUpload}
+              onChange={(e) => {
+                // console.log(e.target.files);
+                // console.log(e.target.files.length);
+                let files = [];
+                for (let i = 0; i < e.target.files.length; i++) {
+                  const reader = new FileReader();
+                  reader.onloadend = (e) => {
+                    files.push(e.target.result);
+                  };
+                  reader.readAsDataURL(e.target.files[i]);
+                }
+                setPostAddMediaListSrc(files);
+              }}
+            />
+            {postAddMediaListSrc.map((value, index) => (
+              <div style={{ marginLeft: '10px' }} key={`${index}-postAddImg`}>
+                <img
+                  style={{
+                    width: '60px',
+                    height: '60px',
+                    objectFit: 'cover',
+                  }}
+                  id='postAddImg'
+                  src={value}
+                />
+              </div>
+            ))}
+          </div>
+        ) : null}
         {alert}
         <div className='Post-Append-Bottom'>
           <div className='Post-Upload-buttons'>
