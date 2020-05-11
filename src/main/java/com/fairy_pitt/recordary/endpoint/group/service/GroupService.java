@@ -9,6 +9,7 @@ import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.*;
+import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -134,4 +135,5 @@ public class GroupService {
     public GroupEntity findEntity(Long groupCd){
         return groupRepository.findByGroupCd(groupCd);
     }
+
 }
