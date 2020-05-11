@@ -43,13 +43,13 @@ public class GroupApplyController {
     }
 
     @GetMapping("findGroupApply/{userCd}")
-    public List<GroupResponseDto> findGroupAppliesToUser(@PathVariable Long userCd){
+    public List<GroupApplyResponseDto> findGroupAppliesToUser(@PathVariable Long userCd){
 
         return groupApplyService.findGroupAppliesToUser(userCd);
     }
 
     @GetMapping("findUserApply/{groupCd}")
-    public List<UserResponseDto> findUserAppliesToGroup(@PathVariable Long groupCd)
+    public List<GroupApplyResponseDto> findUserAppliesToGroup(@PathVariable Long groupCd)
     {
         return groupApplyService.findUserAppliesToGroup(groupCd);
     }

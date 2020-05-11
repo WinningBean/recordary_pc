@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -49,29 +50,20 @@ public class GroupApplyService {
     }
 
     @Transactional(readOnly = true)
-    public List<GroupResponseDto> findGroupAppliesToUser(Long userId){
+    public List<GroupApplyResponseDto> findGroupAppliesToUser(Long userId){
         UserEntity user = userService.findEntity(userId);
-        List<GroupApplyEntity> groupApplyEntities = groupApplyRepository.findAllByUserFKAndAndApplyState(user,1);
-        List<GroupResponseDto> groupResponseDto = new ArrayList<>();
+     return groupApplyRepository.findAllByUserFKAndAndApplyState(user,1).stream()
+                .map(GroupApplyResponseDto :: new)
+                .collect(Collectors.toList());
 
-        for (GroupApplyEntity groupApplyEntity : groupApplyEntities){
-            GroupResponseDto responseDto = new GroupResponseDto(groupApplyEntity.getGroupFK());
-            groupResponseDto.add(responseDto);
-        }
-        return groupResponseDto;
     }
 
     @Transactional(readOnly = true)
-    public List<UserResponseDto> findUserAppliesToGroup(Long groupCd){
+    public List<GroupApplyResponseDto> findUserAppliesToGroup(Long groupCd){
         GroupEntity group = groupRepository.findByGroupCd(groupCd);
-        List<GroupApplyEntity> groupApplyEntities = groupApplyRepository.findAllByGroupFKAndApplyState(group,2);
-        List<UserResponseDto> userResponseDto = new ArrayList<>();
-
-        for (GroupApplyEntity groupApplyEntity : groupApplyEntities){
-            UserResponseDto responseDto = new UserResponseDto(groupApplyEntity.getUserFK());
-            userResponseDto.add(responseDto);
-        }
-        return userResponseDto;
+        return groupApplyRepository.findAllByGroupFKAndApplyState(group,2).stream()
+                .map(GroupApplyResponseDto :: new)
+                .collect(Collectors.toList());
     }
 
     private Boolean checkApply(Long groupCd, Long userCd)
