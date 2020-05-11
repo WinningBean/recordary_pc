@@ -66,14 +66,17 @@ const SearchFieldResult = (props) => {
               }}
             >
               <img
-                alt='friend-img'
+                alt={`${value.userNm} img`}
                 style={{
                   marginRight: '10px',
                   borderRadius: '50%',
+                  width: '40px',
+                  height: '40px',
+                  objectFit: 'cover',
                 }}
                 src={value.userPic}
               />
-              {value.userNm}
+              {value.userId}({value.userNm})
             </div>
             <div>
               {(() => {
