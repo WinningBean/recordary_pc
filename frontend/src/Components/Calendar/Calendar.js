@@ -15,10 +15,12 @@ import produce from 'immer';
 // 600x475, 85x74
 const Calendar = (props) => {
   const type = props.type;
-  // 0 : 내 캘린더
-  // 1 : 내 그룹 캘린더
-  // 2 : 남의 캘린더 (그룹도 포함)
-  // 3 : 나의 일정 공유 캘린더
+  // this.state.type
+  // 0 : 내 프로필
+  // 1 : 남의 프로필
+  // 2 : 마스터 그룹 프로필
+  // 3 : 일반 그룹 프로필
+  // 4 : 일정 공유
   const [userDate, setUserDate] = useState([
     {
       cd: '01',
@@ -264,9 +266,9 @@ const Calendar = (props) => {
               isBorderLeft === true ? 'borderLeft' : ''
             }`}
             key={day}
-            onClick={type !== 3 ? null : () => onChoice(currDay)}
+            onClick={type !== 4 ? null : () => onChoice(currDay)}
             style={(() => {
-              if (type !== 3) {
+              if (type !== 4) {
                 return null;
               }
               if (props.choiceSharedStartDate !== null && props.choiceSharedEndDate === null) {
@@ -284,7 +286,9 @@ const Calendar = (props) => {
               }
             })()}
           >
-            {dateFns.isSameDay(day, selectedDate) ? <div className='selected' /> : null}
+            {dateFns.isSameDay(day, selectedDate) ? (
+              <div className='selected' style={{ backgroundColor: type === 2 || type === 3 ? 'tomato' : null }} />
+            ) : null}
             <span className='bg'>{formattedDate}</span>
             <span className='number'>{formattedDate}</span>
             <div className='more' onClick={(e) => setPopover({ event: e.currentTarget, date: currDay })} />
@@ -323,7 +327,7 @@ const Calendar = (props) => {
         userSelect: 'none',
         backgroundColor: '#9e5fff80',
       }}
-      onMouseDown={type === 0 ? onScMouseDown : null}
+      onMouseDown={type === 0 || type === 2 ? onScMouseDown : null}
       onClick={(e) => setDetailedSC({ event: e.currentTarget, cd: cd })}
     >
       <div
@@ -378,7 +382,7 @@ const Calendar = (props) => {
           userSelect: 'none',
           backgroundColor: '#9e5fff80',
         }}
-        onMouseDown={type === 0 ? onScMouseDown : null}
+        onMouseDown={type === 0 || type === 2 ? onScMouseDown : null}
         onClick={(e) => setDetailedSC({ event: e.currentTarget, cd: cd })}
       >
         <div
@@ -633,7 +637,7 @@ const Calendar = (props) => {
     <div className='calendar'>
       {CalendarHeader}
       {CalendarDays}
-      {type === 0 ? (
+      {type === 0 || type === 2 ? (
         <div id='wrap-cells' onMouseDown={onMouseDownCell} onMouseMove={MouseMoveHandler} onMouseUp={onScMouseUp}>
           {Cells}
           {Schedual()}
@@ -809,7 +813,7 @@ const Calendar = (props) => {
               {selectedDetailedSC !== null ? selectedDetailedSC.ex : null}
             </div>
           </div>
-          {type === 0 ? (
+          {type === 0 || type === 2 ? (
             <div className='calendar-detailedsc-buttons'>
               <div className='calendar-detailedsc-buttons-button' onClick={(userDate) => setScheduleEditOpen(true)}>
                 <CreateIcon fontSize='small' />

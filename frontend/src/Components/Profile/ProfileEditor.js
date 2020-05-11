@@ -175,7 +175,7 @@ class ProfileEditor extends React.Component {
                     }
 
                     const { data } = await axios.post(
-                      `user/${this.state.user_id}/profileUpdate`,
+                      `/user/${this.state.user_id}/profileUpdate`,
                       {
                         userPic: this.state.user_pic,
                         userEx: this.state.user_ex,

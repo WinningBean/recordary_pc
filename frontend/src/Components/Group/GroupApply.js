@@ -3,11 +3,15 @@ import './group.css';
 import DialogContent from '@material-ui/core/DialogContent';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import GroupMemberSearch from './GroupMemberSearch';
 import AlertDialog from '../Other/AlertDialog';
+import Snackbar from '../UI/Snackbar';
 import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -32,26 +36,96 @@ const GroupApply = (props) => {
     <div className='dialog-wrap'>
       <DialogContent className={classes.content}>
         <div className={classes.marginBottom}>
-          <span>그룹장</span>
-          &nbsp;&nbsp;
-          <div>
-            <Chip
-              avatar={<Avatar alt={`${info.userId} img`} src={info.userPic} />}
-              className={classes.chip}
-              label={info.userNm}
-              style={{
-                backgroundColor: 'rgba(20, 81, 51, 0.8)',
-                color: '#ffffff',
-              }}
+          <span style={{ fontWeight: 'bold' }}>그룹장</span>
+          <div style={{ display: 'flex' }}>
+            <img
+              style={{ width: '120px', height: '120px', objectFit: 'cover' }}
+              alt='group-master-img'
+              src={info.userPic}
             />
+            <div style={{ display: 'flex', flexDirection: 'column', flex: 1, paddingLeft: '20px' }}>
+              <div style={{ flex: 1, fontSize: '22px', fontWeight: 'bold' }}>{info.userNm}</div>
+              <Button
+                onClick={() =>
+                  setDialog(
+                    <Dialog open onClose={() => setDialog(null)}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          padding: '6px 8px',
+                          maxHeight: '600px',
+                        }}
+                      >
+                        {info.member.map((value, index) => {
+                          return (
+                            <Button
+                              key={`member-${index}`}
+                              onClick={async () => {
+                                if (!window.confirm('그룹장을 정말 바꾸시겠습니까?')) {
+                                  return;
+                                }
+                                console.log(info.groupCd, value.userCd);
+                                try {
+                                  await axios.post(`/group/changeMaster/${info.groupCd}`, {
+                                    userCd: value.userCd,
+                                  });
+                                  setDialog(<Redirect to='/' />);
+                                } catch (error) {
+                                  console.error(error);
+                                  setDialog(
+                                    <Snackbar onClose={() => setDialog(null)} severity='error' content={`${error}`} />
+                                  );
+                                }
+                              }}
+                            >
+                              <div
+                                style={{
+                                  height: '60px',
+                                  padding: '0px 2px',
+                                  display: 'flex',
+                                  borderBottom: '1px solid #eee',
+                                  padding: '5px 0',
+                                }}
+                              >
+                                <img
+                                  style={{
+                                    height: '50px',
+                                    width: '50px',
+                                    objectFit: 'cover',
+                                    borderRadius: '50%',
+                                  }}
+                                  src={value.userPic}
+                                  alt='user img'
+                                />
+                                <div
+                                  style={{
+                                    flex: 1,
+                                    paddingLeft: '18px',
+                                    lineHeight: '50px',
+                                    fontWeight: 'bold',
+                                  }}
+                                >{`${value.userId}(${value.userNm})`}</div>
+                              </div>
+                            </Button>
+                          );
+                        })}
+                      </div>
+                    </Dialog>
+                  )
+                }
+              >
+                <div style={{ flex: 1 }}>그룹장 변경</div>
+              </Button>
+            </div>
           </div>
         </div>
         <div>
-          <span>그룹멤버</span>
+          <span style={{ fontWeight: 'bold' }}>그룹멤버</span>
           &nbsp;&nbsp;
           <div>
             {(() => {
-              return info.groupMember.map((value, index) => {
+              return info.member.map((value, index) => {
                 return (
                   <Chip
                     avatar={<Avatar alt={`${value.userNm} img`} src={value.userPic} />}

@@ -21,14 +21,14 @@ import axios from 'axios';
 import store from '../../store';
 import * as dateFns from 'date-fns';
 
-const ScheduleShare = props => {
+const ScheduleShare = (props) => {
   const [open, setOpen] = React.useState(false);
   const [alert, setAlert] = useState(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [userDate, setUserDate] = useState([]);
   const [choiceDate, setChoiceDate] = useState({
     start: null,
-    end: null
+    end: null,
   });
   const [scheduleList, setScheduleList] = useState(null);
 
@@ -40,14 +40,14 @@ const ScheduleShare = props => {
       post_ex: null,
       post_pb_st: null,
       post_str_ymd: null,
-      post_end_ymd: null
-    }
+      post_end_ymd: null,
+    },
   });
 
-  const changeHandle = e => {
+  const changeHandle = (e) => {
     setUserPost({
       ...userPost,
-      inputPost: { ...userPost.inputPost, [e.target.name]: e.target.value }
+      inputPost: { ...userPost.inputPost, [e.target.name]: e.target.value },
     });
   };
 
@@ -76,20 +76,10 @@ const ScheduleShare = props => {
 
       if (data.isWrite) {
         setAlert(
-          <AlertDialog
-            severity='success'
-            content='게시물이 추가되었습니다.'
-            onAlertClose={() => setAlert(null)}
-          />
+          <AlertDialog severity='success' content='게시물이 추가되었습니다.' onAlertClose={() => setAlert(null)} />
         );
       } else {
-        setAlert(
-          <Snackbar
-            severity='error'
-            content='게시물을 추가하지 못했습니다.'
-            onClose={() => setAlert(null)}
-          />
-        );
+        setAlert(<Snackbar severity='error' content='게시물을 추가하지 못했습니다.' onClose={() => setAlert(null)} />);
       }
     } catch (error) {
       console.log(error);
@@ -104,23 +94,17 @@ const ScheduleShare = props => {
   };
 
   const saveScheduleList = (userDate, choiceDate) => {
-    const sc = userDate.filter(
-      value => choiceDate.start <= value.start && choiceDate.end >= value.end
-    );
+    const sc = userDate.filter((value) => choiceDate.start <= value.start && choiceDate.end >= value.end);
     setScheduleList(
-      sc.map(value => (
+      sc.map((value) => (
         <div key={value.cd} style={{ display: 'flex' }}>
           <div>
             <Checkbox defaultChecked color='default' />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: '18px', marginTop: '10px' }}>
-              {value.ex}
-            </span>
+            <span style={{ fontSize: '18px', marginTop: '10px' }}>{value.ex}</span>
             <span style={{ fontSize: '13px', color: 'gray', marginTop: '3px' }}>
-              {dateFns.format(value.start, 'yyyy.MM.dd hh:mm') +
-                ' ~ ' +
-                dateFns.format(value.end, 'yyyy.MM.dd hh:mm')}
+              {dateFns.format(value.start, 'yyyy.MM.dd hh:mm') + ' ~ ' + dateFns.format(value.end, 'yyyy.MM.dd hh:mm')}
             </span>
           </div>
         </div>
@@ -133,9 +117,7 @@ const ScheduleShare = props => {
     <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
       <div className='post-append-header' style={{ width: '600px' }}>
         <div className='Post-Append-titleName'>
-          <ShareIcon
-            style={{ fontSize: '40px', color: 'white', marginLeft: '10px' }}
-          />
+          <ShareIcon style={{ fontSize: '40px', color: 'white', marginLeft: '10px' }} />
           <div className='PostAdd-title'>내 일정 공유</div>
         </div>
       </div>
@@ -145,15 +127,10 @@ const ScheduleShare = props => {
             <SelectGroup />
           </div>
           <div className='schedule-media-button '>
-            <div
-              className='plus-button-design'
-              onClick={() => setIsCalendarOpen(!isCalendarOpen)}
-            >
+            <div className='plus-button-design' onClick={() => setIsCalendarOpen(!isCalendarOpen)}>
               <div className='plus-button-design-2'>
                 <EventAvailableIcon style={{ fontSize: '30px' }} />
-                <span style={{ fontSize: '15px', marginLeft: '5px' }}>
-                  일정찾기
-                </span>
+                <span style={{ fontSize: '15px', marginLeft: '5px' }}>일정찾기</span>
               </div>
             </div>
             <PublicRange />
@@ -167,20 +144,17 @@ const ScheduleShare = props => {
             }}
             open
             style={{
-              backgroundColor: 'transparent'
+              backgroundColor: 'transparent',
             }}
           >
             {choiceDate.start === null ? (
-              <div
-                className='post-append-header'
-                style={{ backgroundColor: '#5d5d5d' }}
-              >
+              <div className='post-append-header' style={{ backgroundColor: '#5d5d5d' }}>
                 <div className='Post-Append-titleName'>
                   <PlaylistAddCheckIcon
                     style={{
                       fontSize: '40px',
                       color: 'white',
-                      marginLeft: '10px'
+                      marginLeft: '10px',
                     }}
                   />
                   <div className='PostAdd-title'>시작날짜를 선택하세요.</div>{' '}
@@ -193,7 +167,7 @@ const ScheduleShare = props => {
                   transitionProperty: 'background-color',
                   transitionDuration: '0.7s',
                   transitionTimingFunction: 'ease-out',
-                  backgroundColor: 'rgba(20, 81, 51, 0.8)'
+                  backgroundColor: 'rgba(20, 81, 51, 0.8)',
                 }}
               >
                 <div className='Post-Append-titleName'>
@@ -201,7 +175,7 @@ const ScheduleShare = props => {
                     style={{
                       fontSize: '40px',
                       color: 'white',
-                      marginLeft: '10px'
+                      marginLeft: '10px',
                     }}
                   />
                   <div className='PostAdd-title'>종료날짜를 선택하세요.</div>
@@ -210,7 +184,7 @@ const ScheduleShare = props => {
             )}
             <div style={{ margin: '20px' }}>
               <Calendar
-                type={3}
+                type={4}
                 choiceSharedStartDate={choiceDate.start}
                 choiceSharedEndDate={choiceDate.end}
                 onChoice={(date, userDate) => {
@@ -218,7 +192,7 @@ const ScheduleShare = props => {
                   if (choiceDate.start === null) {
                     setChoiceDate({
                       start: date,
-                      end: null
+                      end: null,
                     });
                   } else {
                     if (date < choiceDate.start) {
@@ -236,7 +210,7 @@ const ScheduleShare = props => {
                 alignItems: 'center',
                 justifyContent: 'flex-end',
                 marginRight: '10px',
-                marginBottom: '10px'
+                marginBottom: '10px',
               }}
             >
               <Button
@@ -265,15 +239,10 @@ const ScheduleShare = props => {
           >
             <DialogTitle id='alert-dialog-title'> {'내 일정 공유'}</DialogTitle>
             <DialogContent>
-              <DialogContentText id='alert-dialog-description'>
-                게시물을 공유하시겠습니까?
-              </DialogContentText>
+              <DialogContentText id='alert-dialog-description'>게시물을 공유하시겠습니까?</DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button
-                onClick={(handleClose, () => props.onCancel(), onSubmit)}
-                color='primary'
-              >
+              <Button onClick={(handleClose, () => props.onCancel(), onSubmit)} color='primary'>
                 확인
               </Button>
               <Button onClick={handleClose} color='primary' autoFocus>

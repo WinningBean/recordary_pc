@@ -192,7 +192,7 @@ const HeaderMenu = (props) => {
   const getGroupList = async () => {
     try {
       console.log(props.data.userCd);
-      const { data } = await axios.get(`group/group/${props.data.userCd}`);
+      const { data } = await axios.get(`/group/group/${props.data.userCd}`);
       console.log(data, 'isData');
       if (data.length === 0) {
         props.onSaveGroupList([]);

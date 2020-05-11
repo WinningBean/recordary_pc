@@ -13,7 +13,9 @@ import Timeline from '../Timeline/Timeline';
 import Loading from '../Loading/Loading';
 import NotifyPopup from '../UI/NotifyPopup';
 import Snackbar from '../UI/Snackbar';
+import GroupSetting from '../Group/GroupSetting';
 import { Dialog } from '@material-ui/core';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/core/styles';
@@ -23,6 +25,13 @@ import RouterLink from 'react-router-dom/Link';
 import { Redirect } from 'react-router-dom';
 
 import axios from 'axios';
+
+const IconButton = styled(Button)({
+  minWidth: '30px',
+  minHeight: '30px',
+  padding: '0 0',
+  margin: '0 0',
+});
 
 class Profile extends React.Component {
   // this.state.type
@@ -65,14 +74,13 @@ class Profile extends React.Component {
 
       const groupMember = (await axios.get(`/group/member/${this.props.match.params.groupCd}`)).data;
 
-      console.log(groupApply, 'groupApply');
-
       var groupApply = null;
       var type = 3;
 
       if (this.props.isLogin && groupInfo.userCd === this.props.user.userCd) {
         type = 2;
         groupApply = (await axios.get(`/groupApply/findUserApply/${this.props.match.params.groupCd}`)).data;
+        console.log(groupApply, 'groupApply');
       }
       console.log('type = ', type);
       this.setState({
@@ -85,6 +93,7 @@ class Profile extends React.Component {
         type: type,
         isLoading: false,
         isHover: false,
+        isClickMember: false,
       });
     } catch (error) {
       console.error(error);
@@ -285,7 +294,14 @@ class Profile extends React.Component {
                     {console.log(this.state.postIt)} */}
                   </ul>
                 </div>
-                <div id='main-profile-info' style={this.state.type >= 2 ? { borderTop: '4px solid tomato' } : null}>
+                <div
+                  id='main-profile-info'
+                  style={
+                    this.state.type >= 2
+                      ? { borderTop: '4px solid tomato' }
+                      : { borderTop: '4px solid rgba(20, 81, 51, 0.8)' }
+                  }
+                >
                   <div id='userinfo'>
                     {this.state.type !== 2 ? null : (
                       <div style={{ position: 'absolute', top: 0, left: 0 }}>
@@ -293,10 +309,9 @@ class Profile extends React.Component {
                           data={this.state.info.groupApply}
                           onAccept={async (index) => {
                             try {
-                              const { data } = await axios.post('/groupApply/create', {
+                              const { data } = await axios.post('/groupMember/create', {
                                 groupCd: this.state.info.groupCd,
                                 userCd: this.state.info.groupApply[index].userCd,
-                                applyState: 1,
                               });
                               const copyList = this.state.info.groupApply.slice();
                               copyList.splice(index, 1);
@@ -334,7 +349,7 @@ class Profile extends React.Component {
                                 groupCd: this.state.info.groupCd,
                                 userCd: this.state.info.groupApply[index].userCd,
                               });
-                              await axios.delete('/groupApply/', {
+                              await axios.post('/groupApply/delete', {
                                 groupCd: this.state.info.groupCd,
                                 userCd: this.state.info.groupApply[index].userCd,
                               });
@@ -376,9 +391,32 @@ class Profile extends React.Component {
                     <div id='userinfo-text'>
                       <div style={{ flexDirection: 'column', alignItems: 'center' }}>
                         <div className='name' style={{ textAlign: 'center', paddingBottom: '16px' }}>
-                          {this.state.type >= 2
-                            ? this.state.info.groupNm
-                            : `${this.state.info.userId}(${this.state.info.userNm})`}
+                          {this.state.type >= 2 ? (
+                            <>
+                              {this.state.info.groupNm}
+                              {this.state.type !== 2 ? null : (
+                                <IconButton
+                                  onClick={() =>
+                                    this.setState({
+                                      alert: (
+                                        <GroupSetting
+                                          onClose={() => this.setState({ alert: null })}
+                                          data={{
+                                            userCd: this.props.user.userCd,
+                                            group: this.state.info,
+                                          }}
+                                        />
+                                      ),
+                                    })
+                                  }
+                                >
+                                  <SettingsIcon fontSize='small' />
+                                </IconButton>
+                              )}
+                            </>
+                          ) : (
+                            `${this.state.info.userId}(${this.state.info.userNm})`
+                          )}
                         </div>
                         {this.state.type >= 2 ? (
                           <>
@@ -388,12 +426,64 @@ class Profile extends React.Component {
                                 component='button'
                                 onClick={() =>
                                   this.setState({
-                                    followerNumClick: true,
+                                    isClickMember: true,
                                   })
                                 }
                               >
                                 <span className='followerNum'>{this.state.info.member.length}</span>
                               </Link>
+                              {this.state.isClickMember ? (
+                                <Dialog
+                                  open
+                                  onClose={() =>
+                                    this.setState({
+                                      isClickMember: false,
+                                    })
+                                  }
+                                >
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      flexDirection: 'column',
+                                      padding: '6px 8px',
+                                      maxHeight: '600px',
+                                    }}
+                                  >
+                                    {this.state.info.member.map((value, index) => {
+                                      return (
+                                        <div
+                                          style={{
+                                            height: '60px',
+                                            padding: '0px 2px',
+                                            display: 'flex',
+                                            borderBottom: '1px solid #eee',
+                                            padding: '5px 0',
+                                          }}
+                                        >
+                                          <img
+                                            style={{
+                                              height: '50px',
+                                              width: '50px',
+                                              objectFit: 'cover',
+                                              borderRadius: '50%',
+                                            }}
+                                            src={value.userPic}
+                                            alt='user img'
+                                          />
+                                          <div
+                                            style={{
+                                              flex: 1,
+                                              paddingLeft: '18px',
+                                              lineHeight: '50px',
+                                              fontWeight: 'bold',
+                                            }}
+                                          >{`${value.userId}(${value.userNm})`}</div>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                </Dialog>
+                              ) : null}
                             </div>
                             <div style={{ position: 'relative' }}>
                               <span className='followerName'>그룹장</span>
@@ -486,7 +576,7 @@ class Profile extends React.Component {
                     </div>
                   </div>
                   <div id='schedule-area'>
-                    <Calendar type={this.state.type === 0 ? 0 : this.state.type === 2 ? 1 : 2} />
+                    <Calendar type={this.state.type} />
                   </div>
                 </div>
               </div>

@@ -111,7 +111,7 @@ const GroupAdd = (props) => {
         groupPic: image,
         groupEx: group.group_ex,
       });
-      const { data } = await axios.post('group/create', {
+      const { data } = await axios.post('/group/create', {
         userCd: group.group_admin,
         userId: props.data.userId,
         groupNm: group.group_nm,
