@@ -108,7 +108,7 @@ aside > .aside-profile {
   background-color: rgba(253, 253, 253, 0.9);
   display: flex;
   flex-direction: column;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 
 .chatting-cell {
@@ -117,7 +117,7 @@ aside > .aside-profile {
 }
 
 .chatting-cell:hover {
-  background-color: #f1d3de;
+  background-color: #40739e33;
 }
 
 .chatting-list {
@@ -127,5 +127,5 @@ aside > .aside-profile {
   background-color: white;
   display: flex;
   flex-direction: column;
-  border-radius: 10px;
+  border-radius: 5px;
 }

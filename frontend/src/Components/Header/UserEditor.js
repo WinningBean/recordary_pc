@@ -15,6 +15,7 @@ class UserEditor extends React.Component {
       user_id: props.data.userId,
       user_pw: '',
       user_ex: props.data.userEx,
+      user_pic: props.data.userPic,
       user_change_pw: '',
       user_change_pw_check: '',
       isSamePw: undefined,
@@ -102,7 +103,7 @@ class UserEditor extends React.Component {
               onClick={async () => {
                 try {
                   const checkPw = (
-                    await axios.post('user/checkPw', {
+                    await axios.post('/user/checkPw', {
                       userId: this.state.user_id,
                       userPw: this.state.user_pw,
                     })
@@ -133,7 +134,7 @@ class UserEditor extends React.Component {
                     return;
                   }
 
-                  const userId = (await axios.delete(`user/${this.state.user_id}`)).data;
+                  const userId = (await axios.delete(`user/${this.props.data.userCd}`)).data;
                   if (userId === this.state.user_id) {
                     this.setState({
                       alertDialog: () => {
@@ -152,7 +153,6 @@ class UserEditor extends React.Component {
                         );
                       },
                     });
-
                     return;
                   }
                 } catch (error) {
@@ -257,7 +257,7 @@ class UserEditor extends React.Component {
                 // }
                 try {
                   const checkPw = (
-                    await axios.post('user/checkPw', {
+                    await axios.post('/user/checkPw', {
                       userId: this.state.user_id,
                       userPw: this.state.user_pw,
                     })
@@ -283,11 +283,15 @@ class UserEditor extends React.Component {
                     return;
                   }
 
-                  const { data } = await axios.put(`user/${this.state.user_id}`, {
+                  const { data } = await axios.put(`user/${this.props.data.userCd}`, {
                     userPw: this.state.user_change_pw,
                     userNm: this.state.user_nm,
+                    userPic: this.state.user_pic,
                     userEx: this.state.user_ex,
                   });
+
+                  console.log(data);
+
                   if (data === this.state.user_id) {
                     this.setState({
                       alertDialog: () => {

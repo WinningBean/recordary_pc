@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { ChromePicker } from 'react-color';
+import { styled } from '@material-ui/styles';
 
 import './PostAppend.css';
 import DTP from '../UI/DTP';
@@ -17,40 +18,40 @@ import PostAddIcon from '@material-ui/icons/PostAdd';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 import DateRangeIcon from '@material-ui/icons/DateRange';
-import PermMediaIcon from '@material-ui/icons/PermMedia';
 import { makeStyles } from '@material-ui/core/styles';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Popover from '@material-ui/core/Popover';
+
 import axios from 'axios';
 import store from '../../store';
-
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   content: {
     width: '552px',
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   marginBottom: {
-    marginBottom: '10px'
+    marginBottom: '10px',
   },
   middleCenter: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '250px;'
+    width: '250px;',
   },
   chip: {
     marginRight: '4px',
-    marginBottom: '4px'
-  }
+    marginBottom: '4px',
+  },
 }));
 
-const PostMediaScheduleAppend = props => {
+const PostMediaScheduleAppend = (props) => {
   const classes = useStyles();
-  const [mediaOpen, setMediaOpen] = useState(null);
+  const [postAddMediaListSrc, setPostAddMediaListSrc] = useState([]);
+  const [mediaOpen, setMediaOpen] = useState(false);
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const [open, setOpen] = React.useState(false);
   const [alert, setAlert] = useState(null);
@@ -59,28 +60,62 @@ const PostMediaScheduleAppend = props => {
     r: '20',
     g: '81',
     b: '51',
-    a: '1'
+    a: '1',
   });
-  const [userPost, setUserPost] = useState({
-    user_id: store.getState().user.currentUser.user_id,
+  let fileUpload = useRef(null);
+
+  const [post, setPost] = useState({
+    user_id: store.getState().user.userId,
     // group_cd: store.getState().user.userGroup[0].group_cd,
     group_cd: null,
-    inputPost: {
-      post_ex: null,
-      post_pb_st: null,
-      post_str_ymd: null,
-      post_end_ymd: null
-    }
+    postOriginCd: null,
+    scheduleCd: null,
+    mediaCd: null,
+    postEx: null,
+    postPublicState: null,
+    postStrYMD: null,
+    postEndYMD: null,
   });
 
-  const changeHandle = e => {
-    setUserPost({
-      ...userPost,
-      inputPost: { ...userPost.inputPost, [e.target.name]: e.target.value }
+  const changeHandle = (e) => {
+    setPost({
+      ...post,
+      [e.target.name]: e.target.value,
     });
   };
 
-  const handleClickOpen = () => {
+  const dataURLToBlob = (dataURL) => {
+    const BASE64_MARKER = ';base64,';
+
+    // base64로 인코딩 되어있지 않을 경우
+    if (dataURL.indexOf(BASE64_MARKER) === -1) {
+      const parts = dataURL.split(',');
+      const contentType = parts[0].split(':')[1];
+      const raw = parts[1];
+      return new Blob([raw], {
+        type: contentType,
+      });
+    }
+
+    // base64로 인코딩 된 이진데이터일 경우
+    const parts = dataURL.split(BASE64_MARKER);
+    const contentType = parts[0].split(':')[1];
+    const raw = window.atob(parts[1]);
+    // atob()는 Base64를 디코딩하는 메서드
+    const rawLength = raw.length;
+    // 부호 없는 1byte 정수 배열을 생성
+    const uInt8Array = new Uint8Array(rawLength); // 길이만 지정된 배열
+    let i = 0;
+    while (i < rawLength) {
+      uInt8Array[i] = raw.charCodeAt(i);
+      i++;
+    }
+    return new Blob([uInt8Array], {
+      type: contentType,
+    });
+  };
+
+  const handleClickOpen = async () => {
     setOpen(true);
   };
 
@@ -92,33 +127,54 @@ const PostMediaScheduleAppend = props => {
     setAlert(<Backdrop />);
 
     try {
-      console.log(userPost);
+      let postAddMediaListFile = [];
+      for (var i = 0; i < postAddMediaListSrc.length; i++) {
+        postAddMediaListFile.push(dataURLToBlob(postAddMediaListSrc[i]));
+      }
 
-      const form = new FormData();
-      form.append('user_id', userPost.user_id);
-      form.append('group_cd', userPost.group_cd);
-      form.append('inputPost', userPost.inputPost);
+      console.log(postAddMediaListFile);
+      const formData = new FormData();
+      formData.append('mediaFiles', postAddMediaListFile);
 
-      const { data } = await axios.post('/post/write', form);
+      const getMediaCd = await axios.post(
+        `media/${store.getState().user.userCd}`,
+        {
+          formData,
+        },
+        {
+          headers: { 'Content-Type': 'multipart/form-data; boundary=------WebKitFormBoundary7MA4YWxkTrZu0gW' },
+        }
+      );
+
+      console.log(getMediaCd);
+
+      setPost({ ...post, mediaCd: getMediaCd.data });
+
+      const { data } = await axios.post(
+        `post/`,
+        {
+          post,
+        },
+        {
+          headers: {
+            'content-type': 'application/json',
+          },
+        }
+      );
 
       console.log(data);
 
-      if (data.isWrite) {
+      if (data) {
         setAlert(
           <AlertDialog
             severity='success'
             content='게시물이 추가되었습니다.'
-            onAlertClose={() => setAlert(null)}
+            onAlertClose={(() => setAlert(null), () => props.onCancel())}
           />
         );
+        console.log(store.getState());
       } else {
-        setAlert(
-          <Snackbar
-            severity='error'
-            content='게시물을 추가하지 못했습니다.'
-            onClose={() => setAlert(null)}
-          />
-        );
+        setAlert(<Snackbar severity='error' content='게시물을 추가하지 못했습니다.' onClose={() => setAlert(null)} />);
       }
     } catch (error) {
       console.log(error);
@@ -132,23 +188,6 @@ const PostMediaScheduleAppend = props => {
     }
   };
 
-  const showMedia = () => {
-    if (mediaOpen === null) {
-      setMediaOpen(
-        <div onClose={() => setMediaOpen(null)}>
-          <div className='Post-Append-Media post-Append'>
-            <AddPhotoAlternateIcon
-              style={{ fontSize: '50px' }}
-            ></AddPhotoAlternateIcon>
-          </div>
-        </div>
-      );
-      return;
-    }
-    setMediaOpen(null);
-    return;
-  };
-
   return (
     <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
       <div
@@ -158,13 +197,11 @@ const PostMediaScheduleAppend = props => {
           transitionProperty: 'background-color',
           transitionDuration: '0.3s',
           transitionTimingFunction: 'ease-out',
-          backgroundColor: `rgba(${scheduleColor.r}, ${scheduleColor.g}, ${scheduleColor.b}, ${scheduleColor.a})`
+          backgroundColor: `rgba(${scheduleColor.r}, ${scheduleColor.g}, ${scheduleColor.b}, ${scheduleColor.a})`,
         }}
       >
         <div className='Post-Append-titleName'>
-          <PostAddIcon
-            style={{ fontSize: '40px', color: 'white', marginLeft: '10px' }}
-          />
+          <PostAddIcon style={{ fontSize: '40px', color: 'white', marginLeft: '10px' }} />
           <div className='PostAdd-title'>게시물 추가</div>
         </div>
       </div>
@@ -174,61 +211,42 @@ const PostMediaScheduleAppend = props => {
           <div>
             <SelectGroup />
           </div>
-
           <div className='schedule-media-button '>
             <PublicRange />
-            <div
-              className='plus-button-design'
-              onClick={() => setScheduleOpen(true)}
-            >
+            <div className='plus-button-design' onClick={() => setScheduleOpen(!scheduleOpen)}>
               {(() => {
                 if (scheduleOpen === false) {
                   return (
                     <div className='plus-button-design-2'>
                       <DateRangeIcon style={{ fontSize: '30px' }} />
-                      <span style={{ fontSize: '15px', marginLeft: '5px' }}>
-                        일정추가
-                      </span>
+                      <span style={{ fontSize: '15px', marginLeft: '5px' }}>일정추가</span>
                     </div>
                   );
                 } else {
                   return (
                     <div className='plus-button-design-2 clicked'>
                       <DateRangeIcon style={{ fontSize: '30px' }} />
-                      <span style={{ fontSize: '15px', marginLeft: '5px' }}>
-                        일정추가
-                      </span>
+                      <span style={{ fontSize: '15px', marginLeft: '5px' }}>일정추가</span>
                     </div>
                   );
                 }
               })()}
             </div>
-            <div className='plus-button-design' onClick={showMedia}>
-              {(() => {
-                if (mediaOpen === null) {
-                  return (
-                    <div className='plus-button-design-2'>
-                      <PermMediaIcon style={{ fontSize: '30px' }} />
-                      <span style={{ fontSize: '15px', marginLeft: '10px' }}>
-                        미디어
-                      </span>
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div className='plus-button-design-2 clicked'>
-                      <PermMediaIcon style={{ fontSize: '30px' }} />
-                      <span style={{ fontSize: '15px', marginLeft: '10px' }}>
-                        미디어
-                      </span>
-                    </div>
-                  );
-                }
-              })()}
+            <div className='plus-button-design' onClick={() => setMediaOpen(!mediaOpen)}>
+              {mediaOpen === true ? (
+                <div className='plus-button-design-2 clicked'>
+                  <AddPhotoAlternateIcon style={{ fontSize: '30px' }} />
+                  <span style={{ fontSize: '15px', marginLeft: '10px' }}>미디어</span>
+                </div>
+              ) : (
+                <div className='plus-button-design-2 '>
+                  <AddPhotoAlternateIcon style={{ fontSize: '30px' }} />
+                  <span style={{ fontSize: '15px', marginLeft: '10px' }}>미디어</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
-
         <div className='Post-Append-text post-Append'>
           <TextField
             id='post_text'
@@ -245,20 +263,18 @@ const PostMediaScheduleAppend = props => {
             open={colorClick}
             anchorOrigin={{
               vertical: 'center',
-              horizontal: 'center'
+              horizontal: 'center',
             }}
             transformOrigin={{
               vertical: 'center',
-              horizontal: 'left'
+              horizontal: 'left',
             }}
             onClose={() => setColorClick(false)}
           >
-            <ChromePicker
-              color={scheduleColor}
-              onChange={color => setScheduleColor(color.rgb)}
-            />
+            <ChromePicker color={scheduleColor} onChange={(color) => setScheduleColor(color.rgb)} />
           </Popover>
         ) : null}
+
         {scheduleOpen === false ? null : (
           <div onClose={() => setScheduleOpen(null)}>
             <div className='Post-Append-title post-Append'>
@@ -269,7 +285,7 @@ const PostMediaScheduleAppend = props => {
                   className='selectColor'
                   onClick={() => setColorClick(true)}
                   style={{
-                    backgroundColor: `rgba(${scheduleColor.r}, ${scheduleColor.g}, ${scheduleColor.b}, ${scheduleColor.a})`
+                    backgroundColor: `rgba(${scheduleColor.r}, ${scheduleColor.g}, ${scheduleColor.b}, ${scheduleColor.a})`,
                   }}
                 />
               </div>
@@ -290,7 +306,7 @@ const PostMediaScheduleAppend = props => {
                 style={{
                   backgroundColor: 'rgba(20, 81, 51, 0.8)',
                   color: '#ffffff',
-                  marginLeft: '5px'
+                  marginLeft: '5px',
                 }}
                 clickable
               />
@@ -298,7 +314,60 @@ const PostMediaScheduleAppend = props => {
             </div>
           </div>
         )}
-        {mediaOpen}
+        {mediaOpen === true ? (
+          <div className='Post-Append-Media post-Append'>
+            <div
+              className=' Post-Append-Media2'
+              style={{
+                padding: '0px 10px',
+                width: '60px',
+                height: '60px',
+                display: 'flex',
+                boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onClick={() => fileUpload.current.click()}
+            >
+              <AddPhotoAlternateIcon style={{ fontSize: '50px' }}></AddPhotoAlternateIcon>
+            </div>
+            <input
+              type='file'
+              accept='image/*'
+              required
+              multiple
+              style={{ display: 'none' }}
+              ref={fileUpload}
+              onChange={(e) => {
+                // console.log(e.target.files);
+                // console.log(e.target.files.length);
+                let files = [];
+                for (let i = 0; i < e.target.files.length; i++) {
+                  const reader = new FileReader();
+                  reader.onloadend = (e) => {
+                    files.push(e.target.result);
+                  };
+                  reader.readAsDataURL(e.target.files[i]);
+                }
+                setPostAddMediaListSrc(files);
+              }}
+            />
+            {postAddMediaListSrc.map((value, index) => (
+              <div style={{ marginLeft: '10px' }} key={`${index}-postAddImg`}>
+                <img
+                  style={{
+                    boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
+                    width: '60px',
+                    height: '60px',
+                    objectFit: 'cover',
+                  }}
+                  id='postAddImg'
+                  src={value}
+                />
+              </div>
+            ))}
+          </div>
+        ) : null}
         {alert}
         <div className='Post-Append-Bottom'>
           <div className='Post-Upload-buttons'>
@@ -313,15 +382,10 @@ const PostMediaScheduleAppend = props => {
           >
             <DialogTitle id='alert-dialog-title'>{'게시물 추가'}</DialogTitle>
             <DialogContent>
-              <DialogContentText id='alert-dialog-description'>
-                작성한 게시물을 추가하시겠습니까?
-              </DialogContentText>
+              <DialogContentText id='alert-dialog-description'>작성한 게시물을 추가하시겠습니까?</DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button
-                onClick={(handleClose, () => props.onCancel(), onSubmit)}
-                color='primary'
-              >
+              <Button onClick={(handleClose, () => props.onCancel(), onSubmit)} color='primary'>
                 확인
               </Button>
               <Button onClick={handleClose} color='primary' autoFocus>

@@ -27,16 +27,17 @@ public class GroupMemberService {
     private final GroupRepository groupRepository;
 
     @Transactional
-    public Boolean save(GroupMemberRequestDto groupMemberRequestDto)
+    public Long save(GroupMemberRequestDto groupMemberRequestDto)
     {
         UserEntity user = userService.findEntity(groupMemberRequestDto.getUserCd());
         GroupEntity group = groupRepository.findByGroupCd(groupMemberRequestDto.getGroupCd());
         GroupMemberEntity groupMemberEntity = groupMemberRequestDto.toEntity(group,user);
-        return Optional.ofNullable(groupMemberRepository.save(groupMemberEntity)).isPresent();
+       return groupMemberRepository.save(groupMemberEntity).getGroupFK().getGroupCd();
     }
 
     @Transactional
-    public Boolean delete (GroupMemberPK id) {
+    public Boolean delete (GroupMemberRequestDto requestDto) {
+        GroupMemberPK id = new GroupMemberPK(requestDto.getGroupCd(),requestDto.getUserCd());
         GroupMemberEntity groupApplyEntity = groupMemberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
 

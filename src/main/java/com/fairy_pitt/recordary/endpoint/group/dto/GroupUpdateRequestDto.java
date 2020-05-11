@@ -9,16 +9,16 @@ import lombok.NoArgsConstructor;
 @Getter
 public class GroupUpdateRequestDto {
 
-    private Long gMstUserFK;
-    private String groupName;
+    private Long userCd;
+    private String groupNm;
     private Boolean groupState;
     private String groupEx;
     private String groupPic;
 
     @Builder(builderClassName = "updateGroupBuilder", builderMethodName = "updateGroupBuilder")
-    public GroupUpdateRequestDto(String groupName, Boolean groupState, String groupPic, String  groupEx)
+    public GroupUpdateRequestDto(String groupNm, Boolean groupState, String groupPic, String  groupEx)
     {
-        this.groupName = groupName;
+        this.groupNm = groupNm;
         this.groupState = groupState;
         this.groupPic = groupPic;
         this.groupEx = groupEx;
@@ -27,6 +27,6 @@ public class GroupUpdateRequestDto {
     @Builder(builderClassName = "updateGroupMasterBuilder", builderMethodName = "updateGroupMasterBuilder")
     public GroupUpdateRequestDto(Long gMstUserFK)
     {
-        this.gMstUserFK = gMstUserFK;
+        this.userCd = gMstUserFK;
     }
 }

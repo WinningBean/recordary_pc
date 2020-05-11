@@ -18,10 +18,10 @@ import CloseIcon from '@material-ui/icons/Close';
 import SearchIcon from '@material-ui/icons/Search';
 import axios from 'axios';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: '860px',
-    height: '600px'
+    height: '600px',
   },
   list: {
     display: 'flex',
@@ -30,12 +30,12 @@ const useStyles = makeStyles(theme => ({
     // width: '200px',
     width: '200px',
     height: '540px',
-    boxShadow: '0px 1px 5px lightgray'
+    boxShadow: '0px 1px 5px lightgray',
   },
   wrap: {
     display: 'flex',
     width: '100%',
-    height: '540px'
+    height: '540px',
   },
   content: {
     display: 'flex',
@@ -43,11 +43,11 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     width: '660px',
     height: '540px',
-    padding: '30px 30px'
-  }
+    padding: '30px 30px',
+  },
 }));
 
-const GroupSetting = props => {
+const GroupSetting = (props) => {
   const classes = useStyles();
 
   const [listIndex, setListIndex] = useState(0);
@@ -55,13 +55,13 @@ const GroupSetting = props => {
   const data = props.data;
 
   useEffect(() => {
-    const form = new FormData();
-    form.append('group_cd', 2);
     (async () => {
       try {
-        const groupData = await axios.post('/group/show', form);
-        console.log(groupData.data);
-        setInfo(groupData.data);
+        const groupInfo = (await axios.get(`/group/${data.group.groupCd}`)).data;
+        console.log(groupInfo);
+        const groupMember = (await axios.get(`/group/member/${data.group.groupCd}`)).data;
+        console.log(groupMember);
+        setInfo({ ...groupInfo, member: groupMember });
       } catch (e) {
         console.error(e);
         setInfo(null);
@@ -70,9 +70,7 @@ const GroupSetting = props => {
   }, []);
 
   if (info === undefined) {
-    return (
-      <Snackbar onClose={() => props.onClose()} severity='success' content='데이터 요청중...' />
-    );
+    return <Snackbar onClose={() => props.onClose()} severity='success' content='데이터 요청중...' />;
   } else if (info === null) {
     return (
       <Snackbar
@@ -86,11 +84,11 @@ const GroupSetting = props => {
   const currPage = (() => {
     switch (listIndex) {
       case 0:
-        return <GroupModify data={data} pic={info !== undefined ? info.group_pic : null} />;
+        return info === undefined ? null : <GroupModify data={info} pic={info !== undefined ? info.groupPic : null} />;
       case 1:
-        return <GroupApply data={data} info={info !== undefined ? info : null} />;
+        return <GroupApply info={info !== undefined ? info : null} />;
       case 2:
-        return <GroupDelete data={data} />;
+        return <GroupDelete info={info} />;
     }
   })();
 

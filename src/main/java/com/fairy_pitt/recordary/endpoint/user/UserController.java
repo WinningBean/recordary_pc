@@ -4,6 +4,7 @@ import com.fairy_pitt.recordary.endpoint.user.dto.*;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -31,15 +32,20 @@ public class UserController {
         return userService.logout();
     }
 
-    @PutMapping("/{userId}")
-    public String update(@PathVariable String userId, @RequestBody UserUpdateRequestDto requestDto) throws IOException {
-        return userService.update(userId, requestDto);
+    @PutMapping("/{userCd}")
+    public Long update(@PathVariable Long userCd, @RequestBody UserUpdateRequestDto requestDto){
+        return userService.update(userCd, requestDto);
     }
 
-    @DeleteMapping("/{userId}")
-    public String delete(@PathVariable String userId){
-        userService.delete(userId);
-        return userId;
+    @PostMapping("/{userCd}/profileUpload")
+    public String profileUpload(@PathVariable Long userCd, @RequestParam MultipartFile userPic) throws IOException {
+        return userService.profileUpload(userCd, userPic);
+    }
+
+    @DeleteMapping("/{userCd}")
+    public Long delete(@PathVariable Long userCd){
+        userService.delete(userCd);
+        return userCd;
     }
 
     @GetMapping("/{userId}")
@@ -57,9 +63,9 @@ public class UserController {
         return userService.existId(userId);
     }
 
-    @GetMapping("/currentId")
-    public String currentUserId(){
-        return userService.currentUserId();
+    @GetMapping("/currentCd")
+    public Long currentUserCd(){
+        return userService.currentUserCd();
     }
 
     @PostMapping("/checkPw")

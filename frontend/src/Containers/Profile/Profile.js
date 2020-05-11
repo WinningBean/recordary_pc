@@ -1,13 +1,12 @@
 import { connect } from 'react-redux';
-import MainPage from '../../Components/Main/MainPage';
+import Profile from '../../Components/Profile/Profile';
 import { withRouter } from 'react-router-dom';
 
 const mapStateToProps = (state) => {
   return {
     isLogin: state.isLogin,
-    data: state.user,
-    post: state.postList,
+    user: state.user,
   };
 };
 
-export default withRouter(connect(mapStateToProps)(MainPage));
+export default withRouter(connect(mapStateToProps)(Profile));

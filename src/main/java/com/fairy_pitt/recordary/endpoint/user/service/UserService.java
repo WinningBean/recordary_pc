@@ -3,7 +3,7 @@ package com.fairy_pitt.recordary.endpoint.user.service;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleResponseDto;
-import com.fairy_pitt.recordary.endpoint.media.S3Uploader;
+import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserLoginRequestDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserSaveRequestDto;
@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserPasswordHashService userPasswordHashService;
     private final HttpSession httpSession;
-    private final S3Uploader s3Uploader;
+    private final S3UploadComponent s3UploadComponent;
 
     @Transactional
     public Boolean save(UserSaveRequestDto requestDto){
@@ -41,24 +42,34 @@ public class UserService {
     }
 
     @Transactional
-    public String update(String userId, UserUpdateRequestDto requestDto) throws IOException {
-        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(userId))
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
+    public Long update(Long userCd, UserUpdateRequestDto requestDto){
+        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserCd(userCd))
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. cd = " + userCd));
 
         String hashedPassword;
         if (requestDto.getUserPw() == null) hashedPassword = null;
         else hashedPassword = userPasswordHashService.getSHA256(requestDto.getUserPw());
 
-        String imgPath = s3Uploader.upload(requestDto.getUserPic(), "user");
-
-        userEntity.update(hashedPassword, requestDto.getUserNm(), imgPath, requestDto.getUserEx());
-        return userId;
+        userEntity.update(hashedPassword, requestDto.getUserNm(), requestDto.getUserPic(), requestDto.getUserEx());
+        return userCd;
     }
 
     @Transactional
-    public void delete(String userId){
-        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(userId))
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
+    public String profileUpload(Long userCd, MultipartFile userPic) throws IOException {
+        String imgPath;
+
+        if (userPic.isEmpty()) imgPath = null;
+        else imgPath = s3UploadComponent.upload(userPic, "user", userCd);
+
+        log.info(imgPath);
+
+        return imgPath;
+    }
+
+    @Transactional
+    public void delete(Long userCd){
+        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserCd(userCd))
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. cd = " + userCd));
 
         userRepository.delete(userEntity);
     }
@@ -84,8 +95,8 @@ public class UserService {
 
         Boolean userState = checkPw(requestDto);
         if (userState){
-            httpSession.setAttribute("loginUser", userEntity.getUserId());
-            log.info("set userId = {}", httpSession.getAttribute("loginUser"));
+            httpSession.setAttribute("loginUser", userEntity.getUserCd());
+            log.info("set userCd = {}", httpSession.getAttribute("loginUser"));
             return new UserResponseDto(userEntity);
         }else return null;
     }
@@ -102,8 +113,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public String currentUserId(){
-        return String.valueOf(httpSession.getAttribute("loginUser"));
+    public Long currentUserCd(){
+        return Long.parseLong(String.valueOf(httpSession.getAttribute("loginUser")));
     }
 
     @Transactional(readOnly = true)

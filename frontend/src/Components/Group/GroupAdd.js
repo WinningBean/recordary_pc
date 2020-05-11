@@ -15,28 +15,78 @@ import AlertDialog from '../Other/AlertDialog';
 import Snackbar from '../UI/Snackbar';
 import Backdrop from '../UI/Backdrop';
 import axios from 'axios';
-import store from '../../store';
 
-const GroupAdd = props => {
+const GroupAdd = (props) => {
   const [openSwitch, setOpenSwitch] = useState({
-    open: true
+    open: true,
   });
 
   const [group, setGroup] = useState({
     group_nm: '',
     group_ex: '',
-    group_pic: '',
-    group_admin: store.getState().user.currentUser.user_cd
+    group_pic: null,
+    group_admin: props.data.userCd,
   });
   const [imageSrc, setImageSrc] = useState(null);
   const [alert, setAlert] = useState(null);
 
   let fileUpload = null;
 
-  const changeHandel = e => {
+  const changeHandel = (e) => {
     setGroup({
       ...group,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const onMinimumSize = (src) => {
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext('2d');
+    const cut = new Image();
+    cut.src = src;
+    let height = cut.height;
+    let width = cut.width;
+    if (height < 250 && width < 250) {
+      return canvas.toDataURL('image/jpg');
+    }
+    height *= 250 / width;
+    width = 250;
+    canvas.width = width;
+    canvas.height = height;
+    // canvas에 변경된 크기의 이미지를 다시 그려줍니다.
+    ctx.drawImage(cut, 0, 0, width, height);
+    // canvas 에 있는 이미지를 img 태그로 넣어줍니다
+    return canvas.toDataURL('image/jpg');
+  };
+
+  const dataURLToBlob = (dataURL) => {
+    const BASE64_MARKER = ';base64,';
+
+    // base64로 인코딩 되어있지 않을 경우
+    if (dataURL.indexOf(BASE64_MARKER) === -1) {
+      const parts = dataURL.split(',');
+      const contentType = parts[0].split(':')[1];
+      const raw = parts[1];
+      return new Blob([raw], {
+        type: contentType,
+      });
+    }
+
+    // base64로 인코딩 된 이진데이터일 경우
+    const parts = dataURL.split(BASE64_MARKER);
+    const contentType = parts[0].split(':')[1];
+    const raw = window.atob(parts[1]);
+    // atob()는 Base64를 디코딩하는 메서드
+    const rawLength = raw.length;
+    // 부호 없는 1byte 정수 배열을 생성
+    const uInt8Array = new Uint8Array(rawLength); // 길이만 지정된 배열
+    let i = 0;
+    while (i < rawLength) {
+      uInt8Array[i] = raw.charCodeAt(i);
+      i++;
+    }
+    return new Blob([uInt8Array], {
+      type: contentType,
     });
   };
 
@@ -49,56 +99,46 @@ const GroupAdd = props => {
       //     />
       <Backdrop />
     );
-    var canvas = document.createElement('canvas');
-    var ctx = canvas.getContext('2d');
-    const cut = new Image();
-    cut.src = group.group_pic;
-    let height = cut.height;
-    let width = cut.width;
-    height *= 250 / width;
-    width = 250;
-    canvas.width = width;
-    canvas.height = height;
-    // canvas에 변경된 크기의 이미지를 다시 그려줍니다.
-    ctx.drawImage(cut, 0, 0, width, height);
-    // canvas 에 있는 이미지를 img 태그로 넣어줍니다
-    var dataUrl = canvas.toDataURL('image/jpg');
+
+    const image = group.group_pic === null ? null : dataURLToBlob(onMinimumSize(group.group_pic));
 
     try {
-      const form = new FormData();
-      form.append('group_nm', group.group_nm);
-      form.append('group_ex', group.group_ex);
-      form.append('group_pic', dataUrl);
-      const { data } = await axios.post('/group/create', form);
+      console.log({
+        userCd: group.group_admin,
+        userId: props.data.userId,
+        groupName: group.group_nm,
+        groupState: openSwitch.open,
+        groupPic: image,
+        groupEx: group.group_ex,
+      });
+      const { data } = await axios.post('/group/create', {
+        userCd: group.group_admin,
+        userId: props.data.userId,
+        groupNm: group.group_nm,
+        groupState: openSwitch.open,
+        groupPic: image,
+        groupEx: group.group_ex,
+      });
 
-      // const data = { success : true };
-
-      if (data.isCreate) {
-        props.onAdd(group);
+      if (data) {
+        props.onAdd({
+          userCd: group.group_admin,
+          userId: props.data.userId,
+          groupNm: group.group_nm,
+          groupState: openSwitch.open,
+          groupPic: image,
+          groupEx: group.group_ex,
+        });
         setAlert(
-          <AlertDialog
-            severity='success'
-            content='그룹을 생성하였습니다.'
-            onAlertClose={() => setAlert(null)}
-          />
+          <AlertDialog severity='success' content='그룹을 생성하였습니다.' onAlertClose={() => setAlert(null)} />
         );
       } else {
-        setAlert(
-          <Snackbar
-            severity='error'
-            content='그룹 생성에 실패하였습니다.'
-            onClose={() => setAlert(null)}
-          />
-        );
+        setAlert(<Snackbar severity='error' content='그룹 생성에 실패하였습니다.' onClose={() => setAlert(null)} />);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setAlert(
-        <Snackbar
-          severity='error'
-          content='서버 에러로 그룹 생성에 실패하였습니다.'
-          onClose={() => setAlert(null)}
-        />
+        <Snackbar severity='error' content='서버 에러로 그룹 생성에 실패하였습니다.' onClose={() => setAlert(null)} />
       );
     }
   };
@@ -121,10 +161,14 @@ const GroupAdd = props => {
                   width: '250px',
                   height: '250px',
                   objectFit: 'cover',
-                  borderRadius: '50%'
+                  borderRadius: '50%',
                 }}
                 alt='profile-img'
-                src={group.group_pic}
+                src={
+                  group.group_pic !== null
+                    ? group.group_pic
+                    : 'https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/user/basic.png'
+                }
               />
             </div>
             <Button
@@ -148,10 +192,10 @@ const GroupAdd = props => {
             type='file'
             accept='image/*'
             style={{ display: 'none' }}
-            ref={file => {
+            ref={(file) => {
               fileUpload = file;
             }}
-            onChange={e => {
+            onChange={(e) => {
               if (e.target.files && e.target.files.length > 0) {
                 const reader = new FileReader();
                 reader.addEventListener('load', () => setImageSrc(reader.result));
@@ -178,9 +222,9 @@ const GroupAdd = props => {
               control={
                 <Switch
                   checked={openSwitch.open}
-                  onChange={event =>
+                  onChange={(event) =>
                     setOpenSwitch({
-                      open: event.target.checked
+                      open: event.target.checked,
                     })
                   }
                   color='primary'
@@ -200,7 +244,7 @@ const GroupAdd = props => {
           <ImageEditor
             src={imageSrc}
             onClose={() => setImageSrc(null)}
-            onComplete={src => {
+            onComplete={(src) => {
               setImageSrc(null);
               setGroup({ ...group, group_pic: src });
             }}

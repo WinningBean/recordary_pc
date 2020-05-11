@@ -25,11 +25,11 @@ const ToDoList = () => {
   const [listOpen, setListOpen] = useState({
     first: false,
     second: false,
-    third: false
+    third: false,
   });
 
   const [selectedDate, setSelectedDate] = React.useState(new Date());
-  const handleDateChange = date => {
+  const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
@@ -37,75 +37,75 @@ const ToDoList = () => {
     {
       day: new Date('2020-03-24'),
       ex: 'EnterPrise Java 강의 듣기',
-      checked: false
+      checked: false,
     },
     {
       day: new Date('2020-03-25'),
       ex: '시스템 분석 강의 듣기',
-      checked: false
+      checked: false,
     },
     {
       day: new Date('2020-03-26'),
       ex: '강교수님 강의 듣기',
-      checked: false
+      checked: false,
     },
     {
       day: new Date('2020-03-26'),
       ex: '모바일 프로그래밍 강의 듣기',
-      checked: false
+      checked: false,
     },
     {
       day: new Date('2020-03-26'),
       ex: '운영체제 강의 듣기',
-      checked: false
+      checked: false,
     },
     {
       day: new Date('2020-03-27'),
       ex: '투썸 강의 듣기',
-      checked: false
+      checked: false,
     },
     {
       day: new Date('2020-03-27'),
       ex: '스타벅스 듣기',
-      checked: false
+      checked: false,
     },
     {
       day: new Date('2020-03-28'),
       ex: '이디야',
-      checked: false
+      checked: false,
     },
     {
       day: new Date('2020-03-29'),
       ex: '카페베네',
-      checked: false
+      checked: false,
     },
     {
       day: new Date('2020-03-29'),
       ex: '아이스크림',
-      checked: false
+      checked: false,
     },
     {
       day: new Date('2020-03-29'),
       ex: '아이스 아메리카노',
-      checked: false
+      checked: false,
     },
     {
       day: new Date('2020-03-30'),
       ex: '아이스티',
-      checked: false
+      checked: false,
     },
     {
       day: new Date('2020-03-31'),
       ex: '카페라떼',
-      checked: false
-    }
+      checked: false,
+    },
   ]);
 
   let count = 0;
   const [beforeList, setBeforeList] = useState(false);
   return (
     <PopupState variant='popover' popupId='demo-popup-popover'>
-      {popupState => (
+      {(popupState) => (
         <div className='header-ring'>
           <ToDoButton {...bindTrigger(popupState)}>
             <AssignmentIcon style={{ fontSize: 37, color: 'white' }} />
@@ -124,7 +124,7 @@ const ToDoList = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 margin: '10px 20px 20px 20px',
-                maxHeight: '400px'
+                maxHeight: '400px',
               }}
             >
               <div
@@ -134,7 +134,7 @@ const ToDoList = () => {
                   paddingBottom: '5px',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'space-between'
+                  justifyContent: 'space-between',
                 }}
               >
                 <span>To Do List</span>
@@ -162,7 +162,7 @@ const ToDoList = () => {
                             value={selectedDate}
                             onChange={handleDateChange}
                             KeyboardButtonProps={{
-                              'aria-label': 'change date'
+                              'aria-label': 'change date',
                             }}
                           />
                         </MuiPickersUtilsProvider>
@@ -184,7 +184,7 @@ const ToDoList = () => {
                           display: 'flex',
                           justifyContent: 'flex-end',
                           marginBottom: '10px',
-                          marginRight: '20px'
+                          marginRight: '20px',
                         }}
                       >
                         <Button onClick={() => setToDoAdd(false)} autoFocus>
@@ -200,7 +200,7 @@ const ToDoList = () => {
               </div>
               <div style={{ border: '2px solid lightgray', marginBottom: '5px' }} />
               <div style={{ display: 'flex', flexDirection: 'column', borderBottom: '1px solid lightgray' }}>
-                {doList.map(value => {
+                {doList.map((value) => {
                   if (dateFns.differenceInCalendarDays(today, value.day) > 0) {
                     count = count + 1;
                   }
@@ -220,7 +220,7 @@ const ToDoList = () => {
                 ) : null}
                 <div style={beforeList === true ? { borderBottom: '1px solid lightgray' } : null}>
                   {beforeList === true
-                    ? doList.map(value => {
+                    ? doList.map((value) => {
                         const diffBeforeDay = dateFns.differenceInCalendarDays(today, value.day);
                         if (diffBeforeDay > 0) {
                           return (
@@ -239,12 +239,12 @@ const ToDoList = () => {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    padding: '5px 0px'
+                    padding: '5px 0px',
                   }}
                 >
                   <div style={{ fontSize: '15px', fontWeight: 'bold', paddingTop: '5px' }}>D-day</div>
                 </div>
-                {doList.map(value =>
+                {doList.map((value) =>
                   dateFns.differenceInCalendarDays(today, value.day) === 0 ? (
                     <FormControlLabel control={<Checkbox />} label={value.ex} />
                   ) : null
@@ -257,7 +257,7 @@ const ToDoList = () => {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    padding: '5px 0px'
+                    padding: '5px 0px',
                   }}
                 >
                   <div style={{ fontSize: '15px', fontWeight: 'bold' }}>D-1</div>
@@ -270,7 +270,7 @@ const ToDoList = () => {
                   </div>
                 </div>
                 {listOpen.first === true
-                  ? doList.map(value => {
+                  ? doList.map((value) => {
                       if (Math.abs(dateFns.differenceInCalendarDays(value.day, today)) === 1) {
                         return <FormControlLabel control={<Checkbox />} label={value.ex} />;
                       }
@@ -283,7 +283,7 @@ const ToDoList = () => {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    padding: '5px 0px'
+                    padding: '5px 0px',
                   }}
                 >
                   <div style={{ fontSize: '15px', fontWeight: 'bold' }}>D-2</div>
@@ -296,7 +296,7 @@ const ToDoList = () => {
                   </div>
                 </div>
                 {listOpen.second === true
-                  ? doList.map(value => {
+                  ? doList.map((value) => {
                       if (Math.abs(dateFns.differenceInCalendarDays(value.day, today)) === 2) {
                         return <FormControlLabel control={<Checkbox />} label={value.ex} />;
                       }
@@ -310,7 +310,7 @@ const ToDoList = () => {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    padding: '5px 0px'
+                    padding: '5px 0px',
                   }}
                 >
                   <div style={{ fontSize: '15px', fontWeight: 'bold' }}>After Three Days</div>
@@ -323,8 +323,10 @@ const ToDoList = () => {
                   </div>
                 </div>
                 {listOpen.third === true
-                  ? doList.map(value => {
-                      const diffDay = Math.abs(dateFns.differenceInCalendarDays(value.day, today));
+                  ? doList.map((value) => {
+                      const diffDay = dateFns.differenceInCalendarDays(value.day, today);
+                      // console.log(value.day);
+                      // console.log(today);
                       if (diffDay >= 3) {
                         return (
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -346,12 +348,12 @@ const ToDoList = () => {
 
 const ToDoButton = styled(Button)({
   minWidth: '40px',
-  height: '50px'
+  height: '50px',
 });
 const ToDoPlusButton = styled(Button)({
   minWidth: '30px',
   height: '40px',
-  marginLeft: '10px'
+  marginLeft: '10px',
 });
 
 export default ToDoList;

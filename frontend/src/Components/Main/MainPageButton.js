@@ -4,13 +4,13 @@ import ChattingButton from '../Other/ChattingButton';
 import SpeedDials from '../UI/SimpleSpeedDial';
 import Chatting from './Chatting';
 
-const MainPageButton = () => {
+const MainPageButton = (props) => {
   const [isChatClick, setIsChatClick] = useState(false);
   console.log(isChatClick);
   return (
     <div>
       <div className='timeline-plus-button'>
-        <SpeedDials />
+        <SpeedDials data={props.data} />
       </div>
       <div className='timeline-chatting-button'>
         <Chatting isOpen={isChatClick} />

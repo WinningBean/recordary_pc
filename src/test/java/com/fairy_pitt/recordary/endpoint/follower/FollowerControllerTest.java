@@ -70,7 +70,7 @@ public class FollowerControllerTest {
                 .userNm("테스트 유저2")
                 .build());
 
-        String url = "http://localhost:" + port + "/follow/" + targetFK.getUserId();
+        String url = "http://localhost:" + port + "/follow/" + targetFK.getUserCd();
 
 //        //when
 //        ResponseEntity<Boolean> responseEntity = restTemplate.getForEntity(url, Boolean.class);
@@ -112,7 +112,7 @@ public class FollowerControllerTest {
                 .targetFK(user1)
                 .build());
 
-        String url = "http://localhost:" + port + "/follower/" + user1.getUserId();
+        String url = "http://localhost:" + port + "/follower/" + user1.getUserCd();
 
         //when
         ResponseEntity<List> responseEntity = restTemplate.getForEntity(url, List.class);
@@ -150,7 +150,7 @@ public class FollowerControllerTest {
                 .targetFK(user3)
                 .build());
 
-        String url = "http://localhost:" + port + "/following/" + user1.getUserId();
+        String url = "http://localhost:" + port + "/following/" + user1.getUserCd();
 
         //when
         ResponseEntity<List> responseEntity = restTemplate.getForEntity(url, List.class);
@@ -205,7 +205,7 @@ public class FollowerControllerTest {
                 .targetFK(user4)
                 .build());
 
-        String url = "http://localhost:" + port + "/friends/" + user1.getUserId();
+        String url = "http://localhost:" + port + "/friends/" + user1.getUserCd();
 
         //when
         ResponseEntity<List> responseEntity = restTemplate.getForEntity(url, List.class);

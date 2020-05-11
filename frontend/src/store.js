@@ -20,10 +20,19 @@ const reducer = (state, action) => {
         ...state,
         user: action.userData,
       };
+    case 'UPDATE_USER':
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          userPic: action.userData.userPic,
+          userEx: action.userData.userEx,
+        },
+      };
     case 'ADD_GROUP':
       return {
         ...state,
-        user: { ...state.user, userGroup: state.user.userGroup.concat(action.groupAddData) },
+        groupList: state.groupList === undefined ? null : state.groupList.concat(action.groupAddData),
       };
     case 'MODIFY_GROUP':
       const data = action.groupModifyData;
