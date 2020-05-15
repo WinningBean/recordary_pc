@@ -18,6 +18,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import ArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import ArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import AddIcon from '@material-ui/icons/Add';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import EditIcon from '@material-ui/icons/Edit';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
@@ -80,6 +81,52 @@ const HeaderMenu = (props) => {
           />
         );
         break;
+      case '그룹 탈퇴':
+        setMenuDialog(
+          <AlertDialog
+            severity='info'
+            content='정말 탈퇴하시겠습니까?'
+            onAlertClose={() => setMenuDialog(null)}
+            onAlertSubmit={async () => {
+              try {
+                const { data } = await axios.post('/groupMember/delete', {
+                  userCd: props.data.userCd,
+                  groupCd: code,
+                });
+
+                if (!data) {
+                  setMenuDialog(
+                    <AlertDialog
+                      severity='error'
+                      content='그룹 탈퇴에 실패하였습니다'
+                      onAlertClose={() => setMenuDialog(null)}
+                    />
+                  );
+                  return;
+                } else {
+                  props.onDeleteGroupList(code);
+                  setMenuDialog(
+                    <AlertDialog
+                      severity='success'
+                      content='그룹 탈퇴하였습니다'
+                      onAlertClose={() => setMenuDialog(null)}
+                    />
+                  );
+                }
+              } catch (error) {
+                console.error(error);
+                setMenuDialog(
+                  <AlertDialog
+                    severity='error'
+                    content='서버에러로인해 실패하였습니다'
+                    onAlertClose={() => setMenuDialog(null)}
+                  />
+                );
+              }
+            }}
+          />
+        );
+        break;
     }
   };
 
@@ -103,7 +150,7 @@ const HeaderMenu = (props) => {
   };
   const showGroupAdd = () => {
     if (groupAdd === null) {
-      setGroupAdd(<GroupAdd data={data} onCancel={() => setGroupAdd(null)} />);
+      setGroupAdd(<GroupAdd data={data} onClose={() => setGroupAdd(null)} />);
       return;
     }
     setGroupAdd(null);
@@ -145,50 +192,71 @@ const HeaderMenu = (props) => {
         </div>
       );
     } else {
-      return props.groupList.map((value, index) => {
-        return (
-          <li key={`groups-${index}`}>
-            <div className='button-wrap'>
-              <Link to={`/group/${value.groupCd}`}>
-                <GroupButton>
-                  <div
-                    style={{
-                      display: 'flex',
-                      // width: '232px',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        marginBottom: '10px',
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      <img
-                        alt='group-img'
+      return (
+        <>
+          {props.groupList.map((value, index) => {
+            return (
+              <li key={`groups-${index}`}>
+                <div className='button-wrap'>
+                  <Link to={`/group/${value.groupCd}`}>
+                    <GroupButton>
+                      <div
                         style={{
-                          marginRight: '10px',
-                          borderRadius: '50%',
-                          width: '40px',
-                          height: '40px',
-                          objectFit: 'cover',
+                          display: 'flex',
+                          // width: '232px',
+                          justifyContent: 'space-between',
                         }}
-                        src={'http://placehold.it/40x40'}
+                      >
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            marginBottom: '10px',
+                            fontWeight: 'bold',
+                          }}
+                        >
+                          <img
+                            alt='group-img'
+                            style={{
+                              marginRight: '10px',
+                              borderRadius: '50%',
+                              width: '40px',
+                              height: '40px',
+                              objectFit: 'cover',
+                            }}
+                            src={value.groupPic}
+                          />
+                          {value.groupNm}
+                        </div>
+                      </div>
+                    </GroupButton>
+                  </Link>
+                  <div className='LongMenuOpen'>
+                    {value.isMaster ? (
+                      <LongMenu
+                        options={['그룹 정보', '그룹 관리']}
+                        code={value.groupCd}
+                        returnValue={onGroupMenuSelect}
                       />
-                      {value.groupNm}
-                    </div>
+                    ) : (
+                      <LongMenu
+                        options={['그룹 정보', '그룹 탈퇴']}
+                        code={value.groupCd}
+                        returnValue={onGroupMenuSelect}
+                      />
+                    )}
                   </div>
-                </GroupButton>
-              </Link>
-              <div className='LongMenuOpen'>
-                <LongMenu options={['그룹 정보', '그룹 관리']} code={value.groupCd} returnValue={onGroupMenuSelect} />
-              </div>
-            </div>
-          </li>
-        );
-      });
+                </div>
+              </li>
+            );
+          })}
+          <div>
+            <CustomIconButton onClick={showGroupAdd}>
+              <AddCircleOutlineIcon />
+            </CustomIconButton>
+          </div>
+        </>
+      );
     }
   };
 
@@ -337,11 +405,11 @@ const HeaderMenu = (props) => {
           </div>
           {profileEditForm}
         </div>
-        <div style={{ display: 'flex', height: '62px' }}>
+        <div style={{ display: 'flex', height: '52px' }}>
           <Button
             style={{
               flex: 1,
-              height: '62px',
+              height: '52px',
             }}
             onClick={() => {
               if (isGroup) {
@@ -352,9 +420,9 @@ const HeaderMenu = (props) => {
           >
             <div
               style={{
-                height: '50px',
+                height: '40px',
                 textAlign: 'center',
-                lineHeight: '50px',
+                lineHeight: '40px',
                 fontSize: '18px',
                 fontWeight: 'bold',
               }}
@@ -365,7 +433,7 @@ const HeaderMenu = (props) => {
           <Button
             style={{
               flex: 1,
-              height: '62px',
+              height: '52px',
             }}
             onClick={() => {
               if (!isGroup) {
@@ -376,9 +444,9 @@ const HeaderMenu = (props) => {
           >
             <div
               style={{
-                height: '50px',
+                height: '40px',
                 textAlign: 'center',
-                lineHeight: '50px',
+                lineHeight: '40px',
                 fontSize: '18px',
                 fontWeight: 'bold',
               }}
@@ -407,6 +475,7 @@ const HeaderMenu = (props) => {
                 const isSuccess = await axios.get('/user/logout');
                 if (isSuccess) {
                   setIsLogout(true);
+                  props.onLogout();
                 } else {
                   setMenuDialog(() => (
                     <AlertDialog

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import GroupModify from './GroupModify';
-import GroupDelete from './GroupDelete';
+import GroupModify from '../../Containers/Group/GroupModify';
+import GroupDelete from '../../Containers/Group/GroupDelete';
 import GroupApply from './GroupApply';
 import Snackbar from '../UI/Snackbar';
 
@@ -61,7 +61,7 @@ const GroupSetting = (props) => {
         console.log(groupInfo);
         const groupMember = (await axios.get(`/group/member/${data.group.groupCd}`)).data;
         console.log(groupMember);
-        setInfo({ ...groupInfo, member: groupMember });
+        setInfo({ ...groupInfo, member: groupMember, isMaster: true });
       } catch (e) {
         console.error(e);
         setInfo(null);
@@ -86,9 +86,9 @@ const GroupSetting = (props) => {
       case 0:
         return info === undefined ? null : <GroupModify data={info} pic={info !== undefined ? info.groupPic : null} />;
       case 1:
-        return <GroupApply info={info !== undefined ? info : null} />;
+        return <GroupApply info={info !== undefined ? info : null} onChangeData={(data) => setInfo(data)} />;
       case 2:
-        return <GroupDelete info={info} />;
+        return <GroupDelete info={info} onClose={() => props.onClose()} />;
     }
   })();
 

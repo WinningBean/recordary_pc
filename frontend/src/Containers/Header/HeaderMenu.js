@@ -18,6 +18,12 @@ const mapDispatchToProps = (dispatch) => {
     onSaveGroupList: (data) => {
       dispatch({ type: 'SAVE_GROUPLIST', groupList: data });
     },
+    onDeleteGroupList: (groupCd) => {
+      dispatch({ type: 'DELETE_GROUP', groupDeleteCd: groupCd });
+    },
+    onLogout: () => {
+      dispatch({ type: 'INIT' });
+    },
   };
 };
 

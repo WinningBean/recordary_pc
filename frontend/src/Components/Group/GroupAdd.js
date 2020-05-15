@@ -91,47 +91,49 @@ const GroupAdd = (props) => {
   };
 
   const onSubmit = async () => {
-    setAlert(
-      // <Snackbar
-      //         severity='info'
-      //         content='Loading...'
-      //         onClose={()=>setAlert(null)}
-      //     />
-      <Backdrop />
-    );
+    setAlert(<Backdrop />);
 
-    const image = group.group_pic === null ? null : dataURLToBlob(onMinimumSize(group.group_pic));
+    var url = null;
+    var groupCd = undefined;
 
     try {
-      console.log({
-        userCd: group.group_admin,
-        userId: props.data.userId,
-        groupName: group.group_nm,
-        groupState: openSwitch.open,
-        groupPic: image,
-        groupEx: group.group_ex,
-      });
-      const { data } = await axios.post('/group/create', {
-        userCd: group.group_admin,
-        userId: props.data.userId,
-        groupNm: group.group_nm,
-        groupState: openSwitch.open,
-        groupPic: image,
-        groupEx: group.group_ex,
-      });
-
-      if (data) {
-        props.onAdd({
+      groupCd = (
+        await axios.post('/group/create', {
           userCd: group.group_admin,
           userId: props.data.userId,
           groupNm: group.group_nm,
           groupState: openSwitch.open,
-          groupPic: image,
+          groupEx: group.group_ex,
+        })
+      ).data;
+
+      if (group.group_pic !== null) {
+        const blob = dataURLToBlob(group.group_pic);
+        const formData = new FormData();
+        formData.append('data', blob);
+        url = (
+          await axios.post(`/group/updateProfile/${groupCd}`, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data; boundary=------WebKitFormBoundary7MA4YWxkTrZu0gW',
+            },
+          })
+        ).data;
+      }
+
+      if (Number.isInteger(groupCd)) {
+        props.onAdd({
+          userCd: group.group_admin,
+          userId: props.data.userId,
+          groupCd: groupCd,
+          groupNm: group.group_nm,
+          groupState: openSwitch.open,
+          groupPic: group.group_pic,
           groupEx: group.group_ex,
         });
         setAlert(
           <AlertDialog severity='success' content='그룹을 생성하였습니다.' onAlertClose={() => setAlert(null)} />
         );
+        props.onClose();
       } else {
         setAlert(<Snackbar severity='error' content='그룹 생성에 실패하였습니다.' onClose={() => setAlert(null)} />);
       }
@@ -233,7 +235,7 @@ const GroupAdd = (props) => {
               label='그룹 공개'
             />
           </Tooltip>
-          <Button color='secondary' onClick={() => props.onCancel()}>
+          <Button color='secondary' onClick={() => props.onClose()}>
             취소
           </Button>
           <Button color='primary' onClick={onSubmit}>

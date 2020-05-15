@@ -109,7 +109,7 @@ const GroupInfo = ({ data, onClose }) => {
                   borderRadius: '50%',
                 }}
                 alt='profile-img'
-                src={info.userPic}
+                src={info.groupPic}
               />
             </div>
             <div
@@ -146,7 +146,7 @@ const GroupInfo = ({ data, onClose }) => {
               <TextField
                 label='그룹장'
                 name='group_ex'
-                defaultValue={info.userName}
+                defaultValue={info.userNm}
                 InputProps={{
                   readOnly: true,
                 }}
@@ -162,9 +162,9 @@ const GroupInfo = ({ data, onClose }) => {
             <div style={{ padding: '4px', minHeight: '180px' }}>
               <Link to={`/profile/${info.userCd}`}>
                 <Chip
-                  avatar={<Avatar alt={`${info.userName} img`} src={info.userPic} />}
+                  avatar={<Avatar alt={`${info.userNm} img`} src={info.userPic} />}
                   className={classes.chip}
-                  label={info.userName}
+                  label={info.userNm}
                   style={{
                     backgroundColor: 'rgba(20, 81, 51, 0.8)',
                     color: '#ffffff',
@@ -175,7 +175,7 @@ const GroupInfo = ({ data, onClose }) => {
               {(() => {
                 return info.groupMember.map((value) => {
                   return (
-                    <Link to={`/${value.userId}`}>
+                    <Link key={`member-${value.userCd}`} to={`/${value.userId}`}>
                       <Chip
                         avatar={<Avatar alt={`${value.userNm} img`} src={value.userPic} />}
                         className={classes.chip}

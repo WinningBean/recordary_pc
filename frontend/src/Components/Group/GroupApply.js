@@ -82,10 +82,9 @@ const GroupApply = (props) => {
                               <div
                                 style={{
                                   height: '60px',
-                                  padding: '0px 2px',
+                                  padding: '5px 2px',
                                   display: 'flex',
                                   borderBottom: '1px solid #eee',
-                                  padding: '5px 0',
                                 }}
                               >
                                 <img
@@ -129,6 +128,7 @@ const GroupApply = (props) => {
                 return (
                   <Chip
                     avatar={<Avatar alt={`${value.userNm} img`} src={value.userPic} />}
+                    key={`member-${value.userCd}`}
                     className={classes.chip}
                     label={value.userNm}
                     clickable
@@ -141,13 +141,12 @@ const GroupApply = (props) => {
                           onAlertClose={() => setDialog(null)}
                           onAlertSubmit={async () => {
                             try {
-                              const form = new FormData();
-                              form.append('group_cd', 2);
-                              form.append('user_id', 'ffff3311');
-                              //     .group.group_cd,
-                              // value.user_id
-                              const isDelete = (await axios.post('/groupMember/delete', form)).data.isDelete;
-                              if (isDelete === false) {
+                              const { data } = await axios.post('/groupMember/delete', {
+                                userCd: value.userCd,
+                                groupCd: info.groupCd,
+                              });
+                              console.log(data);
+                              if (!data) {
                                 setDialog(
                                   <AlertDialog
                                     severity='error'
@@ -158,11 +157,15 @@ const GroupApply = (props) => {
                                 return;
                               }
 
-                              const k = JSON.parse(JSON.stringify(info.group_member));
+                              const k = JSON.parse(JSON.stringify(info.member));
                               k.splice(index, 1);
                               setInfo({
                                 ...info,
-                                group_member: k,
+                                member: k,
+                              });
+                              props.onChangeData({
+                                ...info,
+                                member: k,
                               });
                               setDialog(null);
                             } catch (error) {
