@@ -44,7 +44,9 @@ public class GroupController {
 
     @PostMapping("updateProfile/{groupCd}")
     public String updateProfile(@RequestParam("data") MultipartFile multipartFile, @PathVariable Long groupCd) throws IOException {
-        return s3UploadComponent.profileUpload(multipartFile, "group", groupCd);
+        String url = s3UploadComponent.upload(multipartFile, "group", groupCd);
+        groupService.updateGroupProfile(url, groupCd);
+        return url;
     }
 
     @PostMapping("changeMaster/{groupCd}")
@@ -88,5 +90,6 @@ public class GroupController {
     {
         return groupService.findGroupMembers(groupCd);
     }
+
 
 }

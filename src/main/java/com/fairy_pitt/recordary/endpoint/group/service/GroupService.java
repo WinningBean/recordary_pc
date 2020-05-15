@@ -54,6 +54,14 @@ public class GroupService {
     }
 
     @Transactional
+    public void updateGroupProfile(String url,Long id)
+    {
+        GroupEntity groupEntity = groupRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
+        groupEntity.updateGroupProfile(url);
+    }
+
+    @Transactional
     public Long changGroupMaster(Long userCd, Long groupCd) {
         GroupEntity groupEntity = groupRepository.findById(groupCd)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + groupCd));

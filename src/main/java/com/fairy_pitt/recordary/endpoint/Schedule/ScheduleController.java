@@ -4,10 +4,7 @@ import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.endpoint.Schedule.Service.ScheduleService;
 import com.fairy_pitt.recordary.endpoint.Schedule.Service.ScheduleTabService;
-import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleMemberUpdateRequestDto;
-import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleResponseDto;
-import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleSaveRequestDto;
-import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.Schedule.dto.*;
 import com.fairy_pitt.recordary.endpoint.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +43,9 @@ public class ScheduleController {
         return true;
     }
 
-    @GetMapping("showUserSchedule")
-    public List<ScheduleResponseDto> showUserSchedule(Long user, int state, Date fromDate, Date toDate){
-        return scheduleService.showUserSchedule(user, state, fromDate, toDate);
+    @PostMapping("showUserSchedule")
+    public List<ScheduleResponseDto> showUserSchedule(@RequestBody ScheduleRequestDto responseDto){
+        return scheduleService.showUserSchedule(responseDto);
     }
 
 //    @GetMapping("showMySchedule")

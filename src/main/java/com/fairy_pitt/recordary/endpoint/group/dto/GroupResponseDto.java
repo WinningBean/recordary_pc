@@ -16,6 +16,7 @@ public class GroupResponseDto { // 응답(요청에대한 답)
     private String userPic;
     private String userId;
     private String userNm;
+    private Boolean isMaster;
 
     public GroupResponseDto(GroupEntity entity)
     {
@@ -39,5 +40,6 @@ public class GroupResponseDto { // 응답(요청에대한 답)
         this.userPic = user.getUserPic();
         this.userNm = user.getUserNm();
         this.userId = user.getUserId();
+        this.isMaster = entity.getGMstUserFK().getUserCd().equals(user.getUserCd());
     }
 }
