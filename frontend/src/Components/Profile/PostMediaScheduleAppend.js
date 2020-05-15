@@ -127,24 +127,15 @@ const PostMediaScheduleAppend = (props) => {
     setAlert(<Backdrop />);
 
     try {
-      let postAddMediaListFile = [];
-      for (var i = 0; i < postAddMediaListSrc.length; i++) {
-        postAddMediaListFile.push(dataURLToBlob(postAddMediaListSrc[i]));
-      }
-
-      console.log(postAddMediaListFile);
       const formData = new FormData();
-      formData.append('mediaFiles', postAddMediaListFile);
+      console.log(postAddMediaListSrc);
+      postAddMediaListSrc.map((value, index) => {
+        formData.append('mediaFiles', dataURLToBlob(value));
+      });
 
-      const getMediaCd = await axios.post(
-        `media/${store.getState().user.userCd}`,
-        {
-          formData,
-        },
-        {
-          headers: { 'Content-Type': 'multipart/form-data; boundary=------WebKitFormBoundary7MA4YWxkTrZu0gW' },
-        }
-      );
+      const getMediaCd = await axios.post(`media/${store.getState().user.userCd}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data; boundary=------WebKitFormBoundary7MA4YWxkTrZu0gW' },
+      });
 
       console.log(getMediaCd);
 
@@ -339,33 +330,33 @@ const PostMediaScheduleAppend = (props) => {
               style={{ display: 'none' }}
               ref={fileUpload}
               onChange={(e) => {
-                // console.log(e.target.files);
-                // console.log(e.target.files.length);
-                let files = [];
                 for (let i = 0; i < e.target.files.length; i++) {
                   const reader = new FileReader();
-                  reader.onloadend = (e) => {
-                    files.push(e.target.result);
-                  };
+                  reader.addEventListener('load', (e) => {
+                    postAddMediaListSrc.push(e.target.result);
+                    console.log(postAddMediaListSrc);
+                  });
                   reader.readAsDataURL(e.target.files[i]);
                 }
-                setPostAddMediaListSrc(files);
+                // e.target.value = null;
               }}
             />
-            {postAddMediaListSrc.map((value, index) => (
-              <div style={{ marginLeft: '10px' }} key={`${index}-postAddImg`}>
-                <img
-                  style={{
-                    boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
-                    width: '60px',
-                    height: '60px',
-                    objectFit: 'cover',
-                  }}
-                  id='postAddImg'
-                  src={value}
-                />
-              </div>
-            ))}
+            {postAddMediaListSrc === null
+              ? null
+              : postAddMediaListSrc.map((value, index) => (
+                  <div style={{ marginLeft: '10px' }} key={`${index}-postAddImg`}>
+                    <img
+                      style={{
+                        boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
+                        width: '60px',
+                        height: '60px',
+                        objectFit: 'cover',
+                      }}
+                      id='postAddImg'
+                      src={value}
+                    />
+                  </div>
+                ))}
           </div>
         ) : null}
         {alert}
