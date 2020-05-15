@@ -72,7 +72,8 @@ public class GroupEntity extends BaseTimeEntity{
         this.groupEx = groupEx;
     }
 
-    public void updateGroupMaster(UserEntity User) {
-        this.gMstUserFK = User;
+    public void updateGroupMaster(UserEntity user) {
+        this.gMstUserFK = user;
     }
+    public void updateGroupProfile(String url){this.groupPic = url;}
 }
