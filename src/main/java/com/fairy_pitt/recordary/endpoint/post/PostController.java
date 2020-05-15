@@ -1,6 +1,5 @@
 package com.fairy_pitt.recordary.endpoint.post;
 
-import com.fairy_pitt.recordary.common.entity.PostEntity;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostUpdateRequestDto;
@@ -64,7 +63,7 @@ public class PostController {
     }
 
     @GetMapping("/timeLine/{userCd}")
-    public List<PostEntity> timeLinePostList(@PathVariable Long userCd){
+    public List<PostResponseDto> timeLinePostList(@PathVariable Long userCd){
         return postService.timeLinePostList(userCd);
     }
 }
