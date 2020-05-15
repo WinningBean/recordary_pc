@@ -64,11 +64,9 @@ public class GroupEntity extends BaseTimeEntity{
 
     public void updateGroupInfo(String groupNm,
                                 Boolean groupState,
-                                String groupPic,
                                 String  groupEx) {
         this.groupNm = groupNm;
         this.groupState = groupState;
-        this.groupPic = groupPic;
         this.groupEx = groupEx;
     }
 

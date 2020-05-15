@@ -12,14 +12,12 @@ public class GroupUpdateRequestDto {
     private String groupNm;
     private Boolean groupState;
     private String groupEx;
-    private String groupPic;
 
     @Builder(builderClassName = "updateGroupBuilder", builderMethodName = "updateGroupBuilder")
     public GroupUpdateRequestDto(String groupNm, Boolean groupState, String groupPic, String  groupEx)
     {
         this.groupNm = groupNm;
         this.groupState = groupState;
-        this.groupPic = groupPic;
         this.groupEx = groupEx;
     }
 

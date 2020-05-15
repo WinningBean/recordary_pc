@@ -40,7 +40,7 @@ public class GroupService {
         GroupEntity groupEntity = groupRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
 
-        groupEntity.updateGroupInfo(groupDto.getGroupNm(), groupDto.getGroupState(), groupDto.getGroupPic(), groupDto.getGroupEx());
+        groupEntity.updateGroupInfo(groupDto.getGroupNm(), groupDto.getGroupState(), groupDto.getGroupEx());
 
         return id;
     }
