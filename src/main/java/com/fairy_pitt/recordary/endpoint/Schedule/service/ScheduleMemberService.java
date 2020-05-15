@@ -1,10 +1,13 @@
-package com.fairy_pitt.recordary.endpoint.Schedule.Service;
+package com.fairy_pitt.recordary.endpoint.Schedule.service;
 
+import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
 import com.fairy_pitt.recordary.common.entity.ScheduleMemberEntity;
+import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.pk.ScheduleMemberEntityPK;
 import com.fairy_pitt.recordary.common.repository.ScheduleMemberRepository;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleMemberSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleMemberUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +18,8 @@ public class ScheduleMemberService {
 
 
     private final ScheduleMemberRepository scheduleMemberRepository;
+    private final ScheduleService scheduleService ;
+    private final UserService userService;
 
     @Transactional
     public void delete(ScheduleMemberEntityPK id) {
@@ -26,7 +31,9 @@ public class ScheduleMemberService {
     @Transactional
     public Boolean save(ScheduleMemberSaveRequestDto requestDto)
     {
-        //scheduleMemberRepository.save(requestDto.toEntity());
+        UserEntity user = userService.findEntity(requestDto.getUserCd());
+        ScheduleEntity schedule = scheduleService.findEntity(requestDto.getScheduleCd());
+        scheduleMemberRepository.save(requestDto.toEntity(schedule, user));
         return true;
     }
 

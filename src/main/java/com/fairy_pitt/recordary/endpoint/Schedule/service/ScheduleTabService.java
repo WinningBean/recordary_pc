@@ -1,4 +1,4 @@
-package com.fairy_pitt.recordary.endpoint.Schedule.Service;
+package com.fairy_pitt.recordary.endpoint.Schedule.service;
 
 import com.fairy_pitt.recordary.common.entity.ScheduleTabEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;

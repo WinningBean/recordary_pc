@@ -28,10 +28,6 @@ public class ScheduleEntity extends BaseTimeEntity{
    @JoinColumn(name = "SCHEDULE_GB_FK")
    private ScheduleTabEntity tabFK;
 
-   @OneToOne(fetch = FetchType.LAZY)
-   @JoinColumn(name = "SCHEDULE_POST_FK")
-   private PostEntity postFK;
-
    @Column(name = "SCHEDULE_NM")
    private String scheduleNm;
 
@@ -67,7 +63,6 @@ public class ScheduleEntity extends BaseTimeEntity{
 
       this.tabFK = tabFK;
       this.userFk = userFK;
-      this.postFK = postFK;
       this.scheduleNm = scheduleNm;
       this.scheduleEx = scheduleEx;
       this.scheduleStr = scheduleStr;
