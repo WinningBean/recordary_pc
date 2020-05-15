@@ -21,9 +21,41 @@ const GroupModify = (props) => {
     open: props.data.groupState,
   });
   const [imageSrc, setImageSrc] = useState(null);
+  const [changePic, setChangePic] = useState(null);
   const [alert, setAlert] = useState(null);
 
   let fileUpload = null;
+
+  const dataURLToBlob = (dataURL) => {
+    const BASE64_MARKER = ';base64,';
+
+    // base64로 인코딩 되어있지 않을 경우
+    if (dataURL.indexOf(BASE64_MARKER) === -1) {
+      const parts = dataURL.split(',');
+      const contentType = parts[0].split(':')[1];
+      const raw = parts[1];
+      return new Blob([raw], {
+        type: contentType,
+      });
+    }
+
+    // base64로 인코딩 된 이진데이터일 경우
+    const parts = dataURL.split(BASE64_MARKER);
+    const contentType = parts[0].split(':')[1];
+    const raw = window.atob(parts[1]);
+    // atob()는 Base64를 디코딩하는 메서드
+    const rawLength = raw.length;
+    // 부호 없는 1byte 정수 배열을 생성
+    const uInt8Array = new Uint8Array(rawLength); // 길이만 지정된 배열
+    let i = 0;
+    while (i < rawLength) {
+      uInt8Array[i] = raw.charCodeAt(i);
+      i++;
+    }
+    return new Blob([uInt8Array], {
+      type: contentType,
+    });
+  };
 
   const changeHandel = (e) => {
     setChangeData({
@@ -41,45 +73,32 @@ const GroupModify = (props) => {
       //     />
       <Backdrop />
     );
-    if (changeData.groupPic !== props.data.pic) {
-      var canvas = document.createElement('canvas');
-      var ctx = canvas.getContext('2d');
-      const cut = new Image();
-      cut.src = changeData.groupPic;
-      let height = cut.height;
-      let width = cut.width;
-      height *= 250 / width;
-      width = 250;
-      canvas.width = width;
-      canvas.height = height;
-      // canvas에 변경된 크기의 이미지를 다시 그려줍니다.
-      ctx.drawImage(cut, 0, 0, width, height);
-      // canvas 에 있는 이미지를 img 태그로 넣어줍니다
-      var dataUrl = canvas.toDataURL('image/jpg');
-    } else {
-      var dataUrl = null;
-    }
     try {
-      console.log({
-        groupName: changeData.groupName,
-        groupEx: changeData.groupEx,
-        groupPic: null,
-        groupState: openSwitch.open,
-      });
+      var url = null;
+      if (changePic !== null) {
+        const blob = dataURLToBlob(changePic);
+        const formData = new FormData();
+        formData.append('data', blob);
+        url = (
+          await axios.post(`/group/updateProfile/${props.data.groupCd}`, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data; boundary=------WebKitFormBoundary7MA4YWxkTrZu0gW',
+            },
+          })
+        ).data;
+      }
+      console.log(url);
       const { data } = await axios.post(`/group/update/${changeData.groupCd}`, {
         groupNm: changeData.groupNm,
         groupEx: changeData.groupEx,
-        groupPic: null,
+        // groupPic: url === null ? changeData.groupPic : url,
         groupState: openSwitch.open,
       });
       if (Number.isInteger(data)) {
-        // props.onChange({
-        //   ...changeData.group,
-        //   group_pic: dataUrl,
-        // });
         setAlert(
           <AlertDialog severity='success' content='그룹정보를 변경하였습니다.' onAlertClose={() => setAlert(null)} />
         );
+        props.onChange({ ...changeData, groupPic: changePic !== null ? changePic : changeData.groupPic });
       } else {
         setAlert(
           <Snackbar severity='error' content='그룹정보 변경에 실패하였습니다.' onClose={() => setAlert(null)} />
@@ -115,23 +134,10 @@ const GroupModify = (props) => {
                 borderRadius: '50%',
               }}
               alt='profile-img'
-              src={changeData.groupPic}
+              src={changePic !== null ? changePic : changeData.groupPic}
             />
           </div>
-          <Button
-            startIcon={<CloudUploadIcon />}
-            variant='outlined'
-            onClick={() => fileUpload.click()}
-            // onClick={()=>{
-            //     setImageEditor(
-            //         <ImageEditor
-            //             src={user.user_pic}
-            //             onClose={() => this.setState({ imageSrc: null })}
-            //             onComplete={(src) => this.setState({ imageSrc: null, user_pic: src })}
-            //         />
-            //     )
-            // }}
-          >
+          <Button startIcon={<CloudUploadIcon />} variant='outlined' onClick={() => fileUpload.click()}>
             &nbsp;Upload
           </Button>
         </div>
@@ -192,7 +198,7 @@ const GroupModify = (props) => {
           onComplete={(src) => {
             setImageSrc(null);
             // setChangeData({ ...changeData, group : {...changeData.group , group_pic: src} });
-            // setChangePic(src);
+            setChangePic(src);
           }}
         />
       )}

@@ -10,6 +10,14 @@ const reducer = (state, action) => {
     };
   }
   switch (action.type) {
+    case 'INIT':
+      return {
+        isLogin: false,
+        user: {},
+        friendList: undefined,
+        groupList: undefined,
+        postList: undefined,
+      };
     case 'SET_LOGIN':
       return {
         ...state,
@@ -32,36 +40,26 @@ const reducer = (state, action) => {
     case 'ADD_GROUP':
       return {
         ...state,
-        groupList: state.groupList === undefined ? null : state.groupList.concat(action.groupAddData),
+        groupList: state.groupList === undefined ? undefined : state.groupList.concat(action.groupAddData),
       };
     case 'MODIFY_GROUP':
       const data = action.groupModifyData;
-      var isChangePic = true;
-      if (data.group_pic === null) {
-        isChangePic = false;
-      }
-      const changedGroup = state.user.userGroup.map((value) => {
-        if (value.group_cd === data.group_cd) {
-          if (isChangePic) {
-            return {
-              ...value,
-              group_nm: data.group_nm,
-              group_ex: data.group_ex,
-              group_pic: data.group_pic,
-            };
-          } else {
-            return {
-              ...value,
-              group_nm: data.group_nm,
-              group_ex: data.group_ex,
-            };
-          }
+      const changedGroup = state.groupList.map((value) => {
+        if (value.groupCd === data.groupCd) {
+          return data;
         }
         return value;
       });
       return {
         ...state,
-        user: { ...state.user, userGroup: changedGroup },
+        groupList: changedGroup,
+      };
+    case 'DELETE_GROUP':
+      const groupCd = action.groupDeleteCd;
+      const copyList = JSON.parse(JSON.stringify(state.groupList)).filter((value) => value.groupCd !== groupCd);
+      return {
+        ...state,
+        groupList: copyList,
       };
     case 'SAVE_FRIENDLIST':
       return {

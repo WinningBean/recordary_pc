@@ -204,7 +204,7 @@ const SearchFieldResult = (props) => {
                 }}
               >
                 <img
-                  alt={`${value.groupName} img`}
+                  alt={`${value.groupNm} img`}
                   style={{
                     marginRight: '10px',
                     borderRadius: '50%',
@@ -214,7 +214,7 @@ const SearchFieldResult = (props) => {
                   }}
                   src={value.groupPic}
                 />
-                {value.groupName}
+                {value.groupNm}
               </div>
               <div>
                 {(() => {

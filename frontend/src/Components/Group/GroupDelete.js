@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const GroupDelete = ({ info }) => {
+const GroupDelete = ({ info, onDeleteGroupList, onClose }) => {
   const classes = useStyles();
 
   const [check, setCheck] = useState(false);
@@ -30,7 +30,9 @@ const GroupDelete = ({ info }) => {
 
   const onDelete = async () => {
     try {
-      const { data } = await axios.delete('/group');
+      const { data } = await axios.delete(`/group/${info.groupCd}`);
+      onDeleteGroupList(info.groupCd);
+      onClose();
     } catch (error) {
       console.error(error);
       setAlert(
