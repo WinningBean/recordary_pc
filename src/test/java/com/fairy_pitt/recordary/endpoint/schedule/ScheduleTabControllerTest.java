@@ -41,7 +41,6 @@ public class ScheduleTabControllerTest {
     public void tearDown() throws Exception{
         scheduleTabRepository.deleteAll();
         userRepository.deleteAll();
-    //  groupRepository.deleteAll();
     }
     @Test
     public void Tab_생성() throws Exception{
@@ -69,7 +68,5 @@ public class ScheduleTabControllerTest {
 
         List<ScheduleTabEntity> all = scheduleTabRepository.findAll();
         assertThat(all.get(0).getTabNm()).isEqualTo(tabNm);
-
-
     }
 }

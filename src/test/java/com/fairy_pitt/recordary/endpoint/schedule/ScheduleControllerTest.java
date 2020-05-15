@@ -66,7 +66,7 @@ public class ScheduleControllerTest {
                 .scheduleCol(null)
                 .build();
 
-        String url = "http://localhost:" + port + "schedule/create";
+        String url = "http://localhost:" + port + "schedule/";
 
         //when
         ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url, requestDto, Long.class);
