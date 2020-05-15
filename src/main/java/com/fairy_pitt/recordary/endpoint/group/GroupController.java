@@ -68,7 +68,7 @@ public class GroupController {
 
     @GetMapping("{groupCd}")
     public GroupResponseDto readGroup(@PathVariable Long groupCd) {
-        return groupService.groupInfo(groupCd);
+        return groupService.groupPage(groupCd);
     }
 
 

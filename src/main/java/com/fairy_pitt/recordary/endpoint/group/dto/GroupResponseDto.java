@@ -28,8 +28,7 @@ public class GroupResponseDto { // 응답(요청에대한 답)
         this.groupPic = entity.getGroupPic();
     }
 
-
-    public GroupResponseDto(GroupEntity entity, UserEntity user)
+    public GroupResponseDto(GroupEntity entity, Boolean isMaster)
     {
         this.groupCd = entity.getGroupCd();
         this.userCd = entity.getGMstUserFK().getUserCd();
@@ -37,9 +36,19 @@ public class GroupResponseDto { // 응답(요청에대한 답)
         this.groupState = entity.getGroupState();
         this.groupEx = entity.getGroupEx();
         this.groupPic = entity.getGroupPic();
-        this.userPic = user.getUserPic();
-        this.userNm = user.getUserNm();
-        this.userId = user.getUserId();
-        this.isMaster = entity.getGMstUserFK().getUserCd().equals(user.getUserCd());
+        this.isMaster = isMaster;
+    }
+
+    public GroupResponseDto(GroupEntity entity, UserEntity master)
+    {
+        this.groupCd = entity.getGroupCd();
+        this.userCd = entity.getGMstUserFK().getUserCd();
+        this.groupNm = entity.getGroupNm();
+        this.groupState = entity.getGroupState();
+        this.groupEx = entity.getGroupEx();
+        this.groupPic = entity.getGroupPic();
+        this.userPic = master.getUserPic();
+        this.userId = master.getUserNm();
+        this.userNm = master.getUserId();
     }
 }
