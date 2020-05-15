@@ -26,7 +26,7 @@ const MainPage = (props) => {
           <Main data={data}></Main>
           <Aside data={user}></Aside>
         </div>
-        <MainPageButton data={data}></MainPageButton>
+        {/* <MainPageButton /> */}
       </div>
     </>
   );

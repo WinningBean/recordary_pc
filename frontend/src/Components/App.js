@@ -3,6 +3,7 @@ import './default.css';
 import LoginPage from '../Containers/Login/LoginPage';
 import MainPage from '../Containers/Main/MainPage';
 import ProfilePage from '../Containers/Profile/Profile';
+import MainPageButton from './Main/MainPageButton';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import axios from 'axios';
 
@@ -28,6 +29,7 @@ class App extends React.Component {
           <Route path='/group/:groupCd' component={ProfilePage} />
           <Redirect path='*' to='/' />
         </Switch>
+        {this.props.isLogin ? <MainPageButton /> : null}
       </div>
     );
   }

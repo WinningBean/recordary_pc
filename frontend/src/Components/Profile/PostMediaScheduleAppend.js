@@ -27,6 +27,7 @@ import Popover from '@material-ui/core/Popover';
 
 import axios from 'axios';
 import store from '../../store';
+
 const useStyles = makeStyles((theme) => ({
   content: {
     width: '552px',
@@ -65,9 +66,9 @@ const PostMediaScheduleAppend = (props) => {
   let fileUpload = useRef(null);
 
   const [post, setPost] = useState({
-    user_id: store.getState().user.userId,
+    userCd: store.getState().user.userCd,
     // group_cd: store.getState().user.userGroup[0].group_cd,
-    group_cd: null,
+    groupCd: null,
     postOriginCd: null,
     scheduleCd: null,
     mediaCd: null,
@@ -127,31 +128,24 @@ const PostMediaScheduleAppend = (props) => {
     setAlert(<Backdrop />);
 
     try {
-      const formData = new FormData();
-      console.log(postAddMediaListSrc);
-      postAddMediaListSrc.map((value, index) => {
-        formData.append('mediaFiles', dataURLToBlob(value));
-      });
+      var getMediaCd = null;
+      if (postAddMediaListSrc.length > 0) {
+        const formData = new FormData();
 
-      const getMediaCd = await axios.post(`media/${store.getState().user.userCd}`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data; boundary=------WebKitFormBoundary7MA4YWxkTrZu0gW' },
-      });
+        console.log(postAddMediaListSrc);
+        postAddMediaListSrc.map((value, index) => {
+          formData.append('mediaFiles', dataURLToBlob(value));
+        });
+        getMediaCd = (
+          await axios.post(`/media/${post.userCd}`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data; boundary=------WebKitFormBoundary7MA4YWxkTrZu0gW' },
+          })
+        ).data;
+        console.log(getMediaCd);
+      }
 
-      console.log(getMediaCd);
-
-      setPost({ ...post, mediaCd: getMediaCd.data });
-
-      const { data } = await axios.post(
-        `post/`,
-        {
-          post,
-        },
-        {
-          headers: {
-            'content-type': 'application/json',
-          },
-        }
-      );
+      console.log({ ...post, mediaCd: getMediaCd });
+      const { data } = await axios.post(`/post/`, { ...post, mediaCd: getMediaCd });
 
       console.log(data);
 
@@ -324,7 +318,7 @@ const PostMediaScheduleAppend = (props) => {
             </div>
             <input
               type='file'
-              accept='image/*'
+              accept='image/jpeg'
               required
               multiple
               style={{ display: 'none' }}
