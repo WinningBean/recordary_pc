@@ -1,6 +1,5 @@
 package com.fairy_pitt.recordary.endpoint.group.dto;
 
-import com.fairy_pitt.recordary.common.entity.UserEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

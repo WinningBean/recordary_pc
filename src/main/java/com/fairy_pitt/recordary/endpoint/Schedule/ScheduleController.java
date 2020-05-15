@@ -1,20 +1,12 @@
 package com.fairy_pitt.recordary.endpoint.Schedule;
 
-import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.endpoint.Schedule.Service.ScheduleService;
 import com.fairy_pitt.recordary.endpoint.Schedule.Service.ScheduleTabService;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.*;
-import com.fairy_pitt.recordary.endpoint.post.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @RequiredArgsConstructor

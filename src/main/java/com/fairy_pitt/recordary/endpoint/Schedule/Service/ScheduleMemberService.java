@@ -1,14 +1,10 @@
 package com.fairy_pitt.recordary.endpoint.Schedule.Service;
 
-import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
 import com.fairy_pitt.recordary.common.entity.ScheduleMemberEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.pk.ScheduleMemberEntityPK;
 import com.fairy_pitt.recordary.common.repository.ScheduleMemberRepository;
-import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleMemberResponseDto;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleMemberSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleMemberUpdateRequestDto;
-import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleSaveRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

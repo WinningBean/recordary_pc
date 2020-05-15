@@ -5,13 +5,10 @@ import com.fairy_pitt.recordary.endpoint.Schedule.Service.ScheduleMemberService;
 import com.fairy_pitt.recordary.endpoint.Schedule.Service.ScheduleService;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleMemberSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleMemberUpdateRequestDto;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupMemberRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @RequestMapping("scheduleMember")

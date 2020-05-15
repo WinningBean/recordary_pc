@@ -3,18 +3,12 @@ package com.fairy_pitt.recordary.endpoint.Schedule.Service;
 import com.fairy_pitt.recordary.common.entity.ScheduleTabEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.ScheduleTabRepository;
-import com.fairy_pitt.recordary.common.repository.UserRepository;
-import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleTabRequestDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor // final 객체 주입
