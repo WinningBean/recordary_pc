@@ -1,5 +1,6 @@
 package com.fairy_pitt.recordary.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
@@ -34,9 +35,11 @@ public class ScheduleEntity extends BaseTimeEntity{
    @Column(name = "SCHEDULE_EX")
    private String scheduleEx;
 
+   @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
    @Column(name = "SCHEDULE_STR_DT")
    private Date scheduleStr;
 
+   @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
    @Column(name = "SCHEDULE_END_DT")
    private Date scheduleEnd;
 

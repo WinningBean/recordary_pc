@@ -64,6 +64,7 @@ public class ScheduleControllerTest {
                 .scheduleStr(scheduleStr)
                 .scheduleEnd(scheduleEnd)
                 .scheduleCol(null)
+                .schedulePublicState(3)
                 .build();
 
         String url = "http://localhost:" + port + "schedule/";
