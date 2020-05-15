@@ -1,18 +1,17 @@
 package com.fairy_pitt.recordary.common.group;
 
 import com.fairy_pitt.recordary.common.entity.GroupEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
-import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -32,8 +31,6 @@ public class GroupRepositoryTest {
         //given
        //  UserEntity gMstUserFK =
         String groupName = "테스트 그룹";
-        Boolean groupState = true;
-        String groupPic = null;
         String  groupEx = "그룹 생성 테스트 중입니다";
 
 
@@ -54,8 +51,5 @@ public class GroupRepositoryTest {
         assertThat(groupEntity.getGroupNm()).isEqualTo(groupName);
 
     }
-
-
-
 
 }

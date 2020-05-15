@@ -2,8 +2,10 @@ package com.fairy_pitt.recordary.endpoint.comment.dto;
 
 import com.fairy_pitt.recordary.common.entity.CommentEntity;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class CommentResponseDto {
 
     private Long commentCd;

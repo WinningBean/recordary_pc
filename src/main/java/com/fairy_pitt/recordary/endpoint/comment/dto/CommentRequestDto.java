@@ -6,8 +6,8 @@ import com.fairy_pitt.recordary.common.entity.UserEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 @Getter
+@NoArgsConstructor
 public class CommentRequestDto {
 
     private Long commentUserFK;

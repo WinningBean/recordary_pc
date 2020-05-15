@@ -7,13 +7,15 @@ import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
 import com.fairy_pitt.recordary.endpoint.media.dto.MediaResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-public class PostResponseDto {
+@NoArgsConstructor
+public class PostResponseDto implements Comparable<PostResponseDto>{
     private Long postCd;
     private UserResponseDto userFK;
     private GroupResponseDto groupFK;
@@ -44,5 +46,16 @@ public class PostResponseDto {
         this.postEndYMD = postEntity.getPostEndYMD();
         this.createdDate = postEntity.getCreatedDate();
         this.modifiedDate = postEntity.getModifiedDate();
+    }
+
+    @Override
+    public int compareTo(PostResponseDto postResponseDto){
+        if (this.getCreatedDate().isAfter(postResponseDto.getCreatedDate())){
+            return 1;
+        }else if (this.getCreatedDate().isBefore(postResponseDto.getCreatedDate())){
+            return -1;
+        }else{
+            return 0;
+        }
     }
 }

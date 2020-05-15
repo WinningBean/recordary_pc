@@ -1,6 +1,5 @@
 package com.fairy_pitt.recordary.common.user;
 
-import com.fairy_pitt.recordary.common.entity.PostEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.user.service.UserPasswordHashService;
