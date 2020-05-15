@@ -54,6 +54,14 @@ public class GroupService {
     }
 
     @Transactional
+    public void updateGroupProfile(String url,Long id)
+    {
+        GroupEntity groupEntity = groupRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
+        groupEntity.updateGroupProfile(url);
+    }
+
+    @Transactional
     public Long changGroupMaster(Long userCd, Long groupCd) {
         GroupEntity groupEntity = groupRepository.findById(groupCd)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + groupCd));
@@ -73,11 +81,11 @@ public class GroupService {
     }
 
     @Transactional(readOnly = true)
-    public GroupResponseDto groupInfo(Long id) {
+    public GroupResponseDto groupPage(Long id) {
         GroupEntity entity = groupRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
-        UserEntity user = userService.findEntity(entity.getGMstUserFK().getUserCd());
-        return new GroupResponseDto(entity,user);
+
+        return new GroupResponseDto(entity, entity.getGMstUserFK());
     }
 
     @Transactional(readOnly = true)
@@ -97,11 +105,13 @@ public class GroupService {
 
     @Transactional(readOnly = true)
     public List<GroupResponseDto> findUserGroups(Long userCd){
-        List<GroupMemberEntity> groupEntities = userService.findEntity(userCd).getGroups();
+        UserEntity user = userService.findEntity(userCd);
+        List<GroupMemberEntity> groupEntities = user.getGroups();
         List<GroupResponseDto> result = new ArrayList<>();
 
         for (GroupMemberEntity temp: groupEntities) {
-            GroupResponseDto groupResponseDto = new GroupResponseDto(temp.getGroupFK());
+            Boolean isMaster = temp.getGroupFK().getGMstUserFK().getUserCd().equals(temp.getUserFK().getUserCd());
+            GroupResponseDto groupResponseDto = new GroupResponseDto(temp.getGroupFK(), isMaster);
             result.add(groupResponseDto);
         }
         return  result;
@@ -114,8 +124,11 @@ public class GroupService {
         List<UserResponseDto> result = new ArrayList<>();
 
         for (GroupMemberEntity temp: groupEntities) {
-            UserResponseDto groupResponseDto = new UserResponseDto(temp.getUserFK());
-            result.add(groupResponseDto);
+            if(!temp.getGroupFK().getGMstUserFK().getUserCd().equals(temp.getUserFK().getUserCd()))
+            {
+                UserResponseDto groupResponseDto = new UserResponseDto(temp.getUserFK());
+                result.add(groupResponseDto);
+            }
         }
         return  result;
     }

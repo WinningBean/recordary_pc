@@ -14,6 +14,7 @@ import java.util.List;
 public interface ScheduleRepository extends JpaRepository<ScheduleEntity,Long> {
     ScheduleEntity findByScheduleCd(Long scheduleCd);
     List<ScheduleEntity> findByScheduleStrBetween(Date fromDate, Date toDate);
-    List<ScheduleEntity> findByUserFkAndSchedulePublicStateGreaterThanEqualAndScheduleStrBetween(UserEntity user, int state,Date fromDate, Date toDate);
+    List<ScheduleEntity> findByUserFkAndSchedulePublicStateLessThanEqualAndScheduleStrBetween(UserEntity user, int state,Date fromDate, Date toDate);
+
 
 }

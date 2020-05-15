@@ -23,14 +23,14 @@ public class ScheduleResponseDto {
 
     public ScheduleResponseDto(ScheduleEntity entity) {
         this.scheduleCd = entity.getScheduleCd();
-        this.tabCd = entity.getTabFK().getTabCd();
+        if (entity.getTabFK() != null) this.tabCd = entity.getTabFK().getTabCd();
         this.userCd = entity.getUserFk().getUserCd();
         this.scheduleNm = entity.getScheduleNm();
         this.scheduleEx = entity.getScheduleEx();
         this.scheduleStr = entity.getScheduleStr();
         this.scheduleEnd = entity.getScheduleEnd();
         this.scheduleCol = entity.getScheduleCol();
-        this.tabCol = entity.getTabFK().getTabCol();
+        if (entity.getTabFK() != null) this.tabCol = entity.getTabFK().getTabCol();
         this.schedulePublicState = entity.getSchedulePublicState();
     }
 }
