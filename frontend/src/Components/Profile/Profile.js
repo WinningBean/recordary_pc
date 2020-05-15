@@ -46,8 +46,7 @@ class Profile extends React.Component {
     super(props);
     this.state = {
       addScheduleClick: false,
-      profileScheduleClick: false,
-      profilePictureClick: false,
+      showProfileList: true,
       followerNumClick: false,
       followingNumClick: false,
       isLoading: true,
@@ -107,9 +106,11 @@ class Profile extends React.Component {
 
   getUserPostList = async () => {
     try {
-      const UserPostList = (await axios.get(`/post/user/${this.state.info.userCd}`)).data;
-      console.log(UserPostList);
-      this.setState({ ...this.state, post: UserPostList });
+      if (this.props.isLogin) {
+        const UserPostList = (await axios.get(`/post/user/${this.state.info.userCd}`)).data;
+        console.log(UserPostList);
+        this.setState({ ...this.state, post: UserPostList });
+      }
     } catch (error) {
       console.error(error);
     }
@@ -139,107 +140,19 @@ class Profile extends React.Component {
     }
   }
 
-  setProfileScheduleOpen = () => {
-    if (this.state.profileScheduleClick === true) {
-      return this.setState({
-        profileScheduleClick: false,
-        profilePictureClick: true,
-      });
+  ProfileDownTimeLine = () => {
+    if (this.state.profileScheduleClick === true && this.state.profilePictureClick === false) {
+      return;
+    } else if (this.state.profilePictureClick === true && this.state.profileScheduleClick === false) {
+    } else {
+      console.log('error');
     }
-    return this.setState({
-      profileScheduleClick: true,
-      profilePictureClick: false,
-    });
-  };
-
-  setProfilePictureOpen = () => {
-    if (this.state.profilePictureClick === true) {
-      return this.setState({
-        profilePictureClick: false,
-        profileScheduleClick: true,
-      });
-    }
-    return this.setState({
-      profilePictureClick: true,
-      profileScheduleClick: false,
-    });
   };
 
   render() {
     if (this.state.redirect) {
       return <Redirect to='/' />;
     }
-
-    const ProfileDownTimeLine = () => {
-      try {
-        if (this.state.profileScheduleClick === true && this.state.profilePictureClick === false) {
-          return this.state.post.map((value) => (
-            <div className='profile-ScheduleTimeLine'>
-              <TimelineWeekSchedule key={value.post_cd} data={value} />
-            </div>
-          ));
-        }
-
-        if (this.state.profilePictureClick === true && this.state.profileScheduleClick === false) {
-          return (
-            <>
-              <div className='profile-MediaTimeline'>
-                {this.state.post.map((value, index) => (
-                  <div
-                    className='media-box-hover'
-                    style={{
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      height: '272px',
-                      width: '272px',
-                      overflow: 'hidden',
-                      margin: '10px',
-                    }}
-                    key={value.postCd}
-                  >
-                    <img
-                      className='media-box'
-                      alt={value.postCd}
-                      src={value.post_pic}
-                      onClick={() =>
-                        this.setState({
-                          value: (this.state.post[index] = {
-                            ...value,
-                            post_pic_click: true,
-                          }),
-                        })
-                      }
-                    />
-                  </div>
-                ))}
-              </div>
-              {this.state.post.map((value, index) => {
-                if (value.post_pic_click === true) {
-                  return (
-                    <Dialog
-                      open
-                      key={value.post_cd}
-                      onClose={() =>
-                        this.setState({
-                          value: (this.state.post[index] = {
-                            ...value,
-                            post_pic_click: false,
-                          }),
-                        })
-                      }
-                    >
-                      <Timeline data={value} />
-                    </Dialog>
-                  );
-                }
-              })}
-            </>
-          );
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
 
     const FollowerShow = () => {
       if (this.state.followerNumClick) {
@@ -261,7 +174,6 @@ class Profile extends React.Component {
       }
       return null;
     };
-    console.log(this.props.location.state);
     if (this.state.isLoading) {
       return <Loading />;
     }
@@ -609,7 +521,7 @@ class Profile extends React.Component {
                     : null
                 }
               >
-                <NavButton onClick={this.setProfileScheduleOpen}>
+                <NavButton onClick={() => this.setState({ showProfileList: !this.state.showProfileList })}>
                   <span>일정</span>
                 </NavButton>
               </div>
@@ -621,12 +533,87 @@ class Profile extends React.Component {
                     : null
                 }
               >
-                <NavButton onClick={(this.setProfilePictureOpen, this.getUserPostList)}>
+                <NavButton
+                  onClick={
+                    (() => this.setState({ showProfileList: !this.state.showProfileList }), this.getUserPostList)
+                  }
+                >
                   <span>사진</span>
                 </NavButton>
               </div>
             </nav>
-            {ProfileDownTimeLine()}
+            {this.state.post !== undefined ? (
+              this.state.showProfileList ? (
+                <>
+                  <div className='profile-MediaTimeline'>
+                    {this.state.post.map(async (value, index) => {
+                      try {
+                        if (value.mediaFK.mediaCd !== null) {
+                          const mediaPath = (await axios.get(`/media/${value.mediaFK.mediaCd}}`)).data;
+                          console.log(mediaPath);
+                        }
+                      } catch (error) {
+                        console.log(error);
+                      }
+                      return (
+                        <div
+                          className='media-box-hover'
+                          style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            height: '272px',
+                            width: '272px',
+                            overflow: 'hidden',
+                            margin: '10px',
+                          }}
+                          key={value.postCd}
+                        >
+                          <img
+                            className='media-box'
+                            alt={value.postCd}
+                            src={value.post_pic}
+                            onClick={() =>
+                              this.setState({
+                                value: (this.state.post[index] = {
+                                  ...value,
+                                  post_pic_click: true,
+                                }),
+                              })
+                            }
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {this.state.post.map((value, index) => {
+                    if (value.post_pic_click === true) {
+                      return (
+                        <Dialog
+                          open
+                          key={value.post_cd}
+                          onClose={() =>
+                            this.setState({
+                              value: (this.state.post[index] = {
+                                ...value,
+                                post_pic_click: false,
+                              }),
+                            })
+                          }
+                        >
+                          <Timeline data={value} />
+                        </Dialog>
+                      );
+                    }
+                  })}
+                </>
+              ) : (
+                this.state.post.map((value) => (
+                  <div className='profile-ScheduleTimeLine'>
+                    <TimelineWeekSchedule key={value.post_cd} data={value} />
+                  </div>
+                ))
+              )
+            ) : null}
             {this.state.alert}
           </main>
         ) : null}
