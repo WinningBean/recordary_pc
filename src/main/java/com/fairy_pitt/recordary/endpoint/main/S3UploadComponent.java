@@ -36,19 +36,16 @@ public class S3UploadComponent {
     }
 
     public String mediaEntityUpload(MultipartFile[] multipartFiles, Long id) throws IOException {
-        String dirName = "media/" + id + "_" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        String mediaPath = id + "_" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        String dirName = "media/" + mediaPath;
         int fileNum = 1;
-        log.info("hello1");
         createFolder(bucket, dirName);
-        log.info("hello2");
         for (MultipartFile multipartFile : multipartFiles) {
             String fileName = dirName + "/" + fileNum;
-            log.info(fileName);
             upload(multipartFile, fileName);
-            log.info(fileName);
             fileNum++;
         }
-        return dirName;
+        return mediaPath;
     }
 
     public String profileUpload(MultipartFile multipartFile, String dirName, Long id) throws IOException {//MultipartFile 을 전달 받고
