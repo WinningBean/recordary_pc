@@ -2,28 +2,20 @@ import 'date-fns';
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker
-} from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 import AccessAlarmsIcon from '@material-ui/icons/AccessAlarms';
 
-export default function DTP() {
+export default function DTP({ strDate, endDate, onChangeStrDate, onChangeEndDate }) {
   // The first commit of Material-UI
 
   const today = new Date();
-  const [selectedStartDate, setSelectedStartDate] = React.useState(
-    new Date(today)
-  );
-  const [selectedFinishDate, setSelectedFinishDate] = React.useState(
-    new Date(today)
-  );
-  const handleStartDateChange = date => {
-    setSelectedStartDate(date);
+  const handleStartDateChange = (date) => {
+    // setSelectedStartDate(date);
+    onChangeStrDate(date);
   };
-  const handleFinishDateChange = date => {
-    setSelectedFinishDate(date);
+  const handleFinishDateChange = (date) => {
+    // setSelectedFinishDate(date);
+    onChangeEndDate(date);
   };
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -34,10 +26,10 @@ export default function DTP() {
           margin='normal'
           id='date-picker-inline'
           label='시작일자'
-          value={selectedStartDate}
+          value={strDate}
           onChange={handleStartDateChange}
           KeyboardButtonProps={{
-            'aria-label': 'change date'
+            'aria-label': 'change date',
           }}
         />
 
@@ -46,10 +38,10 @@ export default function DTP() {
           margin='normal'
           id='time-picker'
           label='시작시간'
-          value={selectedStartDate}
+          value={strDate}
           onChange={handleStartDateChange}
           KeyboardButtonProps={{
-            'aria-label': 'change time'
+            'aria-label': 'change time',
           }}
           keyboardIcon={<AccessAlarmsIcon>Icon</AccessAlarmsIcon>}
         />
@@ -62,10 +54,10 @@ export default function DTP() {
           margin='normal'
           id='date-picker-inline'
           label='종료일자'
-          value={selectedFinishDate}
+          value={endDate}
           onChange={handleFinishDateChange}
           KeyboardButtonProps={{
-            'aria-label': 'change date'
+            'aria-label': 'change date',
           }}
         />
         <KeyboardTimePicker
@@ -73,10 +65,10 @@ export default function DTP() {
           margin='normal'
           id='time-picker'
           label='종료시간'
-          value={selectedFinishDate}
+          value={endDate}
           onChange={handleFinishDateChange}
           KeyboardButtonProps={{
-            'aria-label': 'change time'
+            'aria-label': 'change time',
           }}
           keyboardIcon={<AccessAlarmsIcon>Icon</AccessAlarmsIcon>}
         />

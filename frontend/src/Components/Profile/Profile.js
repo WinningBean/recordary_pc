@@ -1,13 +1,15 @@
 import React from 'react';
 import produce from 'immer';
 
+import ScheduleSearch from './ScheduleSearch';
 import './ProfilePage.css';
 import '../Main/mainPage.css';
 import MainPageButton from '../Main/MainPageButton';
-import SearchAppBar from '../Other/SearchField';
-import ScheduleSearch from './ScheduleSearch';
+import PostMediaScheduleAppend from './PostMediaScheduleAppend';
+
 import ScrollToTopOnMount from '../Other/ScrollToTopOnMount';
 import Follower from './Follower';
+import AddSchedule from './AddSchedule';
 import Header from '../../Containers/Header/Header';
 import Calendar from '../Calendar/Calendar';
 import TimelineWeekSchedule from '../Timeline/TimelineWeekSchedule';
@@ -16,7 +18,7 @@ import Loading from '../Loading/Loading';
 import NotifyPopup from '../UI/NotifyPopup';
 import Snackbar from '../UI/Snackbar';
 import GroupSetting from '../Group/GroupSetting';
-import { Dialog } from '@material-ui/core';
+import { Dialog, DialogActions } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 
 import Button from '@material-ui/core/Button';
@@ -55,18 +57,25 @@ class Profile extends React.Component {
       redirect: false,
       alert: null,
       post: undefined,
+      isOpenAddSc: false,
     };
   }
+
   getUserInfo = async () => {
+    var type = 1;
     const { data } = await axios.get(`/user/${this.props.match.params.userId}`);
     if (data === '') {
       this.setState({ ...this.state, redirect: true });
       return;
     }
+    if (this.props.isLogin && data.userCd === this.props.user.userCd) {
+      type = 0;
+    }
     this.setState({
       ...this.state,
       info: data,
       isLoading: false,
+      type: type,
     });
   };
 
@@ -507,7 +516,14 @@ class Profile extends React.Component {
                     </div>
                   </div>
                   <div id='schedule-area'>
-                    <Calendar type={this.state.type} />
+                    <Calendar
+                      type={this.state.type}
+                      onAddSc={() => {
+                        this.setState({
+                          isOpenAddSc: true,
+                        });
+                      }}
+                    />
                   </div>
                 </div>
               </div>
@@ -615,6 +631,7 @@ class Profile extends React.Component {
               )
             ) : null}
             {this.state.alert}
+            {this.state.isOpenAddSc ? <AddSchedule userCd={this.state.info.userCd} /> : null}
           </main>
         ) : null}
       </>

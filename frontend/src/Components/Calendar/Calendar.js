@@ -266,7 +266,13 @@ const Calendar = (props) => {
               isBorderLeft === true ? 'borderLeft' : ''
             }`}
             key={day}
-            onClick={type !== 4 ? null : () => onChoice(currDay)}
+            onClick={() => {
+              if (type === 4) {
+                onChoice(currDay);
+              } else if (type === 0 || type === 2) {
+                props.onAddSc();
+              }
+            }}
             style={(() => {
               if (type !== 4) {
                 return null;
