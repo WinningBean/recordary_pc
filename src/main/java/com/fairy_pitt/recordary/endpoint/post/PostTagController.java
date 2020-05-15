@@ -15,15 +15,15 @@ public class PostTagController {
 
     private final PostTagService postTagService;
 
-    @GetMapping("/{postCd}/tag/{userId}")
-    public Boolean postTag(@PathVariable Long postCd, @PathVariable String userId){
-        return postTagService.save(postCd, userId);
+    @GetMapping("/{postCd}/tag/{userCd}")
+    public Boolean postTag(@PathVariable Long postCd, @PathVariable Long userCd){
+        return postTagService.save(postCd, userCd);
     }
 
-    @DeleteMapping("/{postCd}/unTag/{userId}")
-    public String postUnTag(@PathVariable Long postCd, @PathVariable String userId){
-        postTagService.delete(postCd, userId);
-        return userId;
+    @DeleteMapping("/{postCd}/unTag/{userCd}")
+    public Long postUnTag(@PathVariable Long postCd, @PathVariable Long userCd){
+        postTagService.delete(postCd, userCd);
+        return userCd;
     }
 
     @GetMapping("/{postCd}/tagUser")
@@ -31,8 +31,8 @@ public class PostTagController {
         return postTagService.postTagUser(postCd);
     }
 
-    @GetMapping("/tag/{userId}")
-    public List<PostResponseDto> userTagPost(@PathVariable String userId){
-        return postTagService.userTagPost(userId);
+    @GetMapping("/tag/{userCd}")
+    public List<PostResponseDto> userTagPost(@PathVariable Long userCd){
+        return postTagService.userTagPost(userCd);
     }
 }

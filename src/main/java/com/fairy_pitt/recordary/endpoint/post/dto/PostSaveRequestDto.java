@@ -1,18 +1,13 @@
 package com.fairy_pitt.recordary.endpoint.post.dto;
 
-import com.fairy_pitt.recordary.common.entity.*;
-import com.fairy_pitt.recordary.common.repository.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.persistence.Transient;
 
 @Getter
 @NoArgsConstructor
 public class PostSaveRequestDto {
-    private String userId;
+    private Long userCd;
     private Long groupCd;
     private Long postOriginCd;
     private Long scheduleCd;
@@ -23,7 +18,7 @@ public class PostSaveRequestDto {
     private String postEndYMD;
 
     @Builder
-    public PostSaveRequestDto(String userId,
+    public PostSaveRequestDto(Long userCd,
                               Long groupCd,
                               Long postOriginCd,
                               Long scheduleCd,
@@ -32,7 +27,7 @@ public class PostSaveRequestDto {
                               int postPublicState,
                               String postStrYMD,
                               String postEndYMD) {
-        this.userId = userId;
+        this.userCd = userCd;
         this.groupCd = groupCd;
         this.postOriginCd = postOriginCd;
         this.scheduleCd = scheduleCd;

@@ -36,4 +36,8 @@ public class MediaService {
     private List<String> findPath(String path){
         return s3UploadComponent.listObject("media", path);
     }
+
+    public MediaEntity findEntity(Long mediaCd){
+        return mediaRepository.findByMediaCd(mediaCd);
+    }
 }

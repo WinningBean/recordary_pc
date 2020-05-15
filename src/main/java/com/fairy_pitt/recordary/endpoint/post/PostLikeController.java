@@ -31,8 +31,8 @@ public class PostLikeController {
         return postLikeService.postLikeUser(postCd);
     }
 
-    @GetMapping("/like/{userId}")
-    public List<PostResponseDto> userLikePost(@PathVariable String userId){
-        return postLikeService.userLikePost(userId);
+    @GetMapping("/like/{userCd}")
+    public List<PostResponseDto> userLikePost(@PathVariable Long userCd){
+        return postLikeService.userLikePost(userCd);
     }
 }
