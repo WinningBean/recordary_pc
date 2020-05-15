@@ -204,6 +204,7 @@ class ProfileEditor extends React.Component {
                   try {
                     const formData = new FormData();
                     formData.append('userPic', dataURLToBlob(this.state.user_pic));
+                    console.log(formData.get('userPic'));
 
                     const userPicUrl = await axios.post(`user/${this.props.data.userCd}/profileUpload`, formData, {
                       headers: {
@@ -214,7 +215,7 @@ class ProfileEditor extends React.Component {
                     console.log(userPicUrl.data);
                     // this.setState({ user_pic: userPicUrl.data });
 
-                    const { data } = await axios.put(`user/${this.state.user_id}`, {
+                    const { data } = await axios.put(`user/${this.props.data.userCd}`, {
                       userPw: null,
                       userNm: this.props.data.userNm,
                       userPic: userPicUrl.data,
@@ -223,7 +224,7 @@ class ProfileEditor extends React.Component {
 
                     console.log(data);
 
-                    if (data === this.state.user_id) {
+                    if (data === this.props.data.userCd) {
                       this.props.updateUserData(userPicUrl.data, this.state.user_ex);
                       this.setState({
                         alert: () => {

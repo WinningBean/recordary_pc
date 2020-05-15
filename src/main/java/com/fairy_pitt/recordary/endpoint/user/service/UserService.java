@@ -59,7 +59,7 @@ public class UserService {
         String imgPath;
 
         if (userPic.isEmpty()) imgPath = null;
-        else imgPath = s3UploadComponent.upload(userPic, "user", userCd);
+        else imgPath = s3UploadComponent.profileUpload(userPic, "user", userCd);
 
         log.info(imgPath);
 
@@ -144,8 +144,9 @@ public class UserService {
     @Transactional(readOnly = true)
     public List<ScheduleResponseDto> findUserSchedules(Long userCd)
     {
-       return userRepository.findByUserCd(userCd).getUserScheduleList().stream()
+        return userRepository.findByUserCd(userCd).getUserScheduleList().stream()
                 .map(ScheduleResponseDto::new)
                 .collect(Collectors.toList());
     }
 }
+
