@@ -65,7 +65,7 @@ public class PostTagControllerTest {
                 .postEndYMD("20200311")
                 .build());
 
-        String url = "http://localhost:" + port + "/post/" + postEntity.getPostCd() + "/tag/" + user2.getUserId();
+        String url = "http://localhost:" + port + "/post/" + postEntity.getPostCd() + "/tag/" + user2.getUserCd();
 
         //when
         ResponseEntity<Boolean> responseEntity = restTemplate.getForEntity(url, Boolean.class);
@@ -178,7 +178,7 @@ public class PostTagControllerTest {
                 .userFK(user1)
                 .build());
 
-        String url = "http://localhost:" + port + "/post/tag/" + user1.getUserId();
+        String url = "http://localhost:" + port + "/post/tag/" + user1.getUserCd();
 
         //when
         ResponseEntity<List> responseEntity = restTemplate.getForEntity(url, List.class);

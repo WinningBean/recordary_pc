@@ -26,20 +26,20 @@ public class PostTagService {
     private final UserService userService;
 
     @Transactional
-    public Boolean save(Long postCd, String userId){
+    public Boolean save(Long postCd, Long userCd){
         PostTagEntity postTagEntity = PostTagEntity.builder()
                 .postFK(postService.findEntity(postCd))
-                .userFK(userService.findEntity(userId))
+                .userFK(userService.findEntity(userCd))
                 .build();
 
         return Optional.ofNullable(postTagRepository.save(postTagEntity)).isPresent();
     }
 
     @Transactional
-    public void delete(Long postCd, String userId){
+    public void delete(Long postCd, Long userCd){
         PostTagEntity postTagEntity = Optional.ofNullable(
-                postTagRepository.findByPostFKAndUserFK(postService.findEntity(postCd), userService.findEntity(userId)))
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시물에 태그되어 있지 않습니다. post_code = " + postCd + ", user_id = " + userId));
+                postTagRepository.findByPostFKAndUserFK(postService.findEntity(postCd), userService.findEntity(userCd)))
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시물에 태그되어 있지 않습니다. post_code = " + postCd + ", user_cd = " + userCd));
         postTagRepository.delete(postTagEntity);
     }
 
@@ -56,8 +56,8 @@ public class PostTagService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponseDto> userTagPost(String userId){
-        UserEntity userEntity = userService.findEntity(userId);
+    public List<PostResponseDto> userTagPost(Long userCd){
+        UserEntity userEntity = userService.findEntity(userCd);
         List<PostEntity> postEntityList = new ArrayList<>();
         for (PostTagEntity postTagEntity : postTagRepository.findAllByUserFK(userEntity)){
             postEntityList.add(postTagEntity.getPostFK());

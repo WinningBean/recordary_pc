@@ -194,7 +194,7 @@ public class PostLikeControllerTest {
                 .userFK(user1)
                 .build());
 
-        String url = "http://localhost:" + port + "/post/like/" + user1.getUserId();
+        String url = "http://localhost:" + port + "/post/like/" + user1.getUserCd();
 
         //when
         ResponseEntity<List> responseEntity = restTemplate.getForEntity(url, List.class);

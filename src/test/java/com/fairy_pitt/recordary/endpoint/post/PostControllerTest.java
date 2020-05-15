@@ -4,6 +4,7 @@ import com.fairy_pitt.recordary.common.entity.PostEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
+import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostUpdateRequestDto;
 import org.junit.After;
@@ -40,7 +41,6 @@ public class PostControllerTest {
     @After
     public void tearDown() throws Exception {
         postRepository.deleteAll();
-        postRepository.deleteAll();
         userRepository.deleteAll();
     }
 
@@ -59,7 +59,7 @@ public class PostControllerTest {
         String postEndYMD = "2c0200311";
 
         PostSaveRequestDto requestDto = PostSaveRequestDto.builder()
-                .userId(user1.getUserId())
+                .userCd(user1.getUserCd())
                 .groupCd(null)
                 .postOriginCd(null)
                 .scheduleCd(null)
@@ -167,7 +167,7 @@ public class PostControllerTest {
                 .postEndYMD("20200311")
                 .build());
 
-        String url = "http://localhost:" + port + "/post/user/" + user1.getUserId();
+        String url = "http://localhost:" + port + "/post/user/" + user1.getUserCd();
 
         //when
         ResponseEntity<List> responseEntity = restTemplate.getForEntity(url, List.class);
@@ -217,7 +217,7 @@ public class PostControllerTest {
 
         String searchContent = "테스트";
 
-        String url = "http://localhost:" + port + "/post/user/" + user1.getUserId() + "/search?input=" + searchContent;
+        String url = "http://localhost:" + port + "/post/user/" + user1.getUserCd() + "/search?input=" + searchContent;
 
         //when
         ResponseEntity<List> responseEntity = restTemplate.getForEntity(url, List.class);
