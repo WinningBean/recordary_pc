@@ -56,8 +56,8 @@ public class PostLikeService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponseDto> userLikePost(String userId){
-        UserEntity userEntity = userService.findEntity(userId);
+    public List<PostResponseDto> userLikePost(Long userCd){
+        UserEntity userEntity = userService.findEntity(userCd);
         List<PostEntity> postEntityList = new ArrayList<>();;
         for (PostLikeEntity postLikeEntity : postLikeRepository.findAllByUserFK(userEntity)){
             postEntityList.add(postLikeEntity.getPostFK());

@@ -6,6 +6,7 @@ import com.fairy_pitt.recordary.endpoint.Schedule.Service.ScheduleService;
 import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
+import com.fairy_pitt.recordary.endpoint.media.service.MediaService;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostUpdateRequestDto;
@@ -28,18 +29,19 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserService userService;
+    private final FollowerService followerService;
     private final GroupService groupService;
     private final ScheduleService scheduleService;
-    private final FollowerService followerService;
+    private final MediaService mediaService;
 
     @Transactional
     public Boolean save(PostSaveRequestDto requestDto) {
         PostEntity postEntity = PostEntity.builder()
-                .userFK(userService.findEntity(requestDto.getUserId()))
+                .userFK(userService.findEntity(requestDto.getUserCd()))
                 .groupFK(groupService.findEntity(requestDto.getGroupCd()))
                 .postOriginFK(this.findEntity(requestDto.getPostOriginCd()))
                 .scheduleFK(scheduleService.findEntity(requestDto.getScheduleCd()))
-                //.mediaFK()
+                .mediaFK(mediaService.findEntity(requestDto.getMediaCd()))
                 .postEx(requestDto.getPostEx())
                 .postPublicState(requestDto.getPostPublicState())
                 .postStrYMD(requestDto.getPostStrYMD())
@@ -67,8 +69,8 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponseDto> userPost(String userId){
-        return postRepository.findAllByUserFKOrderByCreatedDateDesc(userService.findEntity(userId)).stream()
+    public List<PostResponseDto> userPost(Long userCd){
+        return postRepository.findAllByUserFKOrderByCreatedDateDesc(userService.findEntity(userCd)).stream()
                 .map(PostResponseDto::new)
                 .collect(Collectors.toList());
     }
@@ -81,8 +83,8 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponseDto> userPostSearch(String searchContent, String userId){
-        return postRepository.findAllByPostExLikeAndUserFK("%"+searchContent+"%", userService.findEntity(userId)).stream()
+    public List<PostResponseDto> userPostSearch(String searchContent, Long userCd){
+        return postRepository.findAllByPostExLikeAndUserFK("%"+searchContent+"%", userService.findEntity(userCd)).stream()
                 .map(PostResponseDto::new)
                 .collect(Collectors.toList());
     }
@@ -114,11 +116,16 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public List<PostEntity> timeLinePostList(Long userCd){ // 수정 필요
+    public List<PostResponseDto> timeLinePostList(Long userCd){
         List<UserResponseDto> followingList = followerService.followingList(userCd);
         List<GroupResponseDto> groupList = groupService.findUserGroups(userCd);
 
-        List<PostEntity> postList = new ArrayList<>();
+        List<PostResponseDto> postList = new ArrayList<>();
+
+        List<PostEntity> userPost = postRepository.findAllByUserFKOrderByCreatedDateDesc(userService.findEntity(userCd));
+        for (PostEntity post : userPost){
+            postList.add(new PostResponseDto(post));
+        }
 
         for (UserResponseDto userResponseDto : followingList){
             List<PostEntity> followingPost = postRepository.findAllByUserFKOrderByCreatedDateDesc(userService.findEntity(userResponseDto.getUserCd()));
@@ -126,14 +133,14 @@ public class PostService {
             int publicState = 2;
             if (friendState) publicState = 3;
             for (PostEntity post : followingPost){
-                if (post.getPostPublicState() < publicState) postList.add(post);
+                if (post.getPostPublicState() < publicState) postList.add(new PostResponseDto(post));
             }
         }
 
         for (GroupResponseDto groupResponseDto : groupList){
             List<PostEntity> groupPost = postRepository.findAllByGroupFKOrderByCreatedDateDesc(groupService.findEntity(groupResponseDto.getGroupCd()));
             for (PostEntity post : groupPost){
-                postList.add(post);
+                postList.add(new PostResponseDto(post));
             }
         }
 

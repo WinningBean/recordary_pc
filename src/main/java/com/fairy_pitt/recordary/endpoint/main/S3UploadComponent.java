@@ -11,13 +11,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,35 +24,50 @@ import java.util.Optional;
 public class S3UploadComponent {
 
     private final AmazonS3Client amazonS3Client;
+    private final AmazonS3 amazonS3 = AmazonS3ClientBuilder.standard()
+            .withRegion(Regions.AP_NORTHEAST_2)
+            .build();
 
     @Value("${cloud.aws.s3.bucket}") //해당 값은 application.yml 에서 작성한 cloud.aws.credentials.accessKey 값을 가져옵니다.
     private String bucket;
 
-    public List<String> postUpload(MultipartFile[] multipartFiles, Long userCd) throws IOException {
-        List<String> uploadImageUrl = new ArrayList<>();
-        String dirName = userCd + "_" + System.currentTimeMillis(); // 유저코드 + 현재시간 으로 폴더 만듬
-        for (MultipartFile multipartFile : multipartFiles) {
-            File uploadFile = convert(multipartFile)//S3에 전달할 수 있도록 MultiPartFile 을 File 로 전환
-                    .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
-
-            String fileName = dirName + "/" + uploadFile.getName();
-            uploadImageUrl.add(upload(uploadFile, dirName, fileName));
-        }
-        return uploadImageUrl;
+    private void createFolder(String bucketName, String folderName) {
+        amazonS3.putObject(bucketName, folderName + "/", new ByteArrayInputStream(new byte[0]), new ObjectMetadata());
     }
 
-    public String upload(MultipartFile multipartFile, String dirName, Long id) throws IOException {//MultipartFile 을 전달 받고
+    public String mediaEntityUpload(MultipartFile[] multipartFiles, Long id) throws IOException {
+        String mediaPath = id + "_" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        String dirName = "media/" + mediaPath;
+        int fileNum = 1;
+        createFolder(bucket, dirName);
+        for (MultipartFile multipartFile : multipartFiles) {
+            String fileName = dirName + "/" + fileNum;
+            upload(multipartFile, fileName);
+            fileNum++;
+        }
+        return mediaPath;
+    }
+
+    public String profileUpload(MultipartFile multipartFile, String dirName, Long id) throws IOException {//MultipartFile 을 전달 받고
         File uploadFile = convert(multipartFile)//S3에 전달할 수 있도록 MultiPartFile 을 File 로 전환
                 .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
         //S3에 MultipartFile 타입은 전송이 안됨
 
         String fileName = dirName + "/" + id + "_" + "profile";
-        return upload(uploadFile, dirName, fileName);
+        return upload(uploadFile, fileName);
         //업로드된 파일의 S3 URL 주소를 반환
     }
 
-    private String upload(File uploadFile, String dirName, String fileName) {
-        // String fileName = dirName + "/" + id + "_" + "profile";
+    private String upload(MultipartFile multipartFile, String fileName) throws IOException {//MultipartFile 을 전달 받고
+        File uploadFile = convert(multipartFile)//S3에 전달할 수 있도록 MultiPartFile 을 File 로 전환
+                .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
+        //S3에 MultipartFile 타입은 전송이 안됨
+
+        return upload(uploadFile, fileName);
+        //업로드된 파일의 S3 URL 주소를 반환
+    }
+
+    private String upload(File uploadFile, String fileName) {
         String uploadImageUrl = putS3(uploadFile, fileName); // 전환된 File 을 S3에 public 읽기 권한으로 put
         //->외부에서 정적 파일을 읽을 수 있도록 하기 위함.
         removeNewFile(uploadFile);
@@ -111,14 +125,14 @@ public class S3UploadComponent {
         return Optional.empty();
     }
 
-    public List<String> listObject(String bucketName)
+    public List<String> listObject(String preFix, String bucketName)
     {
         List<String> resultList = new ArrayList<>();
         ListObjectsRequest listObjectsRequest = new ListObjectsRequest();
         listObjectsRequest.setBucketName(bucketName);
-        listObjectsRequest.setPrefix("static");
+        listObjectsRequest.setPrefix(preFix);
 
-        ObjectListing  result = amazonS3Client.listObjects(listObjectsRequest);
+        ObjectListing result = amazonS3Client.listObjects(listObjectsRequest);
         List<S3ObjectSummary> objects = result.getObjectSummaries();
         for (S3ObjectSummary os : objects) {
             resultList.add( os.getKey());

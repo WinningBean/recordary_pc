@@ -1,15 +1,16 @@
 package com.fairy_pitt.recordary.endpoint.media;
 
 import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
-import com.fairy_pitt.recordary.endpoint.media.dto.MediaRequestDto;
 import com.fairy_pitt.recordary.endpoint.media.service.MediaService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 @AllArgsConstructor
 @RestController
 @RequestMapping("media")
@@ -18,23 +19,13 @@ public class MediaController {
     private final S3UploadComponent s3UploadComponent;
     private final MediaService mediaService;
 
-//    @GetMapping("/")
-//    public String index() {
-//        return "index";
-//    }
-
-    @PostMapping("/upload/{id}")
-    @ResponseBody
-    public String upload(@RequestParam("data") MultipartFile multipartFile, @PathVariable Long id) throws IOException {
-        String imgPath = s3UploadComponent.upload(multipartFile, "static", id); // bucket 의 static 디렉토리로 파일을 전달
-        MediaRequestDto mediaRequestDto = new MediaRequestDto(imgPath);
-        mediaService.save(mediaRequestDto);
-        return  imgPath;
+    @PostMapping("/{userCd}")
+    public Long upload(@PathVariable Long userCd, @RequestParam MultipartFile[] mediaFiles) throws IOException {
+        return  mediaService.save(mediaFiles, userCd);
     }
 
-    @GetMapping("{bucketName}")
-    public List<String> getPhoto(@PathVariable("bucketName") String bucketName)
-    {
-        return s3UploadComponent.listObject(bucketName);
+    @GetMapping("/{mediaCd}}")
+    public List<String> getMediaPath(@PathVariable Long mediaCd){
+        return mediaService.getMediaPath(mediaCd);
     }
 }

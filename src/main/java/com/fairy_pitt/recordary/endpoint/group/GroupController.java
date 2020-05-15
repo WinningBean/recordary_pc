@@ -1,6 +1,5 @@
 package com.fairy_pitt.recordary.endpoint.group;
 
-import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupMemberRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupSaveRequestDto;
@@ -11,9 +10,6 @@ import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.json.JSONArray;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,7 +44,7 @@ public class GroupController {
 
     @PostMapping("updateProfile/{groupCd}")
     public String updateProfile(@RequestParam("data") MultipartFile multipartFile, @PathVariable Long groupCd) throws IOException {
-        return s3UploadComponent.upload(multipartFile, "group", groupCd);
+        return s3UploadComponent.profileUpload(multipartFile, "group", groupCd);
     }
 
     @PostMapping("changeMaster/{groupCd}")
@@ -94,4 +90,3 @@ public class GroupController {
     }
 
 }
-
