@@ -147,7 +147,6 @@ nav > div {
   width: 420px;
   margin-left: 10px;
   margin-right: 10px;
-  /* box-shadow: 0px 1px 5px rgb(161, 159, 159); */
 }
 
 /* ScheduleTimeline부분 */
@@ -158,12 +157,15 @@ nav > div {
   margin: 10px 0px;
 }
 .profile-MediaTimeline {
+  display: flex;
+  flex-wrap: wrap;
   align-self: center;
   width: 880px;
   margin-left: 10px;
   margin-right: 10px;
   margin-top: 10px;
-  display: flex;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 
 .timeline-profile-schedule {

@@ -48,7 +48,7 @@ class Profile extends React.Component {
     super(props);
     this.state = {
       addScheduleClick: false,
-      showProfileList: true,
+      showProfileList: false,
       followerNumClick: false,
       followingNumClick: false,
       isLoading: true,
@@ -56,7 +56,8 @@ class Profile extends React.Component {
       info: undefined,
       redirect: false,
       alert: null,
-      post: undefined,
+      post: [],
+      mediaPathArr: [],
       isOpenAddSc: false,
     };
   }
@@ -113,18 +114,6 @@ class Profile extends React.Component {
     }
   };
 
-  getUserPostList = async () => {
-    try {
-      if (this.props.isLogin) {
-        const UserPostList = (await axios.get(`/post/user/${this.state.info.userCd}`)).data;
-        console.log(UserPostList);
-        this.setState({ ...this.state, post: UserPostList });
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   componentDidMount() {
     if (this.props.match.params.userId !== undefined) {
       console.log('user');
@@ -148,15 +137,6 @@ class Profile extends React.Component {
       }
     }
   }
-
-  ProfileDownTimeLine = () => {
-    if (this.state.profileScheduleClick === true && this.state.profilePictureClick === false) {
-      return;
-    } else if (this.state.profilePictureClick === true && this.state.profileScheduleClick === false) {
-    } else {
-      console.log('error');
-    }
-  };
 
   render() {
     if (this.state.redirect) {
@@ -529,107 +509,80 @@ class Profile extends React.Component {
               </div>
             </div>
             <nav>
-              <div
-                id='tap-1'
-                style={
-                  this.state.profileScheduleClick === true && this.state.profilePictureClick === false
-                    ? { backgroundColor: 'rgba(161, 159, 159, .2)' }
-                    : null
-                }
-              >
+              <div style={this.state.showProfileList ? null : { backgroundColor: 'rgba(161, 159, 159, .2)' }}>
                 <NavButton onClick={() => this.setState({ showProfileList: !this.state.showProfileList })}>
                   <span>일정</span>
                 </NavButton>
               </div>
-              <div
-                id='tap-2'
-                style={
-                  this.state.profilePictureClick === true && this.state.profileScheduleClick === false
-                    ? { backgroundColor: 'rgba(161, 159, 159, 0.2)' }
-                    : null
-                }
-              >
+              <div style={this.state.showProfileList ? { backgroundColor: 'rgba(161, 159, 159, .2)' } : null}>
                 <NavButton
-                  onClick={
-                    (() => this.setState({ showProfileList: !this.state.showProfileList }), this.getUserPostList)
-                  }
+                  onClick={async () => {
+                    this.setState({ showProfileList: !this.state.showProfileList });
+                    this.setState({ mediaPathArr: [] });
+                    try {
+                      if (this.props.isLogin) {
+                        const UserPostList = (await axios.get(`/post/user/${this.state.info.userCd}`)).data;
+                        this.setState({ post: JSON.parse(JSON.stringify(UserPostList)) });
+                        console.log(this.state.post);
+
+                        this.state.post.map(async (value, index) => {
+                          // console.log(value);
+                          if (value.mediaFK !== null) {
+                            const mediaPath = (await axios.get(`/media/${value.mediaFK.mediaCd}`)).data;
+                            console.log(mediaPath);
+                            // console.log(mediaPath[0]);
+                            this.setState({ mediaPathArr: this.state.mediaPathArr.concat(mediaPath[1]) });
+                            console.log(this.state.mediaPathArr);
+                          } else return null;
+                        });
+                      }
+                    } catch (error) {
+                      console.log(error + 'getUserPostListError');
+                    }
+                  }}
                 >
                   <span>사진</span>
                 </NavButton>
               </div>
             </nav>
-            {this.state.post !== undefined ? (
-              this.state.showProfileList ? (
-                <>
-                  <div className='profile-MediaTimeline'>
-                    {this.state.post.map(async (value, index) => {
-                      try {
-                        if (value.mediaFK.mediaCd !== null) {
-                          const mediaPath = (await axios.get(`/media/${value.mediaFK.mediaCd}}`)).data;
-                          console.log(mediaPath);
-                        }
-                      } catch (error) {
-                        console.log(error);
-                      }
-                      return (
-                        <div
-                          className='media-box-hover'
-                          style={{
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            height: '272px',
-                            width: '272px',
-                            overflow: 'hidden',
-                            margin: '10px',
-                          }}
-                          key={value.postCd}
-                        >
-                          <img
-                            className='media-box'
-                            alt={value.postCd}
-                            src={value.post_pic}
-                            onClick={() =>
-                              this.setState({
-                                value: (this.state.post[index] = {
-                                  ...value,
-                                  post_pic_click: true,
-                                }),
-                              })
-                            }
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                  {this.state.post.map((value, index) => {
-                    if (value.post_pic_click === true) {
-                      return (
-                        <Dialog
-                          open
-                          key={value.post_cd}
-                          onClose={() =>
-                            this.setState({
-                              value: (this.state.post[index] = {
-                                ...value,
-                                post_pic_click: false,
-                              }),
-                            })
-                          }
-                        >
-                          <Timeline data={value} />
-                        </Dialog>
-                      );
-                    }
-                  })}
-                </>
-              ) : (
-                this.state.post.map((value) => (
-                  <div className='profile-ScheduleTimeLine'>
-                    <TimelineWeekSchedule key={value.post_cd} data={value} />
-                  </div>
-                ))
-              )
-            ) : null}
+            {this.state.showProfileList ? (
+              <>
+                <div className='profile-MediaTimeline'>
+                  {this.state.mediaPathArr.map((value, index) => (
+                    <div
+                      className='media-box-hover'
+                      style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        height: '272px',
+                        width: '272px',
+                        overflow: 'hidden',
+                        margin: '10px',
+                      }}
+                      key={`${index}- img`}
+                    >
+                      <img
+                        className='media-box'
+                        alt={`${index}- img`}
+                        src={value}
+                        onClick={() => this.setState({ isTimelineOpen: !this.state.isTimelineOpen })}
+                      />
+                    </div>
+                  ))}
+                </div>
+                {/* {!isTimelineOpen ? null : async () => {
+
+                } }
+                {console.log(this.state.mediaPathArr)} */}
+              </>
+            ) : (
+              this.state.post.map((value) => (
+                <div className='profile-ScheduleTimeLine'>
+                  <TimelineWeekSchedule key={value.post_cd} data={value} />
+                </div>
+              ))
+            )}
+
             {this.state.alert}
             {this.state.isOpenAddSc ? <AddSchedule userCd={this.state.info.userCd} /> : null}
           </main>
