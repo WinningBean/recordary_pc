@@ -1,5 +1,4 @@
 import React from 'react';
-import produce from 'immer';
 
 import ScheduleSearch from './ScheduleSearch';
 import './ProfilePage.css';
@@ -10,6 +9,7 @@ import PostMediaScheduleAppend from './PostMediaScheduleAppend';
 import ScrollToTopOnMount from '../Other/ScrollToTopOnMount';
 import Follower from './Follower';
 import AddSchedule from './AddSchedule';
+import AddTab from './AddTab';
 import Header from '../../Containers/Header/Header';
 import Calendar from '../Calendar/Calendar';
 import TimelineWeekSchedule from '../Timeline/TimelineWeekSchedule';
@@ -20,6 +20,7 @@ import Snackbar from '../UI/Snackbar';
 import GroupSetting from '../Group/GroupSetting';
 import { Dialog, DialogActions } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/core/styles';
@@ -30,11 +31,21 @@ import { Redirect } from 'react-router-dom';
 
 import axios from 'axios';
 
+import * as dateFns from 'date-fns';
+
 const IconButton = styled(Button)({
   minWidth: '30px',
   minHeight: '30px',
   padding: '0 0',
   margin: '0 0',
+});
+
+const TabButton = styled(Button)({
+  minWidth: '65px',
+  minHeight: '40px',
+  display: 'flex',
+  alignItems: 'center',
+  marginBottm: '4px',
 });
 
 class Profile extends React.Component {
@@ -56,10 +67,14 @@ class Profile extends React.Component {
       info: undefined,
       redirect: false,
       alert: null,
+      clickTab: undefined,
+      tab: [],
       post: [],
       mediaPathProfileArr: [],
       postMediaList: [],
+      addScList: [],
       isOpenAddSc: false,
+      isOpenAddTab: false,
     };
   }
 
@@ -73,6 +88,15 @@ class Profile extends React.Component {
     if (this.props.isLogin && data.userCd === this.props.user.userCd) {
       type = 0;
     }
+    // await axios.post('/tab/create')
+    // console.log(
+    //   await axios.post('/schedule/showUserSchedule', {
+    //     userCd: data.userCd,
+    //     state: 0,
+    //     frommDate: dateFns.startOfMonth(new Date()).getTime(),
+    //     toDate: dateFns.endOfMonth(new Date()).getTime(),
+    //   })
+    // );
     this.setState({
       ...this.state,
       info: data,
@@ -184,39 +208,65 @@ class Profile extends React.Component {
               <div className='main-profile-info-postIt'>
                 <div className='postIt'>
                   <ul style={{ width: '40px' }}>
-                    {/* {this.state.postIt.map((value, index) => (
-                      <li
-                        key={value.postIt_cd}
-                        onClick={() => {
-                          this.setState({
-                            postIt: this.state.postIt.map((val, _index) => {
-                              if (_index === index) {
-                                return {
-                                  ...val,
-                                  postIt_click: !val.postIt_click,
-                                };
+                    {this.state.type !== 0 ? null : (
+                      <>
+                        <li
+                          style={{
+                            transform: this.state.clickTab === undefined ? 'translateX(15px)' : 'translateX(30px)',
+                          }}
+                          className='transition-all'
+                        >
+                          <TabButton
+                            style={{
+                              backgroundColor: 'rgba(255,197,0)',
+                              opacity: this.state.clickTab === undefined ? '100%' : '60%',
+                            }}
+                            onClick={() => {
+                              if (this.state.clickTab === undefined) {
+                                return;
                               }
-                              return {
-                                ...val,
-                                postIt_click: false,
-                              };
-                            }),
-                          });
-                        }}
-                        style={
-                          value.postIt_click === true
-                            ? {
-                                width: '40px',
-                                backgroundColor: `${value.postIt_color}77`,
-                              }
-                            : {
-                                width: '20px',
-                                backgroundColor: `${value.postIt_color}77`,
-                              }
-                        }
-                      />
-                    ))}
-                    {console.log(this.state.postIt)} */}
+                              this.setState({ clickTab: undefined });
+                            }}
+                          />
+                        </li>
+                        {this.state.tab.map((value, index) => (
+                          <li
+                            key={`tab-${index}`}
+                            style={{
+                              transform: this.state.clickTab === index ? 'translateX(15px)' : 'translateX(30px)',
+                            }}
+                            className='transition-all'
+                          >
+                            <TabButton
+                              style={{
+                                backgroundColor: value.tabCol,
+                                opacity: this.state.clickTab === index ? '100%' : '60%',
+                              }}
+                              onClick={() => {
+                                if (this.state.clickTab === index) {
+                                  return;
+                                }
+                                this.setState({ clickTab: index });
+                              }}
+                            />
+                          </li>
+                        ))}
+                        <li
+                          style={{
+                            transform: 'translateX(30px)',
+                          }}
+                        >
+                          <TabButton
+                            style={{ justifyContent: 'flex-start' }}
+                            onClick={() => {
+                              this.setState({ isOpenAddTab: true });
+                            }}
+                          >
+                            <PlaylistAddIcon />
+                          </TabButton>
+                        </li>
+                      </>
+                    )}
                   </ul>
                 </div>
                 <div
@@ -503,6 +553,8 @@ class Profile extends React.Component {
                   <div id='schedule-area'>
                     <Calendar
                       type={this.state.type}
+                      info={this.state.info}
+                      addScList={this.state.addScList}
                       onAddSc={() => {
                         this.setState({
                           isOpenAddSc: true,
@@ -635,10 +687,11 @@ class Profile extends React.Component {
               <AddSchedule
                 data={this.state.info}
                 onClose={() => this.setState({ isOpenAddSc: false })}
-                onSuccess={(scCd) =>
+                onSuccess={(newSc) =>
                   this.setState({
                     ...this.state,
                     isOpenAddSc: false,
+                    addScList: this.state.addScList.concat(newSc),
                     alert: (
                       <Snackbar
                         severity='success'
@@ -648,6 +701,15 @@ class Profile extends React.Component {
                     ),
                   })
                 }
+              />
+            ) : null}
+            {this.state.isOpenAddTab ? (
+              <AddTab
+                userCd={this.state.info.userCd}
+                onClose={() => this.setState({ isOpenAddTab: false })}
+                onSuccess={(tabInfo) => {
+                  this.setState({ ...this.state, tab: this.state.tab.concat(tabInfo), isOpenAddTab: false });
+                }}
               />
             ) : null}
           </main>
