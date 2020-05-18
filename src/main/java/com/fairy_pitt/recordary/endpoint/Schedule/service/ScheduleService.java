@@ -1,10 +1,10 @@
-package com.fairy_pitt.recordary.endpoint.Schedule.service;
+package com.fairy_pitt.recordary.endpoint.schedule.service;
 
 import com.fairy_pitt.recordary.common.entity.*;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.common.repository.ScheduleRepository;
 import com.fairy_pitt.recordary.common.repository.ScheduleTabRepository;
-import com.fairy_pitt.recordary.endpoint.Schedule.dto.*;
+import com.fairy_pitt.recordary.endpoint.schedule.dto.*;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

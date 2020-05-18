@@ -2,7 +2,7 @@ package com.fairy_pitt.recordary.endpoint.user.service;
 
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
-import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleResponseDto;
+import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleResponseDto;
 import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserLoginRequestDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;

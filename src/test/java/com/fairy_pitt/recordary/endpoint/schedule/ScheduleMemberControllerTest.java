@@ -2,7 +2,7 @@ package com.fairy_pitt.recordary.endpoint.schedule;
 
 import com.fairy_pitt.recordary.common.entity.*;
 import com.fairy_pitt.recordary.common.repository.*;
-import com.fairy_pitt.recordary.endpoint.Schedule.dto.ScheduleMemberSaveRequestDto;
+import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleMemberSaveRequestDto;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;

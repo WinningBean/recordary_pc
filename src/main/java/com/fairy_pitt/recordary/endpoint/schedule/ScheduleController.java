@@ -1,8 +1,8 @@
-package com.fairy_pitt.recordary.endpoint.Schedule;
+package com.fairy_pitt.recordary.endpoint.schedule;
 
-import com.fairy_pitt.recordary.endpoint.Schedule.service.ScheduleService;
-import com.fairy_pitt.recordary.endpoint.Schedule.service.ScheduleTabService;
-import com.fairy_pitt.recordary.endpoint.Schedule.dto.*;
+import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleService;
+import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleTabService;
+import com.fairy_pitt.recordary.endpoint.schedule.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
