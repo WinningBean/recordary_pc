@@ -18,10 +18,20 @@ import { addHours, startOfDay, endOfDay } from 'date-fns';
 
 import axios from 'axios';
 
+function componentToHex(c) {
+  var hex = c.toString(16);
+  return hex.length == 1 ? '0' + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+  return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
+// 255,197,0
 export default ({ data, onClose, onSuccess }) => {
   const [color, setColor] = useState({
-    r: 0,
-    g: 130,
+    r: 255,
+    g: 197,
     b: 0,
     a: 1,
   });
@@ -44,7 +54,7 @@ export default ({ data, onClose, onSuccess }) => {
   const [dialog, setDialog] = useState(null);
   return (
     <Dialog open onClose={() => onClose()}>
-      <div>
+      <div style={{ padding: '8px 10px', borderTop: `rgba(${color.r},${color.g},${color.b},${color.a}) 6px solid` }}>
         <div className='Post-Append-title post-Append'>
           <TextField id='post_title' label='제목' onChange={(e) => setInfo({ ...info, scheduleNm: e.target.value })} />
 
@@ -126,6 +136,7 @@ export default ({ data, onClose, onSuccess }) => {
         <Button
           onClick={async () => {
             setDialog(<Snackbar severit='info' content='데이터 요청중...' onClose={() => setDialog(null)} />);
+
             const str = switchInfo.str ? startOfDay(info.scheduleStr) : info.scheduleStr;
             const end = switchInfo.end ? endOfDay(info.scheduleEnd) : info.scheduleEnd;
             if (str >= end) {
@@ -145,7 +156,7 @@ export default ({ data, onClose, onSuccess }) => {
               scheduleEx: info.scheduleEx,
               scheduleStr: str.getTime(),
               scheduleEnd: end.getTime(),
-              scheduleCol: `rgba(${color.r},${color.g},${color.b},${color.a})`,
+              scheduleCol: rgbToHex(color.r, color.g, color.b),
               schedulePublicState: info.schedulePublicState,
             });
             try {
@@ -157,11 +168,18 @@ export default ({ data, onClose, onSuccess }) => {
                   scheduleEx: info.scheduleEx,
                   scheduleStr: str.getTime(),
                   scheduleEnd: end.getTime(),
-                  scheduleCol: `rgba(${color.r},${color.g},${color.b},${color.a})`,
+                  scheduleCol: rgbToHex(color.r, color.g, color.b),
                   schedulePublicState: info.schedulePublicState,
                 })
               ).data;
-              onSuccess(scCd);
+              onSuccess({
+                cd: scCd,
+                nm: info.scheduleNm,
+                ex: info.scheduleEx,
+                start: str,
+                end: end,
+                color: rgbToHex(color.r, color.g, color.b),
+              });
             } catch (error) {
               console.log(error);
               setDialog(<Snackbar severit='error' content={error} onClose={() => setDialog(null)} />);

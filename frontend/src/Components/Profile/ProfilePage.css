@@ -23,10 +23,9 @@
   align-items: flex-end;
 }
 .postIt > ul > li {
-  width: 20px;
-  height: 40px;
-  margin: 8px 0px;
-  float: right;
+  /* height: 40px; */
+  margin: 4px 0px;
+  /* float: right; */
 }
 
 #main-profile .profile-search-schedule {
@@ -54,6 +53,7 @@
   box-shadow: 0px 1px 2px rgba(161, 159, 159, 0.8);
   background-color: white;
   padding: 5px;
+  z-index: 1;
 }
 
 #userinfo {

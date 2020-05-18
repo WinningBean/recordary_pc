@@ -5,7 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import PublicIcon from '@material-ui/icons/Public';
 
-const options = ['전체공개', '나만보기', '친구만', '팔로워만'];
+const options = ['전체공개', '팔로워만', '친구만', '나만보기'];
 
 // onSetSelectedIndex={(index) => setInfo({ ...info, schedulePublicState: index })}
 // state 변경 함수 props

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import * as dateFns from 'date-fns';
 import CalendarScheduleEdit from './CalendarScheduleEdit';
 
@@ -12,6 +12,8 @@ import RightIcon from '@material-ui/icons/ChevronRight';
 import './Calendar.css';
 import produce from 'immer';
 
+import axios from 'axios';
+
 // 600x475, 85x74
 const Calendar = (props) => {
   const type = props.type;
@@ -21,32 +23,7 @@ const Calendar = (props) => {
   // 2 : 마스터 그룹 프로필
   // 3 : 일반 그룹 프로필
   // 4 : 일정 공유
-  const [userDate, setUserDate] = useState([
-    {
-      cd: '01',
-      start: new Date('2020-03-02'),
-      end: new Date('2020-03-02'),
-      ex: '안녕하세요',
-    },
-    {
-      cd: '04',
-      start: new Date('2020-03-02'),
-      end: new Date('2020-03-02'),
-      ex: 'Hello World',
-    },
-    {
-      cd: '03',
-      start: new Date('2020-03-12'),
-      end: new Date('2020-03-14'),
-      ex: 'ex3',
-    },
-    {
-      cd: '02',
-      start: new Date('2020-03-18'),
-      end: new Date('2020-04-05'),
-      ex: '발닦고 잠자기',
-    },
-  ]);
+  const [userDate, setUserDate] = useState([]);
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [dayLocation, setDayLocation] = useState(null);
@@ -65,7 +42,62 @@ const Calendar = (props) => {
     return null;
   })();
 
-  console.log('render');
+  useEffect(() => {
+    if (props.addScList.length < 1) {
+      return;
+    }
+    const copyDraft = produce(userDate.concat(props.addScList), (draft) => {
+      draft.sort((a, b) => {
+        if (dateFns.isSameDay(a.start, b.start)) {
+          if (dateFns.isSameDay(a.end, b.end)) {
+            return 0;
+          }
+          return dateFns.differenceInDays(b.end, a.end);
+        }
+        return dateFns.differenceInDays(a.start, b.start);
+      });
+    });
+    setUserDate(userDate.concat(copyDraft));
+  }, [props.addScList]);
+
+  useEffect(() => {
+    (async () => {
+      const monthStart = dateFns.startOfMonth(currentMonth);
+      const monthEnd = dateFns.endOfMonth(monthStart);
+      const startDate = dateFns.startOfWeek(monthStart);
+      const endDate = dateFns.endOfWeek(monthEnd);
+
+      const { data } = await axios.post(`/schedule/showUserSchedule/${props.info.userCd}`, {
+        userCd: props.info.userCd,
+        frommDate: startDate.getTime(),
+        toDate: endDate.getTime(),
+      });
+
+      console.log(data);
+      const abcd = data.map((value) => ({
+        cd: value.scheduleCd,
+        nm: value.scheduleNm,
+        ex: value.scheduleEx,
+        start: new Date(value.scheduleStr),
+        end: new Date(value.scheduleEnd),
+        color: value.scheduleCol,
+      }));
+
+      const copyDraft = produce(abcd, (draft) => {
+        draft.sort((a, b) => {
+          if (dateFns.isSameDay(a.start, b.start)) {
+            if (dateFns.isSameDay(a.end, b.end)) {
+              return 0;
+            }
+            return dateFns.differenceInDays(b.end, a.end);
+          }
+          return dateFns.differenceInDays(a.start, b.start);
+        });
+      });
+      setUserDate(userDate.concat(copyDraft));
+    })();
+  }, []);
+  console.log(userDate);
 
   const onChoice = useCallback((currDay) => props.onChoice(currDay, userDate), [props, userDate]);
 
@@ -319,7 +351,7 @@ const Calendar = (props) => {
   //#endregion
 
   //#region Schedule View
-  const shortSC = (cd, x, y, ex) => (
+  const shortSC = (cd, x, y, nm, color) => (
     <div
       className={`sc${cd}`}
       key={cd}
@@ -331,7 +363,7 @@ const Calendar = (props) => {
         left: `${x}px`,
         cursor: 'pointer',
         userSelect: 'none',
-        backgroundColor: '#9e5fff80',
+        // backgroundColor: color,
       }}
       onMouseDown={type === 0 || type === 2 ? onScMouseDown : null}
       onClick={(e) => setDetailedSC({ event: e.currentTarget, cd: cd })}
@@ -348,7 +380,7 @@ const Calendar = (props) => {
             position: 'absolute',
             left: '0',
             top: '7px',
-            backgroundColor: '#9e5fff',
+            backgroundColor: color + 'a0',
             width: '6px',
             height: '6px',
             borderRadius: '50%',
@@ -365,15 +397,15 @@ const Calendar = (props) => {
             fontSize: '12px',
           }}
         >
-          {ex}
+          {nm}
         </span>
       </div>
     </div>
   );
 
   // longSC = (스케줄코드, 가로, x, y, 설명, start Date , end Date, 몇번째 div인지)
-  const longSC = (cd, width, x, y, ex, index) => {
-    const borderLeft = index === 0 ? '2px solid #9e5fff' : '';
+  const longSC = (cd, width, x, y, nm, index, color) => {
+    const borderLeft = index === 0 ? `2px solid ${color}` : '';
     return (
       <div
         className={`sc${cd}`}
@@ -386,7 +418,7 @@ const Calendar = (props) => {
           left: `${x}px`,
           cursor: 'pointer',
           userSelect: 'none',
-          backgroundColor: '#9e5fff80',
+          // backgroundColor: color,
         }}
         onMouseDown={type === 0 || type === 2 ? onScMouseDown : null}
         onClick={(e) => setDetailedSC({ event: e.currentTarget, cd: cd })}
@@ -408,12 +440,12 @@ const Calendar = (props) => {
               whiteSpace: 'nowrap',
               fontWeight: 'bold',
               fontSize: '12px',
-              backgroundColor: '#9e5fff80',
+              backgroundColor: color + '80',
               paddingLeft: '2px',
               borderLeft: borderLeft,
             }}
           >
-            {ex}
+            {nm}
           </span>
         </div>
       </div>
@@ -486,10 +518,10 @@ const Calendar = (props) => {
       }
       if (dateFns.isSameDay(value.start, value.end)) {
         if (copyDayLocation[index].isSecondBlock) {
-          sc.push(shortSC(value.cd, copyDayLocation[index].x, copyDayLocation[index].y + 20, value.ex));
+          sc.push(shortSC(value.cd, copyDayLocation[index].x, copyDayLocation[index].y + 20, value.nm, value.color));
         } else {
           copyDayLocation[index].isSecondBlock = true;
-          sc.push(shortSC(value.cd, copyDayLocation[index].x, copyDayLocation[index].y, value.ex));
+          sc.push(shortSC(value.cd, copyDayLocation[index].x, copyDayLocation[index].y, value.nm, value.color));
         }
         copyDayLocation[index].overlap = ++copyDayLocation[index].overlap;
         copyDayLocation[index].isSecondBlock = true;
@@ -503,8 +535,9 @@ const Calendar = (props) => {
                 595 - copyDayLocation[index].x,
                 copyDayLocation[index].x,
                 copyDayLocation[index].y + 25,
-                value.ex,
-                beforeStartDay ? -1 : 0
+                value.nm,
+                beforeStartDay ? -1 : 0,
+                value.color
               )
             );
           } else {
@@ -515,8 +548,9 @@ const Calendar = (props) => {
                 595 - copyDayLocation[index].x,
                 copyDayLocation[index].x,
                 copyDayLocation[index].y,
-                value.ex,
-                beforeStartDay ? -1 : 0
+                value.nm,
+                beforeStartDay ? -1 : 0,
+                value.color
               )
             );
           }
@@ -553,9 +587,9 @@ const Calendar = (props) => {
               return;
             }
             if (secondBlock) {
-              sc.push(longSC(value.cd, 595, 0, copyDayLocation[index].y + 25, value.ex, i + 1));
+              sc.push(longSC(value.cd, 595, 0, copyDayLocation[index].y + 25, value.nm, i + 1, value.color));
             } else {
-              sc.push(longSC(value.cd, 595, 0, copyDayLocation[index].y, value.ex, i + 1));
+              sc.push(longSC(value.cd, 595, 0, copyDayLocation[index].y, value.nm, i + 1, value.color));
             }
             // const currWeek = dateFns.addWeeks(value.start, i + 1);
             // const currWeekFisrtDay = dateFns.startOfWeek(currWeek);
@@ -587,10 +621,20 @@ const Calendar = (props) => {
             return;
           }
           if (secondBlock) {
-            sc.push(longSC(value.cd, copyDayLocation[index].x + 85, 0, copyDayLocation[index].y + 25, value.ex, i + 1));
+            sc.push(
+              longSC(
+                value.cd,
+                copyDayLocation[index].x + 85,
+                0,
+                copyDayLocation[index].y + 25,
+                value.nm,
+                i + 1,
+                value.color
+              )
+            );
           } else {
             const diffDay = dateFns.differenceInDays(value.end, copyDayLocation[index].day) + 1;
-            sc.push(longSC(value.cd, 85 * diffDay, 0, copyDayLocation[index].y, value.ex, i + 1));
+            sc.push(longSC(value.cd, 85 * diffDay, 0, copyDayLocation[index].y, value.nm, i + 1, value.color));
           }
 
           // const currWeek = dateFns.addWeeks(value.start, i + 1);
@@ -612,8 +656,9 @@ const Calendar = (props) => {
               85 * diffDay,
               copyDayLocation[index].x,
               copyDayLocation[index].y + 25,
-              value.ex,
-              beforeStartDay ? -1 : 0
+              value.nm,
+              beforeStartDay ? -1 : 0,
+              value.color
             )
           );
         } else {
@@ -623,8 +668,9 @@ const Calendar = (props) => {
               85 * diffDay,
               copyDayLocation[index].x,
               copyDayLocation[index].y,
-              value.ex,
-              beforeStartDay ? -1 : 0
+              value.nm,
+              beforeStartDay ? -1 : 0,
+              value.color
             )
           );
         }
@@ -785,7 +831,10 @@ const Calendar = (props) => {
         disableRestoreFocus
         onClose={() => setDetailedSC(null)}
       >
-        <div className='calendar-detailedsc' style={{ borderTop: '5px solid rgba(158, 95, 255, 0.5)' }}>
+        <div
+          className='calendar-detailedsc'
+          style={{ borderTop: selectedDetailedSC !== null ? `5px solid ${selectedDetailedSC.color}` : null }}
+        >
           <div className='calendar-detailedsc-content'>
             <div
               style={{
