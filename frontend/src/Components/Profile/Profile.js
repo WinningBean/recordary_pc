@@ -57,7 +57,8 @@ class Profile extends React.Component {
       redirect: false,
       alert: null,
       post: [],
-      mediaPathArr: [],
+      mediaPathProfileArr: [],
+      postMediaList: [],
       isOpenAddSc: false,
     };
   }
@@ -518,7 +519,7 @@ class Profile extends React.Component {
                 <NavButton
                   onClick={async () => {
                     this.setState({ showProfileList: !this.state.showProfileList });
-                    this.setState({ mediaPathArr: [] });
+                    this.setState({ mediaPathProfileArr: [] });
                     try {
                       if (this.props.isLogin) {
                         const UserPostList = (await axios.get(`/post/user/${this.state.info.userCd}`)).data;
@@ -526,15 +527,15 @@ class Profile extends React.Component {
                         console.log(this.state.post);
 
                         this.state.post.map(async (value, index) => {
-                          // console.log(value);
+                          console.log(value);
                           if (value.mediaFK !== null) {
                             const mediaPath = (await axios.get(`/media/${value.mediaFK.mediaCd}`)).data;
                             console.log(mediaPath);
                             // console.log(mediaPath[0]);
-                            this.setState({ mediaPathArr: this.state.mediaPathArr.concat(mediaPath[1]) });
-                            console.log(this.state.mediaPathArr);
+                            this.setState({ mediaPathProfileArr: this.state.mediaPathProfileArr.concat(mediaPath[1]) });
                           } else return null;
                         });
+                        console.log(this.state.mediaPathProfileArr);
                       }
                     } catch (error) {
                       console.log(error + 'getUserPostListError');
@@ -548,7 +549,7 @@ class Profile extends React.Component {
             {this.state.showProfileList ? (
               <>
                 <div className='profile-MediaTimeline'>
-                  {this.state.mediaPathArr.map((value, index) => (
+                  {this.state.mediaPathProfileArr.map((value, index) => (
                     <div
                       className='media-box-hover'
                       style={{
@@ -565,15 +566,48 @@ class Profile extends React.Component {
                         className='media-box'
                         alt={`${index}- img`}
                         src={value}
-                        onClick={() => this.setState({ isTimelineOpen: !this.state.isTimelineOpen })}
+                        onClick={() => {
+                          this.state.post.map(async (val, i) => {
+                            try {
+                              if (val.mediaFK !== null) {
+                                const mediaSrc = (await axios.get(`/media/${val.mediaFK.mediaCd}`)).data;
+                                {
+                                  console.log(this.state.postMediaList);
+                                }
+                                if (mediaSrc[1] === value) {
+                                  for (let i = 1; i < mediaSrc.length; i++) {
+                                    this.setState({ postMediaList: this.state.postMediaList.concat(mediaSrc[i]) });
+                                  }
+                                  console.log(this.state.postMediaList);
+                                  this.setState({ val: (this.state.post[i] = { ...val, postImgClick: true }) });
+                                }
+                              } else return null;
+                            } catch (error) {
+                              console.log(error);
+                            }
+                          });
+                        }}
                       />
                     </div>
                   ))}
                 </div>
-                {/* {!isTimelineOpen ? null : async () => {
-
-                } }
-                {console.log(this.state.mediaPathArr)} */}
+                {this.state.post.map((value, index) => {
+                  if (value.postImgClick === true) {
+                    return (
+                      <Dialog
+                        open
+                        key={value.postCd}
+                        onClose={() => {
+                          this.setState({ value: (this.state.post[index] = { ...value, postImgClick: false }) });
+                          this.setState({ postMediaList: [] });
+                        }}
+                      >
+                        <Timeline data={value} imgList={this.state.postMediaList} />
+                      </Dialog>
+                    );
+                  }
+                })}
+                {console.log(this.state.post)}
               </>
             ) : (
               this.state.post.map((value) => (
@@ -582,7 +616,6 @@ class Profile extends React.Component {
                 </div>
               ))
             )}
-
             {this.state.alert}
             {this.state.isOpenAddSc ? <AddSchedule userCd={this.state.info.userCd} /> : null}
           </main>

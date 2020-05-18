@@ -233,15 +233,7 @@ const PostMediaScheduleAppend = (props) => {
           </div>
         </div>
         <div className='Post-Append-text post-Append'>
-          <TextField
-            id='post_text'
-            label='내용'
-            multiline
-            rowsMax='5'
-            rows='3'
-            name='post_ex'
-            onChange={changeHandle}
-          />
+          <TextField id='post_text' label='내용' multiline rowsMax='5' rows='3' name='postEx' onChange={changeHandle} />
         </div>
         {colorClick === true ? (
           <Popover

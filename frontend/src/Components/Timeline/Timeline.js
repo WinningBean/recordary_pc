@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import * as dateFns from 'date-fns';
 import './Timeline.css';
 import LongMenu from '../Other/MoreMenu';
@@ -14,9 +14,14 @@ import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
 const Timeline = (props) => {
   const data = props.data;
-  const [isClickList, setIsClickList] = useState(data.comment.map(() => false));
+  const imgList = props.imgList;
+  const [isClickList, setIsClickList] = useState(data.commentList.map(() => false));
   const [menuDialog, setMenuDialog] = useState(null);
   const [pictureCount, setPictureCount] = useState(0);
+
+  useEffect(() => {
+    console.log(data);
+  }, []);
 
   const userPostMoreButtonClick = (selectedValue) => {
     switch (selectedValue) {
@@ -61,11 +66,13 @@ const Timeline = (props) => {
       <div key={value.id}>
         <div className='comment-reply-users more-comment-reply-users'>
           <div className='comment-reply-users-img'>
-            <img alt={`${value.user_id} img`} src={value.user_pic} />
+            <img alt={`${value.userId} img`} src={value.userPic} />
           </div>
           <div className='comment-reply-users-name'>
-            <span className='reply-name'>{value.user_id}</span>
-            <span>{value.user_comment}</span>
+            <span className='reply-name'>
+              {value.userId}({value.userNm})
+            </span>
+            <span>{value.userComment}</span>
             <div>
               <ThumbUpRoundedIcon
                 style={{
@@ -81,15 +88,17 @@ const Timeline = (props) => {
   };
 
   const commentList = () => {
-    return data.comment.map((value, index) => (
+    return data.commentList.map((value, index) => (
       <>
         <div className='comment-reply-users'>
           <div className='comment-reply-users-img'>
-            <img alt={`${value.user_id} img`} src={value.user_pic} />
+            <img alt={`${value.userId} img`} src={value.userPic} />
           </div>
           <div className='comment-reply-users-name'>
-            <span className='reply-name'>{value.user_id}</span>
-            <span>{value.user_comment}</span>
+            <span className='reply-name'>
+              {value.userId}({value.userNm})
+            </span>
+            <span>{value.userComment}</span>
             <div>
               <ThumbUpRoundedIcon
                 style={{
@@ -114,8 +123,8 @@ const Timeline = (props) => {
 
   const pictureList = useMemo(() => {
     console.log('render pic');
-    if (data.post_pic.length < 2) {
-      return <img alt='timeline-img' src={data.post_pic[0]} />;
+    if (imgList.length < 2) {
+      return <img alt='timeline-img' src={imgList[0]} />;
     } else {
       return (
         <>
@@ -127,10 +136,10 @@ const Timeline = (props) => {
             }}
           >
             <ul style={{ height: '100%', position: 'relative' }}>
-              {data.post_pic.map((value, index) => {
+              {imgList.map((value, index) => {
                 return (
                   <li
-                    key={`${data.post_cd}-${index}`}
+                    key={`${data.postCd}-${index}`}
                     style={{ position: 'absolute', transform: `translateX(${500 * index}px)` }}
                   >
                     <img
@@ -169,7 +178,7 @@ const Timeline = (props) => {
                 <KeyboardArrowLeftIcon />
               </div>
             )}
-            {pictureCount >= data.post_pic.length - 1 ? (
+            {pictureCount >= imgList.length - 1 ? (
               <div />
             ) : (
               <div
@@ -197,11 +206,11 @@ const Timeline = (props) => {
               alignItems: 'center',
             }}
           >
-            {data.post_pic.map((value, index) => {
+            {imgList.map((value, index) => {
               if (index === pictureCount) {
                 return (
                   <div
-                    key={`post-bottom-${data.post_cd}-${index}`}
+                    key={`post-bottom-${data.postCd}-${index}`}
                     className='timeline-picture-bottom'
                     style={{
                       opacity: '1',
@@ -211,7 +220,7 @@ const Timeline = (props) => {
               }
               return (
                 <div
-                  key={`post-bottom-${data.post_cd}-${index}`}
+                  key={`post-bottom-${data.postCd}-${index}`}
                   className='timeline-picture-bottom'
                   style={{
                     opacity: '.4',
@@ -230,11 +239,15 @@ const Timeline = (props) => {
     <div className='timeline'>
       <div className='timeline-profile'>
         <div className='profile-picture'>
-          <img alt={`${data.user_id} img`} src={data.user_pic} />
+          <img alt={`${data.userFK.userId} img`} src={data.userFK.userPic} />
         </div>
-        <div className='profile-name'>{data.user_id}</div>
+        <div className='profile-name'>
+          {data.userFK.userId}({data.userFK.userNm})
+        </div>
         <div className='profile-time'>
-          <div className='profile-time-text'>{`${dateFns.differenceInDays(data.uploadDate, new Date())}일 전`}</div>
+          <div className='profile-time-text'>{`${Math.abs(
+            dateFns.differenceInDays(Date.parse(data.modifiedDate), new Date())
+          )}일 전`}</div>
         </div>
         <div className='profile-moreIcon'>
           <LongMenu options={['나에게 공유', ' 수정 ', ' 삭제 ']} returnValue={userPostMoreButtonClick} />
@@ -247,7 +260,7 @@ const Timeline = (props) => {
             {pictureList}
           </div>
           <div className='timeline-title'>
-            <div>{data.post_title}</div>
+            <div>{data.scheduleFK}</div>
             <div
               style={{
                 flex: 1,
@@ -264,7 +277,7 @@ const Timeline = (props) => {
               </AvatarGroup>
             </div>
           </div>
-          <div className='timeline-context'>{data.post_ex}</div>
+          <div className='timeline-context'>{data.postEx}</div>
         </div>
         <div className='comment-context'>
           <div className='comment-reply' style={{ overflowY: 'auto' }}>
@@ -276,7 +289,8 @@ const Timeline = (props) => {
               <div className='likeIcon'>
                 <ThumbUpRoundedIcon style={{ fontSize: 25 }}>like</ThumbUpRoundedIcon>
               </div>
-              <div className='comment-title'>{`${data.postLikePerson} 님 외 ${data.postLikeCount}명이 좋아합니다`}</div>
+              {/* <div className='comment-title'>{`${data.postLikePerson} 님 외 ${data.postLikeCount}명이 좋아합니다`}</div> */}
+              <div className='comment-title'>WiSungHo(위성호) 님 외 9명이 좋아합니다</div>
             </div>
           </div>
           <div className='comment-write'>

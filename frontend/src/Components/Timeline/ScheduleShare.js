@@ -32,25 +32,25 @@ const ScheduleShare = (props) => {
   });
   const [scheduleList, setScheduleList] = useState(null);
 
-  const [userPost, setUserPost] = useState({
-    user_id: store.getState().user.currentUser.user_id,
+  const [post, setPost] = useState({
+    userCd: store.getState().user.userCd,
     // group_cd: store.getState().user.userGroup[0].group_cd,
-    group_cd: null,
-    inputPost: {
-      post_ex: null,
-      post_pb_st: null,
-      post_str_ymd: null,
-      post_end_ymd: null,
-    },
+    groupCd: null,
+    postOriginCd: null,
+    scheduleCd: null,
+    mediaCd: null,
+    postEx: null,
+    postPublicState: null,
+    postStrYMD: null,
+    postEndYMD: null,
   });
 
   const changeHandle = (e) => {
-    setUserPost({
-      ...userPost,
-      inputPost: { ...userPost.inputPost, [e.target.name]: e.target.value },
+    setPost({
+      ...post,
+      [e.target.name]: e.target.value,
     });
   };
-
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -62,35 +62,35 @@ const ScheduleShare = (props) => {
   const onSubmit = async () => {
     setAlert(<Backdrop />);
 
-    try {
-      console.log(userPost);
+    // try {
+    //   console.log(userPost);
 
-      const form = new FormData();
-      form.append('user_id', userPost.user_id);
-      form.append('group_cd', userPost.group_cd);
-      form.append('inputPost', userPost.inputPost);
+    //   const form = new FormData();
+    //   form.append('user_id', userPost.user_id);
+    //   form.append('group_cd', userPost.group_cd);
+    //   form.append('inputPost', userPost.inputPost);
 
-      const { data } = await axios.post('/post/write', form);
+    //   const { data } = await axios.post('/post/write', form);
 
-      console.log(data);
+    //   console.log(data);
 
-      if (data.isWrite) {
-        setAlert(
-          <AlertDialog severity='success' content='게시물이 추가되었습니다.' onAlertClose={() => setAlert(null)} />
-        );
-      } else {
-        setAlert(<Snackbar severity='error' content='게시물을 추가하지 못했습니다.' onClose={() => setAlert(null)} />);
-      }
-    } catch (error) {
-      console.log(error);
-      setAlert(
-        <Snackbar
-          severity='error'
-          content='서버 에러로 게시물을 추가하지 못했습니다..'
-          onClose={() => setAlert(null)}
-        />
-      );
-    }
+    //   if (data.isWrite) {
+    //     setAlert(
+    //       <AlertDialog severity='success' content='게시물이 추가되었습니다.' onAlertClose={() => setAlert(null)} />
+    //     );
+    //   } else {
+    //     setAlert(<Snackbar severity='error' content='게시물을 추가하지 못했습니다.' onClose={() => setAlert(null)} />);
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    //   setAlert(
+    //     <Snackbar
+    //       severity='error'
+    //       content='서버 에러로 게시물을 추가하지 못했습니다..'
+    //       onClose={() => setAlert(null)}
+    //     />
+    //   );
+    // }
   };
 
   const saveScheduleList = (userDate, choiceDate) => {

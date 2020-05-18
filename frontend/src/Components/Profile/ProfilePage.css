@@ -159,6 +159,8 @@ nav > div {
 .profile-MediaTimeline {
   display: flex;
   flex-wrap: wrap;
+  /* flex-flow: row-reverse; */
+  /* flex-flow: wrap-reverse; */
   align-self: center;
   width: 880px;
   margin-left: 10px;

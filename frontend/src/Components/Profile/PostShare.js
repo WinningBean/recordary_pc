@@ -16,26 +16,27 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import axios from 'axios';
 import store from '../../store';
 
-const PostShare = props => {
+const PostShare = (props) => {
   const [open, setOpen] = React.useState(false);
   const [alert, setAlert] = useState(null);
 
-  const [userPost, setUserPost] = useState({
-    user_id: store.getState().user.currentUser.user_id,
+  const [post, setPost] = useState({
+    userCd: store.getState().user.userCd,
     // group_cd: store.getState().user.userGroup[0].group_cd,
-    group_cd: null,
-    inputPost: {
-      post_ex: null,
-      post_pb_st: null,
-      post_str_ymd: null,
-      post_end_ymd: null
-    }
+    groupCd: null,
+    postOriginCd: null,
+    scheduleCd: null,
+    mediaCd: null,
+    postEx: null,
+    postPublicState: null,
+    postStrYMD: null,
+    postEndYMD: null,
   });
 
-  const changeHandle = e => {
-    setUserPost({
-      ...userPost,
-      inputPost: { ...userPost.inputPost, [e.target.name]: e.target.value }
+  const changeHandle = (e) => {
+    setPost({
+      ...post,
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -50,54 +51,52 @@ const PostShare = props => {
   const onSubmit = async () => {
     setAlert(<Backdrop />);
 
-    try {
-      console.log(userPost);
+    //   try {
+    //     console.log(userPost);
 
-      const form = new FormData();
-      form.append('user_id', userPost.user_id);
-      form.append('group_cd', userPost.group_cd);
-      form.append('inputPost', userPost.inputPost);
+    //     const form = new FormData();
+    //     form.append('user_id', userPost.user_id);
+    //     form.append('group_cd', userPost.group_cd);
+    //     form.append('inputPost', userPost.inputPost);
 
-      const { data } = await axios.post('/post/write', form);
+    //     const { data } = await axios.post('/post/write', form);
 
-      console.log(data);
+    //     console.log(data);
 
-      if (data.isWrite) {
-        setAlert(
-          <AlertDialog
-            severity='success'
-            content='게시물이 추가되었습니다.'
-            onAlertClose={() => setAlert(null)}
-          />
-        );
-      } else {
-        setAlert(
-          <Snackbar
-            severity='error'
-            content='게시물을 추가하지 못했습니다.'
-            onClose={() => setAlert(null)}
-          />
-        );
-      }
-    } catch (error) {
-      console.log(error);
-      setAlert(
-        <Snackbar
-          severity='error'
-          content='서버 에러로 게시물을 추가하지 못했습니다..'
-          onClose={() => setAlert(null)}
-        />
-      );
-    }
+    //     if (data.isWrite) {
+    //       setAlert(
+    //         <AlertDialog
+    //           severity='success'
+    //           content='게시물이 추가되었습니다.'
+    //           onAlertClose={() => setAlert(null)}
+    //         />
+    //       );
+    //     } else {
+    //       setAlert(
+    //         <Snackbar
+    //           severity='error'
+    //           content='게시물을 추가하지 못했습니다.'
+    //           onClose={() => setAlert(null)}
+    //         />
+    //       );
+    //     }
+    //   } catch (error) {
+    //     console.log(error);
+    //     setAlert(
+    //       <Snackbar
+    //         severity='error'
+    //         content='서버 에러로 게시물을 추가하지 못했습니다..'
+    //         onClose={() => setAlert(null)}
+    //       />
+    //     );
+    //   }
   };
 
   return (
     <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
       <div className='post-append-header'>
         <div className='Post-Append-titleName'>
-          <PostAddIcon
-            style={{ fontSize: '40px', color: 'white', marginLeft: '10px' }}
-          />
+          <PostAddIcon style={{ fontSize: '40px', color: 'white', marginLeft: '10px' }} />
           <div className='PostAdd-title'>내 게시물에 공유</div>
         </div>
       </div>
@@ -135,19 +134,12 @@ const PostShare = props => {
             aria-labelledby='alert-dialog-title'
             aria-describedby='alert-dialog-description'
           >
-            <DialogTitle id='alert-dialog-title'>
-              {'내 게시물로 공유'}
-            </DialogTitle>
+            <DialogTitle id='alert-dialog-title'>{'내 게시물로 공유'}</DialogTitle>
             <DialogContent>
-              <DialogContentText id='alert-dialog-description'>
-                게시물을 공유하시겠습니까?
-              </DialogContentText>
+              <DialogContentText id='alert-dialog-description'>게시물을 공유하시겠습니까?</DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button
-                onClick={(handleClose, () => props.onCancel(), onSubmit)}
-                color='primary'
-              >
+              <Button onClick={(handleClose, () => props.onCancel(), onSubmit)} color='primary'>
                 확인
               </Button>
               <Button onClick={handleClose} color='primary' autoFocus>
