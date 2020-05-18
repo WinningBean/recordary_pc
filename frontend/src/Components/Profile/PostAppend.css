@@ -117,8 +117,8 @@
 }
 .Post-Append-Tag-User {
   display: flex;
+  flex-wrap: wrap;
   width: 550px;
-  height: 50px;
   padding: 10px 0px;
 }
 .MuiFormGroup-root {

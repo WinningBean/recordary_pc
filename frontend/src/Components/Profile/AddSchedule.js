@@ -3,17 +3,22 @@ import React, { useState } from 'react';
 import { Dialog, DialogActions } from '@material-ui/core';
 
 import DTP from '../UI/DTP';
+import PublicRange from '../UI/PublicRange';
 import { ChromePicker } from 'react-color';
 import TextField from '@material-ui/core/TextField';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
+import GroupMemberSearch from '../Group/GroupMemberSearch';
+import AlertDialog from '../Other/AlertDialog';
+import Snackbar from '../UI/Snackbar';
 
-import { format } from 'date-fns';
+import { addHours, startOfDay, endOfDay } from 'date-fns';
 
 import axios from 'axios';
 
-export default ({ userCd }) => {
+export default ({ data, onClose, onSuccess }) => {
   const [color, setColor] = useState({
     r: 0,
     g: 130,
@@ -23,31 +28,39 @@ export default ({ userCd }) => {
   const [isColorClick, setIsColorClick] = useState(false);
   const [info, setInfo] = useState({
     tabCd: null,
-    userCd: userCd,
+    userCd: data.userCd,
     scheduleNm: '',
     scheduleEx: '',
     scheduleStr: new Date(),
-    scheduleEnd: new Date(),
-    schedulePublicState: true,
+    scheduleEnd: addHours(new Date(), 1),
+    schedulePublicState: 0,
+    scheduleMembers: [],
   });
+  const [switchInfo, setSwitchInfo] = useState({
+    str: false,
+    end: false,
+  });
+  const [isShowMemberSearch, setIsShowMemberSearch] = useState(false);
+  const [dialog, setDialog] = useState(null);
   return (
-    <Dialog open onClose={() => this.setState({ isOpenAddSc: false })}>
+    <Dialog open onClose={() => onClose()}>
       <div>
         <div className='Post-Append-title post-Append'>
           <TextField id='post_title' label='제목' onChange={(e) => setInfo({ ...info, scheduleNm: e.target.value })} />
+
+          <span>일정 색상 설정</span>
+          <div
+            className='selectColor'
+            onClick={() => {
+              setIsColorClick(true);
+            }}
+            style={{
+              backgroundColor: `rgba(${color.r},${color.g},${color.b},${color.a})`,
+            }}
+          />
+        </div>
+        <div className='selectColor-form'>
           <TextField id='post_title' label='비고' onChange={(e) => setInfo({ ...info, scheduleEx: e.target.value })} />
-          <div className='selectColor-form'>
-            <span>일정 색상 설정</span>
-            <div
-              className='selectColor'
-              onClick={() => {
-                setIsColorClick(true);
-              }}
-              style={{
-                backgroundColor: `rgba(${color.r},${color.g},${color.b},${color.a})`,
-              }}
-            />
-          </div>
         </div>
         <div className='Post-Append-Schedule'>
           <DTP
@@ -55,56 +68,104 @@ export default ({ userCd }) => {
             endDate={info.scheduleEnd}
             onChangeStrDate={(value) => setInfo({ ...info, scheduleStr: value })}
             onChangeEndDate={(value) => setInfo({ ...info, scheduleEnd: value })}
+            switchInfo={switchInfo}
+            onChangeSwitch={(value) => setSwitchInfo(value)}
           />
         </div>
         <div className='Post-Append-Tag-User post-Append'>
-          {/* <Link to={`/${info.user_id}`}> */}
           <Chip
             avatar={
               // <Avatar alt={`${info.user_id} img`} src={info.user_pic} />
-              <Avatar alt='이미지' src='img/RIcon.png' />
+              <Avatar alt={`${data.userNm} img`} src='img/RIcon.png' />
             }
-            style={{
-              marginRight: '4px',
-              marginBottom: '4px',
-            }}
-            // label={info.user_nm}
-            label='성호'
+            label={data.userNm}
             style={{
               backgroundColor: 'rgba(20, 81, 51, 0.8)',
               color: '#ffffff',
               marginLeft: '5px',
+              marginBottom: '5px',
             }}
             clickable
           />
-          {/* </Link> */}
+          {info.scheduleMembers.map((value, index) => (
+            <Chip
+              key={`scheduleMembers-${index}`}
+              avatar={<Avatar alt={`${data.userNm} img`} src='img/RIcon.png' />}
+              label={value.userNm}
+              style={{
+                marginLeft: '5px',
+                marginBottom: '5px',
+              }}
+              clickable
+              onDelete={() => {
+                const copyList = info.scheduleMembers.slice();
+                copyList.splice(index, 1);
+                setInfo({ ...info, scheduleMembers: copyList });
+              }}
+            />
+          ))}
+          <Chip
+            icon={<AddIcon />}
+            style={{
+              marginLeft: '5px',
+              marginBottom: '5px',
+            }}
+            label='ADD'
+            clickable
+            variant='outlined'
+            onClick={() => setIsShowMemberSearch(true)}
+          />
         </div>
       </div>
       <DialogActions>
+        <PublicRange
+          onSetSelectedIndex={(index) => setInfo({ ...info, schedulePublicState: index })}
+          selectedIndex={info.schedulePublicState}
+        />
         <Button>취소</Button>
         <Button
           onClick={async () => {
+            setDialog(<Snackbar severit='info' content='데이터 요청중...' onClose={() => setDialog(null)} />);
+            const str = switchInfo.str ? startOfDay(info.scheduleStr) : info.scheduleStr;
+            const end = switchInfo.end ? endOfDay(info.scheduleEnd) : info.scheduleEnd;
+            if (str >= end) {
+              setDialog(
+                <AlertDialog
+                  severity='error'
+                  content='시작일보다 종료일이 더 빠릅니다.'
+                  onAlertClose={() => setDialog(null)}
+                />
+              );
+              return;
+            }
             console.log({
               tabCd: null,
-              userCd: userCd,
+              userCd: data.userCd,
               scheduleNm: info.scheduleNm,
               scheduleEx: info.scheduleEx,
-              scheduleStr: format(info.scheduleStr, 'yyyy-MM-dd hh:mm:ss a'),
-              scheduleEnd: format(info.scheduleEnd, 'yyyy-MM-dd hh:mm:ss a'),
-              scheduleCol: `rgba(${color.r},${color.g},${color.b},${color.a})`,
-              schedulePublicState: 0,
-            });
-            const { data } = await axios.post('/schedule/', {
-              tabCd: null,
-              userCd: userCd,
-              scheduleNm: info.scheduleNm,
-              scheduleEx: info.scheduleEx,
-              scheduleStr: format(info.scheduleStr, 'yyyy-MM-dd hh:mm:ss a'),
-              scheduleEnd: format(info.scheduleEnd, 'yyyy-MM-dd hh:mm:ss a'),
+              scheduleStr: str.getTime(),
+              scheduleEnd: end.getTime(),
               scheduleCol: `rgba(${color.r},${color.g},${color.b},${color.a})`,
               schedulePublicState: info.schedulePublicState,
             });
-            console.log(data);
+            try {
+              const scCd = (
+                await axios.post('/schedule/', {
+                  tabCd: null,
+                  userCd: data.userCd,
+                  scheduleNm: info.scheduleNm,
+                  scheduleEx: info.scheduleEx,
+                  scheduleStr: str.getTime(),
+                  scheduleEnd: end.getTime(),
+                  scheduleCol: `rgba(${color.r},${color.g},${color.b},${color.a})`,
+                  schedulePublicState: info.schedulePublicState,
+                })
+              ).data;
+              onSuccess(scCd);
+            } catch (error) {
+              console.log(error);
+              setDialog(<Snackbar severit='error' content={error} onClose={() => setDialog(null)} />);
+            }
           }}
         >
           완료
@@ -117,6 +178,14 @@ export default ({ userCd }) => {
           </div>
         </Dialog>
       ) : null}
+      {isShowMemberSearch ? (
+        <GroupMemberSearch
+          type={1}
+          onSelect={(value) => setInfo({ ...info, scheduleMembers: info.scheduleMembers.concat(value) })}
+          onCancel={() => setIsShowMemberSearch(false)}
+        />
+      ) : null}
+      {dialog}
     </Dialog>
   );
 };

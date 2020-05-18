@@ -617,7 +617,25 @@ class Profile extends React.Component {
               ))
             )}
             {this.state.alert}
-            {this.state.isOpenAddSc ? <AddSchedule userCd={this.state.info.userCd} /> : null}
+            {this.state.isOpenAddSc ? (
+              <AddSchedule
+                data={this.state.info}
+                onClose={() => this.setState({ isOpenAddSc: false })}
+                onSuccess={(scCd) =>
+                  this.setState({
+                    ...this.state,
+                    isOpenAddSc: false,
+                    alert: (
+                      <Snackbar
+                        severity='success'
+                        content='일정등록 완료'
+                        onClose={() => this.setState({ alert: null })}
+                      />
+                    ),
+                  })
+                }
+              />
+            ) : null}
           </main>
         ) : null}
       </>

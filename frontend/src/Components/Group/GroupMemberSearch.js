@@ -10,6 +10,9 @@ import AlertDialog from '../Other/AlertDialog';
 import axios from 'axios';
 import { Button, Avatar } from '@material-ui/core';
 
+//type
+// 0: 그룹 멤버 검색
+// 1: 유저 검색후 선택
 const GroupMemberSearch = (props) => {
   const [input, setInput] = useState('');
   const [alert, setAlert] = useState(null);
@@ -91,6 +94,11 @@ const GroupMemberSearch = (props) => {
                           justifyContent: 'flex-start',
                         }}
                         onClick={() => {
+                          if (props.type === 1) {
+                            props.onSelect(value);
+                            props.onCancel();
+                            return;
+                          }
                           try {
                             (async () => {
                               console.log({ groupCd: props.info.groupCd, userCd: props.info.userCd });
@@ -124,7 +132,7 @@ const GroupMemberSearch = (props) => {
                       >
                         <Avatar alt={`${value.userId} img`} src={value.userPic} />
                         &nbsp;&nbsp;&nbsp;
-                        <span>{value.userId}</span>
+                        <span>{`${value.userNm}(${value.userId})`}</span>
                       </Button>
                     </li>
                   );

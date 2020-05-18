@@ -202,15 +202,6 @@ const GroupApply = (props) => {
                   />
                 );
               }}
-              // onClick={async () => {
-              //     await axios.post('/group/memberDelete',
-              //         {
-              //             params: {
-              //                 group_cd: data.group.group_cd,
-              //                 user_cd: value.user_cd
-              //             }
-              //         })
-              // }}
             />
           </div>
         </div>

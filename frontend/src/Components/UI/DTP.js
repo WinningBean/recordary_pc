@@ -1,11 +1,19 @@
 import 'date-fns';
-import React from 'react';
+import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 import AccessAlarmsIcon from '@material-ui/icons/AccessAlarms';
 
-export default function DTP({ strDate, endDate, onChangeStrDate, onChangeEndDate }) {
+import { startOfDay, endOfDay } from 'date-fns';
+
+// switchInfo = {
+//   str: false,
+//   end: false
+// }
+export default function DTP({ strDate, endDate, onChangeStrDate, onChangeEndDate, switchInfo, onChangeSwitch }) {
   // The first commit of Material-UI
 
   const today = new Date();
@@ -17,6 +25,7 @@ export default function DTP({ strDate, endDate, onChangeStrDate, onChangeEndDate
     // setSelectedFinishDate(date);
     onChangeEndDate(date);
   };
+
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <Grid container justify='space-around'>
@@ -34,11 +43,12 @@ export default function DTP({ strDate, endDate, onChangeStrDate, onChangeEndDate
         />
 
         <KeyboardTimePicker
+          readOnly={switchInfo.str}
           variant='inline'
           margin='normal'
           id='time-picker'
           label='시작시간'
-          value={strDate}
+          value={switchInfo.str ? startOfDay(strDate) : strDate}
           onChange={handleStartDateChange}
           KeyboardButtonProps={{
             'aria-label': 'change time',
@@ -46,6 +56,20 @@ export default function DTP({ strDate, endDate, onChangeStrDate, onChangeEndDate
           keyboardIcon={<AccessAlarmsIcon>Icon</AccessAlarmsIcon>}
         />
       </Grid>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={switchInfo.str}
+              onChange={() => {
+                onChangeSwitch({ ...switchInfo, str: !switchInfo.str });
+              }}
+              color='primary'
+            />
+          }
+          label='하루종일'
+        />
+      </div>
       <Grid container justify='space-around'>
         <KeyboardDatePicker
           // disableToolbar
@@ -61,11 +85,12 @@ export default function DTP({ strDate, endDate, onChangeStrDate, onChangeEndDate
           }}
         />
         <KeyboardTimePicker
+          readOnly={switchInfo.end}
           variant='inline'
           margin='normal'
           id='time-picker'
           label='종료시간'
-          value={endDate}
+          value={switchInfo.end ? endOfDay(endDate) : endDate}
           onChange={handleFinishDateChange}
           KeyboardButtonProps={{
             'aria-label': 'change time',
@@ -73,6 +98,20 @@ export default function DTP({ strDate, endDate, onChangeStrDate, onChangeEndDate
           keyboardIcon={<AccessAlarmsIcon>Icon</AccessAlarmsIcon>}
         />
       </Grid>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={switchInfo.end}
+              onChange={() => {
+                onChangeSwitch({ ...switchInfo, end: !switchInfo.end });
+              }}
+              color='primary'
+            />
+          }
+          label='하루종일'
+        />
+      </div>
     </MuiPickersUtilsProvider>
   );
 }
