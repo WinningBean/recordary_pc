@@ -8,18 +8,18 @@ import { styled } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import SubdirectoryArrowLeftIcon from '@material-ui/icons/SubdirectoryArrowLeft';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   margin: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(1),
   },
   textStyle: {
-    width: '350px'
-  }
+    width: '350px',
+  },
 }));
 
 const SendButton = styled(Button)({
   minWidth: '30px',
-  height: '40px'
+  height: '40px',
 });
 
 export default function Comment() {
@@ -46,7 +46,7 @@ export default function Comment() {
                   <SubdirectoryArrowLeftIcon />{' '}
                 </SendButton>
               </InputAdornment>
-            )
+            ),
           }}
           variant='outlined'
           multiline

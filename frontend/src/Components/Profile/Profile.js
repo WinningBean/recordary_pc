@@ -79,6 +79,10 @@ class Profile extends React.Component {
       isLoading: false,
       type: type,
     });
+
+    const UserPostList = (await axios.get(`/post/user/${this.state.info.userCd}`)).data;
+    this.setState({ post: JSON.parse(JSON.stringify(UserPostList)) });
+    console.log(this.state.post);
   };
 
   getGroupInfo = async () => {
@@ -522,10 +526,6 @@ class Profile extends React.Component {
                     this.setState({ mediaPathProfileArr: [] });
                     try {
                       if (this.props.isLogin) {
-                        const UserPostList = (await axios.get(`/post/user/${this.state.info.userCd}`)).data;
-                        this.setState({ post: JSON.parse(JSON.stringify(UserPostList)) });
-                        console.log(this.state.post);
-
                         this.state.post.map(async (value, index) => {
                           console.log(value);
                           if (value.mediaFK !== null) {
@@ -610,11 +610,25 @@ class Profile extends React.Component {
                 {console.log(this.state.post)}
               </>
             ) : (
-              this.state.post.map((value) => (
-                <div className='profile-ScheduleTimeLine'>
-                  <TimelineWeekSchedule key={value.post_cd} data={value} />
-                </div>
-              ))
+              this.state.post.map((value) => {
+                if (value.mediaFK === null) {
+                  if (value.scheduleFK !== null && value.postStrYMD !== null) {
+                    return (
+                      <div className='profile-ScheduleTimeLine'>
+                        <TimelineWeekSchedule key={value.postCd} data={value} postForm={1} />
+                      </div>
+                    );
+                  } else if (value.scheduleFK === null && value.postStrYMD !== null) {
+                    return (
+                      <div className='profile-ScheduleTimeLine'>
+                        <TimelineWeekSchedule key={value.postCd} data={value} postForm={2} />
+                      </div>
+                    );
+                  }
+                } else if (value.mediaFK !== null && value.scheduleFK !== null) {
+                  return <Timeline data={value} imgList={this.state.postMediaList} />;
+                }
+              })
             )}
             {this.state.alert}
             {this.state.isOpenAddSc ? <AddSchedule userCd={this.state.info.userCd} /> : null}

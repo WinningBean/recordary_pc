@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import * as dateFns from 'date-fns';
+
 import './Timeline.css';
 import LongMenu from '../Other/MoreMenu';
 import PostShare from '../Profile/PostShare';
@@ -8,6 +9,8 @@ import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import ThumbUpRoundedIcon from '@material-ui/icons/ThumbUpRounded';
 import CommentIcon from '@material-ui/icons/Comment';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import TodayIcon from '@material-ui/icons/Today';
+import CloseIcon from '@material-ui/icons/Close';
 import CommentTimeline from './CommentTimeline';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
@@ -18,6 +21,7 @@ const Timeline = (props) => {
   const [isClickList, setIsClickList] = useState(data.commentList.map(() => false));
   const [menuDialog, setMenuDialog] = useState(null);
   const [pictureCount, setPictureCount] = useState(0);
+  const [clickSchedule, setClickSchedule] = useState(false);
 
   useEffect(() => {
     console.log(data);
@@ -145,7 +149,7 @@ const Timeline = (props) => {
                     <img
                       alt='timeline-img'
                       src={value}
-                      style={{ width: '500px', height: '330px', objectFit: 'cover' }}
+                      style={{ width: '490px', height: '330px', objectFit: 'cover' }}
                     />
                   </li>
                 );
@@ -160,6 +164,8 @@ const Timeline = (props) => {
               width: '100%',
               display: 'flex',
               justifyContent: 'space-between',
+              paddingRight: '15px',
+              paddingLeft: '10px',
             }}
           >
             {pictureCount === 0 ? (
@@ -244,6 +250,13 @@ const Timeline = (props) => {
         <div className='profile-name'>
           {data.userFK.userId}({data.userFK.userNm})
         </div>
+        {data.scheduleFK === null ? (
+          <div />
+        ) : (
+          <div className='timeline-showSchedule' onClick={() => setClickSchedule(true)}>
+            <TodayIcon style={{ fontSize: '40px' }} />
+          </div>
+        )}
         <div className='profile-time'>
           <div className='profile-time-text'>{`${Math.abs(
             dateFns.differenceInDays(Date.parse(data.modifiedDate), new Date())
@@ -258,30 +271,114 @@ const Timeline = (props) => {
           <div className='timeline-picture'>
             {/* 이미지 */}
             {pictureList}
-          </div>
-          <div className='timeline-title'>
-            <div>{data.scheduleFK}</div>
             <div
-              style={{
-                flex: 1,
-                marginLeft: '6px',
-                display: 'flex',
-                justifyContent: 'flex-end',
-              }}
+              className='transition-all'
+              style={
+                !clickSchedule
+                  ? {
+                      position: 'absolute',
+                      bottom: '0',
+                      height: 0,
+                      width: '100%',
+                      backgroundColor: 'rgb(253,253,253)',
+                    }
+                  : {
+                      position: 'absolute',
+                      bottom: '0',
+                      width: '98%',
+                      height: '100%',
+                      zIndex: '1',
+                      backgroundColor: 'rgb(253,253,253)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      padding: '5px 5px',
+                      borderTop: `3px solid ${data.scheduleFK.scheduleCol}`,
+                    }
+              }
             >
-              <AvatarGroup>
-                <Avatar alt='Remy Sharp' src='http://placehold.it/40x40' />
-                <Avatar alt='Travis Howard' src='http://placehold.it/40x40' />
-                <Avatar alt='Cindy Baker' src='http://placehold.it/40x40' />
-                <Avatar>+3</Avatar>
-              </AvatarGroup>
+              {!clickSchedule ? null : (
+                <>
+                  <div
+                    style={{
+                      flex: 1,
+                      fontSize: '18px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      fontWeight: 'bold',
+                      borderBottom: '1px solid rgb(229, 229, 229)',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <div style={{ paddingLeft: '8px' }}>
+                      <h2>{data.scheduleFK.scheduleNm}</h2>
+                    </div>
+                    <div style={{ paddingRight: '8px', display: 'flex' }} className='Close-hover'>
+                      <CloseIcon onClick={() => setClickSchedule(false)} />
+                    </div>
+                  </div>
+                  <div style={{ flex: 3, height: '150px', display: 'flex', paddingTop: '8px' }}>
+                    {data.scheduleFK.scheduleEx}
+                  </div>
+                  <div style={{ flex: 2 }}>
+                    <div
+                      style={{
+                        height: '50%',
+                        display: 'flex',
+                        fontSize: '15px',
+                        justifyContent: 'space-between',
+                        borderBottom: '1px solid rgb(229, 229, 229)',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <span style={{ fontWeight: 'bold' }}>시작</span>
+                      <span style={{ fontWeight: 'bold' }}>
+                        {dateFns.format(Date.parse(data.scheduleFK.scheduleStr), 'yyyy.M.d EEE h:mm a')}
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        height: '50%',
+                        display: 'flex',
+                        fontSize: '15px',
+                        justifyContent: 'space-between',
+                        borderBottom: '1px solid rgb(229, 229, 229)',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <span style={{ fontWeight: 'bold' }}>종료</span>
+                      <span style={{ fontWeight: 'bold' }}>
+                        {dateFns.format(Date.parse(data.scheduleFK.scheduleStr), 'yyyy.M.d EEE h:mm a')}
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      flex: 1,
+                      marginTop: '6px',
+                      marginLeft: '6px',
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                    }}
+                  >
+                    <div>
+                      <AvatarGroup>
+                        <Avatar alt='Remy Sharp' src='http://placehold.it/40x40' />
+                        <Avatar alt='Travis Howard' src='http://placehold.it/40x40' />
+                        <Avatar alt='Cindy Baker' src='http://placehold.it/40x40' />
+                        <Avatar>+3</Avatar>
+                      </AvatarGroup>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
           <div className='timeline-context'>{data.postEx}</div>
         </div>
         <div className='comment-context'>
           <div className='comment-reply' style={{ overflowY: 'auto' }}>
-            {commentList()}
+            {data.commentList.length > 0 ? commentList() : <div></div>}
           </div>
 
           <div className='comment-context-icon'>

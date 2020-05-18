@@ -14,7 +14,7 @@ function TimelineOneDay({ title, ex, startDay, endDay }) {
           display: 'flex',
           alignItems: 'center',
           fontWeight: 'bold',
-          borderBottom: '1px solid rgb(229, 229, 229)'
+          borderBottom: '1px solid rgb(229, 229, 229)',
         }}
       >
         {title}
@@ -28,7 +28,7 @@ function TimelineOneDay({ title, ex, startDay, endDay }) {
             fontSize: '15px',
             justifyContent: 'space-between',
             borderBottom: '1px solid rgb(229, 229, 229)',
-            alignItems: 'center'
+            alignItems: 'center',
           }}
         >
           <span style={{ fontWeight: 'bold' }}>시작</span>
@@ -41,7 +41,7 @@ function TimelineOneDay({ title, ex, startDay, endDay }) {
             fontSize: '15px',
             justifyContent: 'space-between',
             borderBottom: '1px solid rgb(229, 229, 229)',
-            alignItems: 'center'
+            alignItems: 'center',
           }}
         >
           <span style={{ fontWeight: 'bold' }}>종료</span>

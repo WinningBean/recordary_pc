@@ -11,12 +11,13 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 
 import CommentTimeline from './CommentTimeline';
 
-const TimelineWeekSchedule = props => {
+const TimelineWeekSchedule = (props) => {
   const data = props.data;
-  const [isClickList, setIsClickList] = useState(data.comment.map(() => false));
+  const postForm = props.postForm;
+  const [isClickList, setIsClickList] = useState(data.commentList.map(() => false));
   const [menuDialog, setMenuDialog] = useState(null);
 
-  const userPostMoreButtonClick = selectedValue => {
+  const userPostMoreButtonClick = (selectedValue) => {
     switch (selectedValue) {
       case '나에게 공유':
         setMenuDialog(<PostShare onCancel={() => setMenuDialog(null)} />);
@@ -46,20 +47,16 @@ const TimelineWeekSchedule = props => {
         <MoreHorizIcon
           style={{
             fontSize: '15',
-            paddingTop: '3px'
+            paddingTop: '3px',
           }}
         />
-        {isClickList[index] === false ? (
-          <span>{`댓글 ${list.length}개 모두 보기`}</span>
-        ) : (
-          <span>{`댓글 접기`}</span>
-        )}
+        {isClickList[index] === false ? <span>{`댓글 ${list.length}개 모두 보기`}</span> : <span>{`댓글 접기`}</span>}
       </div>
     </div>
   );
 
-  const MoreComment = list => {
-    return list.map(value => (
+  const MoreComment = (list) => {
+    return list.map((value) => (
       <div key={value.id}>
         <div className='comment-reply-users more-comment-reply-users'>
           <div className='comment-reply-users-img'>
@@ -72,7 +69,7 @@ const TimelineWeekSchedule = props => {
               <ThumbUpRoundedIcon
                 style={{
                   fontSize: '20',
-                  paddingRight: '5px'
+                  paddingRight: '5px',
                 }}
               />
               {/* <CommentIcon
@@ -102,13 +99,13 @@ const TimelineWeekSchedule = props => {
               <ThumbUpRoundedIcon
                 style={{
                   fontSize: '20',
-                  paddingRight: '5px'
+                  paddingRight: '5px',
                 }}
               />
               <CommentIcon
                 style={{
                   fontSize: '20',
-                  paddingRight: '5px'
+                  paddingRight: '5px',
                 }}
               />
             </div>
@@ -121,25 +118,26 @@ const TimelineWeekSchedule = props => {
   };
 
   const timelineInfo = (() => {
-    switch (data.postForm) {
+    switch (postForm) {
       case 1:
         return (
           <TimelineOneday
-            title={data.post_title}
-            ex={data.post_ex}
-            startDay={data.post_str_ymd}
-            endDay={data.post_end_ymd}
+            title={data.scheduleFK.scheduleNm}
+            ex={data.scheduleFK.scheduleEx}
+            startDay={data.scheduleFK.scheduleStr}
+            endDay={data.scheduleFK.scheduleEnd}
           />
         );
       case 2:
         return (
-          <TimelineMultiDay
-            title={data.post_title}
-            ex={data.post_ex}
-            sharedSchedual={data.sharedSchedual}
-            sharedStartDay={data.sharedStartDay}
-            sharedEndDay={data.sharedEndDay}
-          />
+          // <TimelineMultiDay
+          //   // title={data.post_title}
+          //   // ex={data.post_ex}
+          //   sharedSchedual={data.sharedSchedual}
+          //   sharedStartDay={data.sharedStartDay}
+          //   sharedEndDay={data.sharedEndDay}
+          // />
+          <div></div>
         );
     }
   })();
@@ -148,20 +146,18 @@ const TimelineWeekSchedule = props => {
     <div className='timeline' style={{ minHeight: '391px' }}>
       <div className='timeline-profile'>
         <div className='profile-picture'>
-          <img alt={`${data.user_id} img`} src={data.user_pic} />
+          <img alt={`${data.userFK.userCd} img`} src={data.userFK.userPic} />
         </div>
-        <div className='profile-name'>{data.user_id}</div>
+        <div className='profile-name'>
+          {data.userFK.userId}({data.userFK.userNm})
+        </div>
         <div className='profile-time'>
-          <div className='profile-time-text'>{`${dateFns.differenceInDays(
-            data.uploadDate,
-            new Date()
+          <div className='profile-time-text'>{`${Math.abs(
+            dateFns.differenceInDays(data.modifiedDate, new Date())
           )}일 전`}</div>
         </div>
         <div className='profile-moreIcon'>
-          <LongMenu
-            options={['나에게 공유', ' 수정 ', ' 삭제 ']}
-            returnValue={userPostMoreButtonClick}
-          />
+          <LongMenu options={['나에게 공유', ' 수정 ', ' 삭제 ']} returnValue={userPostMoreButtonClick} />
         </div>
       </div>
       <div className='timeline-info' style={{ height: 'auto' }}>
@@ -171,7 +167,7 @@ const TimelineWeekSchedule = props => {
             display: 'flex',
             flexDirection: 'column',
             height: '340px',
-            overflow: 'auto'
+            overflow: 'auto',
           }}
         >
           {timelineInfo}
@@ -185,9 +181,8 @@ const TimelineWeekSchedule = props => {
               <div className='likeIcon'>
                 <ThumbUpRoundedIcon style={{ fontSize: 25 }}>like</ThumbUpRoundedIcon>
               </div>
-              <div className='comment-title'>
-                {`${data.postLikePerson} 님 외 ${data.postLikeCount}명이 좋아합니다`}
-              </div>
+              {/* <div className='comment-title'>{`${data.postLikePerson} 님 외 ${data.postLikeCount}명이 좋아합니다`}</div> */}
+              <div className='comment-title'>WiSungHo(위성호)님 외 2명이 좋아합니다.</div>
             </div>
           </div>
           <div className='comment-write'>

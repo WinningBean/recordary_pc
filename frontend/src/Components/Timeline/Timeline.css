@@ -1,11 +1,13 @@
 /* 타임라인 일정+사진 */
 .timeline {
   flex-direction: column;
-  width: 100%;
+  align-self: center;
+  width: 866px;
   height: 100%;
   box-shadow: 0px 1px 2px rgba(161, 159, 159, 0.8);
   background-color: white;
   padding: 5px;
+  margin-bottom: 10px;
 }
 
 .timeline-profile {
@@ -15,8 +17,26 @@
   width: 100%;
   height: 60px;
   padding-left: 5px;
+  margin-bottom: 5px;
 }
 
+.timeline-showSchedule {
+  position: absolute;
+  top: 25px;
+  left: 450px;
+  display: flex;
+  align-items: center;
+  border-radius: 50px;
+}
+.timeline-showSchedule:hover {
+  color: rgba(20, 81, 51, 0.9);
+  cursor: pointer;
+}
+
+.Close-hover:hover {
+  color: rgba(20, 81, 51, 0.9);
+  cursor: pointer;
+}
 .profile-picture {
   position: absolute;
   display: flex;
@@ -24,7 +44,7 @@
   align-items: center;
   width: 60px;
   height: 60px;
-  padding: 5px;
+  padding: 10px;
   border-radius: 50%;
   box-shadow: rgba(161, 159, 159, 0.8);
 }
@@ -85,19 +105,21 @@
 
 .timeline-picture {
   position: relative;
-  width: 500px;
+  width: 490px;
   height: 340px;
+  padding-left: 10px;
   overflow: hidden;
 }
 
 .timeline-picture > img {
-  width: 490px;
+  width: 480px;
   height: 330px;
   object-fit: cover;
-  box-shadow: 0px 1px 3px rgba(161, 159, 159, 0.8);
+  /* box-shadow: 0px 1px 3px rgba(161, 159, 159, 0.8); */
+  border: rgba(161, 159, 159, 0.8);
 }
 
-.timeline-title {
+.timeline-showSchedule .timeline-title {
   margin-top: 5px;
   height: 40px;
   font-size: 18px;
@@ -114,6 +136,7 @@
   padding-top: 5px;
   font-size: 16px;
   line-height: 150%;
+  overflow-y: scroll;
 }
 
 .timeline-picture-bottom {
@@ -165,6 +188,8 @@
   height: 340px;
   padding-left: 10px;
   overflow: hidden;
+  margin: 0px 10px;
+  border: 1px solid rgba(161, 159, 159, 0.6);
 }
 
 .comment-context-icon {
