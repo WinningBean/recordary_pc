@@ -1,4 +1,4 @@
-package com.fairy_pitt.recordary.endpoint.Schedule.dto;
+package com.fairy_pitt.recordary.endpoint.schedule.dto;
 
 import com.fairy_pitt.recordary.common.entity.*;
 import lombok.Builder;

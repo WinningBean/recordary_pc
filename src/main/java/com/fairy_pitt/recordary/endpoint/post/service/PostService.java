@@ -2,7 +2,7 @@ package com.fairy_pitt.recordary.endpoint.post.service;
 
 import com.fairy_pitt.recordary.common.entity.PostEntity;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
-import com.fairy_pitt.recordary.endpoint.Schedule.service.ScheduleService;
+import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleService;
 import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;

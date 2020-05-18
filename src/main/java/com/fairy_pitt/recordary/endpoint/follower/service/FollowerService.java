@@ -25,7 +25,7 @@ public class FollowerService {
     private final FollowerRepository followerRepository;
 
     @Transactional
-    public Boolean save(Long targetCd){
+    public Boolean save(Long targetCd) {
         UserEntity currentUser = userService.currentUser();
         if (currentUser == null) return false;
         FollowerSaveRequestDto followerSaveRequestDto = FollowerSaveRequestDto.builder()
@@ -36,7 +36,7 @@ public class FollowerService {
     }
 
     @Transactional
-    public Boolean delete(Long targetCd){
+    public Boolean delete(Long targetCd) {
         FollowerEntity followerEntity = Optional.ofNullable(followerRepository.findByUserFKAndTargetFK(userService.currentUser(), userService.findEntity(targetCd)))
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 팔로우하지 않았습니다. cd = " + targetCd));
         followerRepository.delete(followerEntity);
@@ -44,10 +44,10 @@ public class FollowerService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserResponseDto> followerList(Long userCd){ // 사용자를 팔로우
+    public List<UserResponseDto> followerList(Long userCd) { // 사용자를 팔로우
         List<FollowerEntity> followerEntityList = userService.findEntity(userCd).getFollowTarget();
         List<UserEntity> userEntityList = new ArrayList<>();
-        for (FollowerEntity followerEntity : followerEntityList){
+        for (FollowerEntity followerEntity : followerEntityList) {
             String responseId = followerEntity.getUserFK().getUserId();
             userEntityList.add(userService.findEntity(responseId));
         }
@@ -57,10 +57,10 @@ public class FollowerService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserResponseDto> followingList(Long userCd){ // 사용자가 팔로우
+    public List<UserResponseDto> followingList(Long userCd) { // 사용자가 팔로우
         List<FollowerEntity> followerEntityList = userService.findEntity(userCd).getFollowUser();
         List<UserEntity> userEntityList = new ArrayList<>();
-        for (FollowerEntity followerEntity : followerEntityList){
+        for (FollowerEntity followerEntity : followerEntityList) {
             Long responseCd = followerEntity.getTargetFK().getUserCd();
             userEntityList.add(userService.findEntity(responseCd));
         }
@@ -70,7 +70,7 @@ public class FollowerService {
     }
 
     @Transactional(readOnly = true)
-    public Boolean followEachOther(Long userCd, Long targetCd){ // 맞팔 상태
+    public Boolean followEachOther(Long userCd, Long targetCd) { // 맞팔 상태
         UserEntity user = userService.findEntity(userCd);
         UserEntity target = userService.findEntity(targetCd);
         FollowerEntity followerEntity = followerRepository.findByUserFKAndTargetFK(user, target);
@@ -79,13 +79,13 @@ public class FollowerService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserResponseDto> friends(Long userCd){ // 사용자 친구 리스트 (맞팔)
+    public List<UserResponseDto> friends(Long userCd) { // 사용자 친구 리스트 (맞팔)
         List<String> followersId = new ArrayList<>();
         List<String> followingsId = new ArrayList<>();
-        for (UserResponseDto userListResponseDto : followerList(userCd)){
+        for (UserResponseDto userListResponseDto : followerList(userCd)) {
             followersId.add(userListResponseDto.getUserId());
         }
-        for (UserResponseDto userListResponseDto : followingList(userCd)){
+        for (UserResponseDto userListResponseDto : followingList(userCd)) {
             followingsId.add(userListResponseDto.getUserId());
         }
 
@@ -93,19 +93,19 @@ public class FollowerService {
         followersId.retainAll(followingsId);
 
         List<UserResponseDto> friendList = new ArrayList<>();
-        for (String targetId : followersId){
+        for (String targetId : followersId) {
             friendList.add(userService.findById(targetId));
         }
         return friendList; // return UserResponseDto
     }
 
     @Transactional(readOnly = true)
-    public List<FollowerStateResponseDto> followState(String findNm){
+    public List<FollowerStateResponseDto> followState(String findNm) {
         List<FollowerStateResponseDto> followerStateResponseDtoList = null;
         List<UserResponseDto> userResponseDtoList = userService.findNmUser(findNm);
 
         UserEntity userFK = userService.currentUser();
-        for (UserResponseDto targetFK : userResponseDtoList){
+        for (UserResponseDto targetFK : userResponseDtoList) {
             UserEntity targetUser = userService.findEntity(targetFK.getUserCd());
             followerStateResponseDtoList.add(new FollowerStateResponseDto(
                     targetUser,
@@ -115,4 +115,24 @@ public class FollowerService {
         }
         return followerStateResponseDtoList;
     }
+
+    @Transactional
+    public int checkUserState(Long targetCd) {  //user - target 관계 확인
+        Long userCd = userService.currentUserCd();
+
+        if (userCd.equals(targetCd)) {
+            return 3;
+        } else if (followEachOther(userCd, targetCd)) {
+            return 2;
+        } else if (findByUserFKAndTargetFK(userCd, targetCd)) {
+            return 1;
+        } else return 0;
+    }
+
+    private Boolean findByUserFKAndTargetFK(Long userCd, Long targetCd) {
+        UserEntity user = userService.findEntity(userCd);
+        UserEntity target = userService.findEntity(targetCd);
+        return Optional.ofNullable(followerRepository.findByUserFKAndTargetFK(user, target)).isPresent();
+    }
 }
+

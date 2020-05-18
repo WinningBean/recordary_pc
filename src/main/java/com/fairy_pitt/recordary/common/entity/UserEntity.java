@@ -82,6 +82,10 @@ public class UserEntity extends BaseTimeEntity{
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "commentUserFK", cascade = CascadeType.REMOVE)
     private List<CommentEntity> userComments = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = CascadeType.REMOVE)
+    private List<FollowerEntity> userTodoList = new ArrayList<>();
+
     @Builder
     public UserEntity(String userId, String userPw, String userNm, String userPic){
         this.userId = userId;
