@@ -1,5 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.schedule;
 
+import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleService;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleTabService;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.*;
@@ -15,6 +16,7 @@ import java.util.List;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
+    private final FollowerService followerService;
     private final ScheduleTabService scheduleTabService;
 
     @PostMapping("/")
@@ -30,13 +32,13 @@ public class ScheduleController {
     }
 
     @DeleteMapping("{id}")
-    public Boolean deleteGroup(@PathVariable Long id){
+    public Boolean deleteSchedule(@PathVariable Long id){
         scheduleService.delete(id);
         return true;
     }
 
-    @PostMapping("showUserSchedule")
-    public List<ScheduleResponseDto> showUserSchedule(@RequestBody ScheduleRequestDto responseDto){
-        return scheduleService.showUserSchedule(responseDto);
+    @PostMapping("showUserSchedule/{id}")
+    public List<ScheduleResponseDto> showUserSchedule(@PathVariable Long id, @RequestBody ScheduleDateRequestDto responseDto){
+        return scheduleService.showUserSchedule(responseDto, id, followerService.checkUserState(id));
     }
 }

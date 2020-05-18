@@ -70,12 +70,12 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public  List<ScheduleResponseDto> showUserSchedule(ScheduleRequestDto responseDto)
+    public  List<ScheduleResponseDto> showUserSchedule(ScheduleDateRequestDto responseDto, Long id, int state )
     {
-        UserEntity user = userService.findEntity(responseDto.getUserCd());
+        UserEntity user = userService.findEntity(id);
         return scheduleRepository.findByUserFkAndSchedulePublicStateLessThanEqualAndScheduleStrBetween(user,
-                responseDto.getState(),
-                responseDto.getFrommDate(),
+                state,
+                responseDto.getFromDate(),
                 responseDto.getToDate())
                 .stream()
                 .map(ScheduleResponseDto::new)
