@@ -8,6 +8,7 @@ import com.fairy_pitt.recordary.endpoint.user.dto.UserSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserUpdateRequestDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserPasswordHashService;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,11 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.List;
 
@@ -37,8 +42,21 @@ public class UserControllerTest {
     @Autowired
     private UserPasswordHashService userPasswordHashService;
 
+    private MockHttpSession mockHttpSession;
+    private MockHttpServletRequest mockHttpServletRequest;
+
+    @Before
+    public void setUp() throws Exception{
+        mockHttpSession = new MockHttpSession();
+        mockHttpServletRequest = new MockHttpServletRequest();
+        mockHttpServletRequest.setSession(mockHttpSession);
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockHttpServletRequest));
+    }
+
     @After
     public void tearDown() throws Exception{
+        mockHttpSession.clearAttributes();
+        mockHttpSession = null;
         userRepository.deleteAll();
     }
 
@@ -118,6 +136,7 @@ public class UserControllerTest {
         UserUpdateRequestDto requestDto = UserUpdateRequestDto.builder()
                 .userPw(expectedUserPw)
                 .userNm(expectedUserNm)
+                .userEx(expectedUserEx)
                 .build();
 
         String url = "http://localhost:" + port + "/user/ " + updateCd;
@@ -125,16 +144,16 @@ public class UserControllerTest {
         HttpEntity<UserUpdateRequestDto> requestDtoHttpEntity = new HttpEntity<>(requestDto);
 
         //when
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.PUT, requestDtoHttpEntity, String.class);
+        ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.PUT, requestDtoHttpEntity, Long.class);
 
-//        //then
-//        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-//        assertThat(responseEntity.getBody()).isEqualTo(staticUserId);
-//
-//        List<UserEntity> all = userRepository.findAll();
-//        assertThat(all.get(0).getUserPw()).isEqualTo(userPasswordHashService.getSHA256(expectedUserPw));
-//        assertThat(all.get(0).getUserNm()).isEqualTo(expectedUserNm);
-//        assertThat(all.get(0).getUserEx()).isEqualTo(expectedUserEx);
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isEqualTo(updateCd);
+
+        List<UserEntity> all = userRepository.findAll();
+        assertThat(all.get(0).getUserPw()).isEqualTo(userPasswordHashService.getSHA256(expectedUserPw));
+        assertThat(all.get(0).getUserNm()).isEqualTo(expectedUserNm);
+        assertThat(all.get(0).getUserEx()).isEqualTo(expectedUserEx);
     }
 
     @Test
@@ -151,8 +170,11 @@ public class UserControllerTest {
         //when
         ResponseEntity<UserResponseDto> responseEntity = restTemplate.postForEntity(url, requestDto, UserResponseDto.class);
 
+        mockHttpSession.setAttribute("loginUser", responseEntity.getBody().getUserCd());
+
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(((UserResponseDto)responseEntity.getBody()).getUserId()).isEqualTo(staticUserId);
+        assertThat((responseEntity.getBody()).getUserId()).isEqualTo(staticUserId);
+        assertThat(mockHttpSession.getAttribute("loginUser")).isEqualTo(responseEntity.getBody().getUserCd());
     }
 }

@@ -31,7 +31,7 @@ public class PostTagController {
         return postTagService.postTagUser(postCd);
     }
 
-    @GetMapping("/tag/{userCd}")
+    @GetMapping("/{userCd}/tagPost")
     public List<PostResponseDto> userTagPost(@PathVariable Long userCd){
         return postTagService.userTagPost(userCd);
     }
