@@ -25,7 +25,13 @@ public class MediaController {
     }
 
     @GetMapping("/{mediaCd}}")
-    public List<String> getMediaPath(@PathVariable Long mediaCd){
-        return mediaService.getMediaPath(mediaCd);
+    public List<String> getMediaPath(@PathVariable String mediaCd){
+        Long mediaTest = Long.parseLong(mediaCd);
+        return mediaService.getMediaPath(mediaTest);
+    }
+
+    @DeleteMapping("/{mediaCd}")
+    public void delete(@PathVariable Long mediaCd){
+        mediaService.delete(mediaCd);
     }
 }

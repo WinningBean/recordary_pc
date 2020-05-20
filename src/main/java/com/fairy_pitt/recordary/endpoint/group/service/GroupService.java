@@ -6,6 +6,7 @@ import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.GroupMemberRepository;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.endpoint.group.dto.*;
+import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final UserService userService;
     private final GroupMemberRepository groupMemberRepository;
+    private final S3UploadComponent s3UploadComponent;
 
     @Transactional
     public Long save(@RequestBody GroupSaveRequestDto requestDto) {
@@ -69,6 +71,7 @@ public class GroupService {
         GroupEntity groupEntity = groupRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
 
+        s3UploadComponent.profileDelete("group", id.toString());
         groupRepository.delete(groupEntity);
     }
 

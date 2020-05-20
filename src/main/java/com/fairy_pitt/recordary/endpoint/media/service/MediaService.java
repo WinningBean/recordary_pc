@@ -29,12 +29,17 @@ public class MediaService {
     }
 
     public List<String> getMediaPath(Long mediaCd){
-        MediaEntity mediaEntity = mediaRepository.findByMediaCd(mediaCd);
-        return this.findPath(mediaEntity.getMediaPath());
+        return this.findPath(findEntity(mediaCd).getMediaPath());
+    }
+
+    public void delete(Long mediaCd){
+        MediaEntity mediaEntity = findEntity(mediaCd);
+        s3UploadComponent.mediaDelete(mediaEntity.getMediaPath());
+        mediaRepository.delete(mediaEntity);
     }
 
     private List<String> findPath(String path){
-        return s3UploadComponent.listObject("media", path);
+        return s3UploadComponent.listObject(path);
     }
 
     public MediaEntity findEntity(Long mediaCd){

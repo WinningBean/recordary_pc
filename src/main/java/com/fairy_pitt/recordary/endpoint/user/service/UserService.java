@@ -71,6 +71,7 @@ public class UserService {
         UserEntity userEntity = Optional.ofNullable(userRepository.findByUserCd(userCd))
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. cd = " + userCd));
 
+        s3UploadComponent.profileDelete("user", userCd.toString());
         userRepository.delete(userEntity);
     }
 
