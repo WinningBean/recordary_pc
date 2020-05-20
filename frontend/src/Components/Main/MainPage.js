@@ -10,9 +10,6 @@ const MainPage = (props) => {
   const [data, setData] = useState({
     ...props,
   });
-  const [user, setUser] = useState({
-    ...props.data,
-  });
 
   console.log(data);
   if (!props.isLogin) {
@@ -24,9 +21,8 @@ const MainPage = (props) => {
       <div id='main-page'>
         <div id='main-wrap'>
           <Main data={data}></Main>
-          <Aside data={user}></Aside>
+          <Aside data={data.user}></Aside>
         </div>
-        {/* <MainPageButton /> */}
       </div>
     </>
   );
