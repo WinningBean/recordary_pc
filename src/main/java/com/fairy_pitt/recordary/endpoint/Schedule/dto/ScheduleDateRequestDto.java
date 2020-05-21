@@ -7,14 +7,17 @@ import java.util.Date;
 @Getter
 public class ScheduleDateRequestDto {
 
+    private  Long tabCd;
     private Date fromDate;
     private Date toDate;
 
    public ScheduleDateRequestDto(Date frommDate,
-                                 Date toDate)
+                                 Date toDate,
+                                 Long tabCd)
    {
        this.fromDate = frommDate;
        this.toDate = toDate;
+       this.tabCd = tabCd;
    }
 
 }

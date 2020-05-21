@@ -5,12 +5,14 @@ import com.fairy_pitt.recordary.common.entity.ScheduleMemberEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.pk.ScheduleMemberEntityPK;
 import com.fairy_pitt.recordary.common.repository.ScheduleMemberRepository;
-import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleMemberSaveRequestDto;
-import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleMemberUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.schedule.dto.*;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -29,11 +31,14 @@ public class ScheduleMemberService {
     }
 
     @Transactional
-    public Boolean save(ScheduleMemberSaveRequestDto requestDto)
+    public Boolean save(List<Long> userCd, Long ScheduleCd)
     {
-        UserEntity user = userService.findEntity(requestDto.getUserCd());
-        ScheduleEntity schedule = scheduleService.findEntity(requestDto.getScheduleCd());
-        scheduleMemberRepository.save(requestDto.toEntity(schedule, user));
+        ScheduleEntity schedule = scheduleService.findEntity(ScheduleCd);
+        for(Long temp : userCd) {
+            UserEntity user = userService.findEntity(temp);
+            ScheduleMemberSaveRequestDto requestDto = new ScheduleMemberSaveRequestDto();
+            scheduleMemberRepository.save(requestDto.toEntity(schedule, user));
+        }
         return true;
     }
 
@@ -47,26 +52,35 @@ public class ScheduleMemberService {
         return true;
     }
 
-
-/*    public Boolean scheduleMemberInsert(UserEntity user, ScheduleEntity schedule)
+    @Transactional(readOnly = true)
+    public List<ScheduleResponseDto> findMemberScheduleList(Long userCd, List<ScheduleResponseDto> responseDto, ScheduleDateRequestDto date)
     {
-        ScheduleMemberEntity scheduleMemberEntity = new ScheduleMemberEntity();
-        scheduleMemberEntity.setScheduleCodeFK(schedule);
-        scheduleMemberEntity.setUserCodeFK(user);
-        scheduleMemberEntity.setScheduleState(false);
+        UserEntity user = userService.findEntity(userCd);
+        Long currUserCd = userService.currentUserCd();
 
-        scheduleMemberRepository.save(scheduleMemberEntity);
-        return  true;
+        List<ScheduleResponseDto> schedule =  scheduleMemberRepository.findByUserFKAndAndScheduleState(user, true)
+                .stream()
+                .map(ScheduleResponseDto::new)
+                .collect(Collectors.toList());
+
+        if(!currUserCd.equals(userCd)) {
+            for (ScheduleResponseDto temp : schedule) {
+                int str = date.getFromDate().compareTo(temp.getScheduleStr());
+                int end = date.getToDate().compareTo(temp.getScheduleStr());
+                if (((str == 0 || str < 0) && temp.getSchedulePublicState() == 0) && ((end == 0 || end > 0) && temp.getSchedulePublicState() == 0)) {
+                    responseDto.add(temp);
+                }
+            }
+        }else {
+            for (ScheduleResponseDto temp : schedule) {
+                int str = date.getFromDate().compareTo(temp.getScheduleStr());
+                int end = date.getToDate().compareTo(temp.getScheduleStr());
+                if ((str == 0 || str < 0) && (end == 0 || end > 0)) {
+                    responseDto.add(temp);
+                }
+            }
+        }
+        return  responseDto;
     }
-
-    public Boolean scheduleMemberDelete(long userCode, long scheduleCode)
-    {
-        ScheduleMemberEntityPK scheduleMemberEntityPK = new ScheduleMemberEntityPK();
-        scheduleMemberEntityPK.setScheduleCodeFK(scheduleCode);
-        scheduleMemberEntityPK.setUserCodeFK(userCode);
-        scheduleMemberRepository.deleteById(scheduleMemberEntityPK);
-        return  true;
-    }*/
-
 
 }

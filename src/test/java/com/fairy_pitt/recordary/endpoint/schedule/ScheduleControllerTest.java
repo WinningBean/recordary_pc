@@ -1,8 +1,12 @@
 package com.fairy_pitt.recordary.endpoint.schedule;
 
 import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
+import com.fairy_pitt.recordary.common.entity.ScheduleMemberEntity;
+import com.fairy_pitt.recordary.common.entity.ScheduleTabEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.repository.ScheduleMemberRepository;
 import com.fairy_pitt.recordary.common.repository.ScheduleRepository;
+import com.fairy_pitt.recordary.common.repository.ScheduleTabRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleDateRequestDto;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleSaveRequestDto;
@@ -19,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -40,8 +45,16 @@ public class ScheduleControllerTest {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    ScheduleTabRepository scheduleTabRepository;
+
+    @Autowired
+    ScheduleMemberRepository scheduleMemberRepository;
+
     @After
     public void tearDown(){
+        scheduleMemberRepository.deleteAll();
+         scheduleTabRepository.deleteAll();
         scheduleRepository.deleteAll();
         userRepository.deleteAll();
     }
@@ -50,10 +63,33 @@ public class ScheduleControllerTest {
     @Test
     public void Schedule_등록된다() throws Exception {
         //given
+        UserEntity user = userRepository.save(UserEntity.builder()
+                .userId("testUser1")
+                .userPw("testPassword")
+                .userNm("테스트 유저1")
+                .build());
+
+        UserEntity user2 = userRepository.save(UserEntity.builder()
+                .userId("testUser12")
+                .userPw("testPassword")
+                .userNm("테스트 유저1")
+                .build());
+
+        UserEntity user3 = userRepository.save(UserEntity.builder()
+                .userId("testUser13")
+                .userPw("testPassword")
+                .userNm("테스트 유저1")
+                .build());
+
+
+
         String scheduleEx = "테스트 게시글";
         String scheduleNm = "Test 게시글";
+        List<Long> userCd = new ArrayList<>();
+        userCd.add(user2.getUserCd());
+        userCd.add(user3.getUserCd());
        // int postPublicState = 1;
-        Date scheduleStr = Timestamp.valueOf("2020-03-25 12:13:24");
+        Date scheduleStr = Timestamp.valueOf("2020-03-25 23:59:59");
         Date scheduleEnd = Timestamp.valueOf("2020-03-26 12:13:24");
 
         ScheduleSaveRequestDto requestDto = ScheduleSaveRequestDto.createScheduleBuilder()
@@ -64,6 +100,7 @@ public class ScheduleControllerTest {
                 .scheduleStr(scheduleStr)
                 .scheduleEnd(scheduleEnd)
                 .scheduleCol(null)
+                .scheduleMember(userCd)
                 .schedulePublicState(3)
                 .build();
 
@@ -111,7 +148,7 @@ public class ScheduleControllerTest {
 
         String scheduleNmChange = "테스트 게시글2";
         String scheduleExChange = "테스트 게시글2";
-        Date scheduleStr2 = Timestamp.valueOf("2020-04-25 12:13:24");
+        Date scheduleStr2 = Timestamp.valueOf("2020-04-25 23:59:59");
         Date scheduleEnd2 = Timestamp.valueOf("2020-04-26 12:13:24");
 
         ScheduleUpdateRequestDto requestDto = ScheduleUpdateRequestDto.updateScheduleBuilder()
@@ -151,6 +188,19 @@ public class ScheduleControllerTest {
 //                .userNm("테스트 유저1")
 //                .build());
 //
+//        UserEntity user2 = userRepository.save(UserEntity.builder()
+//                .userId("testUser2")
+//                .userPw("testPassword")
+//                .userNm("테스트 유저1")
+//                .build());
+//
+//
+//       ScheduleTabEntity tab = scheduleTabRepository.save(ScheduleTabEntity.builder()
+//                .tabNm("test")
+//                .tabCol(null)
+//                .userFk(user)
+//                .build());
+//
 //        String scheduleEx = "테스트 게시글";
 //        Date scheduleStr = Timestamp.valueOf("2020-03-25 12:13:24");
 //        Date scheduleEnd = Timestamp.valueOf("2020-03-26 12:13:24");
@@ -182,7 +232,7 @@ public class ScheduleControllerTest {
 //
 //        ScheduleEntity saveSchedule3 = scheduleRepository.save(ScheduleEntity.builder()
 //                .tabFK(null)
-//                .userFK(user)
+//                .userFK(user2)
 //                .scheduleNm("Test")
 //                .scheduleEx(scheduleEx)
 //                .scheduleStr(scheduleStr)
@@ -192,11 +242,11 @@ public class ScheduleControllerTest {
 //                .build());
 //
 //        ScheduleEntity saveSchedule4 = scheduleRepository.save(ScheduleEntity.builder()
-//                .tabFK(null)
+//                .tabFK(tab)
 //                .userFK(user)
 //                .scheduleNm("Test")
 //                .scheduleEx(scheduleEx)
-//                .scheduleStr(scheduleStr)
+//                .scheduleStr(scheduleStr2)
 //                .scheduleEnd(scheduleEnd)
 //                .scheduleCol(null)
 //                .schedulePublicState(0)
@@ -221,20 +271,36 @@ public class ScheduleControllerTest {
 //                .scheduleStr(scheduleStr2)
 //                .scheduleEnd(scheduleEnd2)
 //                .scheduleCol(null)
-//                .schedulePublicState(0)
+//                .schedulePublicState(2)
 //                .build());
 //
-//        Long userCd = user.getUserCd();
-//        Date fromDate = Timestamp.valueOf("2020-03-01 00:00:00");
-//        Date toDate = Timestamp.valueOf("2020-03-26 23:59:59");
+//        ScheduleEntity saveSchedule7 = scheduleRepository.save(ScheduleEntity.builder()
+//                .tabFK(null)
+//                .userFK(user2)
+//                .scheduleNm("Test")
+//                .scheduleEx(scheduleEx)
+//                .scheduleStr(scheduleStr2)
+//                .scheduleEnd(scheduleEnd2)
+//                .scheduleCol(null)
+//                .schedulePublicState(2)
+//                .build());
 //
-//        ScheduleDateRequestDto requestDto = new ScheduleDateRequestDto(fromDate,toDate);
+//        scheduleMemberRepository.save(ScheduleMemberEntity.builder().userFK(user2).scheduleFK(saveSchedule5).scheduleState(true).build());
+//        scheduleMemberRepository.save(ScheduleMemberEntity.builder().userFK(user2).scheduleFK(saveSchedule6).scheduleState(true).build());
+//        scheduleMemberRepository.save(ScheduleMemberEntity.builder().userFK(user2).scheduleFK(saveSchedule4).scheduleState(true).build());
+//
+//        Long tabCd = tab.getTabCd();
+//        Long userCd = user2.getUserCd();
+//        Date fromDate = Timestamp.valueOf("2020-04-01 00:00:00");
+//        Date toDate = Timestamp.valueOf("2020-04-26 23:59:59");
+//
+//        ScheduleDateRequestDto requestDto = new ScheduleDateRequestDto(fromDate,toDate,null);
 //
 //        String url = "http://localhost:" + port + "schedule/showUserSchedule/" + userCd ;
 //
 //        //when
 //        ResponseEntity<List> responseEntity = restTemplate.postForEntity(url,requestDto,List.class);
 //
-//        assertThat(responseEntity.getBody().size()).isEqualTo(4);
+//        assertThat(responseEntity.getBody().size()).isEqualTo(3);
 //    }
 }

@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -57,7 +58,6 @@ public class ScheduleMemberControllerTest {
                 .userNm("테스트 유저")
                 .build());
 
-
         String scheduleNm = "Test";
         String scheduleEx = "Testing";
         Date scheduleStr = Timestamp.valueOf("2020-03-25 12:13:24");
@@ -78,10 +78,11 @@ public class ScheduleMemberControllerTest {
 
         Long scheduleCd = scheduleEntity.getScheduleCd();
         Long userCd = saveUser.getUserCd();
+        List<Long> requestDto = new ArrayList<>();
+        requestDto.add(userCd);
+        //ScheduleMemberSaveRequestDto requestDto = new ScheduleMemberSaveRequestDto(scheduleCd, true);
 
-        ScheduleMemberSaveRequestDto requestDto = new ScheduleMemberSaveRequestDto(scheduleCd, userCd,true);
-
-        String url = "http://localhost:" + port + "/scheduleMember/" ;
+        String url = "http://localhost:" + port + "/scheduleMember/" + scheduleCd ;
 
         // HttpEntity<ScheduleUpdateRequestDto> requestDtoHttpEntity = new HttpEntity<>(requestDto);
 
