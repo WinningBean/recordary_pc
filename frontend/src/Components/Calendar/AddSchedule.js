@@ -128,10 +128,18 @@ export default ({ data, clickDate, onClose, onSuccess }) => {
         </div>
       </div>
       <DialogActions>
-        <PublicRange
-          onSetSelectedIndex={(index) => setInfo({ ...info, schedulePublicState: index })}
-          selectedIndex={info.schedulePublicState}
-        />
+        {info.scheduleMembers.length > 0 ? (
+          <PublicRange
+            options={['전체공개', '비공개']}
+            onSetSelectedIndex={(index) => setInfo({ ...info, schedulePublicState: index === 0 ? 0 : 3 })}
+            selectedIndex={info.schedulePublicState}
+          />
+        ) : (
+          <PublicRange
+            onSetSelectedIndex={(index) => setInfo({ ...info, schedulePublicState: index })}
+            selectedIndex={info.schedulePublicState}
+          />
+        )}
         <Button>취소</Button>
         <Button
           onClick={async () => {
@@ -157,6 +165,7 @@ export default ({ data, clickDate, onClose, onSuccess }) => {
               scheduleStr: str.getTime(),
               scheduleEnd: end.getTime(),
               scheduleCol: rgbToHex(color.r, color.g, color.b),
+              scheduleMember: info.scheduleMembers.map((value) => value.userCd),
               schedulePublicState: info.schedulePublicState,
             });
             try {
@@ -168,6 +177,7 @@ export default ({ data, clickDate, onClose, onSuccess }) => {
                   scheduleEx: info.scheduleEx,
                   scheduleStr: str.getTime(),
                   scheduleEnd: end.getTime(),
+                  scheduleMember: info.scheduleMembers.map((value) => value.userCd),
                   scheduleCol: rgbToHex(color.r, color.g, color.b),
                   schedulePublicState: info.schedulePublicState,
                 })

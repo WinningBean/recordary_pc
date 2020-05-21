@@ -870,7 +870,7 @@ const Calendar = (props) => {
                               position: 'absolute',
                               left: '0',
                               top: '7px',
-                              backgroundColor: '#9e5fff',
+                              backgroundColor: value.color,
                               width: '6px',
                               height: '6px',
                               borderRadius: '50%',
@@ -887,7 +887,7 @@ const Calendar = (props) => {
                               fontSize: '14px',
                             }}
                           >
-                            {value.ex}
+                            {value.nm}
                           </span>
                           <span
                             style={{
@@ -902,8 +902,12 @@ const Calendar = (props) => {
                               color: 'gray',
                             }}
                           >
+                            {dateFns.isSameDay(value.start, value.end)
+                              ? null
+                              : dateFns.format(value.start, 'M월 dd일 ')}
                             {dateFns.format(value.start, 'a ') === 'AM' ? '오전' : '오후'}
-                            {dateFns.format(value.start, 'h -')}
+                            {dateFns.format(value.start, 'h - ')}
+                            {dateFns.isSameDay(value.start, value.end) ? null : dateFns.format(value.end, 'M월 dd일 ')}
                             {dateFns.format(value.end, 'a ') === 'AM' ? '오전' : '오후'}
                             {dateFns.format(value.end, 'h')}
                           </span>
@@ -940,7 +944,7 @@ const Calendar = (props) => {
                 fontSize: '16px',
               }}
             >
-              <strong>{selectedDetailedSC !== null ? selectedDetailedSC.ex : null}</strong>
+              <strong>{selectedDetailedSC !== null ? selectedDetailedSC.nm : null}</strong>
               <div>
                 <PersonIcon fontSize='small' />
                 <span style={{ position: 'absolute', fontSize: '18px' }}>4</span>
@@ -966,7 +970,7 @@ const Calendar = (props) => {
           </div>
           {type === 0 || type === 2 ? (
             <div className='calendar-detailedsc-buttons'>
-              <div className='calendar-detailedsc-buttons-button' onClick={(userDate) => setScheduleEditOpen(true)}>
+              <div className='calendar-detailedsc-buttons-button' onClick={() => setScheduleEditOpen(true)}>
                 <CreateIcon fontSize='small' />
                 수정
               </div>
@@ -983,9 +987,24 @@ const Calendar = (props) => {
               />
               <div
                 className='calendar-detailedsc-buttons-button'
-                onClick={() => {
-                  setUserDate(userDate.filter((value) => value.cd !== selectedDetailedSC.cd));
-                  setDetailedSC(null);
+                onClick={async () => {
+                  setAlert(<SnackBar severity='info' content='일정 삭제중...' duration={999999} />);
+                  try {
+                    console.log(selectedDetailedSC.cd);
+                    await axios.delete(`/schedule/${selectedDetailedSC.cd}`);
+                    setUserDate(userDate.filter((value) => value.cd !== selectedDetailedSC.cd));
+                    setDetailedSC(null);
+                    setAlert(
+                      <SnackBar
+                        severity='success'
+                        content='일정이 수정되었습니다.'
+                        duration={1000}
+                        onClose={() => setAlert(null)}
+                      />
+                    );
+                  } catch (error) {
+                    setAlert(<SnackBar severity='error' content={error} onClose={() => setAlert(null)} />);
+                  }
                 }}
               >
                 <DeleteIcon fontSize='small' />
