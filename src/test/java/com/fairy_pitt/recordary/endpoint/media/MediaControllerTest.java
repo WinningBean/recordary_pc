@@ -68,6 +68,8 @@ public class MediaControllerTest {
 
     @AfterEach
     void tearDown() {
+        mediaRepository.deleteAll();
+        userRepository.deleteAll();
         s3Mock.shutdown();
     }
 

@@ -5,14 +5,16 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import PublicIcon from '@material-ui/icons/Public';
 
-const options = ['전체공개', '팔로워만', '친구만', '나만보기'];
-
 // onSetSelectedIndex={(index) => setInfo({ ...info, schedulePublicState: index })}
 // state 변경 함수 props
 // selectedIndex={info.schedulePublicState}
 // 해당 index state
 
-export default function PublicRange({ onSetSelectedIndex, selectedIndex }) {
+export default function PublicRange({
+  onSetSelectedIndex,
+  selectedIndex,
+  options = ['전체공개', '팔로워만', '친구만', '나만보기'],
+}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   // const [selectedIndex, setSelectedIndex] = React.useState(0);
 
