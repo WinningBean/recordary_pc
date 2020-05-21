@@ -7,17 +7,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ScheduleTabResponseDto {
+    private Long scheduleTabCd;
+    private String scheduleTabNm;
+    private String scheduleTabColor;
 
-    private Long tabCd;
-    private Long userCd;
-    private String tabNm;
-    private String tabCol;
-
-    public ScheduleTabResponseDto(ScheduleTabEntity entity)
-    {
-        this.tabCd = entity.getTabCd();
-        this.tabCol = entity.getTabCol();
-        this.tabNm = entity.getTabNm();
-        this.userCd = entity.getUserFk().getUserCd();
+    public ScheduleTabResponseDto(ScheduleTabEntity scheduleTabEntity){
+        this.scheduleTabCd = scheduleTabEntity.getTabCd();
+        this.scheduleTabNm = scheduleTabEntity.getTabNm();
+        this.scheduleTabColor = scheduleTabEntity.getTabCol();
     }
 }

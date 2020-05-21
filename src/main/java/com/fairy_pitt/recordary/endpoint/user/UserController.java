@@ -48,9 +48,14 @@ public class UserController {
         return userCd;
     }
 
-    @GetMapping("/{userId}")
-    public UserResponseDto findById(@PathVariable String userId){
-        return userService.findById(userId);
+    @GetMapping("/{userCd}")
+    public UserResponseDto findById(@PathVariable Long userCd){
+        return userService.findByCd(userCd);
+    }
+
+    @GetMapping("/profile/{userId}")
+    public UserProfileResponseDto getProfile(@PathVariable String userId){
+        return userService.getProfile(userId);
     }
 
     @GetMapping("/search/{inputNm}")

@@ -4,10 +4,7 @@ import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleResponseDto;
 import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
-import com.fairy_pitt.recordary.endpoint.user.dto.UserLoginRequestDto;
-import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
-import com.fairy_pitt.recordary.endpoint.user.dto.UserSaveRequestDto;
-import com.fairy_pitt.recordary.endpoint.user.dto.UserUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -76,6 +73,13 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public UserProfileResponseDto getProfile(String userId){
+        UserEntity userEntity = userRepository.findByUserId(userId);
+        if (userEntity == null) return null;
+        return new UserProfileResponseDto(userEntity);
+    }
+
+    @Transactional(readOnly = true)
     public Boolean existId(String inputId){
         return Optional.ofNullable(userRepository.findByUserId(inputId)).isPresent();
     }
@@ -124,8 +128,19 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public UserResponseDto findByCd(Long userCd){
+        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserCd(userCd))
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. cd = " + userCd));
+
+        if (userEntity == null) return null;
+        return new UserResponseDto(userEntity);
+    }
+
+    @Transactional(readOnly = true)
     public UserResponseDto findById(String userId){
-        UserEntity userEntity = userRepository.findByUserId(userId);
+        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(userId))
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + userId));
+
         if (userEntity == null) return null;
         return new UserResponseDto(userEntity);
     }
