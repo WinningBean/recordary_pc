@@ -14,7 +14,7 @@ import GroupMemberSearch from '../Group/GroupMemberSearch';
 import AlertDialog from '../Other/AlertDialog';
 import Snackbar from '../UI/Snackbar';
 
-import { addHours, startOfDay, endOfDay } from 'date-fns';
+import { addHours, startOfDay, endOfDay, startOfSecond } from 'date-fns';
 
 import axios from 'axios';
 
@@ -28,7 +28,7 @@ function rgbToHex(r, g, b) {
 }
 
 // 255,197,0
-export default ({ data, onClose, onSuccess }) => {
+export default ({ data, clickDate, onClose, onSuccess }) => {
   const [color, setColor] = useState({
     r: 255,
     g: 197,
@@ -41,8 +41,8 @@ export default ({ data, onClose, onSuccess }) => {
     userCd: data.userCd,
     scheduleNm: '',
     scheduleEx: '',
-    scheduleStr: new Date(),
-    scheduleEnd: addHours(new Date(), 1),
+    scheduleStr: clickDate,
+    scheduleEnd: addHours(clickDate, 1),
     schedulePublicState: 0,
     scheduleMembers: [],
   });
@@ -138,7 +138,7 @@ export default ({ data, onClose, onSuccess }) => {
             setDialog(<Snackbar severit='info' content='데이터 요청중...' onClose={() => setDialog(null)} />);
 
             const str = switchInfo.str ? startOfDay(info.scheduleStr) : info.scheduleStr;
-            const end = switchInfo.end ? endOfDay(info.scheduleEnd) : info.scheduleEnd;
+            const end = switchInfo.end ? startOfSecond(endOfDay(info.scheduleEnd)) : info.scheduleEnd;
             if (str >= end) {
               setDialog(
                 <AlertDialog
