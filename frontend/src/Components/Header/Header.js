@@ -79,8 +79,8 @@ class Header extends React.Component {
           </div>
           <ToDoList />
           <div className='profile-icon'>
-            {/* <Link to={`/profile/${this.props.userId}`}> */}
-            <Link to={`/profile/wsh`}>
+            <Link to={`/profile/${this.props.userId}`}>
+              {/* <Link to={`/profile/wsh`}> */}
               <AccountCircleIcon style={{ fontSize: 40, color: 'white' }}>Profile</AccountCircleIcon>
             </Link>
           </div>
