@@ -44,7 +44,7 @@ public class PostLikeControllerTest {
     }
 
     @Test
-    public void PostLike_등록된다() throws Exception{ // session
+    public void PostLike_등록된다() throws Exception{
         //given
         UserEntity user1 = userRepository.save(UserEntity.builder()
                 .userId("testUser1")
@@ -66,18 +66,18 @@ public class PostLikeControllerTest {
                 .postEndYMD("20200311")
                 .build());
 
-        String url = "http://localhost:" + port + "/post/" + postEntity.getPostCd() + "/like";
+        String url = "http://localhost:" + port + "/post/" + postEntity.getPostCd() + "/like/" + user2.getUserCd();
 
-//        //when
-//        ResponseEntity<Boolean> responseEntity = restTemplate.getForEntity(url, Boolean.class);
-//
-//        //then
-//        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-//        assertThat(responseEntity.getBody()).isEqualTo(true);
-//
-//        List<PostLikeEntity> all = postLikeRepository.findAll();
-//        assertThat(all.get(0).getPostFK().getPostEx()).isEqualTo(postEntity.getPostEx());
-//        assertThat(all.get(0).getUserFK().getUserId()).isEqualTo(user2.getUserId());
+        //when
+        ResponseEntity<Boolean> responseEntity = restTemplate.getForEntity(url, Boolean.class);
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isEqualTo(true);
+
+        List<PostLikeEntity> all = postLikeRepository.findAll();
+        assertThat(all.get(0).getPostFK().getPostCd()).isEqualTo(postEntity.getPostCd());
+        assertThat(all.get(0).getUserFK().getUserCd()).isEqualTo(user2.getUserCd());
     }
 
     @Test
@@ -194,7 +194,7 @@ public class PostLikeControllerTest {
                 .userFK(user1)
                 .build());
 
-        String url = "http://localhost:" + port + "/post/like/" + user1.getUserCd();
+        String url = "http://localhost:" + port + "/post/" + user1.getUserCd() + "/likePost";
 
         //when
         ResponseEntity<List> responseEntity = restTemplate.getForEntity(url, List.class);

@@ -100,6 +100,14 @@ class Profile extends React.Component {
       isLoading: false,
       type: type,
     });
+
+    try {
+      const UserPostList = (await axios.get(`/post/user/${this.state.info.userCd}`)).data;
+      this.setState({ post: JSON.parse(JSON.stringify(UserPostList)) });
+      console.log(this.state.post);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   getGroupInfo = async () => {
@@ -580,14 +588,10 @@ class Profile extends React.Component {
                     this.setState({ mediaPathProfileArr: [] });
                     try {
                       if (this.props.isLogin) {
-                        const UserPostList = (await axios.get(`/post/user/${this.state.info.userCd}`)).data;
-                        this.setState({ post: JSON.parse(JSON.stringify(UserPostList)) });
-                        console.log(this.state.post);
-
                         this.state.post.map(async (value, index) => {
                           console.log(value);
                           if (value.mediaFK !== null) {
-                            const mediaPath = (await axios.get(`/media/${value.mediaFK.mediaCd}`)).data;
+                            const mediaPath = (await axios.get(`/media/${value.mediaFK.mediaCd}}`)).data;
                             console.log(mediaPath);
                             // console.log(mediaPath[0]);
                             this.setState({ mediaPathProfileArr: this.state.mediaPathProfileArr.concat(mediaPath[1]) });
@@ -628,7 +632,7 @@ class Profile extends React.Component {
                           this.state.post.map(async (val, i) => {
                             try {
                               if (val.mediaFK !== null) {
-                                const mediaSrc = (await axios.get(`/media/${val.mediaFK.mediaCd}`)).data;
+                                const mediaSrc = (await axios.get(`/media/${val.mediaFK.mediaCd}}`)).data;
                                 {
                                   console.log(this.state.postMediaList);
                                 }
@@ -668,11 +672,25 @@ class Profile extends React.Component {
                 {console.log(this.state.post)}
               </>
             ) : (
-              this.state.post.map((value) => (
-                <div className='profile-ScheduleTimeLine'>
-                  <TimelineWeekSchedule key={value.post_cd} data={value} />
-                </div>
-              ))
+              this.state.post.map((value) => {
+                if (value.mediaFK === null) {
+                  if (value.scheduleFK !== null && value.postStrYMD !== null) {
+                    return (
+                      <div className='profile-ScheduleTimeLine'>
+                        <TimelineWeekSchedule key={value.postCd} data={value} postForm={1} />
+                      </div>
+                    );
+                  } else if (value.scheduleFK === null && value.postStrYMD !== null) {
+                    return (
+                      <div className='profile-ScheduleTimeLine'>
+                        <TimelineWeekSchedule key={value.postCd} data={value} postForm={2} />
+                      </div>
+                    );
+                  }
+                } else {
+                  return <Timeline data={value} imgList={this.state.postMediaList} />;
+                }
+              })
             )}
             {this.state.alert}
             {this.state.isOpenAddTab ? (

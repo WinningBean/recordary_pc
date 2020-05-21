@@ -15,14 +15,14 @@ public class PostLikeController {
 
     private final PostLikeService postLikeService;
 
-    @GetMapping("/{postCd}/like")
-    public Boolean postLike(@PathVariable Long postCd){
-        return postLikeService.save(postCd);
+    @GetMapping("/{postCd}/like/{userCd}")
+    public Boolean postLike(@PathVariable Long postCd, @PathVariable Long userCd){
+        return postLikeService.save(postCd, userCd);
     }
 
-    @DeleteMapping("/{postCd}/unLike")
-    public Long postUnLike(@PathVariable Long postCd){
-        postLikeService.delete(postCd);
+    @DeleteMapping("/{postCd}/unLike/{userCd}")
+    public Long postUnLike(@PathVariable Long postCd, @PathVariable Long userCd){
+        postLikeService.delete(postCd, userCd);
         return postCd;
     }
 
@@ -31,7 +31,7 @@ public class PostLikeController {
         return postLikeService.postLikeUser(postCd);
     }
 
-    @GetMapping("/like/{userCd}")
+    @GetMapping("/{userCd}/likePost")
     public List<PostResponseDto> userLikePost(@PathVariable Long userCd){
         return postLikeService.userLikePost(userCd);
     }

@@ -178,7 +178,7 @@ public class PostTagControllerTest {
                 .userFK(user1)
                 .build());
 
-        String url = "http://localhost:" + port + "/post/tag/" + user1.getUserCd();
+        String url = "http://localhost:" + port + "/post/" + user1.getUserCd() + "/tagPost";
 
         //when
         ResponseEntity<List> responseEntity = restTemplate.getForEntity(url, List.class);

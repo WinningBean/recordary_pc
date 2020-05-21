@@ -26,19 +26,19 @@ public class PostLikeService {
     private final UserService userService;
 
     @Transactional
-    public Boolean save(Long postCd){
+    public Boolean save(Long postCd, Long userCd){
         PostLikeEntity postLikeEntity = PostLikeEntity.builder()
                 .postFK(postService.findEntity(postCd))
-                .userFK(userService.currentUser())
+                .userFK(userService.findEntity(userCd))
                 .build();
 
         return Optional.ofNullable(postLikeRepository.save(postLikeEntity)).isPresent();
     }
 
     @Transactional
-    public void delete(Long postCd){
+    public void delete(Long postCd, Long userCd){
         PostLikeEntity postLikeEntity = Optional.ofNullable(
-                postLikeRepository.findByPostFKAndUserFK(postService.findEntity(postCd), userService.currentUser()))
+                postLikeRepository.findByPostFKAndUserFK(postService.findEntity(postCd), userService.findEntity(userCd)))
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물에 좋아요를 하지 않았습니다. code = " + postCd));
         postLikeRepository.delete(postLikeEntity);
     }
