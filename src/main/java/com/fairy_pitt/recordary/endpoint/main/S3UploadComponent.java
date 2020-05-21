@@ -3,7 +3,6 @@ package com.fairy_pitt.recordary.endpoint.main;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
 import lombok.RequiredArgsConstructor;
@@ -24,16 +23,20 @@ import java.util.*;
 @Component
 public class S3UploadComponent {
 
-    private final AmazonS3Client amazonS3Client;
-    private final AmazonS3 amazonS3 = AmazonS3ClientBuilder.standard()
+    private AmazonS3 amazonS3Client = AmazonS3ClientBuilder.standard()
             .withRegion(Regions.AP_NORTHEAST_2)
             .build();
 
     @Value("${cloud.aws.s3.bucket}") //해당 값은 application.yml 에서 작성한 cloud.aws.credentials.accessKey 값을 가져옵니다.
     private String bucket;
 
-    private void createFolder(String folderName) {
-        amazonS3.putObject(bucket, folderName + "/", new ByteArrayInputStream(new byte[0]), new ObjectMetadata());
+    public S3UploadComponent(final AmazonS3 amazonS3Client, final String bucket) {
+        this.amazonS3Client = amazonS3Client;
+        this.bucket = bucket;
+    }
+
+    public void createFolder(String folderName) {
+        amazonS3Client.putObject(bucket, folderName + "/", new ByteArrayInputStream(new byte[0]), new ObjectMetadata());
     }
 
     public String mediaEntityUpload(MultipartFile[] multipartFiles, Long id) throws IOException {
@@ -58,7 +61,7 @@ public class S3UploadComponent {
         //업로드된 파일의 S3 URL 주소를 반환
     }
 
-    private String upload(MultipartFile multipartFile, String fileName) throws IOException {//MultipartFile 을 전달 받고
+    public String upload(MultipartFile multipartFile, String fileName) throws IOException {//MultipartFile 을 전달 받고
         File uploadFile = convert(multipartFile)//S3에 전달할 수 있도록 MultiPartFile 을 File 로 전환
                 .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
         //S3에 MultipartFile 타입은 전송이 안됨
@@ -85,10 +88,12 @@ public class S3UploadComponent {
     {
         List<String> resultList = new ArrayList<>();
         ObjectListing objectListing = amazonS3Client.listObjects(bucket, preFix);
+        int folderCount = 0;
         for (S3ObjectSummary os : objectListing.getObjectSummaries()){
-            resultList.add(amazonS3Client.getUrl(bucket, os.getKey()).toString());
+            if (folderCount != 0) resultList.add(amazonS3Client.getUrl(bucket, os.getKey()).toString());
+            folderCount++;
         }
-        return  resultList;
+        return resultList;
     }
 
     private Boolean isValidObject(String objectName) throws AmazonClientException{
@@ -110,21 +115,21 @@ public class S3UploadComponent {
     }
 
     // 파일 삭제
-    private void objectDelete(String objectName) {
+    public void delete(String objectName) {
         amazonS3Client.deleteObject(bucket, objectName);
     }
 
     public void profileDelete(String dirName, String fileName) throws AmazonClientException {
         String objectName = dirName + "/" + fileName;
-        if (isValidObject(objectName)) objectDelete(objectName);
+        if (isValidObject(objectName)) delete(objectName);
     }
 
     public void mediaDelete(String preFix){
         ObjectListing objectListing = amazonS3Client.listObjects(bucket, preFix);
         for (S3ObjectSummary os : objectListing.getObjectSummaries()){
-            objectDelete(os.getKey());
+            delete(os.getKey());
         }
-        objectDelete(preFix);
+        delete(preFix);
     }
 
 //    public String update(String currentFilePath, MultipartFile multipartFile) throws IOException {
