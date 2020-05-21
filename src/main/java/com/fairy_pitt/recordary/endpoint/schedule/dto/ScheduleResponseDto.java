@@ -1,6 +1,7 @@
 package com.fairy_pitt.recordary.endpoint.schedule.dto;
 
 import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
+import com.fairy_pitt.recordary.common.entity.ScheduleMemberEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,5 +33,16 @@ public class ScheduleResponseDto {
         this.scheduleCol = entity.getScheduleCol();
         if (entity.getTabFK() != null) this.tabCol = entity.getTabFK().getTabCol();
         this.schedulePublicState = entity.getSchedulePublicState();
+    }
+
+    public ScheduleResponseDto(ScheduleMemberEntity entity)
+    {
+        //this.userCd = entity.getScheduleFK().getUserFk().getUserCd();
+        this.scheduleNm = entity.getScheduleFK().getScheduleNm();
+        this.scheduleEx = entity.getScheduleFK().getScheduleEx();
+        this.scheduleStr = entity.getScheduleFK().getScheduleStr();
+        this.scheduleEnd = entity.getScheduleFK().getScheduleEnd();
+        this.scheduleCol = entity.getScheduleFK().getScheduleCol();
+        this.schedulePublicState = entity.getScheduleFK().getSchedulePublicState();
     }
 }

@@ -163,3 +163,18 @@
   align-items: center;
   cursor: pointer;
 }
+
+.animation {
+  animation-name: ani;
+  animation-duration: 0.3s;
+  animation-delay: 0;
+}
+
+@keyframes ani {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 100%;
+  }
+}

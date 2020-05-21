@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -21,6 +22,7 @@ public class ScheduleSaveRequestDto {
     private Date scheduleEnd;
     private String scheduleCol;
     private int schedulePublicState;
+    private List<Long> scheduleMember;
 
     @Builder(builderClassName = "createScheduleBuilder", builderMethodName = "createScheduleBuilder")
     public ScheduleSaveRequestDto(Long tabFK,
@@ -30,7 +32,8 @@ public class ScheduleSaveRequestDto {
                                   Date scheduleStr,
                                   Date scheduleEnd,
                                   String scheduleCol,
-                                  int schedulePublicState) {
+                                  int schedulePublicState,
+                                  List<Long> scheduleMember) {
         this.tabCd = tabFK;
         this.userCd = userFk;
         this.scheduleNm = scheduleNm;
@@ -39,6 +42,7 @@ public class ScheduleSaveRequestDto {
         this.scheduleEnd = scheduleEnd;
         this.scheduleCol = scheduleCol;
         this.schedulePublicState = schedulePublicState;
+        this.scheduleMember = scheduleMember;
     }
 
     public ScheduleEntity toEntity(ScheduleTabEntity Tab,

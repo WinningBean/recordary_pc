@@ -8,7 +8,6 @@ import PostMediaScheduleAppend from './PostMediaScheduleAppend';
 
 import ScrollToTopOnMount from '../Other/ScrollToTopOnMount';
 import Follower from './Follower';
-import AddSchedule from './AddSchedule';
 import AddTab from './AddTab';
 import Header from '../../Containers/Header/Header';
 import Calendar from '../Calendar/Calendar';
@@ -72,8 +71,6 @@ class Profile extends React.Component {
       post: [],
       mediaPathProfileArr: [],
       postMediaList: [],
-      addScList: [],
-      isOpenAddSc: false,
       isOpenAddTab: false,
     };
   }
@@ -224,6 +221,7 @@ class Profile extends React.Component {
                             style={{
                               backgroundColor: 'rgba(255,197,0)',
                               opacity: this.state.clickTab === undefined ? '100%' : '60%',
+                              fontWeight: 'bold',
                             }}
                             onClick={() => {
                               if (this.state.clickTab === undefined) {
@@ -231,7 +229,9 @@ class Profile extends React.Component {
                               }
                               this.setState({ clickTab: undefined });
                             }}
-                          />
+                          >
+                            ALL
+                          </TabButton>
                         </li>
                         {this.state.tab.map((value, index) => (
                           <li
@@ -261,7 +261,7 @@ class Profile extends React.Component {
                           }}
                         >
                           <TabButton
-                            style={{ justifyContent: 'flex-start' }}
+                            style={{ justifyContent: 'flex-start', backgroundColor: 'rgba(0, 0, 0, 0.04)' }}
                             onClick={() => {
                               this.setState({ isOpenAddTab: true });
                             }}
@@ -558,12 +558,18 @@ class Profile extends React.Component {
                     <Calendar
                       type={this.state.type}
                       info={this.state.info}
-                      addScList={this.state.addScList}
-                      onAddSc={() => {
+                      clickTab={this.state.clickTab}
+                      onSuccessAlert={() =>
                         this.setState({
-                          isOpenAddSc: true,
-                        });
-                      }}
+                          alert: (
+                            <Snackbar
+                              severity='success'
+                              content='일정등록 완료'
+                              onClose={() => this.setState({ alert: null })}
+                            />
+                          ),
+                        })
+                      }
                     />
                   </div>
                 </div>
@@ -687,26 +693,6 @@ class Profile extends React.Component {
               })
             )}
             {this.state.alert}
-            {this.state.isOpenAddSc ? (
-              <AddSchedule
-                data={this.state.info}
-                onClose={() => this.setState({ isOpenAddSc: false })}
-                onSuccess={(newSc) =>
-                  this.setState({
-                    ...this.state,
-                    isOpenAddSc: false,
-                    addScList: this.state.addScList.concat(newSc),
-                    alert: (
-                      <Snackbar
-                        severity='success'
-                        content='일정등록 완료'
-                        onClose={() => this.setState({ alert: null })}
-                      />
-                    ),
-                  })
-                }
-              />
-            ) : null}
             {this.state.isOpenAddTab ? (
               <AddTab
                 userCd={this.state.info.userCd}

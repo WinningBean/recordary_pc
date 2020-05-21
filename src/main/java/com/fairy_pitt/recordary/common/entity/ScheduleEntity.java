@@ -56,7 +56,6 @@ public class ScheduleEntity extends BaseTimeEntity{
    @Builder
    public ScheduleEntity(ScheduleTabEntity tabFK,
                          UserEntity userFK,
-                         PostEntity postFK,
                          String scheduleNm,
                          String scheduleEx,
                          Date scheduleStr,
