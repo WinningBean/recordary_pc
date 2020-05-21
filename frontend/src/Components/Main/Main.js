@@ -6,49 +6,46 @@ import Timeline from '../Timeline/Timeline';
 import TimelineWeekSchedule from '../Timeline/TimelineWeekSchedule';
 
 const Main = (props) => {
-  const [data, setData] = useState(props.data);
-  const [postForm, setPostForm] = useState(0);
-  const [timeLine, setTimeLine] = useState(undefined);
-
   useEffect(() => {
-    (async () => {
-      try {
-        const timelineData = await axios.get(`/post/timeLine/${data.userCd}`);
-        setTimeLine(timelineData);
-        console.log(timeLine);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, []);
+    console.log(props);
+  });
+  const [mediaList, setMediaList] = useState([]);
 
-  const timelineList = (() => {
-    // console.log(data);
-    // if (data.post === undefined) {
-    //   return null;
-    // }
-    // return data.post.map((value) => {
-    //   // if (value.mediaCd !== null ? (this.state.postForm = 0) : (this.state.postForm = 1))
-    //   switch (postForm) {
-    //     case 0:
-    //       return (
-    //         <div className='timeline-Margin' key={value.postOriginCd}>
-    //           <Timeline data={value} />
-    //         </div>
-    //       );
-    //     default:
-    //       return (
-    //         <div className='timeline-Margin' key={value.postOriginCd}>
-    //           <TimelineWeekSchedule data={value}></TimelineWeekSchedule>
-    //         </div>
-    //       );
-    //   }
-    // });
-  })();
+  const sendImgList = async (index) => {
+    try {
+      // const postMediaList = [];
+      const mediaSrcList = (await axios.get(`/media/${props.timeline[index].mediaFK.mediaCd}}`)).data;
+      // for (let i = 1; i < mediaSrcList.length; i++) {
+      //   postMediaList.push(mediaSrcList[i]);
+      // }
+      // console.log(postMediaList);
+      // setMediaList(mediaSrcList);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <main>
-      <div id='timeline-list'>{timelineList}</div>
+      <div id='timeline-list'>
+        {props.timeline.map((value, index) => {
+          if (value.mediaFK !== null) {
+            sendImgList(index);
+            // console.log(mediaList);
+            return (
+              <div className='timeline-Margin' key={value.postCd}>
+                <Timeline data={value} imgList={mediaList} />
+              </div>
+            );
+          } else {
+            return (
+              <div className='timeline-Margin' key={value.postCd}>
+                {/* <TimelineWeekSchedule data={value}></TimelineWeekSchedule> */}
+              </div>
+            );
+          }
+        })}
+      </div>
     </main>
   );
 };

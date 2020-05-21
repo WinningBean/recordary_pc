@@ -104,9 +104,13 @@ class Profile extends React.Component {
       type: type,
     });
 
-    const UserPostList = (await axios.get(`/post/user/${this.state.info.userCd}`)).data;
-    this.setState({ post: JSON.parse(JSON.stringify(UserPostList)) });
-    console.log(this.state.post);
+    try {
+      const UserPostList = (await axios.get(`/post/user/${this.state.info.userCd}`)).data;
+      this.setState({ post: JSON.parse(JSON.stringify(UserPostList)) });
+      console.log(this.state.post);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   getGroupInfo = async () => {
@@ -581,7 +585,7 @@ class Profile extends React.Component {
                         this.state.post.map(async (value, index) => {
                           console.log(value);
                           if (value.mediaFK !== null) {
-                            const mediaPath = (await axios.get(`/media/${value.mediaFK.mediaCd}`)).data;
+                            const mediaPath = (await axios.get(`/media/${value.mediaFK.mediaCd}}`)).data;
                             console.log(mediaPath);
                             // console.log(mediaPath[0]);
                             this.setState({ mediaPathProfileArr: this.state.mediaPathProfileArr.concat(mediaPath[1]) });
@@ -622,7 +626,7 @@ class Profile extends React.Component {
                           this.state.post.map(async (val, i) => {
                             try {
                               if (val.mediaFK !== null) {
-                                const mediaSrc = (await axios.get(`/media/${val.mediaFK.mediaCd}`)).data;
+                                const mediaSrc = (await axios.get(`/media/${val.mediaFK.mediaCd}}`)).data;
                                 {
                                   console.log(this.state.postMediaList);
                                 }
@@ -677,7 +681,7 @@ class Profile extends React.Component {
                       </div>
                     );
                   }
-                } else if (value.mediaFK !== null && value.scheduleFK !== null) {
+                } else {
                   return <Timeline data={value} imgList={this.state.postMediaList} />;
                 }
               })

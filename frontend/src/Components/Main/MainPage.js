@@ -2,16 +2,33 @@ import React, { useState, useEffect } from 'react';
 import './mainPage.css';
 import Main from './Main';
 import Aside from './Aside';
-import MainPageButton from './MainPageButton';
 import Header from '../../Containers/Header/Header';
 import { Redirect } from 'react-router-dom';
+import axios from 'axios';
 
 const MainPage = (props) => {
   const [data, setData] = useState({
-    ...props,
+    ...props.data,
   });
+  const [timeline, setTimeline] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const timeLineDataList = (await axios.get(`/post/timeLine/${data.userCd}`)).data;
+        if (timeLineDataList.length < 0) {
+          return null;
+        } else {
+          setTimeline(JSON.parse(JSON.stringify(timeLineDataList)));
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    })();
+  }, []);
 
   console.log(data);
+
   if (!props.isLogin) {
     return <Redirect to='/' />;
   }
@@ -20,8 +37,9 @@ const MainPage = (props) => {
       <Header />
       <div id='main-page'>
         <div id='main-wrap'>
-          <Main data={data}></Main>
-          <Aside data={data.user}></Aside>
+          {console.log(timeline)}
+          <Main data={data} timeline={timeline} />
+          <Aside data={data}></Aside>
         </div>
       </div>
     </>

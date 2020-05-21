@@ -127,6 +127,8 @@ const Timeline = (props) => {
 
   const pictureList = useMemo(() => {
     console.log('render pic');
+    console.log(imgList.length);
+    console.log(imgList[0]);
     if (imgList.length < 2) {
       return <img alt='timeline-img' src={imgList[0]} />;
     } else {
