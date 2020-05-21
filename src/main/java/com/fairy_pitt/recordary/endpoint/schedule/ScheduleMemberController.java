@@ -8,6 +8,8 @@ import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleMemberUpdateReques
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RequiredArgsConstructor
 @RequestMapping("scheduleMember")
@@ -17,10 +19,10 @@ public class ScheduleMemberController {
     private final ScheduleService scheduleService;
     private final ScheduleMemberService scheduleMemberService;
 
-    @PostMapping("/")
-    public Boolean save(@RequestBody ScheduleMemberSaveRequestDto requestDto){
+    @PostMapping("/{id}")
+    public Boolean save(@RequestBody List<Long> requestDto, @PathVariable Long id){
 
-        scheduleMemberService.save(requestDto);
+        scheduleMemberService.save(requestDto, id);
         return true;
     }
 

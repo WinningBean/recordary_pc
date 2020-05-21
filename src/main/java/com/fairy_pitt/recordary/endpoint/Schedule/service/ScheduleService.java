@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Service
 @RequestMapping("schedule")
 @RequiredArgsConstructor
-public class ScheduleService {
+public class ScheduleService implements Comparator< ScheduleResponseDto > {
 
     private final ScheduleRepository scheduleRepository;
     private final ScheduleTabRepository scheduleTabRepository;
@@ -73,13 +73,29 @@ public class ScheduleService {
     public  List<ScheduleResponseDto> showUserSchedule(ScheduleDateRequestDto responseDto, Long id, int state )
     {
         UserEntity user = userService.findEntity(id);
-        return scheduleRepository.findByUserFkAndSchedulePublicStateLessThanEqualAndScheduleStrBetween(user,
-                state,
-                responseDto.getFromDate(),
-                responseDto.getToDate())
-                .stream()
-                .map(ScheduleResponseDto::new)
-                .collect(Collectors.toList());
+        List<ScheduleResponseDto> schedule;
+
+        if(responseDto.getTabCd() == null) {
+          schedule = scheduleRepository.findByUserFkAndSchedulePublicStateLessThanEqualAndScheduleStrBetween(user,
+                    state,
+                    responseDto.getFromDate(),
+                    responseDto.getToDate())
+                    .stream()
+                    .map(ScheduleResponseDto::new)
+                    .collect(Collectors.toList());
+        }else {
+            ScheduleTabEntity tab = scheduleTabRepository.findByTabCd(responseDto.getTabCd());
+            schedule = scheduleRepository.findByUserFkAndTabFKAndSchedulePublicStateLessThanEqualAndScheduleStrBetween(user,
+                    tab,
+                    state,
+                    responseDto.getFromDate(),
+                    responseDto.getToDate())
+                    .stream()
+                    .map(ScheduleResponseDto::new)
+                    .collect(Collectors.toList());
+        }
+
+        return scheduleSort(schedule);
     }
 
 
@@ -93,7 +109,18 @@ public class ScheduleService {
 
 
     public ScheduleEntity findEntity(Long ScheduleCd){
+
         return scheduleRepository.findByScheduleCd(ScheduleCd);
     }
 
+    private List<ScheduleResponseDto> scheduleSort(List<ScheduleResponseDto> responseDto)
+    {
+        responseDto.sort(Comparator.comparing(ScheduleResponseDto::getScheduleStr).thenComparing(ScheduleResponseDto::getScheduleEnd));
+        return  responseDto;
+    }
+
+    @Override
+    public int compare(ScheduleResponseDto o1, ScheduleResponseDto o2) {
+        return 0;
+    }
 }
