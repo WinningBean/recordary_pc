@@ -29,7 +29,7 @@ class App extends React.Component {
           <Route path='/group/:groupCd' component={ProfilePage} />
           <Redirect path='*' to='/' />
         </Switch>
-        {this.props.isLogin ? <MainPageButton /> : null}
+        {this.props.isLogin ? <MainPageButton data={this.props.user} /> : null}
       </div>
     );
   }

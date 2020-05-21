@@ -9,6 +9,7 @@ import PublicRange from '../UI/PublicRange';
 import Backdrop from '../UI/Backdrop';
 import AlertDialog from '../Other/AlertDialog';
 import Snackbar from '../UI/Snackbar';
+import GroupMemberSearch from '../Group/GroupMemberSearch';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -24,6 +25,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Popover from '@material-ui/core/Popover';
+import AddIcon from '@material-ui/icons/Add';
+
+import { addHours, startOfDay, endOfDay, startOfSecond } from 'date-fns';
 
 import axios from 'axios';
 import store from '../../store';
@@ -51,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
 
 const PostMediaScheduleAppend = (props) => {
   const classes = useStyles();
+  const [data, setData] = useState(props.data);
   const [postAddMediaListSrc, setPostAddMediaListSrc] = useState([]);
   const [mediaOpen, setMediaOpen] = useState(false);
   const [scheduleOpen, setScheduleOpen] = useState(false);
@@ -63,10 +68,12 @@ const PostMediaScheduleAppend = (props) => {
     b: '51',
     a: '1',
   });
+  const [isShowMemberSearch, setIsShowMemberSearch] = useState(false);
+
   let fileUpload = useRef(null);
 
   const [post, setPost] = useState({
-    userCd: store.getState().user.userCd,
+    userCd: data.userCd,
     // group_cd: store.getState().user.userGroup[0].group_cd,
     groupCd: null,
     postOriginCd: null,
@@ -76,6 +83,22 @@ const PostMediaScheduleAppend = (props) => {
     postPublicState: null,
     postStrYMD: null,
     postEndYMD: null,
+  });
+
+  const [scheduleInfo, setScheduleInfo] = useState({
+    tabCd: null,
+    userCd: data.userCd,
+    scheduleNm: '',
+    scheduleEx: '',
+    scheduleStr: new Date(),
+    scheduleEnd: addHours(new Date(), 1),
+    schedulePublicState: 0,
+    scheduleMembers: [],
+  });
+
+  const [switchInfo, setSwitchInfo] = useState({
+    str: false,
+    end: false,
   });
 
   const changeHandle = (e) => {
@@ -197,7 +220,10 @@ const PostMediaScheduleAppend = (props) => {
             <SelectGroup />
           </div>
           <div className='schedule-media-button '>
-            <PublicRange />
+            <PublicRange
+              onSetSelectedIndex={(index) => setScheduleInfo({ ...scheduleInfo, schedulePublicState: index })}
+              selectedIndex={scheduleInfo.schedulePublicState}
+            />
             <div className='plus-button-design' onClick={() => setScheduleOpen(!scheduleOpen)}>
               {(() => {
                 if (scheduleOpen === false) {
@@ -255,7 +281,11 @@ const PostMediaScheduleAppend = (props) => {
         {scheduleOpen === false ? null : (
           <div onClose={() => setScheduleOpen(null)}>
             <div className='Post-Append-title post-Append'>
-              <TextField id='post_title' label='제목' />
+              <TextField
+                id='post_title'
+                label='제목'
+                onChange={(e) => setScheduleInfo({ ...scheduleInfo, scheduleNm: e.target.value })}
+              />
               <div className='selectColor-form'>
                 <span>일정 색상 설정</span>
                 <div
@@ -268,29 +298,70 @@ const PostMediaScheduleAppend = (props) => {
               </div>
             </div>
             <div className='Post-Append-Schedule'>
-              <DTP />
+              <DTP
+                strDate={scheduleInfo.scheduleStr}
+                endDate={scheduleInfo.scheduleEnd}
+                onChangeStrDate={(value) => setScheduleInfo({ ...scheduleInfo, scheduleStr: value })}
+                onChangeEndDate={(value) => setScheduleInfo({ ...scheduleInfo, scheduleEnd: value })}
+                switchInfo={switchInfo}
+                onChangeSwitch={(value) => setSwitchInfo(value)}
+              />
             </div>
             <div className='Post-Append-Tag-User post-Append'>
-              {/* <Link to={`/${info.user_id}`}> */}
               <Chip
                 avatar={
                   // <Avatar alt={`${info.user_id} img`} src={info.user_pic} />
-                  <Avatar alt='이미지' src='img/RIcon.png' />
+                  <Avatar alt={`${data.userNm} img`} src='img/RIcon.png' />
                 }
-                className={classes.chip}
-                // label={info.user_nm}
-                label='성호'
+                label={data.userNm}
                 style={{
                   backgroundColor: 'rgba(20, 81, 51, 0.8)',
                   color: '#ffffff',
                   marginLeft: '5px',
+                  marginBottom: '5px',
                 }}
                 clickable
               />
-              {/* </Link> */}
+              {scheduleInfo.scheduleMembers.map((value, index) => (
+                <Chip
+                  key={`scheduleMembers-${index}`}
+                  avatar={<Avatar alt={`${data.userNm} img`} src='img/RIcon.png' />}
+                  label={value.userNm}
+                  style={{
+                    marginLeft: '5px',
+                    marginBottom: '5px',
+                  }}
+                  clickable
+                  onDelete={() => {
+                    const copyList = scheduleInfo.scheduleMembers.slice();
+                    copyList.splice(index, 1);
+                    setScheduleInfo({ ...scheduleInfo, scheduleMembers: copyList });
+                  }}
+                />
+              ))}
+              <Chip
+                icon={<AddIcon />}
+                style={{
+                  marginLeft: '5px',
+                  marginBottom: '5px',
+                }}
+                label='ADD'
+                clickable
+                variant='outlined'
+                onClick={() => setIsShowMemberSearch(true)}
+              />
             </div>
           </div>
         )}
+        {isShowMemberSearch ? (
+          <GroupMemberSearch
+            type={1}
+            onSelect={(value) =>
+              setScheduleInfo({ ...scheduleInfo, scheduleMembers: scheduleInfo.scheduleMembers.concat(value) })
+            }
+            onCancel={() => setIsShowMemberSearch(false)}
+          />
+        ) : null}
         {mediaOpen === true ? (
           <div className='Post-Append-Media post-Append'>
             <div

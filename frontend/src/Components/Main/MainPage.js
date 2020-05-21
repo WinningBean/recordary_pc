@@ -26,9 +26,6 @@ const MainPage = (props) => {
       }
     })();
   }, []);
-
-  console.log(data);
-
   if (!props.isLogin) {
     return <Redirect to='/' />;
   }

@@ -5,7 +5,6 @@ import './ProfilePage.css';
 import '../Main/mainPage.css';
 import MainPageButton from '../Main/MainPageButton';
 import PostMediaScheduleAppend from './PostMediaScheduleAppend';
-
 import ScrollToTopOnMount from '../Other/ScrollToTopOnMount';
 import Follower from './Follower';
 import AddTab from './AddTab';
@@ -17,6 +16,7 @@ import Loading from '../Loading/Loading';
 import NotifyPopup from '../UI/NotifyPopup';
 import Snackbar from '../UI/Snackbar';
 import GroupSetting from '../Group/GroupSetting';
+
 import { Dialog, DialogActions } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';

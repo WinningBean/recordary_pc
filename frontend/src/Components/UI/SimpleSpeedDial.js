@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SpeedDials() {
+export default function SpeedDials(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [hidden, setHidden] = React.useState(false);
@@ -53,7 +53,9 @@ export default function SpeedDials() {
 
   const PostMediaScheduleWrite = () => {
     if (postMediaScheduleClick === null) {
-      setPostMediaScheduleClick(<PostMediaScheduleAppend onCancel={() => setPostMediaScheduleClick(null)} />);
+      setPostMediaScheduleClick(
+        <PostMediaScheduleAppend data={props.data} onCancel={() => setPostMediaScheduleClick(null)} />
+      );
       return;
     }
     setPostMediaScheduleClick(null);
