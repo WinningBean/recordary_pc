@@ -72,7 +72,7 @@ public class UserEntity extends BaseTimeEntity{
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFk", cascade = CascadeType.REMOVE)
-    private  List<ScheduleTabEntity> userTab = new ArrayList<>();
+    private  List<ScheduleTabEntity> userScheduleTab = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = CascadeType.REMOVE)
