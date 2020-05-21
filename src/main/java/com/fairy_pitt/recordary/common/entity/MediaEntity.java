@@ -19,7 +19,7 @@ public class MediaEntity extends BaseTimeEntity{
     @Column(name = "MEDIA_CD")
     private Long mediaCd;
 
-    @Column(name = "MEDIA_PATH")
+    @Column(name = "MEDIA_PATH", nullable = false)
     private String mediaPath;
 
     @JsonIgnore
