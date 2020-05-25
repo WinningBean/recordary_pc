@@ -1,5 +1,8 @@
 package com.fairy_pitt.recordary.common.entity;
 
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,5 +32,12 @@ public class MediaEntity extends BaseTimeEntity{
     @Builder
     public MediaEntity(String mediaPath) {
         this.mediaPath = mediaPath;
+    }
+
+    public String getFirstPath(){
+        AmazonS3 amazonS3Client = AmazonS3ClientBuilder.standard()
+                .withRegion(Regions.AP_NORTHEAST_2)
+                .build();
+        return amazonS3Client.getUrl("recordary-springboot-upload", mediaPath + "/1").toString();
     }
 }
