@@ -91,18 +91,20 @@ const Timeline = (props) => {
     ));
   };
 
+  // console.log(data.commentList)
+
   const commentList = () => {
     return data.commentList.map((value, index) => (
-      <>
+      // <>
         <div className='comment-reply-users'>
           <div className='comment-reply-users-img'>
-            <img alt={`${value.userId} img`} src={value.userPic} />
+            <img alt={`${value.userFK.userId} img`} src={value.userFK.userPic} />
           </div>
           <div className='comment-reply-users-name'>
             <span className='reply-name'>
-              {value.userId}({value.userNm})
+              {value.userFK.userId}({value.userFK.userNm})
             </span>
-            <span>{value.userComment}</span>
+            <span>{value.commentContent}</span>
             <div>
               <ThumbUpRoundedIcon
                 style={{
@@ -119,9 +121,9 @@ const Timeline = (props) => {
             </div>
           </div>
         </div>
-        {isClickList[index] === true ? MoreComment(value.recommentList) : null}
-        {value.recommentList.length > 0 ? showMoreComment(value.recommentList, index) : null}
-      </>
+      //   {isClickList[index] === true ? MoreComment(value.recommentList) : null}
+      //   {value.recommentList.length > 0 ? showMoreComment(value.recommentList, index) : null}
+      // </>
     ));
   };
 
@@ -130,7 +132,7 @@ const Timeline = (props) => {
     console.log(imgList.length);
     console.log(imgList[0]);
     if (imgList.length < 2) {
-      return <img alt='timeline-img' src={imgList[0]} />;
+      return <img alt='timeline-img' src={data.mediaFK.mediaFirstPath} />;
     } else {
       return (
         <>

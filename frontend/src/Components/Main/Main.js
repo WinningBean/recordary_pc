@@ -14,7 +14,7 @@ const Main = (props) => {
   const sendImgList = async (index) => {
     try {
       // const postMediaList = [];
-      const mediaSrcList = (await axios.get(`/media/${props.timeline[index].mediaFK.mediaCd}}`)).data;
+      const mediaSrcList = (await axios.get(`/media/${props.timeline[index].mediaFK.mediaCd}`)).data;
       // for (let i = 1; i < mediaSrcList.length; i++) {
       //   postMediaList.push(mediaSrcList[i]);
       // }

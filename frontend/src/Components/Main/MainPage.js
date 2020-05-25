@@ -19,7 +19,9 @@ const MainPage = (props) => {
         if (timeLineDataList.length < 0) {
           return null;
         } else {
+          console.log(timeLineDataList);
           setTimeline(JSON.parse(JSON.stringify(timeLineDataList)));
+          console.log(timeline);
         }
       } catch (e) {
         console.error(e);

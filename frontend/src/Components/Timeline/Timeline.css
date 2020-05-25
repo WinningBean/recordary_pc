@@ -189,7 +189,7 @@
   padding-left: 10px;
   overflow: hidden;
   margin: 0px 10px;
-  border: 1px solid rgba(161, 159, 159, 0.6);
+  /*border: 1px solid rgba(161, 159, 159, 0.6);*/
 }
 
 .comment-context-icon {

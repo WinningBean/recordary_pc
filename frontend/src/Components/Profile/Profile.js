@@ -77,12 +77,13 @@ class Profile extends React.Component {
 
   getUserInfo = async () => {
     var type = 1;
-    const { data } = await axios.get(`/user/${this.props.match.params.userId}`);
+    const { data } = await axios.get(`/user/profile/${this.props.user.userId}`);
     if (data === '') {
       this.setState({ ...this.state, redirect: true });
       return;
     }
-    if (this.props.isLogin && data.userCd === this.props.user.userCd) {
+    console.log(data)
+    if (this.props.isLogin && data.userDto.userCd === this.props.user.userCd) {
       type = 0;
     }
     // await axios.post('/tab/create')
@@ -102,7 +103,8 @@ class Profile extends React.Component {
     });
 
     try {
-      const UserPostList = (await axios.get(`/post/user/${this.state.info.userCd}`)).data;
+      console.log(this.state.info.userDto.userCd);
+      const UserPostList = (await axios.get(`/post/user/${this.state.info.userDto.userCd}`)).data;
       this.setState({ post: JSON.parse(JSON.stringify(UserPostList)) });
       console.log(this.state.post);
     } catch (error) {
@@ -364,7 +366,7 @@ class Profile extends React.Component {
                     <div id='user-image'>
                       <img
                         alt='profile-img'
-                        src='https://i.pinimg.com/originals/0d/e8/86/0de8869350e89fd300edaeef3b659674.jpg'
+                        src={this.state.info.userDto.userPic}
                       />
                     </div>
                     <div id='userinfo-text'>
@@ -381,7 +383,7 @@ class Profile extends React.Component {
                                         <GroupSetting
                                           onClose={() => this.setState({ alert: null })}
                                           data={{
-                                            userCd: this.props.user.userCd,
+                                            userCd: this.props.userCd,
                                             group: this.state.info,
                                           }}
                                         />
@@ -394,7 +396,7 @@ class Profile extends React.Component {
                               )}
                             </>
                           ) : (
-                            `${this.state.info.userId}(${this.state.info.userNm})`
+                            `${this.state.info.userDto.userId}(${this.state.info.userDto.userNm})`
                           )}
                         </div>
                         {this.state.type >= 2 ? (
@@ -529,7 +531,7 @@ class Profile extends React.Component {
                                   })
                                 }
                               >
-                                <span className='followerNum'>50</span>
+                                <span className='followerNum'>{this.state.info.followerCount}</span>
                               </Link>
                             </div>
                             {/* {FollowerShow()} */}
@@ -543,14 +545,14 @@ class Profile extends React.Component {
                                   })
                                 }
                               >
-                                <span className='followNum'>18</span>
+                                <span className='followNum'>{this.state.info.followingCount}</span>
                               </Link>
                             </div>
                           </>
                         )}
                       </div>
                       <div className='status-content'>
-                        <div>{this.state.type >= 2 ? this.state.info.groupEx : this.state.info.userEx}</div>
+                        <div>{this.state.type >= 2 ? this.state.info.groupEx : this.state.info.userDto.userEx}</div>
                       </div>
                     </div>
                   </div>
@@ -591,10 +593,10 @@ class Profile extends React.Component {
                         this.state.post.map(async (value, index) => {
                           console.log(value);
                           if (value.mediaFK !== null) {
-                            const mediaPath = (await axios.get(`/media/${value.mediaFK.mediaCd}}`)).data;
+                            const mediaPath = (await axios.get(`/media/${value.mediaFK.mediaCd}`)).data;
                             console.log(mediaPath);
                             // console.log(mediaPath[0]);
-                            this.setState({ mediaPathProfileArr: this.state.mediaPathProfileArr.concat(mediaPath[1]) });
+                            this.setState({ mediaPathProfileArr: this.state.mediaPathProfileArr.concat(mediaPath[0]) });
                           } else return null;
                         });
                         console.log(this.state.mediaPathProfileArr);
@@ -632,7 +634,7 @@ class Profile extends React.Component {
                           this.state.post.map(async (val, i) => {
                             try {
                               if (val.mediaFK !== null) {
-                                const mediaSrc = (await axios.get(`/media/${val.mediaFK.mediaCd}}`)).data;
+                                const mediaSrc = (await axios.get(`/media/${val.mediaFK.mediaCd}`)).data;
                                 {
                                   console.log(this.state.postMediaList);
                                 }
