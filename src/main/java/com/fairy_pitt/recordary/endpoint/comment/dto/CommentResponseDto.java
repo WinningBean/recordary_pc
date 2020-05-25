@@ -11,13 +11,13 @@ public class CommentResponseDto {
     private Long commentCd;
     private UserResponseDto userFK;
     private String commentContent;
-    private Long commentOriginFK;
+//    private Long commentOriginFK;
 
     public CommentResponseDto(CommentEntity comment)
     {
         this.commentCd = comment.getCommentCd();
         this.userFK = new UserResponseDto(comment.getCommentUserFK());
         this.commentContent = comment.getCommentContent();
-        this.commentOriginFK = comment.getCommentOriginFK().getCommentCd();
+//        if (comment.getCommentOriginFK() != null) this.commentOriginFK = comment.getCommentOriginFK().getCommentCd();
     }
 }
