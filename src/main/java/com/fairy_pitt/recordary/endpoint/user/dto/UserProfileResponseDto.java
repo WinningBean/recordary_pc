@@ -14,13 +14,13 @@ public class UserProfileResponseDto {
     private UserResponseDto userDto;
     private int followerCount;
     private int followingCount;
-    private List<ScheduleTabResponseDto> userScheduleTabDto;
+    private List<ScheduleTabResponseDto> scheduleTabDto;
 
     public UserProfileResponseDto(UserEntity userEntity){
         this.userDto = new UserResponseDto(userEntity);
         this.followerCount = (userEntity.getFollowTarget()).size();
         this.followingCount = (userEntity.getFollowUser()).size();
-        this.userScheduleTabDto = userEntity.getUserScheduleTab().stream()
+        this.scheduleTabDto = userEntity.getUserScheduleTab().stream()
                 .map(ScheduleTabResponseDto::new)
                 .collect(Collectors.toList());
     }

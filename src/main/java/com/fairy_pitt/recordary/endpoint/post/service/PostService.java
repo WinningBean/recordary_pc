@@ -116,6 +116,7 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<PostResponseDto> timeLinePostList(Long userCd){
         List<UserResponseDto> followingList = followerService.followingList(userCd);
         List<GroupResponseDto> groupList = groupService.findUserGroups(userCd);

@@ -1,10 +1,10 @@
 package com.fairy_pitt.recordary.endpoint.post.dto;
 
 import com.fairy_pitt.recordary.common.entity.PostEntity;
-import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleResponseDto;
 import com.fairy_pitt.recordary.endpoint.comment.dto.CommentResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
 import com.fairy_pitt.recordary.endpoint.media.dto.MediaResponseDto;
+import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,6 +38,7 @@ public class PostResponseDto implements Comparable<PostResponseDto>{
         if (postEntity.getScheduleFK() != null) this.scheduleFK = new ScheduleResponseDto(postEntity.getScheduleFK());
         if (postEntity.getMediaFK() != null) this.mediaFK = new MediaResponseDto(postEntity.getMediaFK());
         this.commentList = postEntity.getPostComments().stream()
+                .filter(c -> c.getCommentOriginFK() == null)
                 .map(CommentResponseDto::new)
                 .collect(Collectors.toList());
         this.postEx = postEntity.getPostEx();
@@ -50,9 +51,9 @@ public class PostResponseDto implements Comparable<PostResponseDto>{
 
     @Override
     public int compareTo(PostResponseDto postResponseDto){
-        if (this.getCreatedDate().isAfter(postResponseDto.getCreatedDate())){
+        if (this.getCreatedDate().isBefore(postResponseDto.getCreatedDate())){
             return 1;
-        }else if (this.getCreatedDate().isBefore(postResponseDto.getCreatedDate())){
+        }else if (this.getCreatedDate().isAfter(postResponseDto.getCreatedDate())){
             return -1;
         }else{
             return 0;
