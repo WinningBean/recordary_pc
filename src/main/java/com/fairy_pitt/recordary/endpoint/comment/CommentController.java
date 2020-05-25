@@ -5,11 +5,11 @@ import com.fairy_pitt.recordary.endpoint.comment.dto.CommentResponseDto;
 import com.fairy_pitt.recordary.endpoint.comment.dto.CommentUpdateRequestDto;
 import com.fairy_pitt.recordary.endpoint.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequestMapping("comment")
 @RequiredArgsConstructor
 @RestController
 public class CommentController {
@@ -22,19 +22,19 @@ public class CommentController {
         return commentService.save(requestDto);
     }
 
-    @PostMapping("{id}")
+    @PutMapping("/{id}")
     public Long update(@PathVariable Long id, @RequestBody CommentUpdateRequestDto requestDto)
     {
         return  commentService.update(id,requestDto);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id)
     {
         commentService.delete(id);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public List<CommentResponseDto> findChildComment(@PathVariable Long id)
     {
         return commentService.findChildComment(id);

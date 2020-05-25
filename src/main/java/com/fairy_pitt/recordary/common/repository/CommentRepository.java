@@ -1,8 +1,7 @@
 package com.fairy_pitt.recordary.common.repository;
 
 import com.fairy_pitt.recordary.common.entity.CommentEntity;
-import com.fairy_pitt.recordary.common.entity.FollowerEntity;
-import com.fairy_pitt.recordary.common.pk.FollowerPK;
+import com.fairy_pitt.recordary.common.entity.PostEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +16,5 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
     CommentEntity findByCommentCd(Long CommentCd);
 
     List<CommentEntity> findAllByCommentOriginFK(CommentEntity commentEntity);
-    List<CommentEntity> findAllByCommentOriginFKNotNull();
-
+    List<CommentEntity> findAllByCommentPostFKAndCommentOriginFKIsNull(PostEntity postFK);
 }

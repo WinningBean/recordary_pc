@@ -1,28 +1,23 @@
 package com.fairy_pitt.recordary.endpoint.comment.dto;
 
 import com.fairy_pitt.recordary.common.entity.CommentEntity;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
 public class CommentResponseDto {
-
     private Long commentCd;
-    private Long commentUserFK;
-    private Long commentPostFK;
+    private UserResponseDto userFK;
     private String commentContent;
     private Long commentOriginFK;
 
     public CommentResponseDto(CommentEntity comment)
     {
         this.commentCd = comment.getCommentCd();
-        this.commentOriginFK = comment.getCommentOriginFK().getCommentCd();
+        this.userFK = new UserResponseDto(comment.getCommentUserFK());
         this.commentContent = comment.getCommentContent();
-        this.commentPostFK = comment.getCommentPostFK().getPostCd();
-        this.commentUserFK = comment.getCommentUserFK().getUserCd();
-       // this.commentOriginFK = commentOriginFK;
+        this.commentOriginFK = comment.getCommentOriginFK().getCommentCd();
     }
-
-    
 }

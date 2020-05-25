@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -32,15 +34,15 @@ public class CommentEntity extends BaseTimeEntity{
     private CommentEntity commentOriginFK;
 
     @Column(name = "COMMENT_CONTENT")
+    @Type(type = "text")
     private String commentContent;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "commentOriginFK", cascade = CascadeType.REMOVE)
-    private List<CommentEntity> commentOriginList;
+    private List<CommentEntity> commentOriginList = new ArrayList<>();
 
     @Builder
-    public CommentEntity(
-                         UserEntity commentUserFK,
+    public CommentEntity(UserEntity commentUserFK,
                          PostEntity commentPostFK,
                          CommentEntity commentOriginFK,
                          String commentContent) {
