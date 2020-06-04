@@ -4,10 +4,7 @@ import com.fairy_pitt.recordary.endpoint.follower.dto.FollowerStateResponseDto;
 import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -48,8 +45,8 @@ public class FollowerController {
         return followerService.followEachOther(userCd, targetCd);
     }
 
-    @GetMapping("followState/search/{inputNm}")
-    public List<FollowerStateResponseDto> findNmUser(@PathVariable("inputNm") String inputNm){
+    @GetMapping("followState/search")
+    public List<FollowerStateResponseDto> findNmUser(@RequestParam(value = "input") String inputNm){
         return followerService.followState(inputNm);
     }
 }

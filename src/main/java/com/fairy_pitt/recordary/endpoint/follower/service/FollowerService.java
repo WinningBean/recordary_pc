@@ -101,7 +101,7 @@ public class FollowerService {
 
     @Transactional(readOnly = true)
     public List<FollowerStateResponseDto> followState(String findNm) {
-        List<FollowerStateResponseDto> followerStateResponseDtoList = null;
+        List<FollowerStateResponseDto> followerStateResponseDtoList = new ArrayList<>();
         List<UserResponseDto> userResponseDtoList = userService.findNmUser(findNm);
 
         UserEntity userFK = userService.currentUser();

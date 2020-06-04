@@ -11,16 +11,16 @@ import java.util.stream.Collectors;
 @Getter
 @NoArgsConstructor
 public class UserProfileResponseDto {
-    private UserResponseDto userDto;
+    private UserResponseDto userInfo;
     private int followerCount;
     private int followingCount;
-    private List<ScheduleTabResponseDto> scheduleTabDto;
+    private List<ScheduleTabResponseDto> scheduleTabInfo;
 
     public UserProfileResponseDto(UserEntity userEntity){
-        this.userDto = new UserResponseDto(userEntity);
+        this.userInfo = new UserResponseDto(userEntity);
         this.followerCount = (userEntity.getFollowTarget()).size();
         this.followingCount = (userEntity.getFollowUser()).size();
-        this.scheduleTabDto = userEntity.getUserScheduleTab().stream()
+        this.scheduleTabInfo = userEntity.getUserScheduleTab().stream()
                 .map(ScheduleTabResponseDto::new)
                 .collect(Collectors.toList());
     }
