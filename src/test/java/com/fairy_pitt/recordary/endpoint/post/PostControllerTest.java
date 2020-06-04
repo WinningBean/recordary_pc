@@ -1,6 +1,9 @@
 package com.fairy_pitt.recordary.endpoint.post;
 
-import com.fairy_pitt.recordary.common.entity.*;
+import com.fairy_pitt.recordary.common.entity.FollowerEntity;
+import com.fairy_pitt.recordary.common.entity.GroupEntity;
+import com.fairy_pitt.recordary.common.entity.PostEntity;
+import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.*;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostSaveRequestDto;
@@ -106,8 +109,6 @@ public class PostControllerTest {
                 .userFK(user1)
                 .postEx("테스트 게시글")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
                 .build());
 
         Long updateCd = savedPost.getPostCd();
@@ -148,8 +149,6 @@ public class PostControllerTest {
                 .userFK(user1)
                 .postEx("테스트 게시글")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
                 .build());
 
         String url = "http://localhost:" + port + "/post/" + post.getPostCd();
@@ -177,29 +176,21 @@ public class PostControllerTest {
                 .userFK(user1)
                 .postEx("테스트 게시글1")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .postEx("테스트 게시글2")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .postEx("테스트 게시글3")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .postEx("테스트 게시글4")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
                 .build());
 
         String url = "http://localhost:" + port + "/post/user/" + user1.getUserCd();
@@ -225,29 +216,21 @@ public class PostControllerTest {
                 .userFK(user1)
                 .postEx("테스트 게시글1")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .postEx("테스트 게시글2")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .postEx("테스트 게시글3")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .postEx("게시글4")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
                 .build());
 
         String searchContent = "테스트";
@@ -284,32 +267,24 @@ public class PostControllerTest {
                 .groupFK(group1)
                 .postEx("테스트 게시글1")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .groupFK(group1)
                 .postEx("테스트 게시글2")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .groupFK(group1)
                 .postEx("테스트 게시글3")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .groupFK(group1)
                 .postEx("테스트 게시글4")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
                 .build());
 
         String url = "http://localhost:" + port + "/post/group/" + group1.getGroupCd();
@@ -344,32 +319,24 @@ public class PostControllerTest {
                 .groupFK(group1)
                 .postEx("테스트 게시글1")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .groupFK(group1)
                 .postEx("테스트 게시글2")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .groupFK(group1)
                 .postEx("테스트 게시글3")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .groupFK(group1)
                 .postEx("게시글4")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
                 .build());
 
         String searchContent = "테스트";
@@ -413,9 +380,17 @@ public class PostControllerTest {
                 .targetFK(user2)
                 .build());
         followerRepository.save(FollowerEntity.builder()
+                .userFK(user2)
+                .targetFK(user1)
+                .build()); // user1 - user2 친구관계
+        followerRepository.save(FollowerEntity.builder()
                 .userFK(user1)
                 .targetFK(user3)
-                .build());
+                .build()); // user1 -> user3 following
+        followerRepository.save(FollowerEntity.builder()
+                .userFK(user1)
+                .targetFK(user4)
+                .build()); // user1 -> user4 following
 
         GroupEntity group1 = groupRepository.save(GroupEntity.builder()
                 .gMstUserFK(user1)
@@ -423,65 +398,52 @@ public class PostControllerTest {
                 .groupState(true)
                 .groupPic(null)
                 .groupEx("testEx")
-                .build());
+                .build()); // user1이 속한 그룹
         GroupEntity group2 = groupRepository.save(GroupEntity.builder()
                 .gMstUserFK(user4)
                 .groupNm("testGroup2")
                 .groupState(true)
                 .groupPic(null)
                 .groupEx("testEx")
-                .build());
-
-        groupMemberRepository.save(GroupMemberEntity.builder()
-                .groupFK(group2)
-                .userFK(user1)
-                .build());
+                .build()); // user1이 속하지 않 그룹
 
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .postEx("테스트 게시글1")
-                .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
-                .build());
+                .postPublicState(3)
+                .build()); // user1이 비공개로 쓴 글 (timeline 1)
         postRepository.save(PostEntity.builder()
                 .userFK(user2)
                 .postEx("테스트 게시글2")
-                .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
-                .build());
+                .postPublicState(2)
+                .build()); // user2가 친구 공개로 쓴 글 (timeline 2)
+        postRepository.save(PostEntity.builder()
+                .userFK(user2)
+                .postEx("테스트 게시글3")
+                .postPublicState(3)
+                .build()); // user2가 비공개로 쓴 글 (timeline X)
         postRepository.save(PostEntity.builder()
                 .userFK(user2)
                 .groupFK(group1)
-                .postEx("테스트 게시글3")
-                .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
-                .build());
+                .postEx("테스트 게시글4")
+                .postPublicState(0)
+                .build()); // user1이 속한 그룹 글 (timeline 3)
         postRepository.save(PostEntity.builder()
                 .userFK(user3)
-                .postEx("테스트 게시글4")
+                .postEx("테스트 게시글5")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
-                .build());
+                .build()); // user3이 팔로 공개로 쓴 글 (timeline 4)
         postRepository.save(PostEntity.builder()
                 .userFK(user4)
                 .groupFK(group2)
-                .postEx("테스트 게시글5")
-                .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
-                .build());
+                .postEx("테스트 게시글6")
+                .postPublicState(0)
+                .build()); // user4가 그룹에 쓴 글 (timeline X)
         postRepository.save(PostEntity.builder()
                 .userFK(user4)
-                .postEx("테스트 게시글6")
-                .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
-                .build());
-
+                .postEx("테스트 게시글7")
+                .postPublicState(2)
+                .build()); // user4가 친구 공개로 쓴 글 (timeline X)
 
         String url = "http://localhost:" + port + "/post/timeLine/" + user1.getUserCd();
 
@@ -490,7 +452,81 @@ public class PostControllerTest {
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody().size()).isEqualTo(5);
+        assertThat(responseEntity.getBody().size()).isEqualTo(4);
+    }
 
+    @Test
+    public void Post_타임라인_페이징() throws Exception{
+        //given
+        UserEntity user1 = userRepository.save(UserEntity.builder()
+                .userId("testUser1")
+                .userPw("testPassword")
+                .userNm("테스트 유저1")
+                .build());
+        UserEntity user2 = userRepository.save(UserEntity.builder()
+                .userId("testUser2")
+                .userPw("testPassword")
+                .userNm("테스트 유저2")
+                .build());
+
+        followerRepository.save(FollowerEntity.builder()
+                .userFK(user1)
+                .targetFK(user2)
+                .build());
+
+        postRepository.save(PostEntity.builder()
+                .userFK(user1)
+                .postEx("테스트 게시글1")
+                .postPublicState(0)
+                .build());
+        postRepository.save(PostEntity.builder()
+                .userFK(user1)
+                .postEx("테스트 게시글2")
+                .postPublicState(0)
+                .build());
+        postRepository.save(PostEntity.builder()
+                .userFK(user1)
+                .postEx("테스트 게시글3")
+                .postPublicState(0)
+                .build());
+        PostEntity lastPost = postRepository.save(PostEntity.builder()
+                .userFK(user1)
+                .postEx("테스트 게시글4")
+                .postPublicState(0)
+                .build());
+        postRepository.save(PostEntity.builder()
+                .userFK(user2)
+                .postEx("테스트 게시글5")
+                .postPublicState(0)
+                .build());
+        postRepository.save(PostEntity.builder()
+                .userFK(user2)
+                .postEx("테스트 게시글6")
+                .postPublicState(0)
+                .build());
+        postRepository.save(PostEntity.builder()
+                .userFK(user2)
+                .postEx("테스트 게시글7")
+                .postPublicState(0)
+                .build());
+        postRepository.save(PostEntity.builder()
+                .userFK(user2)
+                .postEx("테스트 게시글8")
+                .postPublicState(0)
+                .build());
+
+        String url1 = "http://localhost:" + port + "/post/pagingTimeLine/" + user1.getUserCd();
+        String url2 = "http://localhost:" + port + "/post/pagingTimeLine/" + user1.getUserCd() + "?lastCd=" + lastPost.getPostCd();
+
+        //when
+        ResponseEntity<List> responseEntity1 = restTemplate.getForEntity(url1, List.class);
+        ResponseEntity<List> responseEntity2 = restTemplate.getForEntity(url2, List.class);
+
+        //then
+        assertThat(responseEntity1.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity1.getBody().size()).isEqualTo(5);
+
+        assertThat(responseEntity2.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity2.getBody().size()).isEqualTo(3);
     }
 }

@@ -11,6 +11,8 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
     PostEntity findByPostCd(Long postCd);
 
     List<PostEntity> findAllByUserFKOrderByCreatedDateDesc(UserEntity userFK);
+    List<PostEntity> findAllByUserFKAndPostPublicStateOrderByCreatedDateDesc(UserEntity userEntity, int publicState);
+    List<PostEntity> findAllByUserFKAndGroupFKAndPostPublicStateLessThanEqualOrderByCreatedDateDesc(UserEntity userEntity, GroupEntity groupEntity, int publicState);
     List<PostEntity> findAllByGroupFKOrderByCreatedDateDesc(GroupEntity groupEntity);
 
     List<PostEntity> findAllByPostExLike(String postEx);
