@@ -13,12 +13,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Getter
 @NoArgsConstructor
-public class PostResponseDto implements Comparable<PostResponseDto>{
+public class GroupPostResponseDto {
+
     private Long postCd;
     private UserResponseDto userFK;
-   private GroupResponseDto groupFK;
     private PostResponseDto postOriginFK;
     private ScheduleResponseDto scheduleFK;
     private MediaResponseDto mediaFK;
@@ -30,10 +31,9 @@ public class PostResponseDto implements Comparable<PostResponseDto>{
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
-    public PostResponseDto(PostEntity postEntity){
+    public GroupPostResponseDto(PostEntity postEntity){
         this.postCd = postEntity.getPostCd();
         this.userFK = new UserResponseDto(postEntity.getUserFK());
-        if (postEntity.getGroupFK() != null) this.groupFK = new GroupResponseDto(postEntity.getGroupFK());
         if (postEntity.getPostOriginFK() != null) this.postOriginFK = new PostResponseDto(postEntity.getPostOriginFK());
         if (postEntity.getScheduleFK() != null) this.scheduleFK = new ScheduleResponseDto(postEntity.getScheduleFK());
         if (postEntity.getMediaFK() != null) this.mediaFK = new MediaResponseDto(postEntity.getMediaFK());
@@ -49,14 +49,4 @@ public class PostResponseDto implements Comparable<PostResponseDto>{
         this.modifiedDate = postEntity.getModifiedDate();
     }
 
-    @Override
-    public int compareTo(PostResponseDto postResponseDto){
-        if (this.getCreatedDate().isBefore(postResponseDto.getCreatedDate())){
-            return 1;
-        }else if (this.getCreatedDate().isAfter(postResponseDto.getCreatedDate())){
-            return -1;
-        }else{
-            return 0;
-        }
-    }
 }

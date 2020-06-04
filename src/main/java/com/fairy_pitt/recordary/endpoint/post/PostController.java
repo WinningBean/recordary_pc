@@ -47,11 +47,6 @@ public class PostController {
         return postService.userPost(userCd);
     }
 
-    @GetMapping("/group/{groupCd}")
-    public List<PostResponseDto> groupPost(@PathVariable Long groupCd){
-        return postService.groupPost(groupCd);
-    }
-
     @GetMapping("/user/{userCd}/search")
     public List<PostResponseDto> userPostSearch(@PathVariable Long userCd, @RequestParam(value = "input")String searchContent){
         return postService.userPostSearch(searchContent, userCd);

@@ -262,65 +262,6 @@ public class PostControllerTest {
         assertThat(responseEntity.getBody().size()).isEqualTo(3);
     }
 
-    @Test
-    public void Post_그게시물() throws Exception{
-        //given
-        UserEntity user1 = userRepository.save(UserEntity.builder()
-                .userId("testUser1")
-                .userPw("testPassword")
-                .userNm("테스트 유저1")
-                .build());
-
-        GroupEntity group1 = groupRepository.save(GroupEntity.builder()
-                .gMstUserFK(user1)
-                .groupNm("testGroup1")
-                .groupState(true)
-                .groupPic(null)
-                .groupEx("testEx")
-                .build());
-
-        postRepository.save(PostEntity.builder()
-                .userFK(user1)
-                .groupFK(group1)
-                .postEx("테스트 게시글1")
-                .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
-                .build());
-        postRepository.save(PostEntity.builder()
-                .userFK(user1)
-                .groupFK(group1)
-                .postEx("테스트 게시글2")
-                .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
-                .build());
-        postRepository.save(PostEntity.builder()
-                .userFK(user1)
-                .groupFK(group1)
-                .postEx("테스트 게시글3")
-                .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
-                .build());
-        postRepository.save(PostEntity.builder()
-                .userFK(user1)
-                .groupFK(group1)
-                .postEx("테스트 게시글4")
-                .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
-                .build());
-
-        String url = "http://localhost:" + port + "/post/group/" + group1.getGroupCd();
-
-        //when
-        ResponseEntity<List> responseEntity = restTemplate.getForEntity(url, List.class);
-
-        //then
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody().size()).isEqualTo(4);
-    }
 
     @Test
     public void Post_그룹게시물검색() throws Exception{

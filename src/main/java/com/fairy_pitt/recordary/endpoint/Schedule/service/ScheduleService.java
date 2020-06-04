@@ -4,6 +4,7 @@ import com.fairy_pitt.recordary.common.entity.*;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.common.repository.ScheduleRepository;
 import com.fairy_pitt.recordary.common.repository.ScheduleTabRepository;
+import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.*;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.acl.Group;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,6 +23,7 @@ public class ScheduleService implements Comparator< ScheduleResponseDto > {
 
     private final ScheduleRepository scheduleRepository;
     private final ScheduleTabRepository scheduleTabRepository;
+    private final GroupService groupService;
     private final UserService userService;
     private final PostRepository postRepository;
 
@@ -29,7 +32,8 @@ public class ScheduleService implements Comparator< ScheduleResponseDto > {
     {
         ScheduleTabEntity scheduleTabEntity = scheduleTabRepository.findByTabCd(requestDto.getTabCd());
         UserEntity user = userService.findEntity(requestDto.getUserCd());
-        return scheduleRepository.save(requestDto.toEntity(scheduleTabEntity,user))
+        GroupEntity group = groupService.findEntity(requestDto.getGroupCd());
+        return scheduleRepository.save(requestDto.toEntity(scheduleTabEntity,user,group))
                 .getScheduleCd();
     }
 
@@ -76,7 +80,7 @@ public class ScheduleService implements Comparator< ScheduleResponseDto > {
         List<ScheduleResponseDto> schedule;
 
         if(responseDto.getTabCd() == null) {
-          schedule = scheduleRepository.findByUserFkAndSchedulePublicStateLessThanEqualAndScheduleStrBetween(targetUser,
+          schedule = scheduleRepository.findByUserFkAndGroupFKIsNullAndSchedulePublicStateLessThanEqualAndScheduleStrBetween(targetUser,
                     state,
                     responseDto.getFromDate(),
                     responseDto.getToDate())
@@ -85,7 +89,7 @@ public class ScheduleService implements Comparator< ScheduleResponseDto > {
                     .collect(Collectors.toList());
         }else {
             ScheduleTabEntity tab = scheduleTabRepository.findByTabCd(responseDto.getTabCd());
-            schedule = scheduleRepository.findByUserFkAndTabFKAndSchedulePublicStateLessThanEqualAndScheduleStrBetween(targetUser,
+            schedule = scheduleRepository.findByUserFkAndGroupFKIsNullAndTabFKAndSchedulePublicStateLessThanEqualAndScheduleStrBetween(targetUser,
                     tab,
                     state,
                     responseDto.getFromDate(),
@@ -105,7 +109,7 @@ public class ScheduleService implements Comparator< ScheduleResponseDto > {
         Long currUserCd = userService.currentUserCd();
         //Long currUserCd = Long.parseLong("2");
 
-        List<ScheduleResponseDto> schedule = scheduleRepository.findByUserFkAndSchedulePublicStateLessThanEqualAndScheduleStrBetween(targetUser,
+        List<ScheduleResponseDto> schedule = scheduleRepository.findByUserFkAndGroupFKIsNullAndSchedulePublicStateAndScheduleStrBetween(targetUser,
                 3,
                 date.getFromDate(),
                 date.getToDate())
@@ -124,6 +128,17 @@ public class ScheduleService implements Comparator< ScheduleResponseDto > {
 
         return scheduleSort(responseDto);
     }
+
+    @Transactional(readOnly = true)
+    public List<ScheduleResponseDto> findGroupSchedule(Long groupCd, ScheduleDateRequestDto requestDto){
+        GroupEntity group = groupService.findEntity(groupCd);
+        List<ScheduleResponseDto> scheduleResponseDtoList = scheduleRepository.findByGroupFKAndScheduleStrBetween(group,requestDto.getFromDate(),requestDto.getToDate()).stream()
+                .map(ScheduleResponseDto :: new)
+                .collect(Collectors.toList());
+
+        return  scheduleSort(scheduleResponseDtoList);
+    }
+
 
     @Transactional(readOnly = true)
     public List<ScheduleMemberResponseDto> getScheduleMember(Long id) {

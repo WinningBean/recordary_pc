@@ -32,6 +32,8 @@ public class ScheduleController {
     @PostMapping("update/{id}")
     public Long update(@PathVariable Long id,
                        @RequestBody ScheduleUpdateRequestDto requestDto) {
+        if(requestDto.getCreateMember() != null)scheduleMemberService.save(requestDto.getCreateMember(), id);
+        if(requestDto.getDeleteMember() != null)scheduleMemberService.save(requestDto.getDeleteMember(), id);
         return scheduleService.update(id, requestDto);
     }
 
@@ -46,5 +48,10 @@ public class ScheduleController {
         List<ScheduleResponseDto> result = scheduleService.showUserSchedule(responseDto, id, followerService.checkUserState(id));
         return scheduleMemberService.findUserAsMemberScheduleList(id, result, responseDto);
 
+    }
+
+    @PostMapping("showGroupSchedule/{id}")
+    public List<ScheduleResponseDto> showGroupSchedule(@PathVariable Long id, @RequestBody ScheduleDateRequestDto responseDto){
+       return scheduleService.findGroupSchedule(id, responseDto);
     }
 }

@@ -10,4 +10,5 @@ import java.util.List;
 
 public interface ScheduleMemberRepository extends JpaRepository<ScheduleMemberEntity, ScheduleMemberEntityPK> {
     List<ScheduleMemberEntity> findByUserFKAndAndScheduleState(UserEntity user, Boolean state);
+    ScheduleMemberEntity findByUserFKAndScheduleFK(UserEntity user, ScheduleEntity schedule);
 }
