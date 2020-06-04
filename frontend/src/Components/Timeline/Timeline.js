@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as dateFns from 'date-fns';
 
 import './Timeline.css';
@@ -14,7 +14,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import CommentTimeline from './CommentTimeline';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-
+import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import axios from 'axios';
 
 const Timeline = (props) => {
@@ -24,6 +25,8 @@ const Timeline = (props) => {
   const [pictureCount, setPictureCount] = useState(0);
   const [clickSchedule, setClickSchedule] = useState(false);
   const [mediaList, setMediaList] = useState([]);
+  const [recommentListData, setRecommentListData] = useState([]);
+  const [writeRecommentShow, setWriteRecommentShow] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -52,44 +55,30 @@ const Timeline = (props) => {
     }
   };
 
-  const showMoreComment = (list, index) => (
-    <div
-      className='show-more-comment'
-      onClick={() =>
-        setIsClickList(
-          isClickList.map((value, listIndex) => {
-            if (listIndex === index) {
-              return !value;
-            }
-            return value;
-          })
-        )
-      }
-    >
-      <div>
-        <MoreHorizIcon
-          style={{
-            fontSize: '15',
-            paddingTop: '3px',
-          }}
-        />
-        {isClickList[index] === false ? <span>{`댓글 ${list.length}개 모두 보기`}</span> : <span>{`댓글 접기`}</span>}
-      </div>
-    </div>
-  );
+  const getRecommentList = async (value, index) => {
+    try {
+      const array = [];
+      const recommentList = (await axios.get(`/comment/${value.commentCd}`)).data;
+      array[index] = JSON.parse(JSON.stringify(recommentList));
+      setRecommentListData(Object.values(array)[0]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  const MoreComment = (list) => {
-    return list.map((value) => (
-      <div key={value.id}>
-        <div className='comment-reply-users more-comment-reply-users'>
-          <div className='comment-reply-users-img'>
-            <img alt={`${value.userId} img`} src={value.userPic} />
+  const showRecommentList = (index) => {
+    console.log(recommentListData);
+    return recommentListData.map((val) => (
+      <div key={val.commentCd}>
+        <div className='comment-reply-users more-recomment-reply-users'>
+          <div className='recomment-reply-users-img'>
+            <img alt={`${val.userFK.userCd} img`} src={val.userFK.userPic} />
           </div>
           <div className='comment-reply-users-name'>
             <span className='reply-name'>
-              {value.userId}({value.userNm})
+              {val.userFK.userId}({val.userFK.userNm})
             </span>
-            <span>{value.userComment}</span>
+            <span style={{ fontSize: '12px' }}>{val.commentContent}</span>
             <div>
               <ThumbUpRoundedIcon
                 style={{
@@ -102,11 +91,13 @@ const Timeline = (props) => {
         </div>
       </div>
     ));
+    // } else return null;
+    // });
   };
 
-  const commentList = () => {
-    return data.commentList.map((value, index) => (
-      <>
+  const commentList = () =>
+    data.commentList.map((value, index) => (
+      <div style={{ marginBottom: '5px' }}>
         <div className='comment-reply-users'>
           <div className='comment-reply-users-img'>
             <img alt={`${value.userFK.userId} img`} src={value.userFK.userPic} />
@@ -116,27 +107,84 @@ const Timeline = (props) => {
               {value.userFK.userId}({value.userFK.userNm})
             </span>
             <span>{value.commentContent}</span>
-            <div>
-              <ThumbUpRoundedIcon
-                style={{
-                  fontSize: '20',
-                  paddingRight: '5px',
-                }}
-              />
-              <CommentIcon
-                style={{
-                  fontSize: '20',
-                  paddingRight: '5px',
-                }}
-              />
+            <div className='commentIconFlex'>
+              <div className='commentIcon-hover'>
+                <ThumbUpRoundedIcon
+                  style={{
+                    fontSize: '20',
+                    paddingRight: '5px',
+                  }}
+                />
+              </div>
+              <div className='commentIcon-hover' onClick={() => setWriteRecommentShow(!writeRecommentShow)}>
+                <CommentIcon
+                  style={
+                    writeRecommentShow === true
+                      ? {
+                          fontSize: '20',
+                          paddingRight: '5px',
+                          color: 'rgba(20, 81, 51, 0.9)',
+                        }
+                      : {
+                          fontSize: '20',
+                          paddingRight: '5px',
+                        }
+                  }
+                />
+              </div>
             </div>
+            {/* {writeRecommentShow === true ? (
+              <div style={{marginBottom:'5px'}}>
+                <TextField
+                  id='recommentWrite'
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position='start'>
+                        <div className='recommentProfileImg'>
+                          <img alt={`${props.user.userId} img`} src={props.user.userPic} />
+                        </div>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </div>
+            ) : null} */}
+            {/* 대댓글 count 갯수 세고 => 댓글 접기, 댓글 보기 출력 => 그 밑에 댓글 작성란을 만들기 
+            => map으로 인덱스 값이랑 유저 같으면~ 그때 writeRcommentShow가 되도록 하기 */}
           </div>
         </div>
-        {/* {isClickList[index] === true ? MoreComment(value.recommentList) : null}
-        {value.recommentList.length > 0 ? showMoreComment(value.recommentList, index) : null} */}
-      </>
+        {value.reCommentCount > 0 ? (
+          <div
+            className='show-more-comment'
+            onClick={() => {
+              getRecommentList(value, index);
+              setIsClickList(
+                isClickList.map((value, listIndex) => {
+                  if (listIndex === index) {
+                    return !value;
+                  } else return value;
+                })
+              );
+            }}
+          >
+            <div>
+              <MoreHorizIcon
+                style={{
+                  fontSize: '15',
+                  paddingTop: '3px',
+                }}
+              />
+              {isClickList[index] === false ? (
+                <span>{`댓글 ${value.reCommentCount}개 모두 보기`}</span>
+              ) : (
+                <span>{`댓글 접기`}</span>
+              )}
+            </div>
+          </div>
+        ) : null}
+        {isClickList[index] === true ? showRecommentList(index) : null}
+      </div>
     ));
-  };
 
   const pictureList = () => {
     try {
@@ -393,7 +441,17 @@ const Timeline = (props) => {
         </div>
         <div className='comment-context'>
           <div className='comment-reply' style={{ overflowY: 'auto' }}>
-            {data.commentList.length > 0 ? commentList() : <div></div>}
+            {data.commentList.length > 0 ? (
+              commentList()
+            ) : (
+              <div>
+                <div>
+                  {data.userFK.userId}({data.userFK.userNm})게시물에 첫번째 댓글을 달아주세용
+                </div>
+              </div>
+            )}
+            {/* {recommentListData !== null ? <recommentListData /> : null} */}
+            {/* {console.log(recommentListData)} */}
           </div>
 
           <div className='comment-context-icon'>
@@ -406,7 +464,7 @@ const Timeline = (props) => {
             </div>
           </div>
           <div className='comment-write'>
-            <CommentTimeline />
+            <CommentTimeline user={props.user} postCd={data.postCd} />
           </div>
         </div>
       </div>

@@ -131,9 +131,12 @@
 
 .timeline-context {
   max-width: 490px;
-  max-height: 115px;
+  max-height: 116px;
   margin-left: 10px;
   margin-top: 5px;
+  border: 1px solid rgba(161, 159, 159, 0.8);
+  height: 100%;
+  border-radius: 5px;
   font-size: 16px;
   line-height: 150%;
   overflow-y: scroll;
@@ -148,10 +151,21 @@
   margin-right: 2px;
   transition: all 0.2s ease-in-out 0.2s;
 }
-
+.commentIcon-hover:hover {
+  color: rgba(20, 81, 51, 0.9);
+  cursor: pointer;
+}
+.commentIconFlex {
+  display: flex;
+  height: 19px;
+  padding-top: 2px;
+}
 .comment-reply-users {
   display: flex;
   align-items: center;
+}
+.comment-reply-users-img {
+  height: 40px;
 }
 .comment-reply-users-img > img {
   width: 40px;
@@ -162,7 +176,7 @@
 }
 .comment-reply-users-name {
   padding-left: 10px;
-  line-height: 150%;
+  padding-top: 5px;
 }
 .comment-reply-users-name > .reply-name {
   font-weight: bold;
@@ -181,7 +195,13 @@
   margin-bottom: 10px;
   height: 30px;
 }
-
+.recommentProfileImg > img {
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0px 1px 3px rgba(161, 159, 159, 0.8);
+}
 .comment-reply {
   display: flex;
   flex-direction: column;
@@ -196,6 +216,7 @@
   display: flex;
   justify-content: space-between;
   padding-left: 10px;
+  margin-left: 5px;
 }
 
 .comment-icon-left,
@@ -237,8 +258,18 @@ fieldset {
 }
 
 /* 더 많은 댓글 보기 */
-.more-comment-reply-users {
+.more-recomment-reply-users {
   margin-left: 50px;
+}
+.recomment-reply-users-img {
+  height: 30px;
+}
+.recomment-reply-users-img > img {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0px 1px 3px rgba(161, 159, 159, 0.8);
 }
 
 .show-more-comment {

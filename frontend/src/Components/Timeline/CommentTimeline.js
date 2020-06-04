@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField';
@@ -8,12 +8,15 @@ import { styled } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import SubdirectoryArrowLeftIcon from '@material-ui/icons/SubdirectoryArrowLeft';
 
+import axios from 'axios';
+
 const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
   },
   textStyle: {
-    width: '350px',
+    width: '340px',
+    marginLeft: '10px',
   },
 }));
 
@@ -22,24 +25,29 @@ const SendButton = styled(Button)({
   height: '40px',
 });
 
-const CommentTimeline = () => {
+const CommentTimeline = (props) => {
   const classes = useStyles();
   const [writeComment, setWriteComment] = useState('');
+  const textField = useRef();
 
-  const sendCommentMessage = (e) => {
-    if (writeComment === '') return null;
-    setWriteComment('');
+  // const sendCommentMessage = (e) => {
+  //   if (writeComment === '') return null;
+  //   setWriteComment('');
+  // };
+
+  const handleChange = (e) => {
+    setWriteComment(e.target.value);
   };
 
   return (
     <div>
       <FormControl className={classes.margin}>
         <TextField
+          inputRef={textField}
           className={(classes.margin, classes.textStyle)}
           id='input-with-icon-textfield'
           label='Comment'
           size='small'
-          inputProps={writeComment}
           InputProps={{
             startAdornment: (
               <InputAdornment position='start'>
@@ -49,10 +57,22 @@ const CommentTimeline = () => {
             endAdornment: (
               <InputAdornment position='end'>
                 <SendButton
-                  onClick={(e) => {
+                  onClick={async (e) => {
                     e.preventDefault();
-                    // sendCommentMessage();
-                    setWriteComment('');
+                    textField.current.value = '';
+                    try {
+                      const commentCd = (
+                        await axios.post(`/comment/`, {
+                          userCd: props.user.userCd,
+                          postCd: props.postCd,
+                          commentContent: writeComment,
+                          commentOriginCd: null,
+                          // commentOriginFK => 대댓글 코드 작성 시 수정
+                        })
+                      ).data;
+                    } catch (e) {
+                      console.log(e + 'comment Error');
+                    }
                   }}
                 >
                   <SubdirectoryArrowLeftIcon />
@@ -60,7 +80,7 @@ const CommentTimeline = () => {
               </InputAdornment>
             ),
           }}
-          onChange={(e) => setWriteComment(e.target.value)}
+          onChange={handleChange}
           variant='outlined'
           multiline
           rowsMax='2'

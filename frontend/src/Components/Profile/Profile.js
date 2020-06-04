@@ -3,8 +3,6 @@ import React from 'react';
 import ScheduleSearch from './ScheduleSearch';
 import './ProfilePage.css';
 import '../Main/mainPage.css';
-import MainPageButton from '../Main/MainPageButton';
-import PostMediaScheduleAppend from './PostMediaScheduleAppend';
 import ScrollToTopOnMount from '../Other/ScrollToTopOnMount';
 import Follower from './Follower';
 import AddTab from './AddTab';
@@ -17,7 +15,7 @@ import NotifyPopup from '../UI/NotifyPopup';
 import Snackbar from '../UI/Snackbar';
 import GroupSetting from '../Group/GroupSetting';
 
-import { Dialog, DialogActions } from '@material-ui/core';
+import { Dialog } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 
@@ -113,7 +111,7 @@ class Profile extends React.Component {
   getGroupInfo = async () => {
     try {
       const groupInfo = (await axios.get(`/group/${this.props.match.params.groupCd}`)).data;
-      console.log(groupInfo);
+
       const groupMember = (await axios.get(`/group/member/${this.props.match.params.groupCd}`)).data;
 
       var groupApply = null;
@@ -362,10 +360,7 @@ class Profile extends React.Component {
                       </div>
                     )}
                     <div id='user-image'>
-                      <img
-                        alt='profile-img'
-                        src={this.state.type >= 2 ? this.state.info.groupPic : this.state.info.userDto.userPic}
-                      />
+                      <img alt='profile-img' src={this.state.info.userDto.userPic} />
                     </div>
                     <div id='userinfo-text'>
                       <div style={{ flexDirection: 'column', alignItems: 'center' }}>

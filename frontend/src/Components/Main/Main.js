@@ -17,7 +17,7 @@ const Main = (props) => {
           if (value.mediaFK !== null) {
             return (
               <div className='timeline-Margin' key={value.postCd}>
-                <Timeline data={value} />
+                <Timeline data={value} user={props.data} />
               </div>
             );
           } else {
