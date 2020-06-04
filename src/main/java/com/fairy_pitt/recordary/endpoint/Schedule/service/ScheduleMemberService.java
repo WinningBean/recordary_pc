@@ -53,34 +53,41 @@ public class ScheduleMemberService {
     }
 
     @Transactional(readOnly = true)
-    public List<ScheduleResponseDto> findMemberScheduleList(Long userCd, List<ScheduleResponseDto> responseDto, ScheduleDateRequestDto date)
+    public List<ScheduleResponseDto> findUserAsMemberScheduleList(Long targetUserCd, List<ScheduleResponseDto> responseDto, ScheduleDateRequestDto date)
     {
-        UserEntity user = userService.findEntity(userCd);
-        Long currUserCd = userService.currentUserCd();
+        if(date.getTabCd() == null) {
+            UserEntity targetUser = userService.findEntity(targetUserCd);
+            Long currUserCd = userService.currentUserCd();
+            //Long currUserCd = Long.parseLong("2");
 
-        List<ScheduleResponseDto> schedule =  scheduleMemberRepository.findByUserFKAndAndScheduleState(user, true)
-                .stream()
-                .map(ScheduleResponseDto::new)
-                .collect(Collectors.toList());
+            List<ScheduleResponseDto> schedule = scheduleMemberRepository.findByUserFKAndAndScheduleState(targetUser, true)
+                    .stream()
+                    .map(ScheduleResponseDto::new)
+                    .collect(Collectors.toList());
 
-        if(!currUserCd.equals(userCd)) {
-            for (ScheduleResponseDto temp : schedule) {
-                int str = date.getFromDate().compareTo(temp.getScheduleStr());
-                int end = date.getToDate().compareTo(temp.getScheduleStr());
-                if (((str == 0 || str < 0) && temp.getSchedulePublicState() == 0) && ((end == 0 || end > 0) && temp.getSchedulePublicState() == 0)) {
-                    responseDto.add(temp);
+            if (!currUserCd.equals(targetUserCd)) {
+                for (ScheduleResponseDto temp : schedule) {
+                    int str = date.getFromDate().compareTo(temp.getScheduleStr());
+                    int end = date.getToDate().compareTo(temp.getScheduleStr());
+                    if (((str == 0 || str < 0) && temp.getSchedulePublicState() == 0) && ((end == 0 || end > 0) && temp.getSchedulePublicState() == 0)) {
+                        responseDto.add(temp);
+                    }
                 }
-            }
-        }else {
-            for (ScheduleResponseDto temp : schedule) {
-                int str = date.getFromDate().compareTo(temp.getScheduleStr());
-                int end = date.getToDate().compareTo(temp.getScheduleStr());
-                if ((str == 0 || str < 0) && (end == 0 || end > 0)) {
-                    responseDto.add(temp);
+                return scheduleService.findIasMemberScheduleList(targetUserCd, responseDto, date);
+            } else {
+                for (ScheduleResponseDto temp : schedule) {
+                    int str = date.getFromDate().compareTo(temp.getScheduleStr());
+                    int end = date.getToDate().compareTo(temp.getScheduleStr());
+                    if ((str == 0 || str < 0) && (end == 0 || end > 0)) {
+                        responseDto.add(temp);
+                    }
                 }
             }
         }
-        return  responseDto;
+
+        return  scheduleService.scheduleSort(responseDto);
     }
+
+
 
 }

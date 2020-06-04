@@ -2,18 +2,21 @@ package com.fairy_pitt.recordary.endpoint.schedule.dto;
 
 import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
 import com.fairy_pitt.recordary.common.entity.ScheduleMemberEntity;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Getter
 public class ScheduleResponseDto {
 
     private Long scheduleCd;
+    private UserResponseDto user;
     private Long tabCd;
-    private Long  userCd;
     private String scheduleNm;
     private String scheduleEx;
     private Date scheduleStr;
@@ -21,11 +24,12 @@ public class ScheduleResponseDto {
     private String scheduleCol;
     private String tabCol;
     private int schedulePublicState;
+    private List<ScheduleMemberResponseDto> scheduleMemberList;
 
     public ScheduleResponseDto(ScheduleEntity entity) {
         this.scheduleCd = entity.getScheduleCd();
         if (entity.getTabFK() != null) this.tabCd = entity.getTabFK().getTabCd();
-        this.userCd = entity.getUserFk().getUserCd();
+        this.user = new UserResponseDto(entity.getUserFk());
         this.scheduleNm = entity.getScheduleNm();
         this.scheduleEx = entity.getScheduleEx();
         this.scheduleStr = entity.getScheduleStr();
@@ -33,6 +37,9 @@ public class ScheduleResponseDto {
         this.scheduleCol = entity.getScheduleCol();
         if (entity.getTabFK() != null) this.tabCol = entity.getTabFK().getTabCol();
         this.schedulePublicState = entity.getSchedulePublicState();
+        this.scheduleMemberList = entity.getScheduleMembers().stream()
+                .map(ScheduleMemberResponseDto :: new)
+                .collect(Collectors.toList());
     }
 
     public ScheduleResponseDto(ScheduleMemberEntity entity)
