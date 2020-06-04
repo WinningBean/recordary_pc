@@ -131,9 +131,9 @@
 
 .timeline-context {
   max-width: 490px;
-  max-height: 80px;
-  padding-left: 10px;
-  padding-top: 5px;
+  max-height: 115px;
+  margin-left: 10px;
+  margin-top: 5px;
   font-size: 16px;
   line-height: 150%;
   overflow-y: scroll;

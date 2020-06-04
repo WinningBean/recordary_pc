@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField';
@@ -22,8 +22,14 @@ const SendButton = styled(Button)({
   height: '40px',
 });
 
-export default function Comment() {
+const CommentTimeline = () => {
   const classes = useStyles();
+  const [writeComment, setWriteComment] = useState('');
+
+  const sendCommentMessage = (e) => {
+    if (writeComment === '') return null;
+    setWriteComment('');
+  };
 
   return (
     <div>
@@ -33,6 +39,7 @@ export default function Comment() {
           id='input-with-icon-textfield'
           label='Comment'
           size='small'
+          inputProps={writeComment}
           InputProps={{
             startAdornment: (
               <InputAdornment position='start'>
@@ -41,13 +48,19 @@ export default function Comment() {
             ),
             endAdornment: (
               <InputAdornment position='end'>
-                <SendButton>
-                  {' '}
-                  <SubdirectoryArrowLeftIcon />{' '}
+                <SendButton
+                  onClick={(e) => {
+                    e.preventDefault();
+                    // sendCommentMessage();
+                    setWriteComment('');
+                  }}
+                >
+                  <SubdirectoryArrowLeftIcon />
                 </SendButton>
               </InputAdornment>
             ),
           }}
+          onChange={(e) => setWriteComment(e.target.value)}
           variant='outlined'
           multiline
           rowsMax='2'
@@ -56,4 +69,6 @@ export default function Comment() {
       </FormControl>
     </div>
   );
-}
+};
+
+export default CommentTimeline;

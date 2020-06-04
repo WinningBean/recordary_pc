@@ -193,7 +193,7 @@ const Chatting = ({ isOpen }) => {
     });
   };
 
-  const sendMassge = (e) => {
+  const sendMessage = (e) => {
     if (writedMessage === '') return null;
     setChatList((draft) => {
       var value = undefined;
@@ -413,14 +413,14 @@ const Chatting = ({ isOpen }) => {
                     if (!e.shiftKey) {
                       if (e.key === 'Enter') {
                         e.preventDefault();
-                        sendMassge();
+                        sendMessage();
                       }
                     }
                   }}
                 ></textarea>
                 <div
                   style={{ width: '15%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                  onClick={sendMassge}
+                  onClick={sendMessage}
                 >
                   <SubdirectoryArrowLeftIcon />
                 </div>

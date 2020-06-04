@@ -15,16 +15,29 @@ import CommentTimeline from './CommentTimeline';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
+import axios from 'axios';
+
 const Timeline = (props) => {
   const data = props.data;
-  const imgList = props.imgList;
   const [isClickList, setIsClickList] = useState(data.commentList.map(() => false));
   const [menuDialog, setMenuDialog] = useState(null);
   const [pictureCount, setPictureCount] = useState(0);
   const [clickSchedule, setClickSchedule] = useState(false);
+  const [mediaList, setMediaList] = useState([]);
 
   useEffect(() => {
-    console.log(data);
+    (async () => {
+      try {
+        const mediaSrc = (await axios.get(`/media/${data.mediaFK.mediaCd}`)).data;
+        if (mediaSrc.length < 0) {
+          return null;
+        } else {
+          setMediaList(mediaList.concat(JSON.parse(JSON.stringify(mediaSrc))));
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    })();
   }, []);
 
   const userPostMoreButtonClick = (selectedValue) => {
@@ -91,11 +104,9 @@ const Timeline = (props) => {
     ));
   };
 
-  // console.log(data.commentList)
-
   const commentList = () => {
     return data.commentList.map((value, index) => (
-      // <>
+      <>
         <div className='comment-reply-users'>
           <div className='comment-reply-users-img'>
             <img alt={`${value.userFK.userId} img`} src={value.userFK.userPic} />
@@ -121,129 +132,130 @@ const Timeline = (props) => {
             </div>
           </div>
         </div>
-      //   {isClickList[index] === true ? MoreComment(value.recommentList) : null}
-      //   {value.recommentList.length > 0 ? showMoreComment(value.recommentList, index) : null}
-      // </>
+        {/* {isClickList[index] === true ? MoreComment(value.recommentList) : null}
+        {value.recommentList.length > 0 ? showMoreComment(value.recommentList, index) : null} */}
+      </>
     ));
   };
 
-  const pictureList = useMemo(() => {
-    console.log('render pic');
-    console.log(imgList.length);
-    console.log(imgList[0]);
-    if (imgList.length < 2) {
-      return <img alt='timeline-img' src={data.mediaFK.mediaFirstPath} />;
-    } else {
-      return (
-        <>
-          <div
-            style={{
-              transition: 'transform 363.693ms cubic-bezier(0.215, 0.61, 0.355, 1) 0s',
-              transform: `translateX(${-500 * pictureCount}px)`,
-              position: 'relative',
-            }}
-          >
-            <ul style={{ height: '100%', position: 'relative' }}>
-              {imgList.map((value, index) => {
-                return (
-                  <li
-                    key={`${data.postCd}-${index}`}
-                    style={{ position: 'absolute', transform: `translateX(${500 * index}px)` }}
-                  >
-                    <img
-                      alt='timeline-img'
-                      src={value}
-                      style={{ width: '490px', height: '330px', objectFit: 'cover' }}
+  const pictureList = () => {
+    try {
+      if (mediaList.length < 2) {
+        return <img alt='timeline-img' src={data.mediaFK.mediaFirstPath} />;
+      } else {
+        return (
+          <>
+            <div
+              style={{
+                transition: 'transform 363.693ms cubic-bezier(0.215, 0.61, 0.355, 1) 0s',
+                transform: `translateX(${-500 * pictureCount}px)`,
+                position: 'relative',
+              }}
+            >
+              <ul style={{ height: '100%', position: 'relative' }}>
+                {mediaList.map((value, index) => {
+                  return (
+                    <li
+                      key={`${data.postCd}-${index}`}
+                      style={{ position: 'absolute', transform: `translateX(${500 * index}px)` }}
+                    >
+                      <img
+                        alt='timeline-img'
+                        src={value}
+                        style={{ width: '490px', height: '330px', objectFit: 'cover' }}
+                      />
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+            <div
+              style={{
+                position: 'absolute',
+                top: '150px',
+                height: '30px',
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'space-between',
+                paddingRight: '15px',
+                paddingLeft: '10px',
+              }}
+            >
+              {pictureCount === 0 ? (
+                <div />
+              ) : (
+                <div
+                  style={{
+                    width: '25px',
+                    height: '25px',
+                    backgroundColor: 'rgba(253,253,253,.7)',
+                    borderRadius: '50%',
+                    marginLeft: '5px',
+                  }}
+                  onClick={() => setPictureCount(pictureCount - 1)}
+                >
+                  <KeyboardArrowLeftIcon />
+                </div>
+              )}
+              {pictureCount >= mediaList.length - 1 ? (
+                <div />
+              ) : (
+                <div
+                  style={{
+                    width: '25px',
+                    height: '25px',
+                    backgroundColor: 'rgba(253,253,253,.7)',
+                    borderRadius: '50%',
+                    marginRight: '5px',
+                  }}
+                  onClick={() => setPictureCount(pictureCount + 1)}
+                >
+                  <KeyboardArrowRightIcon />
+                </div>
+              )}
+            </div>
+            <div
+              style={{
+                bottom: '15px',
+                left: '6px',
+                position: 'absolute',
+                right: '6px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              {mediaList.map((value, index) => {
+                if (index === pictureCount) {
+                  return (
+                    <div
+                      key={`post-bottom-${data.postCd}-${index}`}
+                      className='timeline-picture-bottom'
+                      style={{
+                        opacity: '1',
+                      }}
                     />
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-          <div
-            style={{
-              position: 'absolute',
-              top: '150px',
-              height: '30px',
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'space-between',
-              paddingRight: '15px',
-              paddingLeft: '10px',
-            }}
-          >
-            {pictureCount === 0 ? (
-              <div />
-            ) : (
-              <div
-                style={{
-                  width: '25px',
-                  height: '25px',
-                  backgroundColor: 'rgba(253,253,253,.7)',
-                  borderRadius: '50%',
-                  marginLeft: '5px',
-                }}
-                onClick={() => setPictureCount(pictureCount - 1)}
-              >
-                <KeyboardArrowLeftIcon />
-              </div>
-            )}
-            {pictureCount >= imgList.length - 1 ? (
-              <div />
-            ) : (
-              <div
-                style={{
-                  width: '25px',
-                  height: '25px',
-                  backgroundColor: 'rgba(253,253,253,.7)',
-                  borderRadius: '50%',
-                  marginRight: '5px',
-                }}
-                onClick={() => setPictureCount(pictureCount + 1)}
-              >
-                <KeyboardArrowRightIcon />
-              </div>
-            )}
-          </div>
-          <div
-            style={{
-              bottom: '15px',
-              left: '6px',
-              position: 'absolute',
-              right: '6px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            {imgList.map((value, index) => {
-              if (index === pictureCount) {
+                  );
+                }
                 return (
                   <div
                     key={`post-bottom-${data.postCd}-${index}`}
                     className='timeline-picture-bottom'
                     style={{
-                      opacity: '1',
+                      opacity: '.4',
                     }}
                   />
                 );
-              }
-              return (
-                <div
-                  key={`post-bottom-${data.postCd}-${index}`}
-                  className='timeline-picture-bottom'
-                  style={{
-                    opacity: '.4',
-                  }}
-                />
-              );
-            })}
-          </div>
-        </>
-      );
-      //165 160 10
+              })}
+            </div>
+          </>
+        );
+        //165 160 10
+      }
+    } catch (e) {
+      console.error(e);
     }
-  }, [pictureCount, data]);
+  };
 
   return (
     <div className='timeline'>
@@ -273,8 +285,7 @@ const Timeline = (props) => {
       <div className='timeline-info'>
         <div className='time-line-picture-info'>
           <div className='timeline-picture'>
-            {/* 이미지 */}
-            {pictureList}
+            {pictureList()}
             <div
               className='transition-all'
               style={
