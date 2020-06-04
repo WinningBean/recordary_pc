@@ -118,7 +118,8 @@ public class FollowerService {
 
     @Transactional
     public int checkUserState(Long targetCd) {  //user - target 관계 확인
-        Long userCd = userService.currentUserCd();
+       Long userCd = userService.currentUserCd();
+        //Long userCd = Long.parseLong("2");
 
         if (userCd.equals(targetCd)) {
             return 3;

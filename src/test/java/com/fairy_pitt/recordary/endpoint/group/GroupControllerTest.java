@@ -2,10 +2,13 @@ package com.fairy_pitt.recordary.endpoint.group;
 
 import com.fairy_pitt.recordary.common.entity.GroupEntity;
 import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
+import com.fairy_pitt.recordary.common.entity.PostEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.GroupMemberRepository;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
+import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupPageResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupSaveRequestDto;
 
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupUpdateRequestDto;
@@ -44,8 +47,12 @@ public class GroupControllerTest {
     @Autowired
     private GroupMemberRepository groupMemberRepository;
 
+    @Autowired
+    private PostRepository postRepository;
+
     @After
     public void tearDown() throws Exception{
+        postRepository.deleteAll();
         groupMemberRepository.deleteAll();
         groupRepository.deleteAll();
         userRepository.deleteAll();
@@ -274,4 +281,62 @@ public class GroupControllerTest {
 //        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 //        assertThat(responseEntity.getBody().size()).isEqualTo(2);
     }
+
+//    @Test
+//    public void group_페이지() throws Exception{
+//        UserEntity saveUser = userRepository.save(UserEntity.builder()
+//                .userId("test")
+//                .userPw("test")
+//                .userNm("테스트 유저")
+//                .build());
+//
+//        String groupName ="test";
+//        Boolean groupState = true;
+//        String groupPic = "asd";
+//        String  groupEx = "test";
+//
+//        GroupEntity groupEntity = groupRepository.save(GroupEntity.builder()
+//                .gMstUserFK(saveUser)
+//                .groupNm(groupName)
+//                .groupState(true)
+//                .groupPic(groupPic)
+//                .groupEx(groupEx)
+//                .build());
+//
+//
+//        GroupMemberEntity groupMemberEntity = groupMemberRepository.save(GroupMemberEntity.builder()
+//                .groupFK(groupEntity)
+//                .userFK(saveUser)
+//                .build());
+//
+//        postRepository.save(PostEntity.builder()
+//                .userFK(saveUser)
+//                .groupFK(groupEntity)
+//                .postEx("테스트 게시글3")
+//                .postPublicState(1)
+//                .postStrYMD("20200310")
+//                .postEndYMD("20200311")
+//                .build());
+//
+//        postRepository.save(PostEntity.builder()
+//                .userFK(saveUser)
+//                .postEx("테스트 게시글4")
+//                .postPublicState(1)
+//                .postStrYMD("20200310")
+//                .postEndYMD("20200311")
+//                .build());
+//
+//        Long groupCd  = groupEntity.getGroupCd();
+//        String url = "http://localhost:" + port + "group/" + groupCd;
+//
+//        //when
+//        ResponseEntity<GroupPageResponseDto> responseEntity = restTemplate.getForEntity(url,GroupPageResponseDto.class);
+//
+//        //than
+//        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+//        GroupPageResponseDto result =  responseEntity.getBody();
+//        //assertThat(result.getPostList().size()).isEqualTo(2);
+//
+//    }
+
 }

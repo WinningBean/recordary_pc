@@ -34,10 +34,10 @@ public class ScheduleMemberController {
         return true;
     }
 
-    @PostMapping("delete")
-    public Boolean delete(@RequestBody ScheduleMemberEntityPK id){
-        scheduleMemberService.delete(id);
-        return true;
-    }
+//    @PostMapping("delete")
+//    public Boolean delete(@RequestBody ScheduleMemberEntityPK id){
+//        scheduleMemberService.delete(id);
+//        return true;
+//    }
 
 }
