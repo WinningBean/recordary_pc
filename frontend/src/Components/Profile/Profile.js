@@ -67,7 +67,6 @@ class Profile extends React.Component {
       redirect: false,
       alert: null,
       clickTab: undefined,
-      tab: [],
       post: [],
       isOpenAddTab: false,
     };
@@ -75,7 +74,7 @@ class Profile extends React.Component {
 
   getUserInfo = async () => {
     var type = 1;
-    const { data } = await axios.get(`/user/profile/${this.props.user.userId}`);
+    const { data } = await axios.get(`/user/profile/${this.props.match.params.userId}`);
     if (data === '') {
       this.setState({ ...this.state, redirect: true });
       return;
@@ -177,7 +176,7 @@ class Profile extends React.Component {
       if (this.state.followerNumClick) {
         return (
           <Follower
-            userId={this.state.userInfo.userId}
+            userId={this.state.info.userDto.userId}
             isFollower={true}
             onCancel={() => this.setState({ followerNumClick: false })}
           ></Follower>
@@ -185,7 +184,7 @@ class Profile extends React.Component {
       } else if (this.state.followingNumClick) {
         return (
           <Follower
-            userId={this.state.userInfo.userId}
+            userId={this.state.info.userDto.userId}
             isFollower={false}
             onCancel={() => this.setState({ followingNumClick: false })}
           ></Follower>
@@ -233,7 +232,7 @@ class Profile extends React.Component {
                             ALL
                           </TabButton>
                         </li>
-                        {this.state.tab.map((value, index) => (
+                        {this.state.info.scheduleTabDto.map((value, index) => (
                           <li
                             key={`tab-${index}`}
                             style={{
@@ -243,7 +242,7 @@ class Profile extends React.Component {
                           >
                             <TabButton
                               style={{
-                                backgroundColor: value.tabCol,
+                                backgroundColor: value.scheduleTabColor,
                                 opacity: this.state.clickTab === index ? '100%' : '60%',
                               }}
                               onClick={() => {
@@ -263,6 +262,18 @@ class Profile extends React.Component {
                           <TabButton
                             style={{ justifyContent: 'flex-start', backgroundColor: 'rgba(0, 0, 0, 0.04)' }}
                             onClick={() => {
+                              if (this.state.info.scheduleTabDto.length > 8) {
+                                this.setState({
+                                  alert: (
+                                    <Snackbar
+                                      severity='error'
+                                      content='탭은 최대 8개까지 만들수있습니다.'
+                                      onClose={() => this.setState({ alert: null })}
+                                    />
+                                  ),
+                                });
+                                return;
+                              }
                               this.setState({ isOpenAddTab: true });
                             }}
                           >
@@ -532,7 +543,7 @@ class Profile extends React.Component {
                                 <span className='followerNum'>{this.state.info.followerCount}</span>
                               </Link>
                             </div>
-                            {/* {FollowerShow()} */}
+                            {FollowerShow()}
                             <div>
                               <span className='followerName'>팔로우</span>
                               <Link
@@ -557,8 +568,12 @@ class Profile extends React.Component {
                   <div id='schedule-area'>
                     <Calendar
                       type={this.state.type}
-                      info={this.state.info}
-                      clickTab={this.state.clickTab}
+                      info={this.state.type === 2 || this.state.type === 3 ? this.state.info : this.state.info.userDto}
+                      clickTab={
+                        this.state.clickTab === undefined
+                          ? undefined
+                          : this.state.info.scheduleTabDto[this.state.clickTab].scheduleTabCd
+                      }
                       onSuccessAlert={() =>
                         this.setState({
                           alert: (
@@ -667,10 +682,14 @@ class Profile extends React.Component {
             {this.state.alert}
             {this.state.isOpenAddTab ? (
               <AddTab
-                userCd={this.state.info.userCd}
+                userCd={this.state.info.userDto.userCd}
                 onClose={() => this.setState({ isOpenAddTab: false })}
                 onSuccess={(tabInfo) => {
-                  this.setState({ ...this.state, tab: this.state.tab.concat(tabInfo), isOpenAddTab: false });
+                  this.setState({
+                    ...this.state,
+                    info: { ...this.state.info, scheduleTabDto: this.state.info.scheduleTabDto.concat(tabInfo) },
+                    isOpenAddTab: false,
+                  });
                 }}
               />
             ) : null}

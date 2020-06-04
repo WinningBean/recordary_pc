@@ -69,7 +69,11 @@ const AddTab = ({ onClose, userCd, onSuccess }) => {
                 tabCol: `rgb(${color.r},${color.g},${color.b})`,
                 tabNm: tabNm,
               });
-              onSuccess({ tabCd: data, tabCol: `rgb(${color.r},${color.g},${color.b})`, tabNm: tabNm });
+              onSuccess({
+                scheduleTabCd: data,
+                scheduleTabColor: `rgb(${color.r},${color.g},${color.b})`,
+                scheduleTabNm: tabNm,
+              });
             } catch (error) {
               setAlert(<AlertDialog severity='error' content={error} onAlertClose={() => setAlert(null)} />);
             }

@@ -75,7 +75,7 @@ const Calendar = (props) => {
         toDate: endDate.getTime(),
       });
 
-      console.log(data);
+      console.log(props.info.userCd, data);
       const abcd = data.map((value) => ({
         tab: value.tabCd,
         cd: value.scheduleCd,
@@ -85,6 +85,7 @@ const Calendar = (props) => {
         end: new Date(value.scheduleEnd),
         color: value.scheduleCol,
         state: value.schedulePublicState,
+        members: value.scheduleMemberList,
       }));
 
       const copyDraft = produce(abcd, (draft) => {
@@ -98,9 +99,10 @@ const Calendar = (props) => {
           return dateFns.differenceInDays(a.start, b.start);
         });
       });
-      setUserDate(userDate.concat(copyDraft));
+      setUserDate(copyDraft);
     })();
-  }, []);
+  }, [currentMonth]);
+
   console.log(userDate);
 
   const onChoice = useCallback((currDay) => props.onChoice(currDay, userDate), [props, userDate]);
@@ -144,6 +146,7 @@ const Calendar = (props) => {
       } else {
         moveBlockY = -(parseInt(y / 74) - parseInt(moveY / 74));
       }
+
       const moveObjDate = userDate.filter((value) => value.cd == id.substring(2, 4))[0];
       setAlert(
         <AlertDialog
@@ -438,7 +441,12 @@ const Calendar = (props) => {
         backgroundColor: color,
       }}
       onMouseDown={type === 0 || type === 2 ? onScMouseDown : null}
-      onClick={(e) => setDetailedSC({ event: e.currentTarget, cd: cd })}
+      onClick={(e) => {
+        if (alert !== null) {
+          return;
+        }
+        setDetailedSC({ event: e.currentTarget, cd: cd });
+      }}
     >
       <div
         style={{
@@ -494,7 +502,12 @@ const Calendar = (props) => {
           backgroundColor: color,
         }}
         onMouseDown={type === 0 || type === 2 ? onScMouseDown : null}
-        onClick={(e) => setDetailedSC({ event: e.currentTarget, cd: cd })}
+        onClick={(e) => {
+          if (alert !== null) {
+            return;
+          }
+          setDetailedSC({ event: e.currentTarget, cd: cd });
+        }}
       >
         <div
           style={{
@@ -945,10 +958,6 @@ const Calendar = (props) => {
               }}
             >
               <strong>{selectedDetailedSC !== null ? selectedDetailedSC.nm : null}</strong>
-              <div>
-                <PersonIcon fontSize='small' />
-                <span style={{ position: 'absolute', fontSize: '18px' }}>4</span>
-              </div>
             </div>
             <div style={{ marginTop: '5px', fontSize: '12px', color: 'gray' }}>
               {selectedDetailedSC !== null
@@ -967,6 +976,36 @@ const Calendar = (props) => {
             >
               {selectedDetailedSC !== null ? selectedDetailedSC.ex : null}
             </div>
+            <div
+              style={{
+                width: '100%',
+                height: '80px',
+                paddingTop: '3px',
+                paddingBottom: '3px',
+                overflowX: 'scroll',
+                overflowY: 'hidden',
+              }}
+            >
+              <div style={{ display: 'flex' }}>
+                {selectedDetailedSC !== null
+                  ? selectedDetailedSC.members.map((value) => (
+                      <div>
+                        <img
+                          style={{
+                            width: '50px',
+                            height: '50px',
+                            marginRight: '4px',
+                            objectFit: 'cover',
+                            border: value.scheduleState ? `3px solid ${selectedDetailedSC.color}` : null,
+                          }}
+                          src={value.userPic}
+                        />
+                        <div>{value.userNm}</div>
+                      </div>
+                    ))
+                  : null}
+              </div>
+            </div>
           </div>
           {type === 0 || type === 2 ? (
             <div className='calendar-detailedsc-buttons'>
@@ -974,7 +1013,24 @@ const Calendar = (props) => {
                 <CreateIcon fontSize='small' />
                 수정
               </div>
-              {scheduleEditOpen === true ? <CalendarScheduleEdit onCancel={() => setScheduleEditOpen(false)} /> : null}
+              {scheduleEditOpen === true ? (
+                <CalendarScheduleEdit
+                  groupCd={type === 2 ? props.info.groupCd : undefined}
+                  userCd={props.info.userCd}
+                  info={selectedDetailedSC}
+                  onModify={(data) => {
+                    const copyUserDate = userDate.slice();
+                    for (let i = 0; i < copyUserDate.length; i++) {
+                      if (copyUserDate[i].cd === copyUserDate.cd) {
+                        copyUserDate[i] = data;
+                        break;
+                      }
+                    }
+                    setUserDate(copyUserDate);
+                  }}
+                  onCancel={() => setScheduleEditOpen(false)}
+                />
+              ) : null}
               <div
                 style={{
                   background: '#e5e5e5',
@@ -1017,6 +1073,7 @@ const Calendar = (props) => {
       {clickDate !== null ? (
         <AddSchedule
           data={props.info}
+          clickTab={props.clickTab}
           onClose={() => setClickDate(null)}
           clickDate={clickDate}
           onSuccess={(newSc) => {

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './SearchField.css';
 
+import { Link } from 'react-router-dom';
+
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { styled } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -58,26 +60,28 @@ const SearchFieldResult = (props) => {
       return (
         <li key={value.userId} key={value.userId}>
           <div className='follower_list'>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                marginBottom: '10px',
-              }}
-            >
-              <img
-                alt={`${value.userNm} img`}
+            <Link to={`/profile/${value.userId}`}>
+              <div
                 style={{
-                  marginRight: '10px',
-                  borderRadius: '50%',
-                  width: '40px',
-                  height: '40px',
-                  objectFit: 'cover',
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '10px',
                 }}
-                src={value.userPic}
-              />
-              {value.userId}({value.userNm})
-            </div>
+              >
+                <img
+                  alt={`${value.userNm} img`}
+                  style={{
+                    marginRight: '10px',
+                    borderRadius: '50%',
+                    width: '40px',
+                    height: '40px',
+                    objectFit: 'cover',
+                  }}
+                  src={value.userPic}
+                />
+                {value.userId}({value.userNm})
+              </div>
+            </Link>
             <div>
               {(() => {
                 if (!value.isClick) {
