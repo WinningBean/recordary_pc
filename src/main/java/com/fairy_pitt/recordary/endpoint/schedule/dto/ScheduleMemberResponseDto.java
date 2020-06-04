@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ScheduleMemberResponseDto {
 
-    private Long scheduleCd;
+    //private Long scheduleCd;
     private Long userCd;
     private String userPic;
     private String userId;
@@ -17,7 +17,7 @@ public class ScheduleMemberResponseDto {
 
     public ScheduleMemberResponseDto(ScheduleMemberEntity entity)
     {
-        this.scheduleCd = entity.getScheduleFK().getScheduleCd();
+       // this.scheduleCd = entity.getScheduleFK().getScheduleCd();
         this.userCd = entity.getUserFK().getUserCd();
         this.scheduleState = entity.getScheduleState();
         this.userCd = entity.getUserFK().getUserCd();

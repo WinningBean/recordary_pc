@@ -22,7 +22,7 @@ public class ScheduleController {
     private final ScheduleMemberService scheduleMemberService;
 
     @PostMapping("/")
-    public Long groupCreate(@RequestBody ScheduleSaveRequestDto requestDto)
+    public Long scheduleCreate(@RequestBody ScheduleSaveRequestDto requestDto)
     {
         Long scheduleCd = scheduleService.save(requestDto);
         scheduleMemberService.save(requestDto.getScheduleMember(), scheduleCd);
@@ -44,6 +44,7 @@ public class ScheduleController {
     @PostMapping("showUserSchedule/{id}")
     public List<ScheduleResponseDto> showUserSchedule(@PathVariable Long id, @RequestBody ScheduleDateRequestDto responseDto){
         List<ScheduleResponseDto> result = scheduleService.showUserSchedule(responseDto, id, followerService.checkUserState(id));
-      return  scheduleMemberService.findMemberScheduleList(id, result, responseDto);
+        return scheduleMemberService.findUserAsMemberScheduleList(id, result, responseDto);
+
     }
 }
