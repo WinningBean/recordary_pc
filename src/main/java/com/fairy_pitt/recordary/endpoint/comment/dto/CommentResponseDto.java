@@ -11,6 +11,7 @@ public class CommentResponseDto {
     private Long commentCd;
     private UserResponseDto userFK;
     private String commentContent;
+    private int reCommentCount;
 //    private Long commentOriginFK;
 
     public CommentResponseDto(CommentEntity comment)
@@ -18,6 +19,7 @@ public class CommentResponseDto {
         this.commentCd = comment.getCommentCd();
         this.userFK = new UserResponseDto(comment.getCommentUserFK());
         this.commentContent = comment.getCommentContent();
+        this.reCommentCount = comment.getCommentOriginList().size();
 //        if (comment.getCommentOriginFK() != null) this.commentOriginFK = comment.getCommentOriginFK().getCommentCd();
     }
 }

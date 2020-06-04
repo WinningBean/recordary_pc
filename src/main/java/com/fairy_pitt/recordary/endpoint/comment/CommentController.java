@@ -22,22 +22,22 @@ public class CommentController {
         return commentService.save(requestDto);
     }
 
-    @PutMapping("/{id}")
-    public Long update(@PathVariable Long id, @RequestBody CommentUpdateRequestDto requestDto)
+    @PutMapping("/{commentCd}")
+    public Long update(@PathVariable Long commentCd, @RequestBody CommentUpdateRequestDto requestDto)
     {
-        return  commentService.update(id,requestDto);
+        return  commentService.update(commentCd,requestDto);
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id)
+    @DeleteMapping("/{commentCd}")
+    public void delete(@PathVariable Long commentCd)
     {
-        commentService.delete(id);
+        commentService.delete(commentCd);
     }
 
-    @GetMapping("/{id}")
-    public List<CommentResponseDto> findChildComment(@PathVariable Long id)
+    @GetMapping("/{commentCd}")
+    public List<CommentResponseDto> findChildComment(@PathVariable Long commentCd)
     {
-        return commentService.findChildComment(id);
+        return commentService.findChildComment(commentCd);
     }
 
 }
