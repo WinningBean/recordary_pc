@@ -58,8 +58,8 @@ public class UserController {
         return userService.getProfile(userId);
     }
 
-    @GetMapping("/search/{inputNm}")
-    public List<UserResponseDto> findNmUser(@PathVariable String inputNm){
+    @GetMapping("/search")
+    public List<UserResponseDto> findNmUser(@RequestParam(value = "input") String inputNm){
         return userService.findNmUser(inputNm);
     }
 
