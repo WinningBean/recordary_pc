@@ -27,12 +27,12 @@ public class CommentService {
 
     @Transactional
     public Long save(CommentRequestDto requestDto){
-        UserEntity user = userService.findEntity(requestDto.getCommentUserFK());
-        PostEntity post = postService.findEntity(requestDto.getCommentPostFK());
+        UserEntity user = userService.findEntity(requestDto.getUserCd());
+        PostEntity post = postService.findEntity(requestDto.getPostCd());
         CommentEntity comment = null;
-        if(requestDto.getCommentOriginFK() != null )
+        if(requestDto.getCommentOriginCd() != null )
         {
-            comment = commentRepository.findByCommentCd(requestDto.getCommentOriginFK());
+            comment = commentRepository.findByCommentCd(requestDto.getCommentOriginCd());
         }
         return  commentRepository.save(requestDto.toEntity(user, post,comment)).getCommentCd();
     }
