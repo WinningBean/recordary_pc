@@ -2,7 +2,6 @@ package com.fairy_pitt.recordary.endpoint.post.service;
 
 import com.fairy_pitt.recordary.common.entity.PostEntity;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
-import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleService;
 import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
@@ -10,16 +9,15 @@ import com.fairy_pitt.recordary.endpoint.media.service.MediaService;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleService;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -118,8 +116,6 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<PostResponseDto> timeLinePostList(Long userCd){
-        List<UserResponseDto> followingList = followerService.followingList(userCd);
-        List<GroupResponseDto> groupList = groupService.findUserGroups(userCd);
 
         List<PostResponseDto> postList = new ArrayList<>();
 
@@ -128,17 +124,16 @@ public class PostService {
             postList.add(new PostResponseDto(post));
         }
 
-        for (UserResponseDto userResponseDto : followingList){
-            List<PostEntity> followingPost = postRepository.findAllByUserFKOrderByCreatedDateDesc(userService.findEntity(userResponseDto.getUserCd()));
-            Boolean friendState = followerService.followEachOther(userCd, userResponseDto.getUserCd());
-            int publicState = 2;
-            if (friendState) publicState = 3;
+        for (UserResponseDto userResponseDto : followerService.followingList(userCd)){
+            int publicState = 1;
+            if (followerService.followEachOther(userCd, userResponseDto.getUserCd())) publicState = 2;
+            List<PostEntity> followingPost = postRepository.findAllByUserFKAndGroupFKAndPostPublicStateLessThanEqualOrderByCreatedDateDesc(userService.findEntity(userResponseDto.getUserCd()), null, publicState);
             for (PostEntity post : followingPost){
-                if (post.getPostPublicState() < publicState) postList.add(new PostResponseDto(post));
+                postList.add(new PostResponseDto(post));
             }
         }
 
-        for (GroupResponseDto groupResponseDto : groupList){
+        for (GroupResponseDto groupResponseDto : groupService.findUserGroups(userCd)){
             List<PostEntity> groupPost = postRepository.findAllByGroupFKOrderByCreatedDateDesc(groupService.findEntity(groupResponseDto.getGroupCd()));
             for (PostEntity post : groupPost){
                 postList.add(new PostResponseDto(post));
@@ -149,4 +144,51 @@ public class PostService {
         return postList;
     }
 
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> pagingTimeLinePostList(Long userCd, Long lastPostCd){
+
+        Map<Long, LocalDateTime> postMap = new HashMap<>();
+
+        List<PostEntity> userPost = postRepository.findAllByUserFKOrderByCreatedDateDesc(userService.findEntity(userCd));
+        for (PostEntity post : userPost){
+            postMap.put(post.getPostCd(), post.getModifiedDate());
+        }
+
+        for (UserResponseDto userResponseDto : followerService.followingList(userCd)){
+            int publicState = 1;
+            if (followerService.followEachOther(userCd, userResponseDto.getUserCd())) publicState = 2;
+            List<PostEntity> followingPost = postRepository.findAllByUserFKAndGroupFKAndPostPublicStateLessThanEqualOrderByCreatedDateDesc(userService.findEntity(userResponseDto.getUserCd()), null, publicState);
+            for (PostEntity post : followingPost){
+                postMap.put(post.getPostCd(), post.getModifiedDate());
+            }
+        }
+
+        for (GroupResponseDto groupResponseDto : groupService.findUserGroups(userCd)){
+            List<PostEntity> groupPost = postRepository.findAllByGroupFKOrderByCreatedDateDesc(groupService.findEntity(groupResponseDto.getGroupCd()));
+            for (PostEntity post : groupPost){
+                postMap.put(post.getPostCd(), post.getModifiedDate());
+            }
+        }
+
+        List<Long> cdSetList = new ArrayList<>(postMap.keySet());
+        Collections.sort(cdSetList, new Comparator<Long>() {
+            @Override
+            public int compare(Long o1, Long o2) {
+                return postMap.get(o2).compareTo(postMap.get(o1));
+            }
+        });
+
+        int currentIndex;
+        if (lastPostCd == null) currentIndex = 0;
+        else currentIndex = cdSetList.indexOf(lastPostCd) + 1;
+
+        List<PostResponseDto> postPagingList = new ArrayList<>();
+
+        while (cdSetList.size() > currentIndex && postPagingList.size() < 5) {
+            postPagingList.add(new PostResponseDto(this.findEntity(cdSetList.get(currentIndex))));
+            currentIndex++;
+        }
+
+        return postPagingList;
+    }
 }

@@ -53,18 +53,23 @@ public class PostController {
     }
 
     @GetMapping("/user/{userCd}/search")
-    public List<PostResponseDto> userPostSearch(@PathVariable Long userCd, @RequestParam(value = "input")String searchContent){
+    public List<PostResponseDto> userPostSearch(@PathVariable Long userCd, @RequestParam(value = "input") String searchContent){
         return postService.userPostSearch(searchContent, userCd);
     }
 
     @GetMapping("/group/{groupCd}/search")
-    public List<PostResponseDto> groupPostSearch(@PathVariable Long groupCd, @RequestParam(value = "input")String searchContent){
+    public List<PostResponseDto> groupPostSearch(@PathVariable Long groupCd, @RequestParam(value = "input") String searchContent){
         return postService.groupPostSearch(searchContent, groupCd);
     }
 
     @GetMapping("/timeLine/{userCd}")
     public List<PostResponseDto> timeLinePostList(@PathVariable Long userCd){
         return postService.timeLinePostList(userCd);
+    }
+
+    @GetMapping("/pagingTimeLine/{userCd}")
+    public List<PostResponseDto> pagingTimeLinePostList(@PathVariable Long userCd, @RequestParam(value = "lastCd", required = false) Long lastPostCd){
+        return postService.pagingTimeLinePostList(userCd, lastPostCd);
     }
 }
 

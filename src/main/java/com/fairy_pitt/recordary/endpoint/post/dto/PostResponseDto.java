@@ -51,9 +51,9 @@ public class PostResponseDto implements Comparable<PostResponseDto>{
 
     @Override
     public int compareTo(PostResponseDto postResponseDto){
-        if (this.getCreatedDate().isBefore(postResponseDto.getCreatedDate())){
+        if (this.getModifiedDate().isBefore(postResponseDto.getModifiedDate())){
             return 1;
-        }else if (this.getCreatedDate().isAfter(postResponseDto.getCreatedDate())){
+        }else if (this.getModifiedDate().isAfter(postResponseDto.getModifiedDate())){
             return -1;
         }else{
             return 0;
