@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CommentRequestDto {
 
-    private Long commentUserFK;
-    private Long commentPostFK;
+    private Long userCd;
+    private Long postCd;
     private String commentContent;
-    private Long commentOriginFK;
+    private Long commentOriginCd;
 
     public CommentEntity toEntity(UserEntity user, PostEntity Post, CommentEntity comment){
         return CommentEntity.builder()
@@ -23,6 +23,5 @@ public class CommentRequestDto {
                 .commentContent(commentContent)
                 .build();
     }
-
 
 }
