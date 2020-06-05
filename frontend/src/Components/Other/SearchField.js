@@ -100,20 +100,13 @@ export default function SearchAppBar(props) {
       //     }
       //   ]
       // };
-
-      const addedUserData = userData.map((value) => {
-        return {
-          ...value,
-          isClick: false,
-        };
-      });
       // const addedGroupData = groupData.searchedGroup.map(value => {
       //   return {
       //     ...value,
       //     group_click: false
       //   };
       // });
-      setData(addedUserData);
+      setData(userData);
       setsearchState(true);
     }
   };

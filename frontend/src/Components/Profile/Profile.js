@@ -80,7 +80,7 @@ class Profile extends React.Component {
       return;
     }
     console.log(data);
-    if (this.props.isLogin && data.userDto.userCd === this.props.user.userCd) {
+    if (this.props.isLogin && data.userInfo.userCd === this.props.user.userCd) {
       type = 0;
     }
     // await axios.post('/tab/create')
@@ -100,8 +100,8 @@ class Profile extends React.Component {
     });
 
     try {
-      console.log(this.state.info.userDto.userCd);
-      const UserPostList = (await axios.get(`/post/user/${this.state.info.userDto.userCd}`)).data;
+      console.log(this.state.info.userInfo.userCd);
+      const UserPostList = (await axios.get(`/post/user/${this.state.info.userInfo.userCd}`)).data;
       this.setState({ post: JSON.parse(JSON.stringify(UserPostList)) });
       console.log(this.state.post);
     } catch (error) {
@@ -176,7 +176,7 @@ class Profile extends React.Component {
       if (this.state.followerNumClick) {
         return (
           <Follower
-            userId={this.state.info.userDto.userId}
+            userId={this.state.info.userInfo.userId}
             isFollower={true}
             onCancel={() => this.setState({ followerNumClick: false })}
           ></Follower>
@@ -184,7 +184,7 @@ class Profile extends React.Component {
       } else if (this.state.followingNumClick) {
         return (
           <Follower
-            userId={this.state.info.userDto.userId}
+            userId={this.state.info.userInfo.userId}
             isFollower={false}
             onCancel={() => this.setState({ followingNumClick: false })}
           ></Follower>
@@ -375,7 +375,7 @@ class Profile extends React.Component {
                     <div id='user-image'>
                       <img
                         alt='profile-img'
-                        src={this.state.type >= 2 ? this.state.info.groupPic : this.state.info.userDto.userPic}
+                        src={this.state.type >= 2 ? this.state.info.groupPic : this.state.info.userInfo.userPic}
                       />
                     </div>
                     <div id='userinfo-text'>
@@ -405,7 +405,7 @@ class Profile extends React.Component {
                               )}
                             </>
                           ) : (
-                            `${this.state.info.userDto.userId}(${this.state.info.userDto.userNm})`
+                            `${this.state.info.userInfo.userId}(${this.state.info.userInfo.userNm})`
                           )}
                         </div>
                         {this.state.type >= 2 ? (
@@ -561,14 +561,14 @@ class Profile extends React.Component {
                         )}
                       </div>
                       <div className='status-content'>
-                        <div>{this.state.type >= 2 ? this.state.info.groupEx : this.state.info.userDto.userEx}</div>
+                        <div>{this.state.type >= 2 ? this.state.info.groupEx : this.state.info.userInfo.userEx}</div>
                       </div>
                     </div>
                   </div>
                   <div id='schedule-area'>
                     <Calendar
                       type={this.state.type}
-                      info={this.state.type === 2 || this.state.type === 3 ? this.state.info : this.state.info.userDto}
+                      info={this.state.type === 2 || this.state.type === 3 ? this.state.info : this.state.info.userInfo}
                       clickTab={
                         this.state.clickTab === undefined
                           ? undefined
@@ -682,7 +682,7 @@ class Profile extends React.Component {
             {this.state.alert}
             {this.state.isOpenAddTab ? (
               <AddTab
-                userCd={this.state.info.userDto.userCd}
+                userCd={this.state.info.userInfo.userCd}
                 onClose={() => this.setState({ isOpenAddTab: false })}
                 onSuccess={(tabInfo) => {
                   this.setState({

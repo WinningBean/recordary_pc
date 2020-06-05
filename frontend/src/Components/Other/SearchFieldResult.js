@@ -25,12 +25,6 @@ const SearchFieldResult = (props) => {
   const [clickTab, setClickTab] = useState(0);
   const [alertDialog, setAlertDialog] = useState(null);
 
-  const followerChange = (index, click) => {
-    const array = userList.slice();
-    array[index] = { ...array[index], isClick: click };
-    setUserList(array);
-  };
-
   const groupChange = (index, click) => {
     var array = groupList.slice();
     array[index] = { ...array[index], isClick: click };
@@ -58,9 +52,9 @@ const SearchFieldResult = (props) => {
   const exfollowList = () => {
     return userList.map((value, index) => {
       return (
-        <li key={value.userId} key={value.userId}>
+        <li key={value.userInfo.userId} key={value.userInfo.userId}>
           <div className='follower_list'>
-            <Link to={`/profile/${value.userId}`}>
+            <Link to={`/profile/${value.userInfo.userId}`}>
               <div
                 style={{
                   display: 'flex',
@@ -69,7 +63,7 @@ const SearchFieldResult = (props) => {
                 }}
               >
                 <img
-                  alt={`${value.userNm} img`}
+                  alt={`${value.userInfo.userNm} img`}
                   style={{
                     marginRight: '10px',
                     borderRadius: '50%',
@@ -77,20 +71,20 @@ const SearchFieldResult = (props) => {
                     height: '40px',
                     objectFit: 'cover',
                   }}
-                  src={value.userPic}
+                  src={value.userInfo.userPic}
                 />
-                {value.userId}({value.userNm})
+                {value.userInfo.userId}({value.userInfo.userNm})
               </div>
             </Link>
             <div>
               {(() => {
-                if (!value.isClick) {
+                if (!value.userFollowTarget) {
                   return (
                     <FollowButton
-                      key={`button-${value.userId}`}
+                      key={`button-${value.userInfo.userId}`}
                       onClick={async (e) => {
                         try {
-                          const isSuccess = await axios.get(`/follow/${value.userCd}`);
+                          const isSuccess = await axios.get(`/follow/${value.userInfo.userCd}`);
                           if (isSuccess) {
                             setAlertDialog(
                               <Snackbar
@@ -101,8 +95,10 @@ const SearchFieldResult = (props) => {
                                 }}
                               />
                             );
-                            followerChange(index, !value.isClick);
-                            props.onSaveFriend(value);
+                            const copyList = userList.slice();
+                            copyList[index] = { ...value, userFollowTarget: true };
+                            setUserList(copyList);
+                            // props.onSaveFriend(value);
                             return;
                           } else {
                             setAlertDialog(
@@ -148,7 +144,9 @@ const SearchFieldResult = (props) => {
                                 }}
                               />
                             );
-                            followerChange(index, !value.user_click);
+                            const copyList = userList.slice();
+                            copyList[index] = { ...value, userFollowTarget: false };
+                            setUserList(copyList);
                             return;
                           } else {
                             setAlertDialog(
