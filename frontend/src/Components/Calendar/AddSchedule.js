@@ -28,7 +28,7 @@ function rgbToHex(r, g, b) {
 }
 
 // 255,197,0
-export default ({ data, clickDate, onClose, onSuccess }) => {
+export default ({ data, clickTab, clickDate, onClose, onSuccess, groupCd }) => {
   const [color, setColor] = useState({
     r: 255,
     g: 197,
@@ -36,6 +36,7 @@ export default ({ data, clickDate, onClose, onSuccess }) => {
     a: 1,
   });
   const [isColorClick, setIsColorClick] = useState(false);
+  console.log(data.userCd);
   const [info, setInfo] = useState({
     tabCd: null,
     userCd: data.userCd,
@@ -46,10 +47,7 @@ export default ({ data, clickDate, onClose, onSuccess }) => {
     schedulePublicState: 0,
     scheduleMembers: [],
   });
-  const [switchInfo, setSwitchInfo] = useState({
-    str: false,
-    end: false,
-  });
+  const [switchInfo, setSwitchInfo] = useState(false);
   const [isShowMemberSearch, setIsShowMemberSearch] = useState(false);
   const [dialog, setDialog] = useState(null);
   return (
@@ -145,8 +143,8 @@ export default ({ data, clickDate, onClose, onSuccess }) => {
           onClick={async () => {
             setDialog(<Snackbar severit='info' content='데이터 요청중...' onClose={() => setDialog(null)} />);
 
-            const str = switchInfo.str ? startOfDay(info.scheduleStr) : info.scheduleStr;
-            const end = switchInfo.end ? startOfSecond(endOfDay(info.scheduleEnd)) : info.scheduleEnd;
+            const str = switchInfo ? startOfDay(info.scheduleStr) : info.scheduleStr;
+            const end = switchInfo ? startOfSecond(endOfDay(info.scheduleEnd)) : info.scheduleEnd;
             if (str >= end) {
               setDialog(
                 <AlertDialog
@@ -158,7 +156,7 @@ export default ({ data, clickDate, onClose, onSuccess }) => {
               return;
             }
             console.log({
-              tabCd: null,
+              tabCd: clickTab === undefined ? null : clickTab,
               userCd: data.userCd,
               scheduleNm: info.scheduleNm,
               scheduleEx: info.scheduleEx,
@@ -171,7 +169,8 @@ export default ({ data, clickDate, onClose, onSuccess }) => {
             try {
               const scCd = (
                 await axios.post('/schedule/', {
-                  tabCd: null,
+                  tabCd: clickTab === undefined ? null : clickTab,
+                  groupCd: groupCd === undefined ? null : groupCd, 
                   userCd: data.userCd,
                   scheduleNm: info.scheduleNm,
                   scheduleEx: info.scheduleEx,
@@ -183,6 +182,7 @@ export default ({ data, clickDate, onClose, onSuccess }) => {
                 })
               ).data;
               onSuccess({
+                tab: clickTab === undefined ? null : clickTab,
                 cd: scCd,
                 nm: info.scheduleNm,
                 ex: info.scheduleEx,

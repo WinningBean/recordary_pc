@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './SearchField.css';
 
+import { Link } from 'react-router-dom';
+
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { styled } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -22,12 +24,6 @@ const SearchFieldResult = (props) => {
   const [followerIconClick, setFollowerIconClick] = useState(false);
   const [clickTab, setClickTab] = useState(0);
   const [alertDialog, setAlertDialog] = useState(null);
-
-  const followerChange = (index, click) => {
-    const array = userList.slice();
-    array[index] = { ...array[index], isClick: click };
-    setUserList(array);
-  };
 
   const groupChange = (index, click) => {
     var array = groupList.slice();
@@ -56,37 +52,39 @@ const SearchFieldResult = (props) => {
   const exfollowList = () => {
     return userList.map((value, index) => {
       return (
-        <li key={value.userId} key={value.userId}>
+        <li key={value.userInfo.userId} key={value.userInfo.userId}>
           <div className='follower_list'>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                marginBottom: '10px',
-              }}
-            >
-              <img
-                alt={`${value.userNm} img`}
+            <Link to={`/profile/${value.userInfo.userId}`}>
+              <div
                 style={{
-                  marginRight: '10px',
-                  borderRadius: '50%',
-                  width: '40px',
-                  height: '40px',
-                  objectFit: 'cover',
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '10px',
                 }}
-                src={value.userPic}
-              />
-              {value.userId}({value.userNm})
-            </div>
+              >
+                <img
+                  alt={`${value.userInfo.userNm} img`}
+                  style={{
+                    marginRight: '10px',
+                    borderRadius: '50%',
+                    width: '40px',
+                    height: '40px',
+                    objectFit: 'cover',
+                  }}
+                  src={value.userInfo.userPic}
+                />
+                {value.userInfo.userId}({value.userInfo.userNm})
+              </div>
+            </Link>
             <div>
               {(() => {
-                if (!value.isClick) {
+                if (!value.userFollowTarget) {
                   return (
                     <FollowButton
-                      key={`button-${value.userId}`}
+                      key={`button-${value.userInfo.userId}`}
                       onClick={async (e) => {
                         try {
-                          const isSuccess = await axios.get(`/follow/${value.userCd}`);
+                          const isSuccess = await axios.get(`/follow/${value.userInfo.userCd}`);
                           if (isSuccess) {
                             setAlertDialog(
                               <Snackbar
@@ -97,8 +95,10 @@ const SearchFieldResult = (props) => {
                                 }}
                               />
                             );
-                            followerChange(index, !value.isClick);
-                            props.onSaveFriend(value);
+                            const copyList = userList.slice();
+                            copyList[index] = { ...value, userFollowTarget: true };
+                            setUserList(copyList);
+                            // props.onSaveFriend(value);
                             return;
                           } else {
                             setAlertDialog(
@@ -144,7 +144,9 @@ const SearchFieldResult = (props) => {
                                 }}
                               />
                             );
-                            followerChange(index, !value.user_click);
+                            const copyList = userList.slice();
+                            copyList[index] = { ...value, userFollowTarget: false };
+                            setUserList(copyList);
                             return;
                           } else {
                             setAlertDialog(

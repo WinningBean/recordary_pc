@@ -278,7 +278,7 @@ const HeaderMenu = (props) => {
 
   const getFriendList = async () => {
     try {
-      const { data } = await axios.get(`/friends/${props.data.userId}`);
+      const { data } = await axios.get(`/friends/${props.data.userCd}`);
       if (data === '') {
         props.onSaveFriendList([]);
       }

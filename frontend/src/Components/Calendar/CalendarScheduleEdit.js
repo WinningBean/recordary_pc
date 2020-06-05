@@ -3,9 +3,13 @@ import { ChromePicker } from 'react-color';
 
 import '../Profile/PostAppend.css';
 import DTP from '../UI/DTP';
-import SelectGroup from '../UI/SelectGroup';
+import AlertDialog from '../Other/AlertDialog';
+import GroupMemberSearch from '../Group/GroupMemberSearch';
 import PublicRange from '../UI/PublicRange';
 
+import Snackbar from '../UI/Snackbar';
+
+import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import TextField from '@material-ui/core/TextField';
@@ -15,24 +19,30 @@ import { makeStyles } from '@material-ui/core/styles';
 import Popover from '@material-ui/core/Popover';
 import CreateIcon from '@material-ui/icons/Create';
 
-const useStyles = makeStyles(theme => ({
+import axios from 'axios';
+
+const useStyles = makeStyles((theme) => ({
   chip: {
     marginRight: '4px',
-    marginBottom: '4px'
-  }
+    marginBottom: '4px',
+  },
 }));
 
-const CalendarScheduleEdit = props => {
+const CalendarScheduleEdit = ({ onCancel, info, onChangeStrDate, onChangeEndData, userCd }) => {
   const classes = useStyles();
-  const data = props.data;
+  const [dialog, setDialog] = useState(null);
   const [open, setOpen] = React.useState(false);
   const [colorClick, setColorClick] = useState(false);
+  const [switchInfo, setSwitchInfo] = useState(false);
   const [scheduleColor, setScheduleColor] = useState({
     r: '20',
     g: '81',
     b: '51',
-    a: '1'
+    a: '1',
   });
+  const [schedule, setSchedule] = useState(info);
+  const [addedSchedule, setAddedSchedule] = useState([]);
+  const [subtractedSchedule, setSubtractedSchedule] = useState([]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -47,44 +57,44 @@ const CalendarScheduleEdit = props => {
           transitionProperty: 'background-color',
           transitionDuration: '0.3s',
           transitionTimingFunction: 'ease-out',
-          backgroundColor: `rgba(${scheduleColor.r}, ${scheduleColor.g}, ${scheduleColor.b}, ${scheduleColor.a})`
+          backgroundColor: `rgba(${scheduleColor.r}, ${scheduleColor.g}, ${scheduleColor.b}, ${scheduleColor.a})`,
         }}
       >
         <div className='Post-Append-titleName'>
-          <CreateIcon
-            style={{ fontSize: '40px', color: 'white', marginLeft: '10px' }}
-          />
+          <CreateIcon style={{ fontSize: '40px', color: 'white', marginLeft: '10px' }} />
           <div className='PostAdd-title'>일정 수정</div>
         </div>
       </div>
 
       <div className='Post-Media-Schedule-Append-Form '>
-        <div className='Post-Append-Group' style={{ marginLeft: '12px' }}>
-          <div>
-            <SelectGroup />
-          </div>
-
-          <div className='schedule-media-button '>
-            <PublicRange />
-          </div>
-        </div>
-
         <div>
           <div className='Post-Append-title post-Append'>
-            <TextField id='post_title' label='제목' />
+            <TextField
+              id='post_title'
+              label='제목'
+              defaultValue={schedule.ex}
+              onChange={(e) => setSchedule({ ...schedule, ex: e.target.value })}
+            />
             <div className='selectColor-form'>
               <span>일정 색상 설정</span>
               <div
                 className='selectColor'
                 onClick={() => setColorClick(true)}
                 style={{
-                  backgroundColor: `rgba(${scheduleColor.r}, ${scheduleColor.g}, ${scheduleColor.b}, ${scheduleColor.a})`
+                  backgroundColor: `rgba(${scheduleColor.r}, ${scheduleColor.g}, ${scheduleColor.b}, ${scheduleColor.a})`,
                 }}
               />
             </div>
           </div>
           <div className='Post-Append-Schedule'>
-            <DTP />
+            <DTP
+              strDate={schedule.start}
+              endDate={schedule.end}
+              onChangeStrDate={(data) => setSchedule({ ...schedule, start: data })}
+              onChangeEndDate={(data) => setSchedule({ ...schedule, end: data })}
+              switchInfo={switchInfo}
+              onChangeSwitch={(bool) => setSwitchInfo(bool)}
+            />
           </div>
           <div className='Post-Append-Tag-User post-Append'>
             <Chip
@@ -92,10 +102,90 @@ const CalendarScheduleEdit = props => {
               className={classes.chip}
               label='성호'
               style={{
-                marginLeft: '5px'
+                marginLeft: '5px',
+                marginBottom: '5px',
               }}
               clickable
             />
+            {schedule.members.map((value, index) => (
+              <Chip
+                avatar={<Avatar alt={`${value.userNm} img`} src={value.userPic} />}
+                key={`member-${value.userCd}`}
+                className={classes.chip}
+                label={value.userNm}
+                clickable
+                variant='outlined'
+                onDelete={() => {
+                  setDialog(
+                    <AlertDialog
+                      severity='info'
+                      content='정말로 삭제하시겠습니까'
+                      onAlertClose={() => setDialog(null)}
+                      onAlertSubmit={() => {
+                        const k = JSON.parse(JSON.stringify(schedule.members));
+                        k.splice(index, 1);
+                        setSchedule({
+                          ...schedule,
+                          members: k,
+                        });
+                        setSubtractedSchedule(subtractedSchedule.concat(value.userCd));
+                        setDialog(
+                          <Snackbar
+                            severity='success'
+                            content='삭제하였습니다'
+                            duration={1000}
+                            onClose={() => setDialog(null)}
+                          />
+                        );
+                      }}
+                    />
+                  );
+                }}
+              />
+            ))}
+            <Chip
+              icon={<AddIcon />}
+              style={{
+                marginLeft: '5px',
+                marginBottom: '5px',
+              }}
+              label='ADD'
+              clickable
+              variant='outlined'
+              onClick={() =>
+                setDialog(
+                  <GroupMemberSearch
+                    type={1}
+                    onSelect={(value) => {
+                      var isOverlap = false;
+                      for (let i = 0; i < schedule.members.length; i++) {
+                        if (value.userCd === schedule.members[i].userCd || value.userCd === userCd) {
+                          return;
+                        }
+                      }
+                      setSchedule({ ...schedule, members: schedule.members.concat(value) });
+                      setAddedSchedule(addedSchedule.concat(value.userCd));
+                      setDialog(
+                        <Snackbar
+                          severity='success'
+                          content='추가하였습니다.'
+                          duration={1000}
+                          onClose={() => setDialog(null)}
+                        />
+                      );
+                    }}
+                    onCancel={() => setDialog(false)}
+                  />
+                )
+              }
+            />
+            {/* {isShowMemberSearch ? (
+              <GroupMemberSearch
+                type={1}
+                onSelect={(value) => setInfo({ ...info, scheduleMembers: info.scheduleMembers.concat(value) })}
+                onCancel={() => setIsShowMemberSearch(false)}
+              />
+            ) : null} */}
           </div>
         </div>
         {colorClick === true ? (
@@ -103,27 +193,36 @@ const CalendarScheduleEdit = props => {
             open={colorClick}
             anchorOrigin={{
               vertical: 'center',
-              horizontal: 'center'
+              horizontal: 'center',
             }}
             transformOrigin={{
               vertical: 'center',
-              horizontal: 'left'
+              horizontal: 'left',
             }}
             onClose={() => setColorClick(false)}
           >
-            <ChromePicker
-              color={scheduleColor}
-              onChange={color => setScheduleColor(color.rgb)}
-            />
+            <ChromePicker color={scheduleColor} onChange={(color) => setScheduleColor(color.rgb)} />
           </Popover>
         ) : null}
         <div className='Post-Append-Bottom'>
           <div className='Post-Upload-buttons'>
-            <Button>수정</Button>
-            <Button onClick={() => props.onCancel()}>취소</Button>
+            <PublicRange />
+            <Button
+              onClick={async () => {
+                console.log(schedule, addedSchedule, subtractedSchedule);
+                await axios.post(`/schedule/update/${schedule.cd}`, {
+                  createMember: addedSchedule,
+                  deleteMember: subtractedSchedule,
+                });
+              }}
+            >
+              수정
+            </Button>
+            <Button onClick={() => onCancel()}>취소</Button>
           </div>
         </div>
       </div>
+      {dialog}
     </Dialog>
   );
 };
