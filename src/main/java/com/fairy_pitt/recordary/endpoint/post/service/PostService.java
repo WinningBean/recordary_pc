@@ -2,6 +2,8 @@ package com.fairy_pitt.recordary.endpoint.post.service;
 
 import com.fairy_pitt.recordary.common.entity.PostEntity;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
+import com.fairy_pitt.recordary.endpoint.post.dto.GroupPostResponseDto;
+import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleService;
 import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
@@ -74,9 +76,9 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponseDto> groupPost(Long groupCd){
+    public List<GroupPostResponseDto> groupPost(Long groupCd){
         return postRepository.findAllByGroupFKOrderByCreatedDateDesc(groupService.findEntity(groupCd)).stream()
-                .map(PostResponseDto::new)
+                .map(GroupPostResponseDto::new)
                 .collect(Collectors.toList());
     }
 

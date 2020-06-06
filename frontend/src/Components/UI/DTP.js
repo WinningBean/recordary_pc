@@ -43,12 +43,12 @@ export default function DTP({ strDate, endDate, onChangeStrDate, onChangeEndDate
         />
 
         <KeyboardTimePicker
-          readOnly={switchInfo.str}
+          readOnly={switchInfo}
           variant='inline'
           margin='normal'
           id='time-picker'
           label='시작시간'
-          value={switchInfo.str ? startOfDay(strDate) : strDate}
+          value={switchInfo ? startOfDay(strDate) : strDate}
           onChange={handleStartDateChange}
           KeyboardButtonProps={{
             'aria-label': 'change time',
@@ -56,20 +56,6 @@ export default function DTP({ strDate, endDate, onChangeStrDate, onChangeEndDate
           keyboardIcon={<AccessAlarmsIcon>Icon</AccessAlarmsIcon>}
         />
       </Grid>
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={switchInfo.str}
-              onChange={() => {
-                onChangeSwitch({ ...switchInfo, str: !switchInfo.str });
-              }}
-              color='primary'
-            />
-          }
-          label='하루종일'
-        />
-      </div>
       <Grid container justify='space-around'>
         <KeyboardDatePicker
           // disableToolbar
@@ -85,12 +71,12 @@ export default function DTP({ strDate, endDate, onChangeStrDate, onChangeEndDate
           }}
         />
         <KeyboardTimePicker
-          readOnly={switchInfo.end}
+          readOnly={switchInfo}
           variant='inline'
           margin='normal'
           id='time-picker'
           label='종료시간'
-          value={switchInfo.end ? endOfDay(endDate) : endDate}
+          value={switchInfo ? endOfDay(endDate) : endDate}
           onChange={handleFinishDateChange}
           KeyboardButtonProps={{
             'aria-label': 'change time',
@@ -102,9 +88,9 @@ export default function DTP({ strDate, endDate, onChangeStrDate, onChangeEndDate
         <FormControlLabel
           control={
             <Switch
-              checked={switchInfo.end}
+              checked={switchInfo}
               onChange={() => {
-                onChangeSwitch({ ...switchInfo, end: !switchInfo.end });
+                onChangeSwitch(!switchInfo);
               }}
               color='primary'
             />

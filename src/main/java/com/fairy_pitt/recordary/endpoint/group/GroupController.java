@@ -1,20 +1,24 @@
 package com.fairy_pitt.recordary.endpoint.group;
 
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupMemberRequestDto;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupSaveRequestDto;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.group.dto.*;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
 import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
+import com.fairy_pitt.recordary.endpoint.post.dto.GroupPostResponseDto;
+import com.fairy_pitt.recordary.endpoint.post.service.PostService;
+import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleDateRequestDto;
+import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleResponseDto;
+import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleService;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -24,6 +28,8 @@ import java.util.List;
 public class GroupController {
 
     private final GroupService groupService;
+    private final PostService postService;
+    private  final ScheduleService scheduleService;
     private final GroupMemberService groupMemberService;
     private final S3UploadComponent s3UploadComponent;
     private final UserService userService;
@@ -62,12 +68,13 @@ public class GroupController {
     }
 
     @GetMapping("findGroup/{groupNm}")
-    public List<GroupResponseDto> findAllGroup(@PathVariable String groupNm) {
+    public List<GroupResponseDto> findByGroupName(@PathVariable String groupNm) {
         return groupService.findGroupByName(groupNm);
     }
 
     @GetMapping("{groupCd}")
-    public GroupResponseDto readGroup(@PathVariable Long groupCd) {
+    public GroupPageResponseDto groupPage(@PathVariable Long groupCd) {
+
         return groupService.groupPage(groupCd);
     }
 
@@ -89,6 +96,12 @@ public class GroupController {
     public List<UserResponseDto> findGroupMember(@PathVariable Long groupCd)
     {
         return groupService.findGroupMembers(groupCd);
+    }
+
+    @PostMapping("schedule/{groupCd}")
+    public List<ScheduleResponseDto> groupSchedule(@PathVariable Long groupCd, ScheduleDateRequestDto date){
+
+        return scheduleService.findGroupSchedule(groupCd, date);
     }
 
 

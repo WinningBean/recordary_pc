@@ -24,10 +24,14 @@ public class ScheduleMemberService {
     private final UserService userService;
 
     @Transactional
-    public void delete(ScheduleMemberEntityPK id) {
-        ScheduleMemberEntity scheduleMemberEntity = scheduleMemberRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
-        scheduleMemberRepository.delete(scheduleMemberEntity);
+    public void delete( List<Long> userCd, Long ScheduleCd) {
+        ScheduleEntity schedule = scheduleService.findEntity(ScheduleCd);
+
+        for(Long temp : userCd) {
+            UserEntity user = userService.findEntity(temp);
+            ScheduleMemberEntity scheduleMemberEntity = scheduleMemberRepository.findByUserFKAndScheduleFK(user, schedule);
+            scheduleMemberRepository.delete(scheduleMemberEntity);
+        }
     }
 
     @Transactional

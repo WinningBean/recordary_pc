@@ -1,5 +1,6 @@
 package com.fairy_pitt.recordary.common.repository;
 
+import com.fairy_pitt.recordary.common.entity.GroupEntity;
 import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
 import com.fairy_pitt.recordary.common.entity.ScheduleTabEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
@@ -13,8 +14,9 @@ import java.util.List;
 public interface ScheduleRepository extends JpaRepository<ScheduleEntity,Long> {
     ScheduleEntity findByScheduleCd(Long scheduleCd);
     List<ScheduleEntity> findByScheduleStrBetween(Date fromDate, Date toDate);
-    List<ScheduleEntity> findByUserFkAndSchedulePublicStateLessThanEqualAndScheduleStrBetween(UserEntity user, int state,Date fromDate, Date toDate);
-    List<ScheduleEntity> findByUserFkAndTabFKAndSchedulePublicStateLessThanEqualAndScheduleStrBetween(UserEntity user, ScheduleTabEntity tab, int state, Date fromDate, Date toDate);
-
+    List<ScheduleEntity> findByUserFkAndGroupFKIsNullAndSchedulePublicStateLessThanEqualAndScheduleStrBetween(UserEntity user, int state,Date fromDate, Date toDate);
+    List<ScheduleEntity> findByUserFkAndGroupFKIsNullAndTabFKAndSchedulePublicStateLessThanEqualAndScheduleStrBetween(UserEntity user, ScheduleTabEntity tab, int state, Date fromDate, Date toDate);
+    List<ScheduleEntity> findByUserFkAndGroupFKIsNullAndSchedulePublicStateAndScheduleStrBetween(UserEntity user, int state,Date fromDate, Date toDate);
+    List<ScheduleEntity> findByGroupFKAndScheduleStrBetween(GroupEntity group, Date fromDate, Date toDate);
 
 }

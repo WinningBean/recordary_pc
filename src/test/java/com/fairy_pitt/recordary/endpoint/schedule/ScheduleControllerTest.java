@@ -93,8 +93,9 @@ public class ScheduleControllerTest {
         Date scheduleEnd = Timestamp.valueOf("2020-03-26 12:13:24");
 
         ScheduleSaveRequestDto requestDto = ScheduleSaveRequestDto.createScheduleBuilder()
-                .tabFK(null)
-                .userFk(null)
+                .groupCd(null)
+                .tabCd(null)
+                .userCd(null)
                 .scheduleNm(scheduleNm)
                 .scheduleEx(scheduleEx)
                 .scheduleStr(scheduleStr)
@@ -178,7 +179,7 @@ public class ScheduleControllerTest {
 
     }
 
- /*   @Test
+/*    @Test
     public void schedule_가져오기() throws Exception {
 
         //given
@@ -199,6 +200,8 @@ public class ScheduleControllerTest {
                 .userPw("testPassword")
                 .userNm("테스트 유저1")
                 .build());
+
+
 
 
        ScheduleTabEntity tab = scheduleTabRepository.save(ScheduleTabEntity.builder()

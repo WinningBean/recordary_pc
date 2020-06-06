@@ -1,6 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.group.dto;
 
-import com.fairy_pitt.recordary.common.entity.GroupApplyEntity;
+import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,12 +8,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GroupMemberResponseDto {
 
-    private Long groupCd;
     private Long userCd;
+    private String userPic;
+    private String userId;
+    private String userNm;
 
-    public GroupMemberResponseDto(GroupApplyEntity entity)
+    public GroupMemberResponseDto(GroupMemberEntity entity)
     {
-        this.groupCd = entity.getGroupFK().getGroupCd();
         this.userCd = entity.getUserFK().getUserCd();
+        this.userNm = entity.getUserFK().getUserNm();
+        this.userId =  entity.getUserFK().getUserId();
+        this.userPic = entity.getUserFK().getUserPic();
     }
 }

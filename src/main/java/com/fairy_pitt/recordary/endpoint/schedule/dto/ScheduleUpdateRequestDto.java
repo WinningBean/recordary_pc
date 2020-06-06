@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 
 @NoArgsConstructor
@@ -18,6 +19,8 @@ public class ScheduleUpdateRequestDto {
     private Date scheduleEnd;
     private String scheduleCol;
     private int schedulePublicState;
+    private List<Long> createMember;
+    private List<Long> deleteMember;
 
     @Builder(builderClassName = "updateScheduleBuilder", builderMethodName = "updateScheduleBuilder")
     public ScheduleUpdateRequestDto(Long TabCodeFK,
@@ -26,7 +29,9 @@ public class ScheduleUpdateRequestDto {
                                   Date scheduleStr,
                                   Date scheduleEnd,
                                   String scheduleCol,
-                                  int schedulePublicState)
+                                  int schedulePublicState,
+                                    List<Long> createMember,
+                                    List<Long> deleteMember)
     {
         this.TabCodeFK = TabCodeFK;
         this.scheduleNm = scheduleNm;
@@ -35,5 +40,7 @@ public class ScheduleUpdateRequestDto {
         this.scheduleEnd = scheduleEnd;
         this.scheduleCol = scheduleCol;
         this.schedulePublicState = schedulePublicState;
+        this.createMember = createMember;
+        this.deleteMember = deleteMember;
     }
 }
