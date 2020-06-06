@@ -2,7 +2,6 @@ package com.fairy_pitt.recordary.endpoint.user.service;
 
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
-import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleResponseDto;
 import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
 import com.fairy_pitt.recordary.endpoint.user.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -114,7 +113,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserEntity currentUser(){
-        return findEntity(String.valueOf(httpSession.getAttribute("loginUser")));
+        return findEntity(currentUserCd());
     }
 
     @Transactional(readOnly = true)
@@ -155,14 +154,6 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserEntity findEntity(Long userCd) {
         return userRepository.findByUserCd(userCd);
-    }
-
-    @Transactional(readOnly = true)
-    public List<ScheduleResponseDto> findUserSchedules(Long userCd)
-    {
-        return userRepository.findByUserCd(userCd).getUserScheduleList().stream()
-                .map(ScheduleResponseDto::new)
-                .collect(Collectors.toList());
     }
 }
 

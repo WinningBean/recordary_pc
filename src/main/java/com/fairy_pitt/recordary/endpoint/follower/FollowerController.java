@@ -1,5 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.follower;
 
+import com.fairy_pitt.recordary.endpoint.follower.dto.FollowerRequestDto;
 import com.fairy_pitt.recordary.endpoint.follower.dto.FollowerStateResponseDto;
 import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
@@ -15,14 +16,14 @@ import java.util.List;
 public class FollowerController {
     private final FollowerService followerService;
 
-    @GetMapping("/follow/{targetCd}")
-    public Boolean follow(@PathVariable("targetCd") Long targetCd){
-        return followerService.save(targetCd);
+    @PostMapping("/follow")
+    public Boolean follow(@RequestBody FollowerRequestDto requestDto){
+        return followerService.save(requestDto);
     }
 
-    @DeleteMapping("/unFollow/{targetCd}")
-    public Boolean unFollow(@PathVariable("targetCd") Long targetCd){
-        return followerService.delete(targetCd);
+    @DeleteMapping("/unFollow")
+    public Boolean unFollow(@RequestBody FollowerRequestDto requestDto){
+        return followerService.delete(requestDto);
     }
 
     @GetMapping("/follower/{userCd}")
@@ -40,12 +41,12 @@ public class FollowerController {
         return followerService.friends(userCd);
     }
 
-    @GetMapping("followEachOther/{userCd}/{targetCd}")
+    @GetMapping("/followEachOther/{userCd}/{targetCd}")
     public Boolean followEachOther(@PathVariable("userCd") Long userCd, @PathVariable("targetCd") Long targetCd){
         return followerService.followEachOther(userCd, targetCd);
     }
 
-    @GetMapping("followState/search")
+    @GetMapping("/followState/search")
     public List<FollowerStateResponseDto> findNmUser(@RequestParam(value = "input") String inputNm){
         return followerService.followState(inputNm);
     }

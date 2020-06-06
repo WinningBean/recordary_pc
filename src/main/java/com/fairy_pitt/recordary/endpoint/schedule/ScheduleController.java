@@ -5,6 +5,7 @@ import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleMemberService;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleService;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleTabService;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.*;
+import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
     private final FollowerService followerService;
+    private final UserService userService;
     private final ScheduleMemberService scheduleMemberService;
 
     @PostMapping("/")
@@ -45,7 +47,7 @@ public class ScheduleController {
 
     @PostMapping("showUserSchedule/{id}")
     public List<ScheduleResponseDto> showUserSchedule(@PathVariable Long id, @RequestBody ScheduleDateRequestDto responseDto){
-        List<ScheduleResponseDto> result = scheduleService.showUserSchedule(responseDto, id, followerService.checkUserState(id));
+        List<ScheduleResponseDto> result = scheduleService.showUserSchedule(responseDto, id, followerService.checkPublicStateToTarget(userService.currentUserCd(), id));
         return scheduleMemberService.findUserAsMemberScheduleList(id, result, responseDto);
 
     }
