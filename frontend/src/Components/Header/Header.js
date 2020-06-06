@@ -38,7 +38,7 @@ class Header extends React.Component {
                 <img
                   className='title-image'
                   alt='Recordary icon'
-                  // src='../../../public/img/Recordary.png'
+                  src='https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.png'
                   style={{ height: '40px' }}
                 />
               </a>
@@ -66,7 +66,12 @@ class Header extends React.Component {
           </div>
           <div className='title-name'>
             <a href='http://localhost/main'>
-              <img className='title-image' alt='Recordary icon' src='img/Recordary.png' style={{ height: '40px' }} />
+              <img
+                className='title-image'
+                alt='Recordary icon'
+                src='https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.png'
+                style={{ height: '40px' }}
+              />
             </a>
           </div>
         </div>

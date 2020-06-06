@@ -24,7 +24,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Popover from '@material-ui/core/Popover';
 import AddIcon from '@material-ui/icons/Add';
 
 import { addHours, startOfDay, endOfDay, startOfSecond } from 'date-fns';
@@ -53,6 +52,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function componentToHex(c) {
+  var hex = c.toString(16);
+  return hex.length == 1 ? '0' + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+  return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
 const PostMediaScheduleAppend = (props) => {
   const classes = useStyles();
   const [data, setData] = useState(props.data);
@@ -69,6 +77,7 @@ const PostMediaScheduleAppend = (props) => {
     a: '1',
   });
   const [isShowMemberSearch, setIsShowMemberSearch] = useState(false);
+  const [dialog, setDialog] = useState(null);
 
   let fileUpload = useRef(null);
 
@@ -96,10 +105,7 @@ const PostMediaScheduleAppend = (props) => {
     scheduleMembers: [],
   });
 
-  const [switchInfo, setSwitchInfo] = useState({
-    str: false,
-    end: false,
-  });
+  const [switchInfo, setSwitchInfo] = useState(false);
 
   const changeHandle = (e) => {
     setPost({
@@ -148,10 +154,50 @@ const PostMediaScheduleAppend = (props) => {
   };
 
   const onSubmit = async () => {
-    setAlert(<Backdrop />);
+    setDialog(<Snackbar severit='info' content='데이터 요청중...' onClose={() => setDialog(null)} />);
+
+    const str = switchInfo ? startOfDay(scheduleInfo.scheduleStr) : scheduleInfo.scheduleStr;
+    const end = switchInfo ? startOfSecond(endOfDay(scheduleInfo.scheduleEnd)) : scheduleInfo.scheduleEnd;
+
+    if (str >= end) {
+      setDialog(
+        <AlertDialog severity='error' content='시작일보다 종료일이 더 빠릅니다.' onAlertClose={() => setDialog(null)} />
+      );
+      return;
+    }
+
+    console.log({
+      // tabCd: clickTab === undefined ? null : clickTab,
+      tabCd: null,
+      userCd: data.userCd,
+      scheduleNm: scheduleInfo.scheduleNm,
+      scheduleEx: scheduleInfo.scheduleEx,
+      scheduleStr: str.getTime(),
+      scheduleEnd: end.getTime(),
+      scheduleCol: rgbToHex(scheduleColor.r, scheduleColor.g, scheduleColor.b),
+      scheduleMember: scheduleInfo.scheduleMembers.map((value) => value.userCd),
+      schedulePublicState: scheduleInfo.schedulePublicState,
+    });
 
     try {
-      var getMediaCd = null;
+      const scheduleCd = (
+        await axios.post('/schedule/', {
+          // tabCd: clickTab === undefined ? null : clickTab,
+          tabCd: null,
+          userCd: data.userCd,
+          scheduleNm: scheduleInfo.scheduleNm,
+          scheduleEx: scheduleInfo.scheduleEx,
+          scheduleStr: str.getTime(),
+          scheduleEnd: end.getTime(),
+          scheduleCol: rgbToHex(scheduleColor.r, scheduleColor.g, scheduleColor.b),
+          scheduleMember: scheduleInfo.scheduleMembers.map((value) => value.userCd),
+          schedulePublicState: scheduleInfo.schedulePublicState,
+        })
+      ).data;
+
+      console.log(scheduleCd);
+
+      const mediaListCd = null;
       if (postAddMediaListSrc.length > 0) {
         const formData = new FormData();
 
@@ -159,16 +205,16 @@ const PostMediaScheduleAppend = (props) => {
         postAddMediaListSrc.map((value, index) => {
           formData.append('mediaFiles', dataURLToBlob(value));
         });
-        getMediaCd = (
+        mediaListCd = (
           await axios.post(`/media/${post.userCd}`, formData, {
             headers: { 'Content-Type': 'multipart/form-data; boundary=------WebKitFormBoundary7MA4YWxkTrZu0gW' },
           })
         ).data;
-        console.log(getMediaCd);
+        console.log(mediaListCd);
       }
 
-      console.log({ ...post, mediaCd: getMediaCd });
-      const { data } = await axios.post(`/post/`, { ...post, mediaCd: getMediaCd });
+      console.log({ ...post, mediaCd: mediaListCd });
+      const { data } = await axios.post(`/post/`, { ...post, mediaCd: mediaListCd });
 
       console.log(data);
 
@@ -220,10 +266,20 @@ const PostMediaScheduleAppend = (props) => {
             <SelectGroup />
           </div>
           <div className='schedule-media-button '>
-            <PublicRange
-              onSetSelectedIndex={(index) => setScheduleInfo({ ...scheduleInfo, schedulePublicState: index })}
-              selectedIndex={scheduleInfo.schedulePublicState}
-            />
+            {scheduleInfo.scheduleMembers.length > 0 ? (
+              <PublicRange
+                options={['전체공개', '비공개']}
+                onSetSelectedIndex={(index) =>
+                  setScheduleInfo({ ...scheduleInfo, schedulePublicState: index === 0 ? 0 : 3 })
+                }
+                selectedIndex={scheduleInfo.schedulePublicState}
+              />
+            ) : (
+              <PublicRange
+                onSetSelectedIndex={(index) => setScheduleInfo({ ...scheduleInfo, schedulePublicState: index })}
+                selectedIndex={scheduleInfo.schedulePublicState}
+              />
+            )}
             <div className='plus-button-design' onClick={() => setScheduleOpen(!scheduleOpen)}>
               {(() => {
                 if (scheduleOpen === false) {
@@ -262,20 +318,11 @@ const PostMediaScheduleAppend = (props) => {
           <TextField id='post_text' label='내용' multiline rowsMax='5' rows='3' name='postEx' onChange={changeHandle} />
         </div>
         {colorClick === true ? (
-          <Popover
-            open={colorClick}
-            anchorOrigin={{
-              vertical: 'center',
-              horizontal: 'center',
-            }}
-            transformOrigin={{
-              vertical: 'center',
-              horizontal: 'left',
-            }}
-            onClose={() => setColorClick(false)}
-          >
-            <ChromePicker color={scheduleColor} onChange={(color) => setScheduleColor(color.rgb)} />
-          </Popover>
+          <Dialog open onClose={() => setColorClick(false)}>
+            <div>
+              <ChromePicker color={scheduleColor} onChange={(color) => setScheduleColor(color.rgb)} />
+            </div>
+          </Dialog>
         ) : null}
 
         {scheduleOpen === false ? null : (
@@ -309,10 +356,7 @@ const PostMediaScheduleAppend = (props) => {
             </div>
             <div className='Post-Append-Tag-User post-Append'>
               <Chip
-                avatar={
-                  // <Avatar alt={`${info.user_id} img`} src={info.user_pic} />
-                  <Avatar alt={`${data.userNm} img`} src='img/RIcon.png' />
-                }
+                avatar={<Avatar alt={`${data.userNm} img`} src={data.userPic} />}
                 label={data.userNm}
                 style={{
                   backgroundColor: 'rgba(20, 81, 51, 0.8)',
@@ -362,6 +406,7 @@ const PostMediaScheduleAppend = (props) => {
             onCancel={() => setIsShowMemberSearch(false)}
           />
         ) : null}
+
         {mediaOpen === true ? (
           <div className='Post-Append-Media post-Append'>
             <div
@@ -443,6 +488,7 @@ const PostMediaScheduleAppend = (props) => {
           </Dialog>
         </div>
       </div>
+      {dialog}
     </Dialog>
   );
 };

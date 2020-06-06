@@ -81,7 +81,7 @@ class Profile extends React.Component {
     if (this.props.isLogin && data.userInfo.userCd === this.props.user.userCd) {
       type = 0;
     }
-    // await axios.post('/tab/create')
+    // await axios.post('/tab/create');
     // console.log(
     //   await axios.post('/schedule/showUserSchedule', {
     //     userCd: data.userCd,
@@ -649,7 +649,7 @@ class Profile extends React.Component {
                           this.setState({ value: (this.state.post[index] = { ...value, postImgClick: false }) });
                         }}
                       >
-                        <Timeline data={value} />
+                        <Timeline data={value} user={this.props.user} />
                       </Dialog>
                     );
                   }
@@ -673,7 +673,7 @@ class Profile extends React.Component {
                     );
                   }
                 } else {
-                  return <Timeline data={value} />;
+                  return <Timeline data={value} user={this.props.user} />;
                 }
               })
             )}

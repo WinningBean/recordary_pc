@@ -23,6 +23,7 @@ import axios from 'axios';
 import Button from '@material-ui/core/Button';
 import SubdirectoryArrowLeftIcon from '@material-ui/icons/SubdirectoryArrowLeft';
 import EditIcon from '@material-ui/icons/Edit';
+import CheckIcon from '@material-ui/icons/Check';
 
 const useStyles = makeStyles((theme) => ({
   textFieldSize: {
@@ -43,10 +44,7 @@ const Timeline = (props) => {
   const [mediaList, setMediaList] = useState([]);
   const [writeRecommentShow, setWriteRecommentShow] = useState(data.commentList.map(() => false));
   const [writeReComment, setWriteReComment] = useState('');
-  const [writeComment, setWriteComment] = useState({
-    commentContent: '',
-    commentCd: null,
-  });
+  const [editComment, setEditComment] = useState(data.commentList.map(() => false));
 
   const textField = useRef();
 
@@ -111,10 +109,10 @@ const Timeline = (props) => {
             <img alt={`${val.userFK.userCd} img`} src={val.userFK.userPic} />
           </div>
           <div className='comment-reply-users-name'>
-            <span className='reply-name'>
+            <span style={{ fontWeight: 'bold', fontSize: '12px', marginRight: '5px' }}>
               {val.userFK.userId}({val.userFK.userNm})
             </span>
-            <span style={{ fontSize: '12px' }}>{val.commentContent}</span>
+            <span style={{ fontSize: '12px', maxWidth: '' }}>{val.commentContent}</span>
           </div>
           <div className='commentIcon-hover' style={{ height: ' 15px' }}>
             {props.user.userCd !== val.userFK.userCd ? null : (
@@ -135,7 +133,7 @@ const Timeline = (props) => {
 
   const commentList = () =>
     data.commentList.map((value, index) => (
-      <div style={{ marginBottom: '5px' }}>
+      <div key={value.commentCd} style={{ marginBottom: '5px' }}>
         <div className='comment-reply-users'>
           <div className='comment-reply-users-img'>
             <img alt={`${value.userFK.userId} img`} src={value.userFK.userPic} />
@@ -150,17 +148,47 @@ const Timeline = (props) => {
               </div>
               <div className='commentIcon-hover' style={{ height: ' 15px' }}>
                 {props.user.userCd !== value.userFK.userCd ? null : (
-                  <EditIcon
-                    onClick={() =>
-                      setWriteComment({ commentContent: value.commentContent, commentCd: value.commentCd })
-                    }
-                    style={{
-                      color: 'gray',
-                      fontSize: '20',
-                      paddingRight: '5px',
-                      paddingBottom: '5px',
-                    }}
-                  />
+                  <div>
+                    {editComment[index] === true ? (
+                      <CheckIcon
+                        onClick={() => {
+                          setEditComment(
+                            editComment.map((value, listIndex) => {
+                              if (listIndex === index) {
+                                return !value;
+                              }
+                              return value;
+                            })
+                          );
+                        }}
+                        style={{
+                          color: 'gray',
+                          fontSize: '20',
+                          paddingRight: '5px',
+                          paddingBottom: '5px',
+                        }}
+                      />
+                    ) : (
+                      <EditIcon
+                        onClick={() => {
+                          setEditComment(
+                            editComment.map((value, listIndex) => {
+                              if (listIndex === index) {
+                                return !value;
+                              }
+                              return value;
+                            })
+                          );
+                        }}
+                        style={{
+                          color: 'gray',
+                          fontSize: '20',
+                          paddingRight: '5px',
+                          paddingBottom: '5px',
+                        }}
+                      />
+                    )}
+                  </div>
                 )}
               </div>
             </div>
@@ -213,7 +241,6 @@ const Timeline = (props) => {
                   </div>
                 </>
               ) : null}
-              {console.log(isClickList)}
             </div>
           </div>
         </div>
@@ -245,7 +272,6 @@ const Timeline = (props) => {
                         e.preventDefault();
                         textField.current.value = '';
                         try {
-                          console.log();
                           const recommentCd = (
                             await axios.post(`/comment/`, {
                               userCd: props.user.userCd,
@@ -522,7 +548,9 @@ const Timeline = (props) => {
               )}
             </div>
           </div>
-          <div className='timeline-context'>{data.postEx}</div>
+          <div className='timeline-context'>
+            <div style={{ margin: '5px' }}>{data.postEx}</div>
+          </div>
         </div>
         <div className='comment-context'>
           <div className='comment-reply' style={{ overflowY: 'auto' }}>
@@ -547,7 +575,7 @@ const Timeline = (props) => {
             </div>
           </div>
           <div className='comment-write'>
-            <CommentTimeline user={props.user} postCd={data.postCd} writedComment={writeComment} />
+            <CommentTimeline user={props.user} postCd={data.postCd} />
           </div>
         </div>
       </div>

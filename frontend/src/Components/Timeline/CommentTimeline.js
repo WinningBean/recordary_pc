@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField';
@@ -30,11 +30,14 @@ const CommentTimeline = (props) => {
   const [writeComment, setWriteComment] = useState('');
   const textField = useRef();
 
-  useEffect(() => {
-    if (props.writedComment.commentContent !== '') {
-      setWriteComment(props.writedComment.commentContent);
-    } else setWriteComment('');
-  });
+  // if (props.writedComment !== '') {
+  //   textField.current.value = props.writedComment;
+  // } else textField.current.value = '';
+
+  // const sendCommentMessage = (e) => {
+  //   if (writeComment === '') return null;
+  //   setWriteComment('');
+  // };
 
   const handleChange = (e) => {
     setWriteComment(e.target.value);
@@ -49,7 +52,6 @@ const CommentTimeline = (props) => {
           id='input-with-icon-textfield'
           label='Comment'
           size='small'
-          defaultValue={writeComment}
           InputProps={{
             startAdornment: (
               <InputAdornment position='start'>
@@ -60,8 +62,10 @@ const CommentTimeline = (props) => {
               <InputAdornment position='end'>
                 <SendButton
                   onClick={async (e) => {
-                    if (props.writedComment.commentContent === '') {
-                      try {
+                    e.preventDefault();
+                    textField.current.value = '';
+                    try {
+                      if (writeComment !== '') {
                         const commentCd = (
                           await axios.post(`/comment/`, {
                             userCd: props.user.userCd,
@@ -71,21 +75,11 @@ const CommentTimeline = (props) => {
                             // commentOriginFK => 대댓글 코드 작성 시 수정
                           })
                         ).data;
-                      } catch (e) {
-                        console.log(e + 'comment Error');
-                      }
-                    } else {
-                      try {
-                        const { updateCommentCd } = await axios.put(`/comment/${props.writedComment.commentCd}`, {
-                          commentContent: writeComment,
-                        });
                         console.log(writeComment);
-                        console.log(updateCommentCd);
-                      } catch (e) {
-                        console.log(e + 'comment Error');
-                      }
+                      } else return null;
+                    } catch (e) {
+                      console.log(e + 'comment Error');
                     }
-                    textField.current.value = '';
                   }}
                 >
                   <SubdirectoryArrowLeftIcon />
