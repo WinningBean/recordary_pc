@@ -4,6 +4,7 @@ import com.fairy_pitt.recordary.common.entity.FollowerEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.FollowerRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
+import com.fairy_pitt.recordary.endpoint.follower.dto.FollowerRequestDto;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -38,50 +38,56 @@ public class FollowerControllerTest {
     @Autowired
     private UserRepository userRepository;
 
-    private MockMvc mockMvc;
-
-    public MockHttpSession session;
-    public MockHttpServletRequest request;
+    public MockHttpSession mockHttpSession;
+    public MockHttpServletRequest mockHttpServletRequest;
 
     @Before
     public void setUp() throws Exception{
-        session = new MockHttpSession();
-        session.setAttribute("loginUser", "testUser1");
-
-        request = new MockHttpServletRequest();
-        request.setSession(session);
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+        mockHttpSession = new MockHttpSession();
+        mockHttpServletRequest = new MockHttpServletRequest();
+        mockHttpServletRequest.setSession(mockHttpSession);
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockHttpServletRequest));
     }
 
     @After
     public void tearDown() throws Exception{
+        mockHttpSession.clearAttributes();
+        mockHttpSession = null;
         followerRepository.deleteAll();
         userRepository.deleteAll();
-        session.clearAttributes();
-        session = null;
     }
 
     @Test
-    public void Follower_팔로우() throws Exception{ // session 문제
+    public void Follower_팔로우() throws Exception{
         //given
-        UserEntity targetFK = userRepository.save(UserEntity.builder()
+        UserEntity user1 = userRepository.save(UserEntity.builder()
+                .userId("testUser1")
+                .userPw("testPassword")
+                .userNm("테스트 유저1")
+                .build());
+        UserEntity user2 = userRepository.save(UserEntity.builder()
                 .userId("testUser2")
                 .userPw("testPassword")
                 .userNm("테스트 유저2")
                 .build());
 
-        String url = "http://localhost:" + port + "/follow/" + targetFK.getUserCd();
+        FollowerRequestDto requestDto = FollowerRequestDto.builder()
+                .userCd(user1.getUserCd())
+                .targetCd(user2.getUserCd())
+                .build();
 
-//        //when
-//        ResponseEntity<Boolean> responseEntity = restTemplate.getForEntity(url, Boolean.class);
-//
-//        //then
-//        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-//        assertThat(responseEntity.getBody()).isEqualTo(true);
-//
-//        List<FollowerEntity> all = followerRepository.findAll();
-//        assertThat(all.get(0).getUserFK().getUserId()).isEqualTo("testUser1");
-//        assertThat(all.get(0).getTargetFK().getUserCd()).isEqualTo(targetFK.getUserCd());
+        String url = "http://localhost:" + port + "/follow";
+
+        //when
+        ResponseEntity<Boolean> responseEntity = restTemplate.postForEntity(url, requestDto, Boolean.class);
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isEqualTo(true);
+
+        List<FollowerEntity> all = followerRepository.findAll();
+        assertThat(all.get(0).getUserFK().getUserCd()).isEqualTo(user1.getUserCd());
+        assertThat(all.get(0).getTargetFK().getUserCd()).isEqualTo(user2.getUserCd());
     }
 
     @Test
@@ -213,5 +219,51 @@ public class FollowerControllerTest {
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody().size()).isEqualTo(2);
+    }
+
+    @Test
+    public void Follower_맞팔상태확인() throws Exception{
+        //given
+        UserEntity user1 = userRepository.save(UserEntity.builder()
+                .userId("testUser1")
+                .userPw("testPassword")
+                .userNm("테스트 유저1")
+                .build());
+        UserEntity user2 = userRepository.save(UserEntity.builder()
+                .userId("testUser2")
+                .userPw("testPassword")
+                .userNm("테스트 유저2")
+                .build());
+        UserEntity user3 = userRepository.save(UserEntity.builder()
+                .userId("testUser3")
+                .userPw("testPassword")
+                .userNm("테스트 유저3")
+                .build());
+
+        followerRepository.save(FollowerEntity.builder()
+                .userFK(user1)
+                .targetFK(user2)
+                .build());
+        followerRepository.save(FollowerEntity.builder()
+                .userFK(user2)
+                .targetFK(user1)
+                .build());
+        followerRepository.save(FollowerEntity.builder()
+                .userFK(user1)
+                .targetFK(user3)
+                .build());
+
+        String url1 = "http://localhost:" + port + "/followEachOther/" + user1.getUserCd() + "/" + user2.getUserCd();
+        String url2 = "http://localhost:" + port + "/followEachOther/" + user1.getUserCd() + "/" + user3.getUserCd();
+
+        //when
+        ResponseEntity<Boolean> responseEntity1 = restTemplate.getForEntity(url1, Boolean.class);
+        ResponseEntity<Boolean> responseEntity2 = restTemplate.getForEntity(url2, Boolean.class);
+
+        //then
+        assertThat(responseEntity1.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity1.getBody()).isEqualTo(true);
+        assertThat(responseEntity2.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity2.getBody()).isEqualTo(false);
     }
 }

@@ -6,7 +6,6 @@ import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.CommentRepository;
 import com.fairy_pitt.recordary.endpoint.comment.dto.CommentRequestDto;
 import com.fairy_pitt.recordary.endpoint.comment.dto.CommentResponseDto;
-import com.fairy_pitt.recordary.endpoint.comment.dto.CommentUpdateRequestDto;
 import com.fairy_pitt.recordary.endpoint.post.service.PostService;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -38,11 +37,11 @@ public class CommentService {
     }
 
     @Transactional
-    public Long update(Long commentCd, CommentUpdateRequestDto requestDto)
+    public Long update(Long commentCd, String commentContent)
     {
         CommentEntity commentEntity = commentRepository.findByCommentCd(commentCd);
-        commentEntity.updateContent(requestDto.getCommentContent());
-        return  commentRepository.save(commentEntity).getCommentCd();
+        commentEntity.updateContent(commentContent);
+        return commentCd;
     }
 
     @Transactional
