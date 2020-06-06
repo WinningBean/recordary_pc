@@ -154,7 +154,7 @@ const PostMediaScheduleAppend = (props) => {
   };
 
   const onSubmit = async () => {
-    setDialog(<Snackbar severit='info' content='데이터 요청중...' onClose={() => setDialog(null)} />);
+    // setDialog(<Snackbar severit='info' content='데이터 요청중...' onClose={() => setDialog(null)} />);
 
     const str = switchInfo ? startOfDay(scheduleInfo.scheduleStr) : scheduleInfo.scheduleStr;
     const end = switchInfo ? startOfSecond(endOfDay(scheduleInfo.scheduleEnd)) : scheduleInfo.scheduleEnd;
@@ -180,23 +180,27 @@ const PostMediaScheduleAppend = (props) => {
     });
 
     try {
-      const scheduleCd = (
-        await axios.post('/schedule/', {
-          // tabCd: clickTab === undefined ? null : clickTab,
-          tabCd: null,
-          userCd: data.userCd,
-          scheduleNm: scheduleInfo.scheduleNm,
-          scheduleEx: scheduleInfo.scheduleEx,
-          scheduleStr: str.getTime(),
-          scheduleEnd: end.getTime(),
-          scheduleCol: rgbToHex(scheduleColor.r, scheduleColor.g, scheduleColor.b),
-          scheduleMember: scheduleInfo.scheduleMembers.map((value) => value.userCd),
-          schedulePublicState: scheduleInfo.schedulePublicState,
-        })
-      ).data;
+      // 일정 추가
+      if (scheduleInfo.scheduleNm !== '') {
+        const scheduleInfoCd = (
+          await axios.post('/schedule/', {
+            // tabCd: clickTab === undefined ? null : clickTab,
+            tabCd: null,
+            userCd: data.userCd,
+            scheduleNm: scheduleInfo.scheduleNm,
+            scheduleEx: scheduleInfo.scheduleEx,
+            scheduleStr: str.getTime(),
+            scheduleEnd: end.getTime(),
+            scheduleCol: rgbToHex(scheduleColor.r, scheduleColor.g, scheduleColor.b),
+            scheduleMember: scheduleInfo.scheduleMembers.map((value) => value.userCd),
+            schedulePublicState: scheduleInfo.schedulePublicState,
+          })
+        ).data;
+        console.log(scheduleInfoCd);
+        setPost({ ...post, scheduleCd: scheduleInfoCd });
+      }
 
-      console.log(scheduleCd);
-
+      //미디어 추가
       const mediaListCd = null;
       if (postAddMediaListSrc.length > 0) {
         const formData = new FormData();
@@ -211,14 +215,15 @@ const PostMediaScheduleAppend = (props) => {
           })
         ).data;
         console.log(mediaListCd);
+        setPost({ ...post, mediaCd: mediaListCd });
       }
+      console.log(post);
+      //게시물 추가
+      const postData = (await axios.post(`/post/`, post)).data;
 
-      console.log({ ...post, mediaCd: mediaListCd });
-      const { data } = await axios.post(`/post/`, { ...post, mediaCd: mediaListCd });
+      console.log(postData);
 
-      console.log(data);
-
-      if (data) {
+      if (postData) {
         setAlert(
           <AlertDialog
             severity='success'

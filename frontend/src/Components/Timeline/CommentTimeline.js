@@ -30,15 +30,6 @@ const CommentTimeline = (props) => {
   const [writeComment, setWriteComment] = useState('');
   const textField = useRef();
 
-  // if (props.writedComment !== '') {
-  //   textField.current.value = props.writedComment;
-  // } else textField.current.value = '';
-
-  // const sendCommentMessage = (e) => {
-  //   if (writeComment === '') return null;
-  //   setWriteComment('');
-  // };
-
   const handleChange = (e) => {
     setWriteComment(e.target.value);
   };
