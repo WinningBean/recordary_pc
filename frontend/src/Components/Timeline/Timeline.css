@@ -155,6 +155,7 @@
   color: rgba(20, 81, 51, 0.9);
   cursor: pointer;
 }
+
 .commentIconFlex {
   display: flex;
   height: 19px;
@@ -177,13 +178,14 @@
 .comment-reply-users-name {
   padding-left: 10px;
   padding-top: 5px;
+  width: 100%;
 }
-.comment-reply-users-name > .reply-name {
+.comment-reply-users-name > div > div > .reply-name {
   font-weight: bold;
   font-size: 12px;
   margin-right: 5px;
 }
-.comment-reply-users-name > div {
+.comment-reply-users-name > div > div > div {
   font-size: 15px;
 }
 
@@ -260,6 +262,7 @@ fieldset {
 /* 더 많은 댓글 보기 */
 .more-recomment-reply-users {
   margin-left: 50px;
+  margin-top: 10px;
 }
 .recomment-reply-users-img {
   height: 30px;
@@ -273,11 +276,17 @@ fieldset {
 }
 
 .show-more-comment {
-  margin-left: 50px;
-  font-size: 12px;
+  /* margin-left: 50px; */
   display: flex;
   align-content: center;
 }
+.show-recomment-write {
+  margin-left: 50px;
+  display: flex;
+  align-content: center;
+  font-size: '12px';
+}
+
 .show-more-comment > div:hover {
   background-color: rgba(161, 159, 159, 0.1);
   cursor: pointer;

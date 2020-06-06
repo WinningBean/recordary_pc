@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField';
@@ -30,10 +30,11 @@ const CommentTimeline = (props) => {
   const [writeComment, setWriteComment] = useState('');
   const textField = useRef();
 
-  // const sendCommentMessage = (e) => {
-  //   if (writeComment === '') return null;
-  //   setWriteComment('');
-  // };
+  useEffect(() => {
+    if (props.writedComment.commentContent !== '') {
+      setWriteComment(props.writedComment.commentContent);
+    } else setWriteComment('');
+  });
 
   const handleChange = (e) => {
     setWriteComment(e.target.value);
@@ -48,6 +49,7 @@ const CommentTimeline = (props) => {
           id='input-with-icon-textfield'
           label='Comment'
           size='small'
+          defaultValue={writeComment}
           InputProps={{
             startAdornment: (
               <InputAdornment position='start'>
@@ -58,21 +60,32 @@ const CommentTimeline = (props) => {
               <InputAdornment position='end'>
                 <SendButton
                   onClick={async (e) => {
-                    e.preventDefault();
-                    textField.current.value = '';
-                    try {
-                      const commentCd = (
-                        await axios.post(`/comment/`, {
-                          userCd: props.user.userCd,
-                          postCd: props.postCd,
+                    if (props.writedComment.commentContent === '') {
+                      try {
+                        const commentCd = (
+                          await axios.post(`/comment/`, {
+                            userCd: props.user.userCd,
+                            postCd: props.postCd,
+                            commentContent: writeComment,
+                            commentOriginCd: null,
+                            // commentOriginFK => 대댓글 코드 작성 시 수정
+                          })
+                        ).data;
+                      } catch (e) {
+                        console.log(e + 'comment Error');
+                      }
+                    } else {
+                      try {
+                        const { updateCommentCd } = await axios.put(`/comment/${props.writedComment.commentCd}`, {
                           commentContent: writeComment,
-                          commentOriginCd: null,
-                          // commentOriginFK => 대댓글 코드 작성 시 수정
-                        })
-                      ).data;
-                    } catch (e) {
-                      console.log(e + 'comment Error');
+                        });
+                        console.log(writeComment);
+                        console.log(updateCommentCd);
+                      } catch (e) {
+                        console.log(e + 'comment Error');
+                      }
                     }
+                    textField.current.value = '';
                   }}
                 >
                   <SubdirectoryArrowLeftIcon />

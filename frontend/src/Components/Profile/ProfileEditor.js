@@ -215,7 +215,7 @@ class ProfileEditor extends React.Component {
                     console.log(userPicUrl.data);
                     // this.setState({ user_pic: userPicUrl.data });
 
-                    const { data } = await axios.put(`user/${this.props.data.userCd}`, {
+                    const { data } = await axios.put(`/user/${this.props.data.userCd}`, {
                       userPw: null,
                       userNm: this.props.data.userNm,
                       userPic: userPicUrl.data,

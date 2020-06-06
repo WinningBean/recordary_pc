@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import * as dateFns from 'date-fns';
+import produce from 'immer';
+import { styled } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 import './Timeline.css';
 import LongMenu from '../Other/MoreMenu';
@@ -17,16 +20,39 @@ import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import axios from 'axios';
+import Button from '@material-ui/core/Button';
+import SubdirectoryArrowLeftIcon from '@material-ui/icons/SubdirectoryArrowLeft';
+import EditIcon from '@material-ui/icons/Edit';
+
+const useStyles = makeStyles((theme) => ({
+  textFieldSize: {
+    fontSize: '12px',
+    width: '170px',
+  },
+}));
 
 const Timeline = (props) => {
+  const classes = useStyles();
   const data = props.data;
-  const [isClickList, setIsClickList] = useState(data.commentList.map(() => false));
+  const [isClickList, setIsClickList] = useState(
+    data.commentList.map(() => ({ recommentList: [], clickIndex: false }))
+  );
   const [menuDialog, setMenuDialog] = useState(null);
   const [pictureCount, setPictureCount] = useState(0);
   const [clickSchedule, setClickSchedule] = useState(false);
   const [mediaList, setMediaList] = useState([]);
-  const [recommentListData, setRecommentListData] = useState([]);
-  const [writeRecommentShow, setWriteRecommentShow] = useState(false);
+  const [writeRecommentShow, setWriteRecommentShow] = useState(data.commentList.map(() => false));
+  const [writeReComment, setWriteReComment] = useState('');
+  const [writeComment, setWriteComment] = useState({
+    commentContent: '',
+    commentCd: null,
+  });
+
+  const textField = useRef();
+
+  const handleChange = (e) => {
+    setWriteReComment(e.target.value);
+  };
 
   useEffect(() => {
     (async () => {
@@ -57,18 +83,28 @@ const Timeline = (props) => {
 
   const getRecommentList = async (value, index) => {
     try {
-      const array = [];
-      const recommentList = (await axios.get(`/comment/${value.commentCd}`)).data;
-      array[index] = JSON.parse(JSON.stringify(recommentList));
-      setRecommentListData(Object.values(array)[0]);
+      const recommentListData = (await axios.get(`/comment/${value.commentCd}`)).data;
+      setIsClickList(
+        isClickList.map((val, listIndex) => {
+          if (index === listIndex) {
+            return produce(val, (draft) => {
+              draft.clickIndex = !draft.clickIndex;
+              draft.recommentList = JSON.parse(JSON.stringify(recommentListData));
+            });
+          } else {
+            return produce(val, (draft) => {
+              draft.clickIndex = draft.clickIndex;
+            });
+          }
+        })
+      );
     } catch (error) {
       console.error(error);
     }
   };
 
-  const showRecommentList = (index) => {
-    console.log(recommentListData);
-    return recommentListData.map((val) => (
+  const showRecommentList = (list) => {
+    return list.map((val) => (
       <div key={val.commentCd}>
         <div className='comment-reply-users more-recomment-reply-users'>
           <div className='recomment-reply-users-img'>
@@ -79,20 +115,22 @@ const Timeline = (props) => {
               {val.userFK.userId}({val.userFK.userNm})
             </span>
             <span style={{ fontSize: '12px' }}>{val.commentContent}</span>
-            <div>
-              <ThumbUpRoundedIcon
+          </div>
+          <div className='commentIcon-hover' style={{ height: ' 15px' }}>
+            {props.user.userCd !== val.userFK.userCd ? null : (
+              <EditIcon
                 style={{
+                  color: 'gray',
                   fontSize: '20',
                   paddingRight: '5px',
+                  paddingBottom: '5px',
                 }}
               />
-            </div>
+            )}
           </div>
         </div>
       </div>
     ));
-    // } else return null;
-    // });
   };
 
   const commentList = () =>
@@ -103,23 +141,47 @@ const Timeline = (props) => {
             <img alt={`${value.userFK.userId} img`} src={value.userFK.userPic} />
           </div>
           <div className='comment-reply-users-name'>
-            <span className='reply-name'>
-              {value.userFK.userId}({value.userFK.userNm})
-            </span>
-            <span>{value.commentContent}</span>
-            <div className='commentIconFlex'>
-              <div className='commentIcon-hover'>
-                <ThumbUpRoundedIcon
-                  style={{
-                    fontSize: '20',
-                    paddingRight: '5px',
-                  }}
-                />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignContent: 'center' }}>
+              <div>
+                <span className='reply-name'>
+                  {value.userFK.userId}({value.userFK.userNm})
+                </span>
+                <span>{value.commentContent}</span>
               </div>
-              <div className='commentIcon-hover' onClick={() => setWriteRecommentShow(!writeRecommentShow)}>
+              <div className='commentIcon-hover' style={{ height: ' 15px' }}>
+                {props.user.userCd !== value.userFK.userCd ? null : (
+                  <EditIcon
+                    onClick={() =>
+                      setWriteComment({ commentContent: value.commentContent, commentCd: value.commentCd })
+                    }
+                    style={{
+                      color: 'gray',
+                      fontSize: '20',
+                      paddingRight: '5px',
+                      paddingBottom: '5px',
+                    }}
+                  />
+                )}
+              </div>
+            </div>
+
+            <div className='commentIconFlex'>
+              <div
+                className='commentIcon-hover'
+                onClick={() =>
+                  setWriteRecommentShow(
+                    writeRecommentShow.map((value, listIndex) => {
+                      if (listIndex === index) {
+                        return !value;
+                      }
+                      return value;
+                    })
+                  )
+                }
+              >
                 <CommentIcon
                   style={
-                    writeRecommentShow === true
+                    writeRecommentShow[index] === true
                       ? {
                           fontSize: '20',
                           paddingRight: '5px',
@@ -132,57 +194,80 @@ const Timeline = (props) => {
                   }
                 />
               </div>
+              {value.reCommentCount > 0 ? (
+                <>
+                  <div className='show-more-comment' onClick={() => getRecommentList(value, index)}>
+                    <div>
+                      <MoreHorizIcon
+                        style={{
+                          fontSize: '15',
+                          paddingTop: '3px',
+                        }}
+                      />
+                      {isClickList[index].clickIndex === false ? (
+                        <span style={{ fontSize: '12px' }}>{`댓글 ${value.reCommentCount}개 모두 보기`}</span>
+                      ) : (
+                        <span style={{ fontSize: '12px' }}>{`댓글 접기`}</span>
+                      )}
+                    </div>
+                  </div>
+                </>
+              ) : null}
+              {console.log(isClickList)}
             </div>
-            {/* {writeRecommentShow === true ? (
-              <div style={{marginBottom:'5px'}}>
-                <TextField
-                  id='recommentWrite'
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position='start'>
-                        <div className='recommentProfileImg'>
-                          <img alt={`${props.user.userId} img`} src={props.user.userPic} />
-                        </div>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </div>
-            ) : null} */}
-            {/* 대댓글 count 갯수 세고 => 댓글 접기, 댓글 보기 출력 => 그 밑에 댓글 작성란을 만들기 
-            => map으로 인덱스 값이랑 유저 같으면~ 그때 writeRcommentShow가 되도록 하기 */}
           </div>
         </div>
-        {value.reCommentCount > 0 ? (
-          <div
-            className='show-more-comment'
-            onClick={() => {
-              getRecommentList(value, index);
-              setIsClickList(
-                isClickList.map((value, listIndex) => {
-                  if (listIndex === index) {
-                    return !value;
-                  } else return value;
-                })
-              );
-            }}
-          >
-            <div>
-              <MoreHorizIcon
-                style={{
-                  fontSize: '15',
-                  paddingTop: '3px',
-                }}
-              />
-              {isClickList[index] === false ? (
-                <span>{`댓글 ${value.reCommentCount}개 모두 보기`}</span>
-              ) : (
-                <span>{`댓글 접기`}</span>
-              )}
-            </div>
+        {isClickList[index].clickIndex === true ? showRecommentList(isClickList[index].recommentList) : null}
+        {writeRecommentShow[index] === true ? (
+          <div className='show-recomment-write' style={{ marginBottom: '5px' }}>
+            <TextField
+              inputRef={textField}
+              id='recommentWrite'
+              autoFocus={true}
+              multiline
+              rowsMax='2'
+              onChange={handleChange}
+              InputProps={{
+                classes: {
+                  input: classes.textFieldSize,
+                },
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <div className='recommentProfileImg'>
+                      <img alt={`${props.user.userId} img`} src={props.user.userPic} />
+                    </div>
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <SendButton
+                      onClick={async (e) => {
+                        e.preventDefault();
+                        textField.current.value = '';
+                        try {
+                          console.log();
+                          const recommentCd = (
+                            await axios.post(`/comment/`, {
+                              userCd: props.user.userCd,
+                              postCd: data.postCd,
+                              commentContent: writeReComment,
+                              commentOriginCd: value.commentCd,
+                            })
+                          ).data;
+                          console.log(recommentCd);
+                        } catch (e) {
+                          console.log(e + 'comment Error');
+                        }
+                      }}
+                    >
+                      <SubdirectoryArrowLeftIcon style={{ fontSize: '15px' }} />
+                    </SendButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
           </div>
         ) : null}
-        {isClickList[index] === true ? showRecommentList(index) : null}
       </div>
     ));
 
@@ -269,7 +354,7 @@ const Timeline = (props) => {
                 position: 'absolute',
                 right: '6px',
                 display: 'flex',
-                justifyContent: 'center',
+                justifyContent: 'cfr',
                 alignItems: 'center',
               }}
             >
@@ -450,8 +535,6 @@ const Timeline = (props) => {
                 </div>
               </div>
             )}
-            {/* {recommentListData !== null ? <recommentListData /> : null} */}
-            {/* {console.log(recommentListData)} */}
           </div>
 
           <div className='comment-context-icon'>
@@ -464,7 +547,7 @@ const Timeline = (props) => {
             </div>
           </div>
           <div className='comment-write'>
-            <CommentTimeline user={props.user} postCd={data.postCd} />
+            <CommentTimeline user={props.user} postCd={data.postCd} writedComment={writeComment} />
           </div>
         </div>
       </div>
@@ -472,5 +555,10 @@ const Timeline = (props) => {
     </div>
   );
 };
+
+const SendButton = styled(Button)({
+  minWidth: '20px',
+  height: '20px',
+});
 
 export default Timeline;
