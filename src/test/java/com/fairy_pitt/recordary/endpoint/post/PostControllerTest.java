@@ -1,9 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.post;
 
-import com.fairy_pitt.recordary.common.entity.FollowerEntity;
-import com.fairy_pitt.recordary.common.entity.GroupEntity;
-import com.fairy_pitt.recordary.common.entity.PostEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.entity.*;
 import com.fairy_pitt.recordary.common.repository.*;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostSaveRequestDto;
@@ -234,7 +231,6 @@ public class PostControllerTest {
                 .build());
 
         String searchContent = "테스트";
-
         String url = "http://localhost:" + port + "/post/user/" + user1.getUserCd() + "/search?input=" + searchContent;
 
         //when
@@ -342,7 +338,7 @@ public class PostControllerTest {
                 .build()); // user1 -> user4 following
 
         GroupEntity group1 = groupRepository.save(GroupEntity.builder()
-                .gMstUserFK(user1)
+                .gMstUserFK(user4)
                 .groupNm("testGroup1")
                 .groupState(true)
                 .groupPic(null)
@@ -355,6 +351,11 @@ public class PostControllerTest {
                 .groupPic(null)
                 .groupEx("testEx")
                 .build()); // user1이 속하지 않 그룹
+
+        groupMemberRepository.save(GroupMemberEntity.builder()
+                .groupFK(group1)
+                .userFK(user1)
+                .build());
 
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
@@ -372,7 +373,7 @@ public class PostControllerTest {
                 .postPublicState(3)
                 .build()); // user2가 비공개로 쓴 글 (timeline X)
         postRepository.save(PostEntity.builder()
-                .userFK(user2)
+                .userFK(user3)
                 .groupFK(group1)
                 .postEx("테스트 게시글4")
                 .postPublicState(0)

@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class CommentRequestDto {
-
     private Long userCd;
     private Long postCd;
     private String commentContent;

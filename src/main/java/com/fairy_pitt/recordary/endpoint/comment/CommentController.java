@@ -2,7 +2,6 @@ package com.fairy_pitt.recordary.endpoint.comment;
 
 import com.fairy_pitt.recordary.endpoint.comment.dto.CommentRequestDto;
 import com.fairy_pitt.recordary.endpoint.comment.dto.CommentResponseDto;
-import com.fairy_pitt.recordary.endpoint.comment.dto.CommentUpdateRequestDto;
 import com.fairy_pitt.recordary.endpoint.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +22,9 @@ public class CommentController {
     }
 
     @PutMapping("/{commentCd}")
-    public Long update(@PathVariable Long commentCd, @RequestBody CommentUpdateRequestDto requestDto)
+    public Long update(@PathVariable Long commentCd, @RequestBody String commentContent)
     {
-        return  commentService.update(commentCd,requestDto);
+        return  commentService.update(commentCd, commentContent);
     }
 
     @DeleteMapping("/{commentCd}")
