@@ -20,13 +20,13 @@ const Main = (props) => {
                 <Timeline data={value} user={props.data} />
               </div>
             );
-          } else {
+          } else if (value.scheduleFK !== null) {
             return (
               <div className='timeline-Margin' key={value.postCd}>
-                {/* <TimelineWeekSchedule data={value}></TimelineWeekSchedule> */}
+                <TimelineWeekSchedule data={value} user={props.data}></TimelineWeekSchedule>
               </div>
             );
-          }
+          } else return null;
         })}
       </div>
     </main>
