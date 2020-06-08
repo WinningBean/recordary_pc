@@ -66,10 +66,11 @@ public class PostLikeControllerTest {
                 .postEndYMD("20200311")
                 .build());
 
-        String url = "http://localhost:" + port + "/post/" + postEntity.getPostCd() + "/like/" + user2.getUserCd();
+        Long requestLong = user2.getUserCd();
+        String url = "http://localhost:" + port + "/post/" + postEntity.getPostCd() + "/like";
 
         //when
-        ResponseEntity<Boolean> responseEntity = restTemplate.getForEntity(url, Boolean.class);
+        ResponseEntity<Boolean> responseEntity = restTemplate.postForEntity(url, requestLong, Boolean.class);
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);

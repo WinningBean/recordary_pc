@@ -5,17 +5,14 @@ import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.GroupMemberRepository;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
-import com.fairy_pitt.recordary.common.repository.PostRepository;
-import com.fairy_pitt.recordary.endpoint.group.dto.*;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupPageResponseDto;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupSaveRequestDto;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupUpdateRequestDto;
 import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
-import com.fairy_pitt.recordary.endpoint.post.dto.GroupPostResponseDto;
-import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
-import com.fairy_pitt.recordary.endpoint.post.service.PostService;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-
-import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -105,12 +102,15 @@ public class GroupService {
     @Transactional(readOnly = true)
     public List<GroupResponseDto> findUserGroups(Long userCd){
         UserEntity user = userService.findEntity(userCd);
+        List<GroupResponseDto> result = groupRepository.findBygMstUserFK(user)
+                .stream()
+                .map(GroupResponseDto::new)
+                .collect(Collectors.toList());
+
         List<GroupMemberEntity> groupEntities = user.getGroups();
-        List<GroupResponseDto> result = new ArrayList<>();
 
         for (GroupMemberEntity temp: groupEntities) {
-            Boolean isMaster = temp.getGroupFK().getGMstUserFK().getUserCd().equals(temp.getUserFK().getUserCd());
-            GroupResponseDto groupResponseDto = new GroupResponseDto(temp.getGroupFK(), isMaster);
+            GroupResponseDto groupResponseDto = new GroupResponseDto(temp.getGroupFK(), false);
             result.add(groupResponseDto);
         }
 

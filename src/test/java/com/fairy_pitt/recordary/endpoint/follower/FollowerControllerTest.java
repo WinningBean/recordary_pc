@@ -4,7 +4,6 @@ import com.fairy_pitt.recordary.common.entity.FollowerEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.FollowerRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
-import com.fairy_pitt.recordary.endpoint.follower.dto.FollowerRequestDto;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,15 +70,12 @@ public class FollowerControllerTest {
                 .userNm("테스트 유저2")
                 .build());
 
-        FollowerRequestDto requestDto = FollowerRequestDto.builder()
-                .userCd(user1.getUserCd())
-                .targetCd(user2.getUserCd())
-                .build();
+        Long requestLong = user2.getUserCd();
 
-        String url = "http://localhost:" + port + "/follow";
+        String url = "http://localhost:" + port + "/follow/" + user1.getUserCd();
 
         //when
-        ResponseEntity<Boolean> responseEntity = restTemplate.postForEntity(url, requestDto, Boolean.class);
+        ResponseEntity<Boolean> responseEntity = restTemplate.postForEntity(url, requestLong, Boolean.class);
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);

@@ -1,6 +1,11 @@
 package com.fairy_pitt.recordary.endpoint.user.service;
 
+import com.fairy_pitt.recordary.common.entity.PostEntity;
+import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.repository.MediaRepository;
+import com.fairy_pitt.recordary.common.repository.PostRepository;
+import com.fairy_pitt.recordary.common.repository.ScheduleRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
 import com.fairy_pitt.recordary.endpoint.user.dto.*;
@@ -26,6 +31,10 @@ public class UserService {
     private final UserPasswordHashService userPasswordHashService;
     private final HttpSession httpSession;
     private final S3UploadComponent s3UploadComponent;
+
+    private final PostRepository postRepository;
+    private final MediaRepository mediaRepository;
+    private final ScheduleRepository scheduleRepository;
 
     @Transactional
     public Boolean save(UserSaveRequestDto requestDto){
@@ -62,12 +71,31 @@ public class UserService {
         return imgPath;
     }
 
+    private void deleteOnlyUserPossession(UserEntity user){
+        s3UploadComponent.profileDelete("user", user.getUserCd().toString()); // 사용자 프로필 삭
+
+        List<PostEntity> onlyUserPostList = user.getPostList().stream()
+                .filter(p -> p.getGroupFK() == null)
+                .collect(Collectors.toList());
+        for (PostEntity postEntity : onlyUserPostList) {
+            mediaRepository.delete(postEntity.getMediaFK()); // 오직 사용자의 미디어
+            postRepository.delete(postEntity); // 오직 사용자의 포스
+        }
+
+        List<ScheduleEntity> onlyUserScheduleList = user.getUserScheduleList().stream()
+                .filter(s -> s.getGroupFK() == null)
+                .collect(Collectors.toList());
+        for (ScheduleEntity scheduleEntity : onlyUserScheduleList){
+            scheduleRepository.delete(scheduleEntity); // 오직 사용자의 일정
+        }
+    }
+
     @Transactional
     public void delete(Long userCd){
         UserEntity userEntity = Optional.ofNullable(userRepository.findByUserCd(userCd))
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. cd = " + userCd));
 
-        s3UploadComponent.profileDelete("user", userCd.toString());
+        deleteOnlyUserPossession(userEntity);
         userRepository.delete(userEntity);
     }
 

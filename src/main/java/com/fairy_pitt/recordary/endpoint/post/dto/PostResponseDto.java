@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class PostResponseDto implements Comparable<PostResponseDto>{
     private Long postCd;
     private UserResponseDto userFK;
-   private GroupResponseDto groupFK;
+    private GroupResponseDto groupFK;
     private PostResponseDto postOriginFK;
     private ScheduleResponseDto scheduleFK;
     private MediaResponseDto mediaFK;
@@ -29,6 +29,9 @@ public class PostResponseDto implements Comparable<PostResponseDto>{
     private String postEndYMD;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
+    private int postLikeCount;
+    private UserResponseDto postLikeFirstUser = null;
+    private Boolean currentUserLikePost = false;
 
     public PostResponseDto(PostEntity postEntity){
         this.postCd = postEntity.getPostCd();
@@ -47,6 +50,12 @@ public class PostResponseDto implements Comparable<PostResponseDto>{
         this.postEndYMD = postEntity.getPostEndYMD();
         this.createdDate = postEntity.getCreatedDate();
         this.modifiedDate = postEntity.getModifiedDate();
+        this.postLikeCount = postEntity.getPostLikeList().size();
+        if (postLikeCount != 0) this.postLikeFirstUser = new UserResponseDto(postEntity.getPostLikeList().get(0).getUserFK());
+    }
+
+    public void setTrueCurrentUserLikePost(){
+        this.currentUserLikePost = true;
     }
 
     @Override

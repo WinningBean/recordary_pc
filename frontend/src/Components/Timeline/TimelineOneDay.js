@@ -1,8 +1,7 @@
 import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
-import PersonIcon from '@material-ui/icons/Person';
-import { format } from 'date-fns';
+import * as dateFns from 'date-fns';
 
 function TimelineOneDay({ title, ex, startDay, endDay }) {
   return (
@@ -15,6 +14,7 @@ function TimelineOneDay({ title, ex, startDay, endDay }) {
           alignItems: 'center',
           fontWeight: 'bold',
           borderBottom: '1px solid rgb(229, 229, 229)',
+          paddingLeft: '8px',
         }}
       >
         {title}
@@ -32,7 +32,7 @@ function TimelineOneDay({ title, ex, startDay, endDay }) {
           }}
         >
           <span style={{ fontWeight: 'bold' }}>시작</span>
-          <span style={{ fontWeight: 'bold' }}>{format(startDay, 'yyyy.M.d EEE h:mm a')}</span>
+          <span style={{ fontWeight: 'bold' }}>{dateFns.format(Date.parse(startDay), 'yyyy.M.d EEE h:mm a')}</span>
         </div>
         <div
           style={{
@@ -45,7 +45,7 @@ function TimelineOneDay({ title, ex, startDay, endDay }) {
           }}
         >
           <span style={{ fontWeight: 'bold' }}>종료</span>
-          <span style={{ fontWeight: 'bold' }}>{format(endDay, 'yyyy.M.d EEE h:mm a')}</span>
+          <span style={{ fontWeight: 'bold' }}>{dateFns.format(Date.parse(endDay), 'yyyy.M.d EEE h:mm a')}</span>
         </div>
       </div>
       <div style={{ flex: 1, marginTop: '6px', marginLeft: '6px' }}>

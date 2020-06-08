@@ -3,6 +3,7 @@ import * as dateFns from 'date-fns';
 import produce from 'immer';
 import { styled } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
+import AlertDialog from '../Other/AlertDialog';
 
 import './Timeline.css';
 import LongMenu from '../Other/MoreMenu';
@@ -24,7 +25,8 @@ import Button from '@material-ui/core/Button';
 import SubdirectoryArrowLeftIcon from '@material-ui/icons/SubdirectoryArrowLeft';
 import EditIcon from '@material-ui/icons/Edit';
 import CheckIcon from '@material-ui/icons/Check';
-
+import InputBase from '@material-ui/core/InputBase';
+import ClearIcon from '@material-ui/icons/Clear';
 const useStyles = makeStyles((theme) => ({
   textFieldSize: {
     fontSize: '12px',
@@ -34,6 +36,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Timeline = (props) => {
   const classes = useStyles();
+  const [dialog, setDialog] = useState(null);
+
   const data = props.data;
   const [isClickList, setIsClickList] = useState(
     data.commentList.map(() => ({ recommentList: [], clickIndex: false }))
@@ -43,13 +47,18 @@ const Timeline = (props) => {
   const [clickSchedule, setClickSchedule] = useState(false);
   const [mediaList, setMediaList] = useState([]);
   const [writeRecommentShow, setWriteRecommentShow] = useState(data.commentList.map(() => false));
-  const [writeReComment, setWriteReComment] = useState('');
+  const [writeRecomment, setWriteRecomment] = useState('');
+  const [updateComment, setUpdateComment] = useState('');
   const [editComment, setEditComment] = useState(data.commentList.map(() => false));
+  const [editRecomment, setEditRecomment] = useState([]);
+  const [updateRecomment, setUpdateRecomment] = useState('');
+  const [deleteComment, setDeleteComment] = useState(data.commentList.map(() => false));
+  const [deleteRecomment, setDeleteRecomment] = useState([]);
 
   const textField = useRef();
 
   const handleChange = (e) => {
-    setWriteReComment(e.target.value);
+    setWriteRecomment(e.target.value);
   };
 
   useEffect(() => {
@@ -96,13 +105,15 @@ const Timeline = (props) => {
           }
         })
       );
+      setEditRecomment(recommentListData.map(() => false));
+      setDeleteRecomment(recommentListData.map(() => false));
     } catch (error) {
       console.error(error);
     }
   };
 
   const showRecommentList = (list) => {
-    return list.map((val) => (
+    return list.map((val, i) => (
       <div key={val.commentCd}>
         <div className='comment-reply-users more-recomment-reply-users'>
           <div className='recomment-reply-users-img'>
@@ -112,18 +123,96 @@ const Timeline = (props) => {
             <span style={{ fontWeight: 'bold', fontSize: '12px', marginRight: '5px' }}>
               {val.userFK.userId}({val.userFK.userNm})
             </span>
-            <span style={{ fontSize: '12px', maxWidth: '' }}>{val.commentContent}</span>
+            <span style={{ fontSize: '12px' }}>
+              <InputBase
+                style={{ fontSize: '12px', height: '12px', color: 'black' }}
+                defaultValue={val.commentContent}
+                inputProps={{ 'aria-label': 'naked' }}
+                disabled={editRecomment[i] === true ? false : true}
+                onChange={(e) => setUpdateRecomment(e.target.value)}
+              />
+            </span>
           </div>
           <div className='commentIcon-hover' style={{ height: ' 15px' }}>
             {props.user.userCd !== val.userFK.userCd ? null : (
-              <EditIcon
-                style={{
-                  color: 'gray',
-                  fontSize: '20',
-                  paddingRight: '5px',
-                  paddingBottom: '5px',
-                }}
-              />
+              <div>
+                {editRecomment[i] === true ? (
+                  <CheckIcon
+                    onClick={async () => {
+                      try {
+                        const editedCommentCd = (
+                          await axios.put(`/comment/${val.commentCd}`, updateRecomment, {
+                            headers: { 'Content-Type': 'application/json' },
+                          })
+                        ).data;
+                        console.log(editedCommentCd);
+                      } catch (e) {
+                        console.log(e);
+                        setDialog(
+                          <AlertDialog
+                            severity='error'
+                            content='댓글을 수정하지 못했습니다.'
+                            onAlertClose={() => setDialog(null)}
+                          />
+                        );
+                      }
+                      setEditRecomment(
+                        editRecomment.map((value, listIndex) => {
+                          if (listIndex === i) {
+                            return !value;
+                          }
+                          return value;
+                        })
+                      );
+                    }}
+                    style={{
+                      color: 'gray',
+                      fontSize: '20',
+                      paddingRight: '5px',
+                      paddingBottom: '5px',
+                    }}
+                  />
+                ) : (
+                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <EditIcon
+                      onClick={() => {
+                        setEditRecomment(
+                          editRecomment.map((value, listIndex) => {
+                            if (listIndex === i) {
+                              return !value;
+                            }
+                            return value;
+                          })
+                        );
+                      }}
+                      style={{
+                        color: 'gray',
+                        fontSize: '20',
+                        paddingRight: '5px',
+                        paddingBottom: '5px',
+                      }}
+                    />
+                    <ClearIcon
+                      onClick={() => {
+                        setDeleteRecomment(
+                          deleteRecomment.map((value, listIndex) => {
+                            if (listIndex === i) {
+                              return !value;
+                            }
+                            return value;
+                          })
+                        );
+                      }}
+                      style={{
+                        color: 'gray',
+                        fontSize: '20',
+                        paddingRight: '5px',
+                        paddingBottom: '5px',
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -144,14 +233,49 @@ const Timeline = (props) => {
                 <span className='reply-name'>
                   {value.userFK.userId}({value.userFK.userNm})
                 </span>
-                <span>{value.commentContent}</span>
+                <span>
+                  <InputBase
+                    style={
+                      editComment[index] === true
+                        ? {
+                            fontSize: '13px',
+                            height: '13px',
+                            color: 'black',
+                            // backgroundColor: 'rgba(161, 159, 159, 0.3)',
+                          }
+                        : { fontSize: '13px', height: '13px', color: 'black' }
+                    }
+                    defaultValue={value.commentContent}
+                    inputProps={{ 'aria-label': 'naked' }}
+                    disabled={editComment[index] === true ? false : true}
+                    onChange={(e) => setUpdateComment(e.target.value)}
+                  />
+                </span>
               </div>
               <div className='commentIcon-hover' style={{ height: ' 15px' }}>
                 {props.user.userCd !== value.userFK.userCd ? null : (
                   <div>
                     {editComment[index] === true ? (
                       <CheckIcon
-                        onClick={() => {
+                        onClick={async () => {
+                          try {
+                            console.log(updateComment);
+                            const editedCommentCd = (
+                              await axios.put(`/comment/${value.commentCd}`, updateComment, {
+                                headers: { 'Content-Type': 'application/json' },
+                              })
+                            ).data;
+                            console.log(editedCommentCd);
+                          } catch (e) {
+                            console.log(e);
+                            setDialog(
+                              <AlertDialog
+                                severity='error'
+                                content='댓글을 수정하지 못했습니다.'
+                                onAlertClose={() => setDialog(null)}
+                              />
+                            );
+                          }
                           setEditComment(
                             editComment.map((value, listIndex) => {
                               if (listIndex === index) {
@@ -169,30 +293,49 @@ const Timeline = (props) => {
                         }}
                       />
                     ) : (
-                      <EditIcon
-                        onClick={() => {
-                          setEditComment(
-                            editComment.map((value, listIndex) => {
-                              if (listIndex === index) {
-                                return !value;
-                              }
-                              return value;
-                            })
-                          );
-                        }}
-                        style={{
-                          color: 'gray',
-                          fontSize: '20',
-                          paddingRight: '5px',
-                          paddingBottom: '5px',
-                        }}
-                      />
+                      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <EditIcon
+                          onClick={() => {
+                            setEditComment(
+                              editComment.map((value, listIndex) => {
+                                if (listIndex === index) {
+                                  return !value;
+                                }
+                                return value;
+                              })
+                            );
+                          }}
+                          style={{
+                            color: 'gray',
+                            fontSize: '20',
+                            paddingRight: '5px',
+                            paddingBottom: '5px',
+                          }}
+                        />
+                        <ClearIcon
+                          onClick={() => {
+                            setDeleteComment(
+                              deleteComment.map((value, listIndex) => {
+                                if (listIndex === index) {
+                                  return !value;
+                                }
+                                return value;
+                              })
+                            );
+                          }}
+                          style={{
+                            color: 'gray',
+                            fontSize: '20',
+                            paddingRight: '5px',
+                            paddingBottom: '5px',
+                          }}
+                        />
+                      </div>
                     )}
                   </div>
                 )}
               </div>
             </div>
-
             <div className='commentIconFlex'>
               <div
                 className='commentIcon-hover'
@@ -276,7 +419,7 @@ const Timeline = (props) => {
                             await axios.post(`/comment/`, {
                               userCd: props.user.userCd,
                               postCd: data.postCd,
-                              commentContent: writeReComment,
+                              commentContent: writeRecomment,
                               commentOriginCd: value.commentCd,
                             })
                           ).data;
@@ -433,9 +576,10 @@ const Timeline = (props) => {
           </div>
         )}
         <div className='profile-time'>
-          <div className='profile-time-text'>{`${Math.abs(
-            dateFns.differenceInDays(Date.parse(data.modifiedDate), new Date())
-          )}일 전`}</div>
+          <div className='profile-time-text'>
+            {/* 0일전 => 오늘             */}
+            {`${Math.abs(dateFns.differenceInDays(Date.parse(data.modifiedDate), new Date()))}일 전`}
+          </div>
         </div>
         <div className='profile-moreIcon'>
           <LongMenu options={['나에게 공유', ' 수정 ', ' 삭제 ']} returnValue={userPostMoreButtonClick} />
@@ -484,9 +628,7 @@ const Timeline = (props) => {
                       justifyContent: 'space-between',
                     }}
                   >
-                    <div style={{ paddingLeft: '8px' }}>
-                      <h2>{data.scheduleFK.scheduleNm}</h2>
-                    </div>
+                    <div style={{ paddingLeft: '8px' }}>{data.scheduleFK.scheduleNm}</div>
                     <div style={{ paddingRight: '8px', display: 'flex' }} className='Close-hover'>
                       <CloseIcon onClick={() => setClickSchedule(false)} />
                     </div>
@@ -568,10 +710,41 @@ const Timeline = (props) => {
           <div className='comment-context-icon'>
             <div className='comment-icon-left'>
               <div className='likeIcon'>
-                <ThumbUpRoundedIcon style={{ fontSize: 25 }}>like</ThumbUpRoundedIcon>
+                <ThumbUpRoundedIcon
+                  style={data.currentUserLikePost ? { color: 'rgba(20, 81, 51, 0.9)', fontSize: 25 } : { fontSize: 25 }}
+                  onClick={async () => {
+                    try {
+                      if (data.currentUserLikePost === false) {
+                        const like = (
+                          await axios.post(`/post/${data.postCd}/like`, props.user.userCd, {
+                            headers: { 'Content-Type': 'application/json' },
+                          })
+                        ).data;
+                        console.log(like);
+                      } else {
+                        const unLike = (
+                          await axios.delete(`/post/${data.postCd}/unLike`, { params: { userCd: props.user.userCd } })
+                        ).data;
+                        console.log(unLike);
+                      }
+                    } catch (e) {
+                      console.log(e);
+                      setDialog(
+                        <AlertDialog severity='error' content='서버에러' onAlertClose={() => setDialog(null)} />
+                      );
+                    }
+                  }}
+                />
               </div>
-              {/* <div className='comment-title'>{`${data.postLikePerson} 님 외 ${data.postLikeCount}명이 좋아합니다`}</div> */}
-              <div className='comment-title'>WiSungHo(위성호) 님 외 9명이 좋아합니다</div>
+              {data.postLikeCount < 1 ? (
+                <div className='comment-title'>첫번째 좋아요를 눌러주세욤</div>
+              ) : data.postLikeCount === 1 ? (
+                <div className='comment-title'>{`${data.postLikeFirstUser.userId}(${data.postLikeFirstUser.userNm}) 님이 좋아합니다`}</div>
+              ) : (
+                <div className='comment-title'>{`${data.postLikeFirstUser.userId}(${
+                  data.postLikeFirstUser.userNm
+                }) 님 외 ${data.postLikeCount - 1}명이 좋아합니다`}</div>
+              )}
             </div>
           </div>
           <div className='comment-write'>
@@ -580,6 +753,7 @@ const Timeline = (props) => {
         </div>
       </div>
       {menuDialog}
+      {dialog}
     </div>
   );
 };
