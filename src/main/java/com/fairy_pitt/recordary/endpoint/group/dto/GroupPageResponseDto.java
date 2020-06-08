@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @Getter
 public class GroupPageResponseDto {
 
+    private Long groupCd;
     private UserResponseDto admin;
     private List<GroupPostResponseDto> postList;
     private List<GroupMemberResponseDto> memberList;
@@ -23,6 +24,7 @@ public class GroupPageResponseDto {
 
     public GroupPageResponseDto(GroupEntity entity)
     {
+        this.groupCd = entity.getGroupCd();
         if (entity.getGMstUserFK() != null) this.admin = new UserResponseDto(entity.getGMstUserFK());
         this.postList = entity.getPostEntityList().stream().map(GroupPostResponseDto::new).collect(Collectors.toList());
         this.memberList = entity.getMembers().stream()

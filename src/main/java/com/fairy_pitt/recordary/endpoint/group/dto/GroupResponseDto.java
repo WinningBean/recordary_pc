@@ -13,7 +13,7 @@ public class GroupResponseDto { // 응답(요청에대한 답)
     private Boolean groupState;
     private String groupEx;
     private String groupPic;
-    private Boolean isMaster;
+    private Boolean isMaster = true;
 
     public GroupResponseDto(GroupEntity entity)
     {
