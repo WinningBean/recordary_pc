@@ -24,8 +24,9 @@ const Calendar = (props) => {
   // 0 : 내 프로필
   // 1 : 남의 프로필
   // 2 : 마스터 그룹 프로필
-  // 3 : 일반 그룹 프로필
+  // 3 : 그룹원 프로필
   // 4 : 일정 공유
+  // 5 : 남의 그룹 프로필
   const [userDate, setUserDate] = useState([]);
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -69,13 +70,27 @@ const Calendar = (props) => {
       const startDate = dateFns.startOfWeek(monthStart);
       const endDate = dateFns.endOfWeek(monthEnd);
 
-      const { data } = await axios.post(`/schedule/showUserSchedule/${props.info.userCd}`, {
-        userCd: props.info.userCd,
-        frommDate: startDate.getTime(),
-        toDate: endDate.getTime(),
-      });
+      var data = undefined;
 
-      console.log(props.info.userCd, data);
+      console.log(props.info, props.type);
+      props.type === 2 || props.type === 3 || props.type === 5
+        ? (data = (
+            await axios.post(`/schedule/showGroupSchedule/23`, {
+              groupCd: props.info.groupCd,
+              frommDate: startDate.getTime(),
+              toDate: endDate.getTime(),
+            })
+          ).data)
+        : (data = (
+            await axios.post(`/schedule/showUserSchedule/${props.info.userCd}`, {
+              userCd: props.info.userCd,
+              frommDate: startDate.getTime(),
+              toDate: endDate.getTime(),
+            })
+          ).data);
+
+      console.log(data);
+
       const abcd = data.map((value) => ({
         tab: value.tabCd,
         cd: value.scheduleCd,
@@ -173,7 +188,8 @@ const Calendar = (props) => {
           onAlertSubmit={async () => {
             setAlert(<SnackBar severity='info' content='일정을 수정중입니다...' duration={999999} />);
             try {
-              await axios.post(`/schedule/update/${moveObjDate.cd}`, {
+              await axios.post(`/schedule/update/${type === 0 ? moveObjDate.cd : moveObjDate.currentUserCd}`, {
+                groupCd: type === 0 ? null : props.info.groupCd,
                 TabCodeFK: null,
                 scheduleNm: moveObjDate.nm,
                 scheduleEx: moveObjDate.ex,
@@ -371,7 +387,7 @@ const Calendar = (props) => {
             onClick={() => {
               if (type === 4) {
                 onChoice(currDay);
-              } else if (type === 0 || type === 2) {
+              } else if (type === 0 || type === 2 || type === 3) {
                 setClickDate(currDay);
               }
             }}
@@ -395,7 +411,10 @@ const Calendar = (props) => {
             })()}
           >
             {dateFns.isSameDay(day, selectedDate) ? (
-              <div className='selected' style={{ backgroundColor: type === 2 || type === 3 ? 'tomato' : null }} />
+              <div
+                className='selected'
+                style={{ backgroundColor: type === 2 || type === 3 || type === 5 ? 'tomato' : null }}
+              />
             ) : null}
             <span className='bg'>{formattedDate}</span>
             <span className='number'>{formattedDate}</span>
@@ -440,7 +459,7 @@ const Calendar = (props) => {
         zIndex: 10,
         backgroundColor: color,
       }}
-      onMouseDown={type === 0 || type === 2 ? onScMouseDown : null}
+      onMouseDown={type === 0 || type === 2 || type === 3 ? onScMouseDown : null}
       onClick={(e) => {
         if (alert !== null) {
           return;
@@ -501,7 +520,7 @@ const Calendar = (props) => {
           zIndex: 10,
           backgroundColor: color,
         }}
-        onMouseDown={type === 0 || type === 2 ? onScMouseDown : null}
+        onMouseDown={type === 0 || type === 2 || type === 3 ? onScMouseDown : null}
         onClick={(e) => {
           if (alert !== null) {
             return;
@@ -798,7 +817,7 @@ const Calendar = (props) => {
     <div className='calendar'>
       {CalendarHeader}
       {CalendarDays}
-      {type === 0 || type === 2 ? (
+      {type === 0 || type === 2 || type === 3 ? (
         <div id='wrap-cells' onMouseDown={onMouseDownCell} onMouseMove={MouseMoveHandler} onMouseUp={onScMouseUp}>
           {Cells}
           {Schedual()}
@@ -1007,7 +1026,7 @@ const Calendar = (props) => {
               </div>
             </div>
           </div>
-          {type === 0 || type === 2 ? (
+          {type === 0 || type === 2 || type === 3 ? (
             <div className='calendar-detailedsc-buttons'>
               <div className='calendar-detailedsc-buttons-button' onClick={() => setScheduleEditOpen(true)}>
                 <CreateIcon fontSize='small' />
@@ -1015,8 +1034,8 @@ const Calendar = (props) => {
               </div>
               {scheduleEditOpen === true ? (
                 <CalendarScheduleEdit
-                  groupCd={type === 2 ? props.info.groupCd : undefined}
-                  userCd={props.info.userCd}
+                  groupCd={type === 2 || type === 3 ? props.info.groupCd : undefined}
+                  userCd={type === 0 ? props.info.userCd : props.info.currentUserCd}
                   info={selectedDetailedSC}
                   onModify={(data) => {
                     const copyUserDate = userDate.slice();
@@ -1053,7 +1072,7 @@ const Calendar = (props) => {
                     setAlert(
                       <SnackBar
                         severity='success'
-                        content='일정이 수정되었습니다.'
+                        content='일정이 삭제되었습니다.'
                         duration={1000}
                         onClose={() => setAlert(null)}
                       />
@@ -1072,6 +1091,7 @@ const Calendar = (props) => {
       </Popover>
       {clickDate !== null ? (
         <AddSchedule
+          type={props.type}
           data={props.info}
           clickTab={props.clickTab}
           onClose={() => setClickDate(null)}

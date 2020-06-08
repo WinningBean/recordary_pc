@@ -28,7 +28,11 @@ class Header extends React.Component {
               <IconButton onClick={() => this.setState({ openMenu: true })}>
                 <MenuIcon style={{ fontSize: '30px', color: 'white' }} />
               </IconButton>
-              {/* <HeaderMenu open={this.state.openMenu} onClose={()=>this.setState({openMenu : false})} /> */}
+              <HeaderMenu
+                open={this.state.openMenu}
+                isLogin={this.props.isLogin}
+                onClose={() => this.setState({ openMenu: false })}
+              />
             </div>
             {/* <div className="title-icon">
                         <a href="profile.html"><img alt="icon" src="RIcon.png" /></a>

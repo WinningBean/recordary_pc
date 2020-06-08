@@ -15,8 +15,12 @@ import NotifyPopup from '../UI/NotifyPopup';
 import Snackbar from '../UI/Snackbar';
 import GroupSetting from '../Group/GroupSetting';
 
-import { Dialog } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import SettingsIcon from '@material-ui/icons/Settings';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 
 import Button from '@material-ui/core/Button';
@@ -50,7 +54,8 @@ class Profile extends React.Component {
   // 0 : 내 프로필
   // 1 : 남의 프로필
   // 2 : 마스터 그룹 프로필
-  // 3 : 일반 그룹 프로필
+  // 3 : 그룹원 프로필
+  // 5 : 남의 그룹 프로필
 
   constructor(props) {
     super(props);
@@ -65,6 +70,8 @@ class Profile extends React.Component {
       redirect: false,
       alert: null,
       clickTab: undefined,
+      isRemoveAllScheduleInTab: false,
+      contextMenu: undefined,
       post: [],
       isOpenAddTab: false,
     };
@@ -116,10 +123,16 @@ class Profile extends React.Component {
       var groupApply = null;
       var type = 3;
 
-      if (this.props.isLogin && groupInfo.userCd === this.props.user.userCd) {
+      if (this.props.isLogin && groupInfo.admin.userCd === this.props.user.userCd) {
         type = 2;
         groupApply = (await axios.get(`/groupApply/findUserApply/${this.props.match.params.groupCd}`)).data;
         console.log(groupApply, 'groupApply');
+      }
+      for (let i = 0; groupMember.length; i++) {
+        if (groupMember[i].userCd === this.props.user.userCd) {
+          type = 5;
+          break;
+        }
       }
 
       console.log('type = ', type);
@@ -127,6 +140,7 @@ class Profile extends React.Component {
         ...this.state,
         info: {
           ...groupInfo,
+          currentUserCd: this.props.user.userCd,
           member: groupMember,
           groupApply: groupApply,
         },
@@ -230,7 +244,7 @@ class Profile extends React.Component {
                             ALL
                           </TabButton>
                         </li>
-                        {this.state.info.scheduleTabDto.map((value, index) => (
+                        {this.state.info.scheduleTabInfo.map((value, index) => (
                           <li
                             key={`tab-${index}`}
                             style={{
@@ -239,9 +253,14 @@ class Profile extends React.Component {
                             className='transition-all'
                           >
                             <TabButton
+                              name={`${value.scheduleTabCd}-${value.scheduleTabNm}`}
                               style={{
                                 backgroundColor: value.scheduleTabColor,
                                 opacity: this.state.clickTab === index ? '100%' : '60%',
+                              }}
+                              onContextMenu={(e) => {
+                                e.preventDefault();
+                                this.setState({ contextMenu: e.currentTarget });
                               }}
                               onClick={() => {
                                 if (this.state.clickTab === index) {
@@ -260,7 +279,7 @@ class Profile extends React.Component {
                           <TabButton
                             style={{ justifyContent: 'flex-start', backgroundColor: 'rgba(0, 0, 0, 0.04)' }}
                             onClick={() => {
-                              if (this.state.info.scheduleTabDto.length > 8) {
+                              if (this.state.info.scheduleTabInfo.length > 8) {
                                 this.setState({
                                   alert: (
                                     <Snackbar
@@ -281,6 +300,95 @@ class Profile extends React.Component {
                       </>
                     )}
                   </ul>
+                  <Menu
+                    anchorEl={this.state.contextMenu}
+                    keepMounted
+                    open={Boolean(this.state.contextMenu)}
+                    onClose={() => this.setState({ contextMenu: undefined })}
+                  >
+                    <MenuItem
+                      onClick={() => {
+                        this.setState({
+                          alert: (
+                            <Dialog open>
+                              <DialogTitle style={{ backgroundColor: 'rgba(20, 81, 51, 0.8)', color: 'white' }}>
+                                탭 삭제
+                              </DialogTitle>
+                              <DialogContent>
+                                <div style={{ fontSize: '16px', fontWeight: 'bold', marginTop: '6px' }}>{`'${
+                                  this.state.contextMenu.name.split('-')[1]
+                                }' 탭을 삭제하시겠습니까?`}</div>
+                                <FormControlLabel
+                                  control={
+                                    <Checkbox
+                                      onChange={(e) => this.setState({ isRemoveAllScheduleInTab: e.target.checked })}
+                                      color='primary'
+                                      inputProps={{ 'aria-label': 'secondary checkbox' }}
+                                    />
+                                  }
+                                  label='탭에 포함된 모든 일정도 삭제'
+                                />
+                              </DialogContent>
+                              <DialogActions>
+                                <Button
+                                  onClick={() =>
+                                    this.setState({
+                                      alert: null,
+                                      isRemoveAllScheduleInTab: false,
+                                      contextMenu: undefined,
+                                    })
+                                  }
+                                >
+                                  취소
+                                </Button>
+                                <Button
+                                  onClick={async () => {
+                                    try {
+                                      const cd = this.state.contextMenu.name.split('-')[0];
+                                      await axios.delete(`/tab/${cd}`);
+                                      const copyTabInfo = this.state.info.scheduleTabInfo.slice();
+                                      for (let i = 0; i < copyTabInfo.length; i++) {
+                                        if (copyTabInfo[i].scheduleTabCd == cd) {
+                                          copyTabInfo.splice(i, 1);
+                                          break;
+                                        }
+                                      }
+                                      this.setState({
+                                        info: { ...this.state.info, scheduleTabInfo: copyTabInfo },
+                                        contextMenu: undefined,
+                                        alert: (
+                                          <Snackbar
+                                            severity='success'
+                                            content='삭제되었습니다.'
+                                            onClose={() => this.setState({ alert: null })}
+                                          />
+                                        ),
+                                      });
+                                    } catch (error) {
+                                      console.error(error);
+                                      this.setState({
+                                        alert: (
+                                          <Snackbar
+                                            severity='error'
+                                            content='서버에러로 인해 거절에 실패하였습니다.'
+                                            onClose={() => this.setState({ alert: null })}
+                                          />
+                                        ),
+                                      });
+                                    }
+                                  }}
+                                >
+                                  삭제
+                                </Button>
+                              </DialogActions>
+                            </Dialog>
+                          ),
+                        });
+                      }}
+                    >
+                      탭 삭제
+                    </MenuItem>
+                  </Menu>
                 </div>
                 <div
                   id='main-profile-info'
@@ -337,10 +445,10 @@ class Profile extends React.Component {
                                 groupCd: this.state.info.groupCd,
                                 userCd: this.state.info.groupApply[index].userCd,
                               });
-                              await axios.post('/groupApply/delete', {
-                                groupCd: this.state.info.groupCd,
-                                userCd: this.state.info.groupApply[index].userCd,
-                              });
+                              // await axios.post('/groupApply/delete', {
+                              //   groupCd: this.state.info.groupCd,
+                              //   userCd: this.state.info.groupApply[index].userCd,
+                              // });
                               const copyList = this.state.info.groupApply.slice();
                               copyList.splice(index, 1);
                               this.setState({
@@ -475,14 +583,14 @@ class Profile extends React.Component {
                             </div>
                             <div style={{ position: 'relative' }}>
                               <span className='followerName'>그룹장</span>
-                              <RouterLink to={`/profile/${this.state.info.userCd}`}>
+                              <RouterLink to={`/profile/${this.state.info.admin.userCd}`}>
                                 <Link component='button'>
                                   <span
                                     className='followerNum'
                                     onMouseEnter={() => this.setState({ ...this.state, isHover: true })}
                                     onMouseOut={() => this.setState({ ...this.state, isHover: false })}
                                   >
-                                    {this.state.info.userNm}
+                                    {this.state.info.admin.userNm}
                                   </span>
                                 </Link>
                               </RouterLink>
@@ -566,17 +674,22 @@ class Profile extends React.Component {
                   <div id='schedule-area'>
                     <Calendar
                       type={this.state.type}
-                      info={this.state.type === 2 || this.state.type === 3 ? this.state.info : this.state.info.userInfo}
+                      info={
+                        this.state.type === 2 || this.state.type === 3 || this.state.type === 5
+                          ? this.state.info
+                          : this.state.info.userInfo
+                      }
                       clickTab={
                         this.state.clickTab === undefined
                           ? undefined
-                          : this.state.info.scheduleTabDto[this.state.clickTab].scheduleTabCd
+                          : this.state.info.scheduleTabInfo[this.state.clickTab].scheduleTabCd
                       }
                       onSuccessAlert={() =>
                         this.setState({
                           alert: (
                             <Snackbar
                               severity='success'
+                              duration={1000}
                               content='일정등록 완료'
                               onClose={() => this.setState({ alert: null })}
                             />
@@ -685,7 +798,7 @@ class Profile extends React.Component {
                 onSuccess={(tabInfo) => {
                   this.setState({
                     ...this.state,
-                    info: { ...this.state.info, scheduleTabDto: this.state.info.scheduleTabDto.concat(tabInfo) },
+                    info: { ...this.state.info, scheduleTabInfo: this.state.info.scheduleTabInfo.concat(tabInfo) },
                     isOpenAddTab: false,
                   });
                 }}

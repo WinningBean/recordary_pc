@@ -19,6 +19,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Popover from '@material-ui/core/Popover';
 import CreateIcon from '@material-ui/icons/Create';
 
+import * as dateFns from 'date-fns';
+
 import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
@@ -28,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CalendarScheduleEdit = ({ onCancel, info, onChangeStrDate, onChangeEndData, userCd }) => {
+const CalendarScheduleEdit = ({ onCancel, info, onChangeStrDate, onChangeEndData, userCd, groupCd }) => {
   const classes = useStyles();
   const [dialog, setDialog] = useState(null);
   const [open, setOpen] = React.useState(false);
@@ -209,8 +211,31 @@ const CalendarScheduleEdit = ({ onCancel, info, onChangeStrDate, onChangeEndData
             <PublicRange />
             <Button
               onClick={async () => {
-                console.log(schedule, addedSchedule, subtractedSchedule);
-                await axios.post(`/schedule/update/${schedule.cd}`, {
+                const str = switchInfo ? dateFns.startOfDay(schedule.start) : schedule.start;
+                const end = switchInfo ? dateFns.startOfSecond(dateFns.endOfDay(schedule.end)) : schedule.end;
+                console.log(groupCd, userCd);
+                console.log({
+                  groupCd: groupCd,
+                  TabCodeFK: schedule.cd,
+                  scheduleNm: schedule.nm,
+                  scheduleEx: schedule.ex,
+                  scheduleStr: str.getTime(),
+                  scheduleEnd: end.getTime(),
+                  scheduleCol: schedule.color,
+                  schedulePublicState: schedule.state,
+                  createMember: addedSchedule,
+                  deleteMember: subtractedSchedule,
+                });
+
+                await axios.post(`/schedule/update/${groupCd !== undefined ? schedule.currentUserCd : schedule.cd}`, {
+                  groupCd: groupCd,
+                  TabCodeFK: schedule.cd,
+                  scheduleNm: schedule.nm,
+                  scheduleEx: schedule.ex,
+                  scheduleStr: str.getTime(),
+                  scheduleEnd: end.getTime(),
+                  scheduleCol: schedule.color,
+                  schedulePublicState: schedule.state,
                   createMember: addedSchedule,
                   deleteMember: subtractedSchedule,
                 });

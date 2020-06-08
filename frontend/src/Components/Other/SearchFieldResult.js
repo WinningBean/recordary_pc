@@ -84,7 +84,9 @@ const SearchFieldResult = (props) => {
                       key={`button-${value.userInfo.userId}`}
                       onClick={async (e) => {
                         try {
-                          const isSuccess = await axios.get(`/follow/${value.userInfo.userCd}`);
+                          const isSuccess = await axios.post(`/follow/${props.userCd}`, value.userInfo.userCd, {
+                            headers: { 'Content-Type': 'application/json' },
+                          });
                           if (isSuccess) {
                             setAlertDialog(
                               <Snackbar
@@ -133,7 +135,11 @@ const SearchFieldResult = (props) => {
                     <FollowButton
                       onClick={async (e) => {
                         try {
-                          const isSuccess = (await axios.delete(`/unFollow/${value.userCd}`)).data;
+                          const isSuccess = (
+                            await axios.delete(`/unFollow/${props.userCd}`, {
+                              params: { targetCd: value.userInfo.userCd },
+                            })
+                          ).data;
                           if (isSuccess) {
                             setAlertDialog(
                               <Snackbar

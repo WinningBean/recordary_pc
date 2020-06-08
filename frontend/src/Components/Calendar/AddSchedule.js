@@ -28,7 +28,7 @@ function rgbToHex(r, g, b) {
 }
 
 // 255,197,0
-export default ({ data, clickTab, clickDate, onClose, onSuccess, groupCd }) => {
+export default ({ data, clickTab, clickDate, onClose, onSuccess, groupCd, type }) => {
   const [color, setColor] = useState({
     r: 255,
     g: 197,
@@ -157,7 +157,8 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, groupCd }) => {
             }
             console.log({
               tabCd: clickTab === undefined ? null : clickTab,
-              userCd: data.userCd,
+              groupCd: type === 0 ? null : info.groupCd,
+              userCd: type === 0 ? data.admin.userCd : data.currentUserCd,
               scheduleNm: info.scheduleNm,
               scheduleEx: info.scheduleEx,
               scheduleStr: str.getTime(),
@@ -170,8 +171,8 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, groupCd }) => {
               const scCd = (
                 await axios.post('/schedule/', {
                   tabCd: clickTab === undefined ? null : clickTab,
-                  groupCd: groupCd === undefined ? null : groupCd, 
-                  userCd: data.userCd,
+                  groupCd: type === 0 ? null : info.groupCd,
+                  userCd: type === 0 ? data.admin.userCd : data.currentUserCd,
                   scheduleNm: info.scheduleNm,
                   scheduleEx: info.scheduleEx,
                   scheduleStr: str.getTime(),
@@ -181,6 +182,7 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, groupCd }) => {
                   schedulePublicState: info.schedulePublicState,
                 })
               ).data;
+              console.log(scCd);
               onSuccess({
                 tab: clickTab === undefined ? null : clickTab,
                 cd: scCd,
