@@ -29,6 +29,8 @@ public class PostResponseDto implements Comparable<PostResponseDto>{
     private String postEndYMD;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
+    private int postLikeCount;
+    private UserResponseDto postLikeFirstUser = null;
     private Boolean currentUserLikePost = false;
 
     public PostResponseDto(PostEntity postEntity){
@@ -48,6 +50,8 @@ public class PostResponseDto implements Comparable<PostResponseDto>{
         this.postEndYMD = postEntity.getPostEndYMD();
         this.createdDate = postEntity.getCreatedDate();
         this.modifiedDate = postEntity.getModifiedDate();
+        this.postLikeCount = postEntity.getPostLikeList().size();
+        if (postLikeCount != 0) this.postLikeFirstUser = new UserResponseDto(postEntity.getPostLikeList().get(0).getUserFK());
     }
 
     public void setTrueCurrentUserLikePost(){

@@ -63,7 +63,7 @@ public class PostEntity extends BaseTimeEntity{
     
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "postFK", cascade = CascadeType.REMOVE)
-    private List<PostLikeEntity> postLikList = new ArrayList<>();
+    private List<PostLikeEntity> postLikeList = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "commentPostFK", cascade = CascadeType.REMOVE)
