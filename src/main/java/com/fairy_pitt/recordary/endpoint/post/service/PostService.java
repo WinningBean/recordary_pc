@@ -1,12 +1,12 @@
 package com.fairy_pitt.recordary.endpoint.post.service;
 
 import com.fairy_pitt.recordary.common.entity.PostEntity;
+import com.fairy_pitt.recordary.common.repository.PostLikeRepository;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
 import com.fairy_pitt.recordary.endpoint.media.service.MediaService;
-import com.fairy_pitt.recordary.endpoint.post.dto.GroupPostResponseDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostUpdateRequestDto;
@@ -32,6 +32,8 @@ public class PostService {
     private final GroupService groupService;
     private final ScheduleService scheduleService;
     private final MediaService mediaService;
+
+    private final PostLikeRepository postLikeRepository;
 
     @Transactional
     public Boolean save(PostSaveRequestDto requestDto) {
@@ -64,35 +66,53 @@ public class PostService {
         PostEntity postEntity = Optional.ofNullable(postRepository.findByPostCd(postCd))
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. code = " + postCd));
 
+        mediaService.delete(postEntity.getMediaFK().getMediaCd());
         postRepository.delete(postEntity);
+    }
+
+    private List<PostResponseDto> checkCurrentUserLikePost(List<PostResponseDto> postResponseDtoList){
+        for (PostResponseDto postResponseDto : postResponseDtoList){
+            if (postLikeRepository.findByPostFKAndUserFK(this.findEntity(postResponseDto.getPostCd()),userService.currentUser()) != null){
+                postResponseDto.setTrueCurrentUserLikePost();
+            }
+        }
+        return postResponseDtoList;
     }
 
     @Transactional(readOnly = true)
     public List<PostResponseDto> userPost(Long userCd){
-        return postRepository.findAllByUserFKOrderByCreatedDateDesc(userService.findEntity(userCd)).stream()
+        List<PostResponseDto> postResponseDtoList = postRepository.findAllByUserFKOrderByCreatedDateDesc(userService.findEntity(userCd)).stream()
                 .map(PostResponseDto::new)
                 .collect(Collectors.toList());
+
+        return checkCurrentUserLikePost(postResponseDtoList);
     }
 
     @Transactional(readOnly = true)
-    public List<GroupPostResponseDto> groupPost(Long groupCd){
-        return postRepository.findAllByGroupFKOrderByCreatedDateDesc(groupService.findEntity(groupCd)).stream()
-                .map(GroupPostResponseDto::new)
+    public List<PostResponseDto> groupPost(Long groupCd){
+        List<PostResponseDto> postResponseDtoList = postRepository.findAllByGroupFKOrderByCreatedDateDesc(groupService.findEntity(groupCd)).stream()
+                .map(PostResponseDto::new)
                 .collect(Collectors.toList());
+
+        return checkCurrentUserLikePost(postResponseDtoList);
     }
 
     @Transactional(readOnly = true)
     public List<PostResponseDto> userPostSearch(String searchContent, Long userCd){
-        return postRepository.findAllByPostExLikeAndUserFK("%"+searchContent+"%", userService.findEntity(userCd)).stream()
+        List<PostResponseDto> postResponseDtoList = postRepository.findAllByPostExLikeAndUserFK("%"+searchContent+"%", userService.findEntity(userCd)).stream()
                 .map(PostResponseDto::new)
                 .collect(Collectors.toList());
+
+        return checkCurrentUserLikePost(postResponseDtoList);
     }
 
     @Transactional(readOnly = true)
     public List<PostResponseDto> groupPostSearch(String searchContent, Long groupCd){
-        return postRepository.findAllByPostExLikeAndGroupFK("%"+searchContent+"%", groupService.findEntity(groupCd)).stream()
+        List<PostResponseDto> postResponseDtoList = postRepository.findAllByPostExLikeAndGroupFK("%"+searchContent+"%", groupService.findEntity(groupCd)).stream()
                 .map(PostResponseDto::new)
                 .collect(Collectors.toList());
+
+        return checkCurrentUserLikePost(postResponseDtoList);
     }
 
     @Transactional(readOnly = true)
@@ -105,14 +125,11 @@ public class PostService {
         PostEntity postEntity = Optional.ofNullable(postRepository.findByPostCd(postCd))
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. code = " + postCd));
 
-        return new PostResponseDto(postEntity);
-    }
-
-    @Transactional(readOnly = true)
-    public List<PostResponseDto> findAllDesc() {
-        return postRepository.findAllByOrderByCreatedDateDesc().stream()
-                .map(PostResponseDto::new)
-                .collect(Collectors.toList());
+        PostResponseDto postResponseDto = new PostResponseDto(postEntity);
+        if (postLikeRepository.findByPostFKAndUserFK(postEntity, userService.currentUser()) != null){
+            postResponseDto.setTrueCurrentUserLikePost();
+        }
+        return postResponseDto;
     }
 
     @Transactional(readOnly = true)
@@ -140,6 +157,7 @@ public class PostService {
             }
         }
 
+        postList = checkCurrentUserLikePost(postList);
         Collections.sort(postList);
         return postList;
     }
@@ -167,7 +185,7 @@ public class PostService {
 
         List<PostResponseDto> postPagingList = new ArrayList<>();
 
-        while (cdSetList.size() > currentIndex && postPagingList.size() < 5) {
+        while (cdSetList.size() > currentIndex && postPagingList.size() < 10) {
             postPagingList.add(new PostResponseDto(this.findEntity(cdSetList.get(currentIndex))));
             currentIndex++;
         }

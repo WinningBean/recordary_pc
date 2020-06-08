@@ -37,11 +37,6 @@ public class PostController {
         return postService.findByCd(postCd);
     }
 
-    @GetMapping("/")
-    public List<PostResponseDto> findAllDesc(){
-        return postService.findAllDesc();
-    }
-
     @GetMapping("/user/{userCd}")
     public List<PostResponseDto> userPost(@PathVariable Long userCd){
         return postService.userPost(userCd);
