@@ -3,7 +3,6 @@ package com.fairy_pitt.recordary.endpoint.follower.service;
 import com.fairy_pitt.recordary.common.entity.FollowerEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.FollowerRepository;
-import com.fairy_pitt.recordary.endpoint.follower.dto.FollowerRequestDto;
 import com.fairy_pitt.recordary.endpoint.follower.dto.FollowerStateResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
@@ -25,19 +24,19 @@ public class FollowerService {
     private final FollowerRepository followerRepository;
 
     @Transactional
-    public Boolean save(FollowerRequestDto requestDto) {
+    public Boolean save(Long userCd, Long targetCd) {
         FollowerEntity followerEntity = FollowerEntity.builder()
-                .userFK(userService.findEntity(requestDto.getUserCd()))
-                .targetFK(userService.findEntity(requestDto.getTargetCd()))
+                .userFK(userService.findEntity(userCd))
+                .targetFK(userService.findEntity(targetCd))
                 .build();
 
         return Optional.ofNullable(followerRepository.save(followerEntity)).isPresent();
     }
 
     @Transactional
-    public Boolean delete(FollowerRequestDto requestDto) {
-        FollowerEntity followerEntity = Optional.ofNullable(this.findEntity(requestDto.getUserCd(), requestDto.getTargetCd()))
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 팔로우하지 않았습니다. cd = " + requestDto.getTargetCd()));
+    public Boolean delete(Long userCd, Long targetCd) {
+        FollowerEntity followerEntity = Optional.ofNullable(this.findEntity(userCd, targetCd))
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 팔로우하지 않았습니다. cd = " + targetCd));
         followerRepository.delete(followerEntity);
         return !Optional.ofNullable(this.findEntity(followerEntity.getUserFK().getUserCd(), followerEntity.getTargetFK().getUserCd())).isPresent();
     }
