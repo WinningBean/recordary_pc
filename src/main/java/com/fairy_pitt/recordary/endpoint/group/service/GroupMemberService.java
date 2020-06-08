@@ -40,4 +40,10 @@ public class GroupMemberService {
         return true;
     }
 
+    @Transactional(readOnly = true)
+    public GroupMemberEntity findEntity(Long groupCd, Long userCd){
+        GroupEntity group = groupRepository.findByGroupCd(groupCd);
+        UserEntity user = userService.findEntity(userCd);
+        return groupMemberRepository.findByGroupFKAndUserFK(group, user);
+    }
 }

@@ -1,15 +1,18 @@
 package com.fairy_pitt.recordary.endpoint.post.service;
 
 import com.fairy_pitt.recordary.common.entity.PostEntity;
+import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.PostLikeRepository;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
+import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
 import com.fairy_pitt.recordary.endpoint.media.service.MediaService;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleService;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
@@ -19,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Transactional
 @RequiredArgsConstructor
@@ -30,6 +32,7 @@ public class PostService {
     private final UserService userService;
     private final FollowerService followerService;
     private final GroupService groupService;
+    private final GroupMemberService groupMemberService;
     private final ScheduleService scheduleService;
     private final MediaService mediaService;
 
@@ -47,6 +50,18 @@ public class PostService {
                 .postPublicState(requestDto.getPostPublicState())
                 .postStrYMD(requestDto.getPostStrYMD())
                 .postEndYMD(requestDto.getPostEndYMD())
+                .build();
+
+        return Optional.ofNullable(postRepository.save(postEntity)).isPresent();
+    }
+
+    public Boolean saveSchedulePost(ScheduleSaveRequestDto requestDto, Long scheduleCd)
+    {
+        PostEntity postEntity = PostEntity.builder()
+                .userFK(userService.findEntity(requestDto.getUserCd()))
+                .groupFK(groupService.findEntity(requestDto.getGroupCd()))
+                .scheduleFK(scheduleService.findEntity(scheduleCd))
+                .postPublicState(requestDto.getSchedulePublicState())
                 .build();
 
         return Optional.ofNullable(postRepository.save(postEntity)).isPresent();
@@ -70,10 +85,30 @@ public class PostService {
         postRepository.delete(postEntity);
     }
 
-    private List<PostResponseDto> checkCurrentUserLikePost(List<PostResponseDto> postResponseDtoList){
-        for (PostResponseDto postResponseDto : postResponseDtoList){
-            if (postLikeRepository.findByPostFKAndUserFK(this.findEntity(postResponseDto.getPostCd()),userService.currentUser()) != null){
-                postResponseDto.setTrueCurrentUserLikePost();
+    private PostResponseDto checkCurrentUserLikePost(PostResponseDto postResponseDto) {
+        if (postLikeRepository.findByPostFKAndUserFK(this.findEntity(postResponseDto.getPostCd()), userService.currentUser()) != null) {
+            postResponseDto.setTrueCurrentUserLikePost();
+        }
+        return postResponseDto;
+    }
+
+    private List<PostResponseDto> checkCurrentUserForPost(List<PostEntity> postEntityList){
+        UserEntity currentUser = userService.currentUser();
+        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+        for (PostEntity postEntity : postEntityList){
+            int publicState = followerService.checkPublicStateToTarget(currentUser.getUserCd(), postEntity.getUserFK().getUserCd());
+            if (postEntity.getPostPublicState() <= publicState){
+                postResponseDtoList.add(checkCurrentUserLikePost(new PostResponseDto(postEntity)));
+            }
+        }
+        return postResponseDtoList;
+    }
+
+    private List<PostResponseDto> checkCurrentUserForPost(List<PostEntity> postEntityList, int publicState){
+        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+        for (PostEntity postEntity : postEntityList){
+            if (postEntity.getPostPublicState() <= publicState){
+                postResponseDtoList.add(checkCurrentUserLikePost(new PostResponseDto(postEntity)));
             }
         }
         return postResponseDtoList;
@@ -81,38 +116,36 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<PostResponseDto> userPost(Long userCd){
-        List<PostResponseDto> postResponseDtoList = postRepository.findAllByUserFKOrderByCreatedDateDesc(userService.findEntity(userCd)).stream()
-                .map(PostResponseDto::new)
-                .collect(Collectors.toList());
+        List<PostEntity> postEntityList = new ArrayList<>(postRepository.findAllByUserFKOrderByCreatedDateDesc(userService.findEntity(userCd)));
 
-        return checkCurrentUserLikePost(postResponseDtoList);
+        return checkCurrentUserForPost(postEntityList);
     }
 
     @Transactional(readOnly = true)
     public List<PostResponseDto> groupPost(Long groupCd){
-        List<PostResponseDto> postResponseDtoList = postRepository.findAllByGroupFKOrderByCreatedDateDesc(groupService.findEntity(groupCd)).stream()
-                .map(PostResponseDto::new)
-                .collect(Collectors.toList());
+        List<PostEntity> postEntityList = new ArrayList<>(postRepository.findAllByGroupFKOrderByCreatedDateDesc(groupService.findEntity(groupCd)));
 
-        return checkCurrentUserLikePost(postResponseDtoList);
+        int publicState = 0;
+        if (groupMemberService.findEntity(groupCd, userService.currentUserCd()) != null) publicState = 3;
+
+        return checkCurrentUserForPost(postEntityList, publicState);
     }
 
     @Transactional(readOnly = true)
     public List<PostResponseDto> userPostSearch(String searchContent, Long userCd){
-        List<PostResponseDto> postResponseDtoList = postRepository.findAllByPostExLikeAndUserFK("%"+searchContent+"%", userService.findEntity(userCd)).stream()
-                .map(PostResponseDto::new)
-                .collect(Collectors.toList());
+        List<PostEntity> postEntityList = new ArrayList<>(postRepository.findAllByPostExLikeAndUserFK("%" + searchContent + "%", userService.findEntity(userCd)));
 
-        return checkCurrentUserLikePost(postResponseDtoList);
+        return checkCurrentUserForPost(postEntityList);
     }
 
     @Transactional(readOnly = true)
     public List<PostResponseDto> groupPostSearch(String searchContent, Long groupCd){
-        List<PostResponseDto> postResponseDtoList = postRepository.findAllByPostExLikeAndGroupFK("%"+searchContent+"%", groupService.findEntity(groupCd)).stream()
-                .map(PostResponseDto::new)
-                .collect(Collectors.toList());
+        List<PostEntity> postEntityList = new ArrayList<>(postRepository.findAllByPostExLikeAndGroupFK("%" + searchContent + "%", groupService.findEntity(groupCd)));
 
-        return checkCurrentUserLikePost(postResponseDtoList);
+        int publicState = 0;
+        if (groupMemberService.findEntity(groupCd, userService.currentUserCd()) != null) publicState = 3;
+
+        return checkCurrentUserForPost(postEntityList, publicState);
     }
 
     @Transactional(readOnly = true)
@@ -125,11 +158,7 @@ public class PostService {
         PostEntity postEntity = Optional.ofNullable(postRepository.findByPostCd(postCd))
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. code = " + postCd));
 
-        PostResponseDto postResponseDto = new PostResponseDto(postEntity);
-        if (postLikeRepository.findByPostFKAndUserFK(postEntity, userService.currentUser()) != null){
-            postResponseDto.setTrueCurrentUserLikePost();
-        }
-        return postResponseDto;
+        return checkCurrentUserLikePost(new PostResponseDto(postEntity));
     }
 
     @Transactional(readOnly = true)
@@ -139,25 +168,24 @@ public class PostService {
 
         List<PostEntity> userPost = postRepository.findAllByUserFKOrderByCreatedDateDesc(userService.findEntity(userCd));
         for (PostEntity post : userPost){
-            postList.add(new PostResponseDto(post));
+            postList.add(checkCurrentUserLikePost(new PostResponseDto(post)));
         }
 
         for (UserResponseDto userResponseDto : followerService.followingList(userCd)){
             int publicState = followerService.checkPublicStateToTarget(userCd, userResponseDto.getUserCd());
             List<PostEntity> followingPost = postRepository.findAllByUserFKAndGroupFKAndPostPublicStateLessThanEqualOrderByCreatedDateDesc(userService.findEntity(userResponseDto.getUserCd()), null, publicState);
             for (PostEntity post : followingPost){
-                postList.add(new PostResponseDto(post));
+                postList.add(checkCurrentUserLikePost(new PostResponseDto(post)));
             }
         }
 
         for (GroupResponseDto groupResponseDto : groupService.findUserGroups(userCd)){
             List<PostEntity> groupPost = postRepository.findAllByGroupFKOrderByCreatedDateDesc(groupService.findEntity(groupResponseDto.getGroupCd()));
             for (PostEntity post : groupPost){
-                postList.add(new PostResponseDto(post));
+                postList.add(checkCurrentUserLikePost(new PostResponseDto(post)));
             }
         }
 
-        postList = checkCurrentUserLikePost(postList);
         Collections.sort(postList);
         return postList;
     }
