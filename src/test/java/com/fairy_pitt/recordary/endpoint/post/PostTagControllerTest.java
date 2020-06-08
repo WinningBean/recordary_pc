@@ -65,10 +65,11 @@ public class PostTagControllerTest {
                 .postEndYMD("20200311")
                 .build());
 
-        String url = "http://localhost:" + port + "/post/" + postEntity.getPostCd() + "/tag/" + user2.getUserCd();
+        Long requestLong = user2.getUserCd();
+        String url = "http://localhost:" + port + "/post/" + postEntity.getPostCd() + "/tag";
 
         //when
-        ResponseEntity<Boolean> responseEntity = restTemplate.getForEntity(url, Boolean.class);
+        ResponseEntity<Boolean> responseEntity = restTemplate.postForEntity(url, requestLong, Boolean.class);
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
