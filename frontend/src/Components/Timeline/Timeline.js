@@ -3,6 +3,7 @@ import * as dateFns from 'date-fns';
 import produce from 'immer';
 import { styled } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
+import AlertDialog from '../Other/AlertDialog';
 
 import './Timeline.css';
 import LongMenu from '../Other/MoreMenu';
@@ -24,6 +25,7 @@ import Button from '@material-ui/core/Button';
 import SubdirectoryArrowLeftIcon from '@material-ui/icons/SubdirectoryArrowLeft';
 import EditIcon from '@material-ui/icons/Edit';
 import CheckIcon from '@material-ui/icons/Check';
+import InputBase from '@material-ui/core/InputBase';
 
 const useStyles = makeStyles((theme) => ({
   textFieldSize: {
@@ -34,6 +36,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Timeline = (props) => {
   const classes = useStyles();
+  const [dialog, setDialog] = useState(null);
+
   const data = props.data;
   const [isClickList, setIsClickList] = useState(
     data.commentList.map(() => ({ recommentList: [], clickIndex: false }))
@@ -43,13 +47,16 @@ const Timeline = (props) => {
   const [clickSchedule, setClickSchedule] = useState(false);
   const [mediaList, setMediaList] = useState([]);
   const [writeRecommentShow, setWriteRecommentShow] = useState(data.commentList.map(() => false));
-  const [writeReComment, setWriteReComment] = useState('');
+  const [writeRecomment, setWriteRecomment] = useState('');
+  const [updateComment, setUpdateComment] = useState('');
   const [editComment, setEditComment] = useState(data.commentList.map(() => false));
+  const [editRecomment, setEditRecomment] = useState([]);
+  const [updateRecomment, setUpdateRecomment] = useState('');
 
   const textField = useRef();
 
   const handleChange = (e) => {
-    setWriteReComment(e.target.value);
+    setWriteRecomment(e.target.value);
   };
 
   useEffect(() => {
@@ -96,13 +103,14 @@ const Timeline = (props) => {
           }
         })
       );
+      setEditRecomment(recommentListData.map(() => false));
     } catch (error) {
       console.error(error);
     }
   };
 
   const showRecommentList = (list) => {
-    return list.map((val) => (
+    return list.map((val, i) => (
       <div key={val.commentCd}>
         <div className='comment-reply-users more-recomment-reply-users'>
           <div className='recomment-reply-users-img'>
@@ -112,18 +120,76 @@ const Timeline = (props) => {
             <span style={{ fontWeight: 'bold', fontSize: '12px', marginRight: '5px' }}>
               {val.userFK.userId}({val.userFK.userNm})
             </span>
-            <span style={{ fontSize: '12px', maxWidth: '' }}>{val.commentContent}</span>
+            <span style={{ fontSize: '12px' }}>
+              <InputBase
+                style={{ fontSize: '12px', height: '12px', color: 'black' }}
+                defaultValue={val.commentContent}
+                inputProps={{ 'aria-label': 'naked' }}
+                disabled={editRecomment[i] === true ? false : true}
+                onChange={(e) => setUpdateRecomment(e.target.value)}
+              />
+            </span>
           </div>
           <div className='commentIcon-hover' style={{ height: ' 15px' }}>
             {props.user.userCd !== val.userFK.userCd ? null : (
-              <EditIcon
-                style={{
-                  color: 'gray',
-                  fontSize: '20',
-                  paddingRight: '5px',
-                  paddingBottom: '5px',
-                }}
-              />
+              <div>
+                {editRecomment[i] === true ? (
+                  <CheckIcon
+                    onClick={async () => {
+                      try {
+                        const editedCommentCd = (
+                          await axios.put(`/comment/${val.commentCd}`, updateRecomment, {
+                            headers: { 'Content-Type': 'application/json' },
+                          })
+                        ).data;
+                        console.log(editedCommentCd);
+                      } catch (e) {
+                        console.log(e);
+                        setDialog(
+                          <AlertDialog
+                            severity='error'
+                            content='댓글을 수정하지 못했습니다.'
+                            onAlertClose={() => setDialog(null)}
+                          />
+                        );
+                      }
+                      setEditRecomment(
+                        editRecomment.map((value, listIndex) => {
+                          if (listIndex === i) {
+                            return !value;
+                          }
+                          return value;
+                        })
+                      );
+                    }}
+                    style={{
+                      color: 'gray',
+                      fontSize: '20',
+                      paddingRight: '5px',
+                      paddingBottom: '5px',
+                    }}
+                  />
+                ) : (
+                  <EditIcon
+                    onClick={() => {
+                      setEditRecomment(
+                        editRecomment.map((value, listIndex) => {
+                          if (listIndex === i) {
+                            return !value;
+                          }
+                          return value;
+                        })
+                      );
+                    }}
+                    style={{
+                      color: 'gray',
+                      fontSize: '20',
+                      paddingRight: '5px',
+                      paddingBottom: '5px',
+                    }}
+                  />
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -144,14 +210,49 @@ const Timeline = (props) => {
                 <span className='reply-name'>
                   {value.userFK.userId}({value.userFK.userNm})
                 </span>
-                <span>{value.commentContent}</span>
+                <span>
+                  <InputBase
+                    style={
+                      editComment[index] === true
+                        ? {
+                            fontSize: '13px',
+                            height: '13px',
+                            color: 'black',
+                            // backgroundColor: 'rgba(161, 159, 159, 0.3)',
+                          }
+                        : { fontSize: '13px', height: '13px', color: 'black' }
+                    }
+                    defaultValue={value.commentContent}
+                    inputProps={{ 'aria-label': 'naked' }}
+                    disabled={editComment[index] === true ? false : true}
+                    onChange={(e) => setUpdateComment(e.target.value)}
+                  />
+                </span>
               </div>
               <div className='commentIcon-hover' style={{ height: ' 15px' }}>
                 {props.user.userCd !== value.userFK.userCd ? null : (
                   <div>
                     {editComment[index] === true ? (
                       <CheckIcon
-                        onClick={() => {
+                        onClick={async () => {
+                          try {
+                            console.log(updateComment);
+                            const editedCommentCd = (
+                              await axios.put(`/comment/${value.commentCd}`, updateComment, {
+                                headers: { 'Content-Type': 'application/json' },
+                              })
+                            ).data;
+                            console.log(editedCommentCd);
+                          } catch (e) {
+                            console.log(e);
+                            setDialog(
+                              <AlertDialog
+                                severity='error'
+                                content='댓글을 수정하지 못했습니다.'
+                                onAlertClose={() => setDialog(null)}
+                              />
+                            );
+                          }
                           setEditComment(
                             editComment.map((value, listIndex) => {
                               if (listIndex === index) {
@@ -192,7 +293,6 @@ const Timeline = (props) => {
                 )}
               </div>
             </div>
-
             <div className='commentIconFlex'>
               <div
                 className='commentIcon-hover'
@@ -276,7 +376,7 @@ const Timeline = (props) => {
                             await axios.post(`/comment/`, {
                               userCd: props.user.userCd,
                               postCd: data.postCd,
-                              commentContent: writeReComment,
+                              commentContent: writeRecomment,
                               commentOriginCd: value.commentCd,
                             })
                           ).data;
@@ -580,6 +680,7 @@ const Timeline = (props) => {
         </div>
       </div>
       {menuDialog}
+      {dialog}
     </div>
   );
 };
