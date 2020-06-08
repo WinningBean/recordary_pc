@@ -1,7 +1,7 @@
 .calendar {
   position: relative;
   width: 595px;
-  height: 475px;
+  /* height: 475px; */
   background-color: #fff;
 }
 
@@ -39,7 +39,7 @@
 #wrap-cells {
   position: relative;
   max-width: 595px;
-  max-height: 370px;
+  /* max-height: 370px; */
 }
 .cell-row {
   display: flex;

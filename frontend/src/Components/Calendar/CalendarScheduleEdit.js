@@ -214,20 +214,8 @@ const CalendarScheduleEdit = ({ onCancel, info, onChangeStrDate, onChangeEndData
                 const str = switchInfo ? dateFns.startOfDay(schedule.start) : schedule.start;
                 const end = switchInfo ? dateFns.startOfSecond(dateFns.endOfDay(schedule.end)) : schedule.end;
                 console.log(groupCd, userCd);
-                console.log({
-                  groupCd: groupCd,
-                  TabCodeFK: schedule.cd,
-                  scheduleNm: schedule.nm,
-                  scheduleEx: schedule.ex,
-                  scheduleStr: str.getTime(),
-                  scheduleEnd: end.getTime(),
-                  scheduleCol: schedule.color,
-                  schedulePublicState: schedule.state,
-                  createMember: addedSchedule,
-                  deleteMember: subtractedSchedule,
-                });
 
-                await axios.post(`/schedule/update/${groupCd !== undefined ? schedule.currentUserCd : schedule.cd}`, {
+                await axios.post(`/schedule/update/${schedule.cd}`, {
                   groupCd: groupCd,
                   TabCodeFK: schedule.cd,
                   scheduleNm: schedule.nm,

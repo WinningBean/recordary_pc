@@ -308,44 +308,46 @@ const HeaderMenu = (props) => {
         return (
           <li key={`friend-${index}`}>
             <div className='button-wrap'>
-              <GroupButton>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    marginBottom: '10px',
-                    fontWeight: 'bold',
-                  }}
-                >
-                  {/* 우선 redux에 저장하지 않음 */}
-                  {value.userPic === null ? (
-                    <img
-                      alt='friend-img'
-                      style={{
-                        width: '40px',
-                        height: '40px',
-                        objectFit: 'cover',
-                        marginRight: '10px',
-                        borderRadius: '50%',
-                      }}
-                      src={'http://placehold.it/250x250'}
-                    />
-                  ) : (
-                    <img
-                      alt='friend-img'
-                      style={{
-                        width: '40px',
-                        height: '40px',
-                        objectFit: 'cover',
-                        marginRight: '10px',
-                        borderRadius: '50%',
-                      }}
-                      src={value.userPic}
-                    />
-                  )}
-                  {value.userId}({value.userNm})
-                </div>
-              </GroupButton>
+              <Link to={`/profile/${value.userId}`}>
+                <GroupButton>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      marginBottom: '10px',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {/* 우선 redux에 저장하지 않음 */}
+                    {value.userPic === null ? (
+                      <img
+                        alt='friend-img'
+                        style={{
+                          width: '40px',
+                          height: '40px',
+                          objectFit: 'cover',
+                          marginRight: '10px',
+                          borderRadius: '50%',
+                        }}
+                        src={'http://placehold.it/250x250'}
+                      />
+                    ) : (
+                      <img
+                        alt='friend-img'
+                        style={{
+                          width: '40px',
+                          height: '40px',
+                          objectFit: 'cover',
+                          marginRight: '10px',
+                          borderRadius: '50%',
+                        }}
+                        src={value.userPic}
+                      />
+                    )}
+                    {value.userId}({value.userNm})
+                  </div>
+                </GroupButton>
+              </Link>
               <div className='LongMenuOpen'>
                 <LongMenu
                   options={['친구 관리', '메시지 보내기']}
