@@ -1,13 +1,7 @@
 package com.fairy_pitt.recordary.endpoint.schedule;
 
-import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
-import com.fairy_pitt.recordary.common.entity.ScheduleMemberEntity;
-import com.fairy_pitt.recordary.common.entity.ScheduleTabEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
-import com.fairy_pitt.recordary.common.repository.ScheduleMemberRepository;
-import com.fairy_pitt.recordary.common.repository.ScheduleRepository;
-import com.fairy_pitt.recordary.common.repository.ScheduleTabRepository;
-import com.fairy_pitt.recordary.common.repository.UserRepository;
+import com.fairy_pitt.recordary.common.entity.*;
+import com.fairy_pitt.recordary.common.repository.*;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleDateRequestDto;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleUpdateRequestDto;
@@ -51,10 +45,14 @@ public class ScheduleControllerTest {
     @Autowired
     ScheduleMemberRepository scheduleMemberRepository;
 
+    @Autowired
+    PostRepository postRepository;
+
     @After
     public void tearDown(){
         scheduleMemberRepository.deleteAll();
-         scheduleTabRepository.deleteAll();
+        postRepository.deleteAll();
+        scheduleTabRepository.deleteAll();
         scheduleRepository.deleteAll();
         userRepository.deleteAll();
     }
@@ -115,9 +113,11 @@ public class ScheduleControllerTest {
         assertThat(responseEntity.getBody()).isGreaterThan(0L);
 
         List<ScheduleEntity> all = scheduleRepository.findAll();
+        List<PostEntity> post = postRepository.findAll();
         assertThat(all.get(0).getScheduleEx()).isEqualTo(scheduleEx);
         assertThat(all.get(0).getScheduleNm()).isEqualTo(scheduleNm);
         assertThat(all.get(0).getScheduleStr()).isEqualTo(scheduleStr);
+        assertThat((post.size())).isEqualTo(1);
 }
 
     @Test

@@ -1,6 +1,7 @@
 package com.fairy_pitt.recordary.endpoint.schedule;
 
 import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
+import com.fairy_pitt.recordary.endpoint.post.service.PostService;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleMemberService;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleService;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleTabService;
@@ -20,6 +21,7 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
     private final FollowerService followerService;
+    private  final PostService postService;
     private final UserService userService;
     private final ScheduleMemberService scheduleMemberService;
 
@@ -27,6 +29,7 @@ public class ScheduleController {
     public Long scheduleCreate(@RequestBody ScheduleSaveRequestDto requestDto)
     {
         Long scheduleCd = scheduleService.save(requestDto);
+        postService.saveSchedulePost(requestDto, scheduleCd);
         scheduleMemberService.save(requestDto.getScheduleMember(), scheduleCd);
         return  scheduleCd;
     }
