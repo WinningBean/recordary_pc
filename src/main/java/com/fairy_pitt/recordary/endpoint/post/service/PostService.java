@@ -10,6 +10,7 @@ import com.fairy_pitt.recordary.endpoint.media.service.MediaService;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleService;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
@@ -47,6 +48,18 @@ public class PostService {
                 .postPublicState(requestDto.getPostPublicState())
                 .postStrYMD(requestDto.getPostStrYMD())
                 .postEndYMD(requestDto.getPostEndYMD())
+                .build();
+
+        return Optional.ofNullable(postRepository.save(postEntity)).isPresent();
+    }
+
+    public Boolean saveSchedulePost(ScheduleSaveRequestDto requestDto, Long scheduleCd)
+    {
+        PostEntity postEntity = PostEntity.builder()
+                .userFK(userService.findEntity(requestDto.getUserCd()))
+                .groupFK(groupService.findEntity(requestDto.getGroupCd()))
+                .scheduleFK(scheduleService.findEntity(scheduleCd))
+                .postPublicState(requestDto.getSchedulePublicState())
                 .build();
 
         return Optional.ofNullable(postRepository.save(postEntity)).isPresent();

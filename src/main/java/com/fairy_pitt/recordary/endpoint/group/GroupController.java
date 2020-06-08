@@ -36,10 +36,7 @@ public class GroupController {
 
     @PostMapping("create")
     public Long groupCreate(@RequestBody GroupSaveRequestDto requestDto) {
-        return groupMemberService.save(GroupMemberRequestDto.builder()
-                .groupCd(groupService.save(requestDto))
-                .userCd(requestDto.getUserCd())
-                .build());
+        return groupService.save(requestDto);
     }
 
     @PostMapping("update/{id}")
@@ -77,7 +74,6 @@ public class GroupController {
 
         return groupService.groupPage(groupCd);
     }
-
 
     @GetMapping("readAll")
     public @ResponseBody

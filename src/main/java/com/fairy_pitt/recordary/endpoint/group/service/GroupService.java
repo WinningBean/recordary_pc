@@ -102,12 +102,15 @@ public class GroupService {
     @Transactional(readOnly = true)
     public List<GroupResponseDto> findUserGroups(Long userCd){
         UserEntity user = userService.findEntity(userCd);
+        List<GroupResponseDto> result = groupRepository.findBygMstUserFK(user)
+                .stream()
+                .map(GroupResponseDto::new)
+                .collect(Collectors.toList());
+
         List<GroupMemberEntity> groupEntities = user.getGroups();
-        List<GroupResponseDto> result = new ArrayList<>();
 
         for (GroupMemberEntity temp: groupEntities) {
-            Boolean isMaster = temp.getGroupFK().getGMstUserFK().getUserCd().equals(temp.getUserFK().getUserCd());
-            GroupResponseDto groupResponseDto = new GroupResponseDto(temp.getGroupFK(), isMaster);
+            GroupResponseDto groupResponseDto = new GroupResponseDto(temp.getGroupFK(), false);
             result.add(groupResponseDto);
         }
 
