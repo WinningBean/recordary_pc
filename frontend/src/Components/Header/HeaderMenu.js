@@ -368,7 +368,23 @@ const HeaderMenu = (props) => {
     setSetting(null);
     return;
   };
-
+  if (!props.isLogin) {
+    return (
+      <Drawer
+        open={props.open}
+        onClose={() => props.onClose()}
+        style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}
+        anchor='left'
+      >
+        <div
+          className='menu-wrap'
+          style={{ justifyContent: 'center', alignItems: 'center', fontWeight: 'bold', color: '#aaa' }}
+        >
+          로그인이 되어있지않습니다.
+        </div>
+      </Drawer>
+    );
+  }
   return (
     <Drawer
       open={props.open}

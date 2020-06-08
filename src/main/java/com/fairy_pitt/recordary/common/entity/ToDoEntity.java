@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Getter
 @NoArgsConstructor
@@ -25,7 +26,7 @@ public class ToDoEntity extends BaseTimeEntity {
     private String toDoContent;
 
     @Column(name = "TODO_END_YMD")
-    private String toDoEndYMD;
+    private Date toDoEndDate;
 
     @Column(name = "TODO_COLOR")
     private String toDoCol;
@@ -36,21 +37,21 @@ public class ToDoEntity extends BaseTimeEntity {
     @Builder
     public ToDoEntity(UserEntity user,
                       String toDoContent,
-                      String toDoEndYMD,
+                      Date toDoEndDate,
                       String toDoCol) {
 
         this.userFK = user;
         this.toDoContent = toDoContent;
-        this.toDoEndYMD = toDoEndYMD;
+        this.toDoEndDate = toDoEndDate;
         this.toDoCol = toDoCol;
     }
 
     public void updateToDo(String toDoContent,
-                           String toDoEndYMD,
+                           Date toDoEndDate,
                            String toDoCol)
     {
         this.toDoContent = toDoContent;
-        this.toDoEndYMD = toDoEndYMD;
+        this.toDoEndDate = toDoEndDate;
         this.toDoCol = toDoCol;
     }
 
