@@ -171,7 +171,11 @@ class Login extends React.Component {
           <div className='icon'>
             <Link to='/main'>
               {/* <img className="title-image" alt="Recordary icon" src="http://localhost:8080/Recodary.png"/> */}
-              <img className='title-image' alt='Recordary icon' src='img/Recordary.png' />
+              <img
+                className='title-image'
+                alt='Recordary icon'
+                src='https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.png'
+              />
             </Link>
           </div>
           {this.state.successRegister()}

@@ -37,7 +37,6 @@ class App extends React.Component {
   }
   render() {
     console.log('aa');
-
     return (
       <div id='wrapper'>
         <Switch>

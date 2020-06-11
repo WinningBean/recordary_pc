@@ -54,7 +54,11 @@ export default function SpeedDials(props) {
   const PostMediaScheduleWrite = () => {
     if (postMediaScheduleClick === null) {
       setPostMediaScheduleClick(
-        <PostMediaScheduleAppend data={props.data} onCancel={() => setPostMediaScheduleClick(null)} />
+        <PostMediaScheduleAppend
+          data={props.data}
+          groupList={props.groupList}
+          onCancel={() => setPostMediaScheduleClick(null)}
+        />
       );
       return;
     }

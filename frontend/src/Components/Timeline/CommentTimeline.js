@@ -25,7 +25,7 @@ const SendButton = styled(Button)({
   height: '40px',
 });
 
-const CommentTimeline = (props) => {
+const CommentTimeline = ({ user, postCd, onSuccess }) => {
   const classes = useStyles();
   const [writeComment, setWriteComment] = useState('');
   const textField = useRef();
@@ -57,19 +57,30 @@ const CommentTimeline = (props) => {
                     textField.current.value = '';
                     try {
                       if (writeComment !== '') {
-                        const commentCd = (
+                        const commentCdData = (
                           await axios.post(`/comment/`, {
-                            userCd: props.user.userCd,
-                            postCd: props.postCd,
+                            userCd: user.userCd,
+                            postCd: postCd,
                             commentContent: writeComment,
                             commentOriginCd: null,
                             // commentOriginFK => 대댓글 코드 작성 시 수정
                           })
                         ).data;
+                        onSuccess({
+                          commentCd: commentCdData,
+                          commentContent: writeComment,
+                          reCommentCount: 0,
+                          userFK: {
+                            userCd: user.userCd,
+                            userId: user.userId,
+                            userNm: user.userNm,
+                            userPic: user.userPic,
+                          },
+                        });
                         console.log(writeComment);
                       } else return null;
                     } catch (e) {
-                      console.log(e + 'comment Error');
+                      console.log(e);
                     }
                   }}
                 >

@@ -16,13 +16,13 @@ const Main = (props) => {
         {props.timeline.map((value, index) => {
           if (value.mediaFK !== null) {
             return (
-              <div className='timeline-Margin' key={value.postCd}>
+              <div className='timeline-Margin' key={`${value.postCd}-${index}`}>
                 <Timeline data={value} user={props.data} />
               </div>
             );
           } else if (value.scheduleFK !== null) {
             return (
-              <div className='timeline-Margin' key={value.postCd}>
+              <div className='timeline-Margin' key={`${value.postCd}-${index}`}>
                 <TimelineWeekSchedule data={value} user={props.data}></TimelineWeekSchedule>
               </div>
             );
