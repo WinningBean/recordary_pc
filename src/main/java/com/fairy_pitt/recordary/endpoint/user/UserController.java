@@ -68,9 +68,9 @@ public class UserController {
         return userService.existId(userId);
     }
 
-    @GetMapping("/currentCd")
-    public Long currentUserCd(){
-        return userService.currentUserCd();
+    @GetMapping("/sessionInfo")
+    public UserResponseDto currentUserInfo(){
+        return userService.currentUserInfo();
     }
 
     @PostMapping("/checkPw")

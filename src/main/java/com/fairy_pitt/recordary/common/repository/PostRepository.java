@@ -13,6 +13,7 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
     PostEntity findByScheduleFK(ScheduleEntity scheduleEntity);
 
     List<PostEntity> findAllByUserFKOrderByCreatedDateDesc(UserEntity userFK);
+    List<PostEntity> findAllByUserFKAndGroupFKOrderByCreatedDateDesc(UserEntity userFK, GroupEntity groupFK);
     List<PostEntity> findAllByUserFKAndPostPublicStateOrderByCreatedDateDesc(UserEntity userEntity, int publicState);
     List<PostEntity> findAllByUserFKAndGroupFKAndPostPublicStateLessThanEqualOrderByCreatedDateDesc(UserEntity userEntity, GroupEntity groupEntity, int publicState);
     List<PostEntity> findAllByGroupFKOrderByCreatedDateDesc(GroupEntity groupEntity);
