@@ -39,10 +39,12 @@ public class ToDoService {
         return true;
     }
 
-    public void delete(Long toDoCd){
+    public Boolean delete(Long toDoCd){
         ToDoEntity toDoEntity = Optional.ofNullable(toDoRepository.findByToDoCd(toDoCd))
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. code = " + toDoCd));
         toDoRepository.delete(toDoEntity);
+
+        return true;
     }
 
     public List<ToDoResponseDto> getCurrTodoList(Long userCd){
@@ -60,9 +62,6 @@ public class ToDoService {
                 .map(ToDoResponseDto :: new)
                 .collect(Collectors.toList());
     }
-
-
-
 
 }
 

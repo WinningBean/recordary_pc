@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -42,11 +44,14 @@ public class toDoRepositoryTest {
                 .userNm("테스트 유저")
                 .build());
 
+        Date End = Timestamp.valueOf("2020-03-26 12:13:24");
+
         toDoRepository.save(ToDoEntity.builder()
                 .user(saveUser)
                 .toDoContent("test")
                 .toDoCol(null)
-                .toDoEndDate(null)
+                .ToDoCompleteState(false)
+                .toDoEndDate(End)
                 .build());
 
         List<ToDoEntity> toDoEntities = toDoRepository.findAll();

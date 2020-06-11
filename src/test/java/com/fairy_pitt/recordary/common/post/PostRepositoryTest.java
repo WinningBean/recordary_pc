@@ -70,7 +70,15 @@ public class PostRepositoryTest {
     public void BaseTimeEntity_등록() {
         //given
         LocalDateTime now = LocalDateTime.of(2020, 3, 11, 0, 0, 0);
+
+        UserEntity user1 = userRepository.save(UserEntity.builder()
+                .userId("testUser1")
+                .userPw("testPassword")
+                .userNm("테스트 유저1")
+                .build());
+
         postRepository.save(PostEntity.builder()
+                .userFK(user1)
                 .postEx("테스트 게시글")
                 .postPublicState(1)
                 .postStrYMD("20200310")

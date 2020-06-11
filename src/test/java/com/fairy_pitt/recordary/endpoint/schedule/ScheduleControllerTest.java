@@ -93,7 +93,7 @@ public class ScheduleControllerTest {
         ScheduleSaveRequestDto requestDto = ScheduleSaveRequestDto.createScheduleBuilder()
                 .groupCd(null)
                 .tabCd(null)
-                .userCd(null)
+                .userCd(user.getUserCd())
                 .scheduleNm(scheduleNm)
                 .scheduleEx(scheduleEx)
                 .scheduleStr(scheduleStr)

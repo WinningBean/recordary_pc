@@ -21,13 +21,13 @@ public class GroupEntity extends BaseTimeEntity{
     private Long groupCd;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "GROUP_MST_FK")
+    @JoinColumn(name = "GROUP_MST_FK", nullable = false)
     private UserEntity gMstUserFK;
 
-    @Column(name = "GROUP_NM")
+    @Column(name = "GROUP_NM", nullable = false)
     private String groupNm;
 
-    @Column(name = "GROUP_PB_ST" )
+    @Column(name = "GROUP_PB_ST", nullable = false)
     private Boolean groupState;
 
     @Column(name = "GROUP_PIC" )
