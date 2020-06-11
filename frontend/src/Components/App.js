@@ -4,47 +4,67 @@ import LoginPage from '../Containers/Login/LoginPage';
 import MainPage from '../Containers/Main/MainPage';
 import ProfilePage from '../Containers/Profile/Profile';
 import MainPageButton from './Main/MainPageButton';
+import Loading from './Loading/Loading';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import axios from 'axios';
+
+import ToDo from './Header/ToDo';
 
 import Fab from '@material-ui/core/Fab';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isRedirect: undefined,
+    };
+  }
   connectSession = async () => {
-    const { data } = await axios.get('/user/currentCd');
-    if (data === null) {
+    const { data } = await axios.get('/user/sessionInfo');
+    console.log(data);
+    if (data === '') {
+      this.setState({ isRedirect: true });
       return;
     }
+    console.log(data);
+    this.props.connectSession(data);
+    this.setState({ isRedirect: false });
   };
   componentDidMount() {
     this.connectSession();
-    const mybutton = document.getElementById('topBtn');
+    // const mybutton = document.getElementById('topBtn');
 
-    window.onscroll = function () {
-      scrollFunction();
-    };
+    // window.onscroll = function () {
+    //   scrollFunction();
+    // };
 
-    function scrollFunction() {
-      if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 600) {
-        mybutton.style.display = 'inline-flex';
-        mybutton.style.opacity = 1;
-      } else {
-        mybutton.style.display = 'none';
-        mybutton.style.opacity = 0;
-      }
-    }
+    // function scrollFunction() {
+    //   if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 600) {
+    //     mybutton.style.display = 'inline-flex';
+    //     mybutton.style.opacity = 1;
+    //   } else {
+    //     mybutton.style.display = 'none';
+    //     mybutton.style.opacity = 0;
+    //   }
+    // }
   }
   render() {
-    console.log('aa');
+    if (this.state.isRedirect === undefined) {
+      return <Loading />;
+    } else if (this.state.isRedirect) {
+      this.setState({ isRedirect: false });
+      return <Redirect to='/' />;
+    }
 
     return (
       <div id='wrapper'>
+        <ToDo />
         <Switch>
           <Route exact path='/' component={LoginPage} />
           <Route exact path='/main' component={MainPage} />
-          <Route path='/profile/:userId' component={ProfilePage} />
           <Route path='/group/:groupCd' component={ProfilePage} />
+          <Route path='/:userId' component={ProfilePage} />
           <Redirect path='*' to='/' />
         </Switch>
         {this.props.isLogin ? <MainPageButton data={this.props.user} /> : null}
@@ -53,7 +73,7 @@ class App extends React.Component {
           class='MuiButtonBase-root MuiFab-root MuiFab-sizeSmall MuiFab-secondary animation'
           color='secondary'
           size='small'
-          style={{ display: 'none', opacity: 0, position: 'fixed', bottom: '100px', right: '65px', zIndex: 99 }}
+          style={{ display: 'inline-flex', opacity: 1, position: 'fixed', bottom: '100px', right: '65px', zIndex: 99 }}
           onClick={() => {
             window.scroll({
               behavior: 'smooth',

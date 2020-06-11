@@ -8,4 +8,12 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, null)(App);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    connectSession: (userInfo) => {
+      dispatch({ type: 'CONNECT_SESSION', userData: userInfo });
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

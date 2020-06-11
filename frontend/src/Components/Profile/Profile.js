@@ -117,20 +117,18 @@ class Profile extends React.Component {
   getGroupInfo = async () => {
     try {
       const groupInfo = (await axios.get(`/group/${this.props.match.params.groupCd}`)).data;
-
-      const groupMember = (await axios.get(`/group/member/${this.props.match.params.groupCd}`)).data;
       console.log(groupInfo);
       var groupApply = null;
-      var type = 3;
+      var type = 5;
 
       if (this.props.isLogin && groupInfo.admin.userCd === this.props.user.userCd) {
         type = 2;
         groupApply = (await axios.get(`/groupApply/findUserApply/${this.props.match.params.groupCd}`)).data;
         console.log(groupApply, 'groupApply');
       }
-      for (let i = 0; groupMember.length; i++) {
-        if (groupMember[i].userCd === this.props.user.userCd) {
-          type = 5;
+      for (let i = 0; groupInfo.memberList.length; i++) {
+        if (groupInfo.memberList[i].userCd === this.props.user.userCd) {
+          type = 3;
           break;
         }
       }
@@ -141,7 +139,7 @@ class Profile extends React.Component {
         info: {
           ...groupInfo,
           currentUserCd: this.props.user.userCd,
-          member: groupMember,
+          member: groupInfo.memberList,
           groupApply: groupApply,
         },
         type: type,

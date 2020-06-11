@@ -88,19 +88,19 @@ class Header extends React.Component {
           <div className='header-ring'>
             <NotifyPopup style={{ fontSize: 40, color: 'white' }}></NotifyPopup>
           </div>
-          <div className='header-ring'>
-            <IconButton onClick={() => this.setState({ isOpenToDo: true })}>
+          <div className='header-ring' style={{ position: 'relative' }}>
+            <IconButton onClick={() => this.setState({ isOpenToDo: !this.state.isOpenToDo })}>
               <AssignmentIcon style={{ fontSize: '30px', color: 'white' }} />
             </IconButton>
+            {this.state.isOpenToDo ? <ToDo /> : null}
           </div>
           <div className='profile-icon'>
-            <Link to={`/profile/${this.props.userId}`}>
+            <Link to={`/${this.props.userId}`}>
               {/* <Link to={`/profile/wsh`}> */}
               <AccountCircleIcon style={{ fontSize: 40, color: 'white' }}>Profile</AccountCircleIcon>
             </Link>
           </div>
         </div>
-        <ToDo open={this.state.isOpenToDo} onClose={() => this.setState({ isOpenToDo: false })} />
       </header>
     );
   }
