@@ -7,8 +7,6 @@ import com.fairy_pitt.recordary.common.repository.GroupMemberRepository;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupPageResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupSaveRequestDto;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupUpdateRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.*;
 import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;

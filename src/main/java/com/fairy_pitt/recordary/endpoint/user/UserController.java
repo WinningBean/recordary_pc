@@ -49,7 +49,7 @@ public class UserController {
     }
 
     @GetMapping("/{userCd}")
-    public UserResponseDto findById(@PathVariable Long userCd){
+    public UserResponseDto findByCd(@PathVariable Long userCd){
         return userService.findByCd(userCd);
     }
 

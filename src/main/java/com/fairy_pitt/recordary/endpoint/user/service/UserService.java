@@ -141,18 +141,20 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserEntity currentUser(){
-        return findEntity(currentUserCd());
-    }
-
-    @Transactional(readOnly = true)
     public Long currentUserCd(){
         return Long.parseLong(String.valueOf(httpSession.getAttribute("loginUser")));
     }
 
     @Transactional(readOnly = true)
+    public UserEntity currentUser(){
+        return findEntity(currentUserCd());
+    }
+
+    @Transactional(readOnly = true)
     public UserResponseDto currentUserInfo(){
-        return new UserResponseDto(currentUser());
+        UserEntity userEntity = currentUser();
+        if (userEntity != null) return new UserResponseDto(userEntity);
+        return null;
     }
 
     @Transactional(readOnly = true)
