@@ -18,6 +18,12 @@ const reducer = (state, action) => {
         groupList: undefined,
         postList: undefined,
       };
+    case 'CONNECT_SESSION':
+      return {
+        ...state,
+        isLogin: true,
+        user: action.userData,
+      };
     case 'SET_LOGIN':
       return {
         ...state,

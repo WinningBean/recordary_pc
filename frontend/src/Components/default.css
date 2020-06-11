@@ -113,6 +113,27 @@ footer{
   background-color: lightgray;
 }
 
+input:focus {
+  outline: none;
+}
+
 .transition-all {
   transition: all 0.3s ease-out;
+}
+
+.todo-animation {
+  animation-name: todo;
+  animation-duration: 0.25s;
+  animation-delay: 0;
+}
+
+@keyframes todo {
+  0% {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  100% {
+    opacity: 100%;
+    transform: translateY(0);
+  }
 }

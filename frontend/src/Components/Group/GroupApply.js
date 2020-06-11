@@ -142,7 +142,7 @@ const GroupApply = (props) => {
                           onAlertSubmit={async () => {
                             try {
                               const { data } = await axios.post('/groupMember/delete', {
-                                userCd: value.userCd,
+                                userCd: value.admin.userCd,
                                 groupCd: info.groupCd,
                               });
                               console.log(data);

@@ -29,9 +29,6 @@ const MainPage = (props) => {
     })();
   }, []);
 
-  if (!props.isLogin) {
-    return <Redirect to='/' />;
-  }
   return (
     <>
       <Header />
