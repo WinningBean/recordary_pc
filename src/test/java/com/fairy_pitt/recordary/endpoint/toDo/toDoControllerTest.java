@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,11 +55,14 @@ public class toDoControllerTest {
                 .userNm("테스트 유저1")
                 .build());
 
+        Date End = Timestamp.valueOf("2020-03-26 12:13:24");
+
         TodoRequestDto requestDto =  TodoRequestDto.builder()
                 .toDoCol(null)
                 .toDoContent("test")
-                .toDoEndDate(null)
+                .toDoEndDate(End)
                 .userCd(user.getUserCd())
+                .toDoSate(false)
                 .build();
 
         String url = "http://localhost:" + port + "/toDo/";

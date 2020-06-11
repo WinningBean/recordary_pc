@@ -22,10 +22,10 @@ public class ScheduleMemberEntity extends BaseTimeEntity implements Serializable
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SCHEDULE_MBR_FK")
+    @JoinColumn(name = "SCHEDULE_MBR_FK", nullable = false)
     private UserEntity userFK;
 
-    @Column(name="SCHEDULE_ACCEPT_ST")
+    @Column(name="SCHEDULE_ACCEPT_ST", nullable = false)
     private Boolean scheduleState;
 
     @Builder
