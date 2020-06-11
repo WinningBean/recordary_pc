@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class GroupSaveRequestDto {
+public class GroupRequestDto {
 
     private Long userCd;
     private String groupNm;
@@ -17,7 +17,7 @@ public class GroupSaveRequestDto {
     private String groupPic;
 
    @Builder(builderClassName = "createGroupBuilder", builderMethodName = "createGroupBuilder")
-   public GroupSaveRequestDto(Long userCd,String groupNm, Boolean groupState, String groupPic, String  groupEx)
+   public GroupRequestDto(Long userCd, String groupNm, Boolean groupState, String groupPic, String  groupEx)
    {
       this.userCd = userCd;
       this.groupNm = groupNm;
@@ -25,6 +25,14 @@ public class GroupSaveRequestDto {
       this.groupPic = groupPic;
       this.groupEx = groupEx;
    }
+
+    @Builder(builderClassName = "updateGroupBuilder", builderMethodName = "updateGroupBuilder")
+    public GroupRequestDto(String groupNm, Boolean groupState, String groupPic, String  groupEx)
+    {
+        this.groupNm = groupNm;
+        this.groupState = groupState;
+        this.groupEx = groupEx;
+    }
 
    public GroupEntity toEntity(UserEntity user, String url){
     return GroupEntity.builder()
