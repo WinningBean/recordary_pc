@@ -2,6 +2,7 @@ package com.fairy_pitt.recordary.common.repository;
 
 import com.fairy_pitt.recordary.common.entity.GroupEntity;
 import com.fairy_pitt.recordary.common.entity.PostEntity;
+import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -9,8 +10,10 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<PostEntity, Long> {
     PostEntity findByPostCd(Long postCd);
+    PostEntity findByScheduleFK(ScheduleEntity scheduleEntity);
 
     List<PostEntity> findAllByUserFKOrderByCreatedDateDesc(UserEntity userFK);
+    List<PostEntity> findAllByUserFKAndGroupFKOrderByCreatedDateDesc(UserEntity userFK, GroupEntity groupFK);
     List<PostEntity> findAllByUserFKAndPostPublicStateOrderByCreatedDateDesc(UserEntity userEntity, int publicState);
     List<PostEntity> findAllByUserFKAndGroupFKAndPostPublicStateLessThanEqualOrderByCreatedDateDesc(UserEntity userEntity, GroupEntity groupEntity, int publicState);
     List<PostEntity> findAllByGroupFKOrderByCreatedDateDesc(GroupEntity groupEntity);

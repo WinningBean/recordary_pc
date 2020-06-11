@@ -94,4 +94,8 @@ public class PostEntity extends BaseTimeEntity{
         this.postEx = postEx;
         this.postPublicState = postPublicState;
     }
+
+    public void addMedea(MediaEntity mediaFK){
+        this.mediaFK = mediaFK;
+    }
 }
