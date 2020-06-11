@@ -19,7 +19,6 @@ class App extends React.Component {
   }
   render() {
     console.log('aa');
-
     return (
       <div id='wrapper'>
         <Switch>
@@ -29,7 +28,7 @@ class App extends React.Component {
           <Route path='/group/:groupCd' component={ProfilePage} />
           <Redirect path='*' to='/' />
         </Switch>
-        {this.props.isLogin ? <MainPageButton data={this.props.user} /> : null}
+        {this.props.isLogin ? <MainPageButton data={this.props.user} groupList={this.props.groupList} /> : null}
       </div>
     );
   }

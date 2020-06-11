@@ -33,7 +33,7 @@ const GroupMemberSearch = (props) => {
     }
     setAlert(<Snackbar onClose={() => setAlert(null)} severity='success' content='데이터 요청중...' />);
     try {
-      const { data } = await axios.get(`/user/search/${input}`);
+      const { data } = await axios.get(`/user/search`, { params: { input } });
 
       console.log(data);
       if (data.length < 1) {
@@ -51,6 +51,7 @@ const GroupMemberSearch = (props) => {
       setAlert(null);
       setList(data);
     } catch (error) {
+      console.log(error);
       setAlert(
         <AlertDialog
           severity='error'
@@ -68,7 +69,7 @@ const GroupMemberSearch = (props) => {
       <div className='searchField-result'>
         <div className='searchField-title'>
           <InputBase
-            placeholder='아이디를 입력하세요'
+            placeholder='이름를 입력하세요'
             onChange={(e) => setInput(e.target.value)}
             style={{ color: '#ffffff' }}
             onKeyDown={(e) => {
