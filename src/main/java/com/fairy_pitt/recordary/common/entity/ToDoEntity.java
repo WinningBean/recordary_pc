@@ -25,7 +25,7 @@ public class ToDoEntity extends BaseTimeEntity {
     @Column(name = "TODO_CONTENT")
     private String toDoContent;
 
-    @Column(name = "TODO_END_YMD")
+    @Column(name = "TODO_END_DT")
     private Date toDoEndDate;
 
     @Column(name = "TODO_COLOR")
