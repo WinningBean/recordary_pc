@@ -84,13 +84,15 @@ public class ScheduleEntity extends BaseTimeEntity{
                               String scheduleEx,
                               Date scheduleStr,
                               Date scheduleEnd,
-                              String scheduleCol){
+                              String scheduleCol,
+                              int schedulePublicState){
       this.tabFK = TabCodeFK;
       this.scheduleNm = scheduleNm;
       this.scheduleEx = scheduleEx;
       this.scheduleStr = scheduleStr;
       this.scheduleEnd = scheduleEnd;
       this.scheduleCol = scheduleCol;
+      this.schedulePublicState = schedulePublicState;
    }
    //private String scheduleLocation;
 
