@@ -1,6 +1,8 @@
 package com.fairy_pitt.recordary.endpoint.post.service;
 
+import com.fairy_pitt.recordary.common.entity.MediaEntity;
 import com.fairy_pitt.recordary.common.entity.PostEntity;
+import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
@@ -70,6 +72,15 @@ public class PostService {
 
         postEntity.update(requestDto.getPostEx(), requestDto.getPostPublicState());
         return postCd;
+    }
+
+    @Transactional
+    public Boolean addMedia(Long scheduleCd, Long mediaCd){
+        ScheduleEntity scheduleEntity = scheduleService.findEntity(scheduleCd);
+        PostEntity postEntity = postRepository.findByScheduleFK(scheduleEntity);
+        MediaEntity mediaEntity = mediaService.findEntity(mediaCd);
+        postEntity.addMedea(mediaEntity);
+        return true;
     }
 
     @Transactional
