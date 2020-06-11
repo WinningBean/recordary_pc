@@ -12,7 +12,7 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
 class App extends React.Component {
   connectSession = async () => {
-    const { data } = await axios.get('/user/currentId');
+    const { data } = await axios.get('/user/currentCd');
     if (data === null) {
       return;
     }

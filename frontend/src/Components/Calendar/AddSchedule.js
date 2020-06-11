@@ -14,18 +14,11 @@ import GroupMemberSearch from '../Group/GroupMemberSearch';
 import AlertDialog from '../Other/AlertDialog';
 import Snackbar from '../UI/Snackbar';
 
+import { rgbToHex } from '../Other/ColorTransfer';
+
 import { addHours, startOfDay, endOfDay, startOfSecond } from 'date-fns';
 
 import axios from 'axios';
-
-function componentToHex(c) {
-  var hex = c.toString(16);
-  return hex.length == 1 ? '0' + hex : hex;
-}
-
-function rgbToHex(r, g, b) {
-  return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
-}
 
 // 255,197,0
 export default ({ data, clickTab, clickDate, onClose, onSuccess, type }) => {
@@ -125,13 +118,16 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, type }) => {
             onClick={() => setIsShowMemberSearch(true)}
           />
         </div>
+        <div style={{ color: 'green', fontSize: 12, paddingLeft: '16px' }}>
+          일정에 같이 참여하는 유저를 추가할 수 있습니다.
+        </div>
       </div>
       <DialogActions>
-        {info.scheduleMembers.length > 0 ? (
+        {type === 2 || type === 3 ? (
           <PublicRange
             options={['전체공개', '비공개']}
             onSetSelectedIndex={(index) => setInfo({ ...info, schedulePublicState: index === 0 ? 0 : 3 })}
-            selectedIndex={info.schedulePublicState}
+            selectedIndex={info.schedulePublicState === 0 ? 0 : 1}
           />
         ) : (
           <PublicRange

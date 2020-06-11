@@ -94,7 +94,7 @@ const Calendar = (props) => {
       console.log(props.info, props.type);
       props.type === 2 || props.type === 3 || props.type === 5
         ? (data = (
-            await axios.post(`/schedule/showGroupSchedule/23`, {
+            await axios.post(`/schedule/showGroupSchedule/${props.info.groupCd}`, {
               groupCd: props.info.groupCd,
               frommDate: startDate.getTime(),
               toDate: endDate.getTime(),
@@ -1056,16 +1056,26 @@ const Calendar = (props) => {
                 <CalendarScheduleEdit
                   groupCd={type === 2 || type === 3 ? props.info.groupCd : undefined}
                   userCd={type === 0 ? props.info.userCd : props.info.currentUserCd}
+                  userInfo={type === 0 ? props.info : null}
                   info={selectedDetailedSC}
                   onModify={(data) => {
                     const copyUserDate = userDate.slice();
                     for (let i = 0; i < copyUserDate.length; i++) {
-                      if (copyUserDate[i].cd === copyUserDate.cd) {
+                      if (copyUserDate[i].cd === data.cd) {
                         copyUserDate[i] = data;
                         break;
                       }
                     }
+                    setAlert(
+                      <SnackBar
+                        severity='success'
+                        content='일정수정 완료'
+                        onClose={() => setAlert(null)}
+                        duration={1000}
+                      />
+                    );
                     setUserDate(copyUserDate);
+                    setScheduleEditOpen(false);
                   }}
                   onCancel={() => setScheduleEditOpen(false)}
                 />

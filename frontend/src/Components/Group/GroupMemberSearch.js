@@ -33,7 +33,7 @@ const GroupMemberSearch = (props) => {
     }
     setAlert(<Snackbar onClose={() => setAlert(null)} severity='success' content='데이터 요청중...' />);
     try {
-      const { data } = await axios.get(`/user/search/${input}`);
+      const { data } = await axios.get('/followState/search', { params: { input: input } });
 
       console.log(data);
       if (data.length < 1) {
@@ -87,7 +87,7 @@ const GroupMemberSearch = (props) => {
               {(() => {
                 return list.map((value) => {
                   return (
-                    <li key={value.userId}>
+                    <li key={value.userInfo.userId}>
                       <Button
                         style={{
                           width: '100%',
@@ -95,7 +95,7 @@ const GroupMemberSearch = (props) => {
                         }}
                         onClick={() => {
                           if (props.type === 1) {
-                            props.onSelect(value);
+                            props.onSelect(value.userInfo);
                             props.onCancel();
                             return;
                           }
@@ -130,9 +130,9 @@ const GroupMemberSearch = (props) => {
                           }
                         }}
                       >
-                        <Avatar alt={`${value.userId} img`} src={value.userPic} />
+                        <Avatar alt={`${value.userInfo.userId} img`} src={value.userInfo.userPic} />
                         &nbsp;&nbsp;&nbsp;
-                        <span>{`${value.userNm}(${value.userId})`}</span>
+                        <span>{`${value.userInfo.userNm}(${value.userInfo.userId})`}</span>
                       </Button>
                     </li>
                   );
