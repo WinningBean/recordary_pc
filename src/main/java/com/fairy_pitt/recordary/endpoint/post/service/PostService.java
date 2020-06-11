@@ -166,7 +166,7 @@ public class PostService {
 
         List<PostResponseDto> postList = new ArrayList<>();
 
-        List<PostEntity> userPost = postRepository.findAllByUserFKOrderByCreatedDateDesc(userService.findEntity(userCd));
+        List<PostEntity> userPost = postRepository.findAllByUserFKAndGroupFKOrderByCreatedDateDesc(userService.findEntity(userCd), null);
         for (PostEntity post : userPost){
             postList.add(checkCurrentUserLikePost(new PostResponseDto(post)));
         }
