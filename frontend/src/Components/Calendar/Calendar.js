@@ -65,6 +65,25 @@ const Calendar = (props) => {
 
   useEffect(() => {
     (async () => {
+      setAlert(
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: '#ddd3',
+            fontWeight: 'bold',
+            fontSize: '18px',
+          }}
+        >
+          Loading...
+        </div>
+      );
       const monthStart = dateFns.startOfMonth(currentMonth);
       const monthEnd = dateFns.endOfMonth(monthStart);
       const startDate = dateFns.startOfWeek(monthStart);
@@ -115,6 +134,7 @@ const Calendar = (props) => {
         });
       });
       setUserDate(copyDraft);
+      setAlert(null);
     })();
   }, [currentMonth]);
 
@@ -188,7 +208,7 @@ const Calendar = (props) => {
           onAlertSubmit={async () => {
             setAlert(<SnackBar severity='info' content='일정을 수정중입니다...' duration={999999} />);
             try {
-              await axios.post(`/schedule/update/${type === 0 ? moveObjDate.cd : moveObjDate.currentUserCd}`, {
+              await axios.post(`/schedule/update/${moveObjDate.cd}`, {
                 groupCd: type === 0 ? null : props.info.groupCd,
                 TabCodeFK: null,
                 scheduleNm: moveObjDate.nm,

@@ -4,11 +4,12 @@ import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 
 import SearchAppBar from '../Other/SearchField';
 import HeaderMenu from '../../Containers/Header/HeaderMenu';
 import NotifyPopup from '../UI/NotifyPopup';
-import ToDoList from './ToDoList';
+import ToDo from './ToDo';
 import { Link } from 'react-router-dom';
 
 class Header extends React.Component {
@@ -16,6 +17,7 @@ class Header extends React.Component {
     super(props);
     this.state = {
       openMenu: false,
+      isOpenToDo: false,
     };
   }
 
@@ -86,7 +88,11 @@ class Header extends React.Component {
           <div className='header-ring'>
             <NotifyPopup style={{ fontSize: 40, color: 'white' }}></NotifyPopup>
           </div>
-          <ToDoList />
+          <div className='header-ring'>
+            <IconButton onClick={() => this.setState({ isOpenToDo: true })}>
+              <AssignmentIcon style={{ fontSize: '30px', color: 'white' }} />
+            </IconButton>
+          </div>
           <div className='profile-icon'>
             <Link to={`/profile/${this.props.userId}`}>
               {/* <Link to={`/profile/wsh`}> */}
@@ -94,6 +100,7 @@ class Header extends React.Component {
             </Link>
           </div>
         </div>
+        <ToDo open={this.state.isOpenToDo} onClose={() => this.setState({ isOpenToDo: false })} />
       </header>
     );
   }

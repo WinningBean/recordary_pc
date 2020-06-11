@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import * as dateFns from 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
@@ -32,6 +32,9 @@ const ToDoList = () => {
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
+  useEffect(() => {
+    console.log('render todo');
+  }, []);
 
   const [doList, setDoList] = useState([
     {

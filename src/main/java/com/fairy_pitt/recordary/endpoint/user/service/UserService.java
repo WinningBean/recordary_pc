@@ -72,7 +72,7 @@ public class UserService {
     }
 
     private void deleteOnlyUserPossession(UserEntity user){
-        s3UploadComponent.profileDelete("user", user.getUserCd().toString()); // 사용자 프로필 삭
+        s3UploadComponent.profileDelete("user", user.getUserCd().toString()); // 사용자 프로필
 
         List<PostEntity> onlyUserPostList = user.getPostList().stream()
                 .filter(p -> p.getGroupFK() == null)
@@ -136,6 +136,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public Boolean logout(){
         httpSession.removeAttribute("loginUser");
+        httpSession.invalidate();
         return (httpSession.getAttribute("loginUser") == null);
     }
 
@@ -147,6 +148,11 @@ public class UserService {
     @Transactional(readOnly = true)
     public Long currentUserCd(){
         return Long.parseLong(String.valueOf(httpSession.getAttribute("loginUser")));
+    }
+
+    @Transactional(readOnly = true)
+    public UserResponseDto currentUserInfo(){
+        return new UserResponseDto(currentUser());
     }
 
     @Transactional(readOnly = true)

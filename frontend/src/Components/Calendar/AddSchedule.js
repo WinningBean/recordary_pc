@@ -28,7 +28,7 @@ function rgbToHex(r, g, b) {
 }
 
 // 255,197,0
-export default ({ data, clickTab, clickDate, onClose, onSuccess, groupCd, type }) => {
+export default ({ data, clickTab, clickDate, onClose, onSuccess, type }) => {
   const [color, setColor] = useState({
     r: 255,
     g: 197,
@@ -39,6 +39,7 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, groupCd, type }
   console.log(data.userCd);
   const [info, setInfo] = useState({
     tabCd: null,
+    groupCd: data.groupCd,
     userCd: data.userCd,
     scheduleNm: '',
     scheduleEx: '',
@@ -157,8 +158,8 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, groupCd, type }
             }
             console.log({
               tabCd: clickTab === undefined ? null : clickTab,
-              groupCd: type === 0 ? null : info.groupCd,
-              userCd: type === 0 ? data.admin.userCd : data.currentUserCd,
+              groupCd: type === 2 || type === 3 ? data.groupCd : null,
+              userCd: type === 2 || type === 3 ? data.currentUserCd : data.userCd,
               scheduleNm: info.scheduleNm,
               scheduleEx: info.scheduleEx,
               scheduleStr: str.getTime(),
@@ -171,8 +172,8 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, groupCd, type }
               const scCd = (
                 await axios.post('/schedule/', {
                   tabCd: clickTab === undefined ? null : clickTab,
-                  groupCd: type === 0 ? null : info.groupCd,
-                  userCd: type === 0 ? data.admin.userCd : data.currentUserCd,
+                  groupCd: type === 2 || type === 3 ? data.groupCd : null,
+                  userCd: type === 2 || type === 3 ? data.currentUserCd : data.userCd,
                   scheduleNm: info.scheduleNm,
                   scheduleEx: info.scheduleEx,
                   scheduleStr: str.getTime(),
@@ -190,6 +191,7 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, groupCd, type }
                 ex: info.scheduleEx,
                 start: str,
                 end: end,
+                members: info.scheduleMembers,
                 color: rgbToHex(color.r, color.g, color.b),
               });
             } catch (error) {
