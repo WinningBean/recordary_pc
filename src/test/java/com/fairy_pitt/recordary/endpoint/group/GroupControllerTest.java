@@ -2,14 +2,12 @@ package com.fairy_pitt.recordary.endpoint.group;
 
 import com.fairy_pitt.recordary.common.entity.GroupEntity;
 import com.fairy_pitt.recordary.common.entity.GroupMemberEntity;
-import com.fairy_pitt.recordary.common.entity.PostEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.GroupMemberRepository;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupPageResponseDto;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupSaveRequestDto;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupRequestDto;
 
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupUpdateRequestDto;
 import org.junit.After;
@@ -73,7 +71,7 @@ public class GroupControllerTest {
         String groupPic = "asd";
         String  groupEx = "test";
 
-        GroupSaveRequestDto requestDto = GroupSaveRequestDto.createGroupBuilder()
+        GroupRequestDto requestDto = GroupRequestDto.createGroupBuilder()
                 .userCd(saveUser.getUserCd())
                 .groupNm(groupName)
                 .groupState(true)
@@ -122,7 +120,7 @@ public class GroupControllerTest {
         String groupPic2 = "asd";
         String  groupEx2 = "test";
 
-        GroupUpdateRequestDto groupUpdateRequestDto = GroupUpdateRequestDto.updateGroupBuilder()
+        GroupRequestDto groupUpdateRequestDto = GroupRequestDto.updateGroupBuilder()
                 .groupEx(groupEx2)
                 .groupNm(groupName)
                 .groupPic(groupPic2)

@@ -37,17 +37,18 @@ public class ScheduleService implements Comparator< ScheduleResponseDto > {
     }
 
     @Transactional
-    public Long update(Long id, ScheduleUpdateRequestDto UpdateRequestDto) {
+    public Long update(Long id, ScheduleUpdateRequestDto updateRequestDto) {
         ScheduleEntity scheduleEntity = scheduleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 스케줄이 없습니다. id=" + id));
 
-        ScheduleTabEntity scheduleTabEntity = scheduleTabRepository.findByTabCd(UpdateRequestDto.getTabCodeFK());
+        ScheduleTabEntity scheduleTabEntity = scheduleTabRepository.findByTabCd(updateRequestDto.getTabCodeFK());
         scheduleEntity.updateSchedule(scheduleTabEntity,
-                UpdateRequestDto.getScheduleNm(),
-                UpdateRequestDto.getScheduleEx(),
-                UpdateRequestDto.getScheduleStr(),
-                UpdateRequestDto.getScheduleEnd(),
-                UpdateRequestDto.getScheduleCol());
+                updateRequestDto.getScheduleNm(),
+                updateRequestDto.getScheduleEx(),
+                updateRequestDto.getScheduleStr(),
+                updateRequestDto.getScheduleEnd(),
+                updateRequestDto.getScheduleCol(),
+                updateRequestDto.getSchedulePublicState() );
 
         return id;
     }
@@ -126,6 +127,14 @@ public class ScheduleService implements Comparator< ScheduleResponseDto > {
             }
 
         return scheduleSort(responseDto);
+    }
+    @Transactional(readOnly = true)
+    public List<ScheduleResponseDto> findPostSchedule(Long userCd, Date strDate, int stat, Date endDate)
+    {
+        UserEntity user = userService.findEntity(userCd);
+        return scheduleRepository.findByUserFkAndGroupFKIsNullAndSchedulePublicStateAndScheduleStrBetween(user, stat, strDate,endDate).stream()
+                .map(ScheduleResponseDto :: new)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
