@@ -15,6 +15,7 @@ public class TodoRequestDto {
     private String toDoCol;
     private Date toDoEndDate;
 
+    @Builder
     public  TodoRequestDto( Long userCd,
                             String toDoContent,
                             Date toDoEndDate,
@@ -26,7 +27,6 @@ public class TodoRequestDto {
         this.toDoCol = toDoCol;
     }
 
-    @Builder
     public ToDoEntity toEntity(UserEntity user)
     {
         return  ToDoEntity.builder()
