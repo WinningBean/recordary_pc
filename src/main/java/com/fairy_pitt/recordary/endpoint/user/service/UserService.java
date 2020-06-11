@@ -142,7 +142,8 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Long currentUserCd(){
-        return Long.parseLong(String.valueOf(httpSession.getAttribute("loginUser")));
+        if (httpSession.getAttribute("loginUser") != null) return Long.parseLong(String.valueOf(httpSession.getAttribute("loginUser")));
+        return null;
     }
 
     @Transactional(readOnly = true)
