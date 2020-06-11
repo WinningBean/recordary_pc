@@ -36,7 +36,7 @@ public class MediaController {
     }
 
     @DeleteMapping("/{mediaCd}")
-    public void delete(@PathVariable Long mediaCd){
-        mediaService.delete(mediaCd);
+    public Boolean delete(@PathVariable Long mediaCd){
+        return mediaService.delete(mediaCd);
     }
 }

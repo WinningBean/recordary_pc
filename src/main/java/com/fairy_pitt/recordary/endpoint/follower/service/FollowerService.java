@@ -38,7 +38,7 @@ public class FollowerService {
         FollowerEntity followerEntity = Optional.ofNullable(this.findEntity(userCd, targetCd))
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 팔로우하지 않았습니다. cd = " + targetCd));
         followerRepository.delete(followerEntity);
-        return !Optional.ofNullable(this.findEntity(followerEntity.getUserFK().getUserCd(), followerEntity.getTargetFK().getUserCd())).isPresent();
+        return !Optional.ofNullable(this.findEntity(userCd, targetCd)).isPresent();
     }
 
     @Transactional(readOnly = true)

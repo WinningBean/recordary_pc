@@ -9,7 +9,7 @@ const MainPageButton = (props) => {
   return (
     <div>
       <div className='timeline-plus-button'>
-        <SpeedDials data={props.data} />
+        <SpeedDials data={props.data} groupList={props.groupList} />
       </div>
       <div className='timeline-chatting-button'>
         <Chatting isOpen={isChatClick} />

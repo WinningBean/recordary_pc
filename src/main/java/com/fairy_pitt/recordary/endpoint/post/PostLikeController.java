@@ -21,9 +21,8 @@ public class PostLikeController {
     }
 
     @DeleteMapping("/{postCd}/unLike")
-    public Long postUnLike(@PathVariable Long postCd, @RequestParam Long userCd){
-        postLikeService.delete(postCd, userCd);
-        return postCd;
+    public Boolean postUnLike(@PathVariable Long postCd, @RequestParam Long userCd){
+        return postLikeService.delete(postCd, userCd);
     }
 
     @GetMapping("/{postCd}/likeUser")

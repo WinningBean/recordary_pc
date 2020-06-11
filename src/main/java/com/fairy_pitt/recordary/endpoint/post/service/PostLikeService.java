@@ -36,11 +36,12 @@ public class PostLikeService {
     }
 
     @Transactional
-    public void delete(Long postCd, Long userCd){
+    public Boolean delete(Long postCd, Long userCd){
         PostLikeEntity postLikeEntity = Optional.ofNullable(
                 postLikeRepository.findByPostFKAndUserFK(postService.findEntity(postCd), userService.findEntity(userCd)))
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물에 좋아요를 하지 않았습니다. code = " + postCd));
         postLikeRepository.delete(postLikeEntity);
+        return !Optional.ofNullable(this.findEntity(postCd, userCd)).isPresent();
     }
 
     @Transactional(readOnly = true)
@@ -66,5 +67,12 @@ public class PostLikeService {
         return postEntityList.stream()
                 .map(PostResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public PostLikeEntity findEntity(Long postCd, Long userCd){
+        PostEntity postEntity = postService.findEntity(postCd);
+        UserEntity userEntity = userService.findEntity(userCd);
+        return postLikeRepository.findByPostFKAndUserFK(postEntity, userEntity);
     }
 }

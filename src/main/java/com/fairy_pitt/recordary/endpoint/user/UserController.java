@@ -43,9 +43,8 @@ public class UserController {
     }
 
     @DeleteMapping("/{userCd}")
-    public Long delete(@PathVariable Long userCd){
-        userService.delete(userCd);
-        return userCd;
+    public Boolean delete(@PathVariable Long userCd){
+        return userService.delete(userCd);
     }
 
     @GetMapping("/{userCd}")

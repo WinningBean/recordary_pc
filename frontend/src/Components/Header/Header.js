@@ -71,14 +71,14 @@ class Header extends React.Component {
             <HeaderMenu open={this.state.openMenu} onClose={() => this.setState({ openMenu: false })} />
           </div>
           <div className='title-name'>
-            <a href='http://localhost/main'>
+            <Link to='/main'>
               <img
                 className='title-image'
                 alt='Recordary icon'
                 src='https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.png'
                 style={{ height: '40px' }}
               />
-            </a>
+            </Link>
           </div>
         </div>
         <div id='header-right'>
