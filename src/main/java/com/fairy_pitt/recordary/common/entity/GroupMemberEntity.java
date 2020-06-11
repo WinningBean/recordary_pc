@@ -17,12 +17,12 @@ public class GroupMemberEntity extends BaseTimeEntity implements Serializable {
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "GROUP_FK")
+    @JoinColumn(name = "GROUP_FK", nullable = false)
     private GroupEntity groupFK;
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "GROUP_USER_FK")
+    @JoinColumn(name = "GROUP_USER_FK", nullable = false)
     private UserEntity userFK;
 
     @Builder

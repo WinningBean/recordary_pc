@@ -38,4 +38,10 @@ public class ToDoController {
         return toDoService.getPreTodoList(userCd);
     }
 
+    @DeleteMapping("{toDoCd}")
+    public Boolean delete(@PathVariable Long toDoCd)
+    {
+        return toDoService.delete(toDoCd);
+    }
+
 }

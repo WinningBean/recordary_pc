@@ -22,10 +22,10 @@ public class ScheduleTabEntity extends BaseTimeEntity {
     private Long tabCd;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SCHEDULE_GB_USER_FK")
+    @JoinColumn(name = "SCHEDULE_GB_USER_FK", nullable = false)
     private UserEntity userFk;
 
-    @Column(name = "SCHEDULE_GB_NM")
+    @Column(name = "SCHEDULE_GB_NM", nullable = false)
     private String tabNm;
 
     @Column(name = "SCHEDULE_GB_COLOR")
