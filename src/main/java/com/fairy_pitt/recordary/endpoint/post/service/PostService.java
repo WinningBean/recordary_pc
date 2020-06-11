@@ -88,12 +88,13 @@ public class PostService {
     }
 
     @Transactional
-    public void delete (Long postCd) {
+    public Boolean delete (Long postCd) {
         PostEntity postEntity = Optional.ofNullable(postRepository.findByPostCd(postCd))
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. code = " + postCd));
 
         mediaService.delete(postEntity.getMediaFK().getMediaCd());
         postRepository.delete(postEntity);
+        return !Optional.ofNullable(this.findEntity(postCd)).isPresent();
     }
 
     private PostResponseDto checkCurrentUserLikePost(PostResponseDto postResponseDto) {

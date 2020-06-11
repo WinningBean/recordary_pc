@@ -91,12 +91,13 @@ public class UserService {
     }
 
     @Transactional
-    public void delete(Long userCd){
+    public Boolean delete(Long userCd){
         UserEntity userEntity = Optional.ofNullable(userRepository.findByUserCd(userCd))
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. cd = " + userCd));
 
         deleteOnlyUserPossession(userEntity);
         userRepository.delete(userEntity);
+        return !Optional.ofNullable(this.findEntity(userCd)).isPresent();
     }
 
     @Transactional(readOnly = true)

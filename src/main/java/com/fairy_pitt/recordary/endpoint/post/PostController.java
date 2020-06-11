@@ -27,9 +27,8 @@ public class PostController {
     }
 
     @DeleteMapping("/{postCd}")
-    public Long delete(@PathVariable Long postCd) {
-        postService.delete(postCd);
-        return postCd;
+    public Boolean delete(@PathVariable Long postCd) {
+        return postService.delete(postCd);
     }
 
     @GetMapping("/{postCd}")

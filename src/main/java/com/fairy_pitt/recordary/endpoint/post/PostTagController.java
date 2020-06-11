@@ -21,9 +21,8 @@ public class PostTagController {
     }
 
     @DeleteMapping("/{postCd}/unTag")
-    public Long postUnTag(@PathVariable Long postCd, @RequestParam Long userCd){
-        postTagService.delete(postCd, userCd);
-        return postCd;
+    public Boolean postUnTag(@PathVariable Long postCd, @RequestParam Long userCd){
+        return postTagService.delete(postCd, userCd);
     }
 
     @GetMapping("/{postCd}/tagUser")
