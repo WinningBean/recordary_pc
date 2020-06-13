@@ -7,7 +7,7 @@ import { styled } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import CommentList from './CommentList';
 import LongMenu from '../Other/MoreMenu';
-import PostShare from '../Profile/PostShare';
+import PostShare from '../../Containers/Profile/PostShare';
 import TimelineOneday from './TimelineOneDay';
 import TimelineMultiDay from './TimelineMultiDay';
 import ThumbUpRoundedIcon from '@material-ui/icons/ThumbUpRounded';
@@ -31,7 +31,6 @@ const SendButton = styled(Button)({
 
 const TimelineWeekSchedule = (props) => {
   const classes = useStyles();
-
   const [data, setData] = useState(props.data);
   const [postForm, setPostForm] = useState(0);
   const [isClickList, setIsClickList] = useState(
@@ -108,8 +107,9 @@ const TimelineWeekSchedule = (props) => {
         </div>
         <div className='profile-time'>
           <div className='profile-time-text'>
-            {/* 0일전 => 오늘             */}
-            {`${Math.abs(dateFns.differenceInDays(Date.parse(data.modifiedDate), new Date()))}일 전`}
+            {Math.abs(dateFns.differenceInDays(Date.parse(data.modifiedDate), new Date())) === 0
+              ? '오늘'
+              : `${Math.abs(dateFns.differenceInDays(Date.parse(data.modifiedDate), new Date()))}일 전`}
           </div>
         </div>
         <div className='profile-moreIcon'>

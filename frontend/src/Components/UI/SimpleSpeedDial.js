@@ -5,8 +5,7 @@ import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import ShareIcon from '@material-ui/icons/Share';
-import PostMediaScheduleAppend from '../Profile/PostMediaScheduleAppend';
-// import PostMediaScheduleAppend from '../../Containers/Profile/PostMediaScheduleAppend';
+import PostMediaScheduleAppend from '../../Containers/Profile/PostMediaScheduleAppend';
 
 import ScheduleShare from '../Timeline/ScheduleShare';
 
@@ -53,13 +52,7 @@ export default function SpeedDials(props) {
 
   const PostMediaScheduleWrite = () => {
     if (postMediaScheduleClick === null) {
-      setPostMediaScheduleClick(
-        <PostMediaScheduleAppend
-          data={props.data}
-          groupList={props.groupList}
-          onCancel={() => setPostMediaScheduleClick(null)}
-        />
-      );
+      setPostMediaScheduleClick(<PostMediaScheduleAppend onCancel={() => setPostMediaScheduleClick(null)} />);
       return;
     }
     setPostMediaScheduleClick(null);
@@ -67,7 +60,14 @@ export default function SpeedDials(props) {
   };
   const ScheduleShareForm = () => {
     if (scheduleShareClick === null) {
-      setScheduleShareClick(<ScheduleShare isMyCalendar={false} onCancel={() => setScheduleShareClick(null)} />);
+      setScheduleShareClick(
+        <ScheduleShare
+          data={props.data}
+          groupList={props.groupList}
+          isMyCalendar={false}
+          onCancel={() => setScheduleShareClick(null)}
+        />
+      );
       return;
     }
     setScheduleShareClick(null);
@@ -95,7 +95,7 @@ export default function SpeedDials(props) {
           <SpeedDialAction
             key={'PosShared'}
             icon={<ShareIcon />}
-            tooltipTitle={'PosShared'}
+            tooltipTitle={'scheduleShare'}
             onClick={ScheduleShareForm}
           />
           {postMediaScheduleClick}

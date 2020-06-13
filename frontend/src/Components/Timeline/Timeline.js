@@ -8,17 +8,17 @@ import AlertDialog from '../Other/AlertDialog';
 import './Timeline.css';
 import CommentList from './CommentList';
 import LongMenu from '../Other/MoreMenu';
-import PostShare from '../Profile/PostShare';
+import PostShare from '../../Containers/Profile/PostShare';
+import EditPostMediaScheduleAppend from '../../Containers/Profile/PostMediaScheduleAppend';
+
 import Avatar from '@material-ui/core/Avatar';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import ThumbUpRoundedIcon from '@material-ui/icons/ThumbUpRounded';
-
 import TodayIcon from '@material-ui/icons/Today';
 import CloseIcon from '@material-ui/icons/Close';
 import CommentTimeline from './CommentTimeline';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
 import SubdirectoryArrowLeftIcon from '@material-ui/icons/SubdirectoryArrowLeft';
@@ -38,6 +38,7 @@ const Timeline = (props) => {
   const [pictureCount, setPictureCount] = useState(0);
   const [clickSchedule, setClickSchedule] = useState(false);
   const [mediaList, setMediaList] = useState([]);
+  const [timelineRender, setTimelineRender] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -60,6 +61,7 @@ const Timeline = (props) => {
         setMenuDialog(<PostShare onCancel={() => setMenuDialog(null)} />);
         break;
       case '수정':
+        setMenuDialog(<EditPostMediaScheduleAppend onCancel={() => setMenuDialog(null)} />);
         break;
       case '삭제':
         break;
@@ -203,8 +205,9 @@ const Timeline = (props) => {
         )}
         <div className='profile-time'>
           <div className='profile-time-text'>
-            {/* 0일전 => 오늘             */}
-            {`${Math.abs(dateFns.differenceInDays(Date.parse(data.modifiedDate), new Date()))}일 전`}
+            {Math.abs(dateFns.differenceInDays(Date.parse(data.modifiedDate), new Date())) === 0
+              ? '오늘'
+              : `${Math.abs(dateFns.differenceInDays(Date.parse(data.modifiedDate), new Date()))}일 전`}
           </div>
         </div>
         <div className='profile-moreIcon'>

@@ -124,7 +124,14 @@ const ScheduleShare = (props) => {
       <div className='Post-Media-Schedule-Append-Form '>
         <div className='Post-Append-Group' style={{ marginLeft: '12px' }}>
           <div>
-            <SelectGroup />
+            {props.groupList === undefined ? (
+              <SelectGroup options={['그룹없음']} />
+            ) : (
+              <SelectGroup
+                options={props.groupList}
+                // onSetSelectedGroup={(selectGroupCd) => setPost({ ...post, groupCd: selectGroupCd })}
+              />
+            )}{' '}
           </div>
           <div className='schedule-media-button '>
             <div className='plus-button-design' onClick={() => setIsCalendarOpen(!isCalendarOpen)}>
