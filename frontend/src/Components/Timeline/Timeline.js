@@ -163,7 +163,7 @@ const Timeline = (props) => {
             <div
               style={{
                 bottom: '15px',
-                left: '6px',
+                left: '50%',
                 position: 'absolute',
                 right: '6px',
                 display: 'flex',

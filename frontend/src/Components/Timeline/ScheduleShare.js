@@ -22,6 +22,7 @@ import store from '../../store';
 import * as dateFns from 'date-fns';
 
 const ScheduleShare = (props) => {
+  const [user, setUser] = useState(props.data);
   const [open, setOpen] = React.useState(false);
   const [alert, setAlert] = useState(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
@@ -33,14 +34,14 @@ const ScheduleShare = (props) => {
   const [scheduleList, setScheduleList] = useState(null);
 
   const [post, setPost] = useState({
-    userCd: store.getState().user.userCd,
+    userCd: user.userCd,
     // group_cd: store.getState().user.userGroup[0].group_cd,
     groupCd: null,
     postOriginCd: null,
     scheduleCd: null,
     mediaCd: null,
     postEx: null,
-    postPublicState: null,
+    postPublicState: 0,
     postStrYMD: null,
     postEndYMD: null,
   });
@@ -140,7 +141,13 @@ const ScheduleShare = (props) => {
                 <span style={{ fontSize: '15px', marginLeft: '5px' }}>일정찾기</span>
               </div>
             </div>
-            <PublicRange />
+            <PublicRange
+              // onSetSelectedIndex={(index) => {
+              // setScheduleInfo({ ...scheduleInfo, schedulePublicState: index });
+              //   setPost({ ...post, postPublicState: index === 0 ? 0 : 3 });
+              // }}
+              selectedIndex={post.postPublicState}
+            />
           </div>
         </div>
         {isCalendarOpen === false ? null : (

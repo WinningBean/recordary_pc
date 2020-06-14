@@ -775,7 +775,7 @@ class Profile extends React.Component {
               this.state.post.map((value) => {
                 if (value.mediaFK === null) {
                   return (
-                    <div className='profile-ScheduleTimeLine'>
+                    <div className='profile-ScheduleTimeLine' style={{ marginBottom: '50px' }}>
                       <TimelineWeekSchedule key={value.postCd} data={value} user={this.props.user} />
                     </div>
                   );
