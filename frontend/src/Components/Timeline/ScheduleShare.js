@@ -130,7 +130,7 @@ const ScheduleShare = (props) => {
             ) : (
               <SelectGroup
                 options={props.groupList}
-                // onSetSelectedGroup={(selectGroupCd) => setPost({ ...post, groupCd: selectGroupCd })}
+                onSetSelectedGroup={(selectGroupCd) => setPost({ ...post, groupCd: selectGroupCd })}
               />
             )}{' '}
           </div>
@@ -199,6 +199,7 @@ const ScheduleShare = (props) => {
             <div style={{ margin: '20px' }}>
               <Calendar
                 type={4}
+                info={user}
                 choiceSharedStartDate={choiceDate.start}
                 choiceSharedEndDate={choiceDate.end}
                 onChoice={(date, userDate) => {

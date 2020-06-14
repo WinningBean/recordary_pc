@@ -7,7 +7,7 @@ import { styled } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import { Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText } from '@material-ui/core';
 
-import EditPostMediaScheduleAppend from '../../Containers/Profile/PostMediaScheduleAppend';
+import EditPostMediaScheduleAppend from '../../Containers/Profile/EditPostMediaScheduleAppend';
 import CommentList from './CommentList';
 import LongMenu from '../Other/MoreMenu';
 import PostShare from '../../Containers/Profile/PostShare';
@@ -68,7 +68,7 @@ const TimelineWeekSchedule = (props) => {
         setMenuDialog(<PostShare onCancel={() => setMenuDialog(null)} />);
         break;
       case '수정':
-        setMenuDialog(<EditPostMediaScheduleAppend data={data} onCancel={() => setMenuDialog(null)} />);
+        setMenuDialog(<EditPostMediaScheduleAppend mediaList={[]} data={data} onCancel={() => setMenuDialog(null)} />);
         break;
       case '삭제':
         setMenuDialog(

@@ -12,6 +12,7 @@
 .timeline-Margin {
   margin-bottom: 50px;
 }
+
 .timeline-profile {
   position: relative;
   display: flex;
@@ -136,7 +137,7 @@
   max-height: 116px;
   margin-left: 10px;
   margin-top: 5px;
-  border: 1px solid rgba(161, 159, 159, 0.8);
+  border: 1px solid rgb(229, 229, 229);
   height: 100%;
   border-radius: 5px;
   font-size: 16px;

@@ -66,7 +66,9 @@ const EditPostMediaScheduleAppend = (props) => {
   const classes = useStyles();
   const [user, setUser] = useState(props.user);
   const [data, setData] = useState(props.data);
-  const [postAddMediaListSrc, setPostAddMediaListSrc] = useState(props.mediaList);
+  const [change, setChange] = useState(false);
+  const [updatePostAddMediaListSrc, setUpdatePostAddMediaListSrc] = useState([]);
+  const [postAddMediaListSrc, setPostAddMediaListSrc] = useState(props.mediaList.length < 0 ? [] : props.mediaList);
   const [mediaOpen, setMediaOpen] = useState(props.data.mediaFK !== null ? true : false);
   const [scheduleOpen, setScheduleOpen] = useState(props.data.scheduleFK !== null ? true : false);
   const [open, setOpen] = React.useState(false);
@@ -555,17 +557,6 @@ const EditPostMediaScheduleAppend = (props) => {
             </div>
           </div>
         )}
-
-        {/* {isShowMemberSearch ? (
-          <GroupMemberSearch
-            type={1}
-            onSelect={(value) =>
-              setScheduleInfo({ ...scheduleInfo, scheduleMembers: scheduleInfo.scheduleMembers.concat(value) })
-            }
-            onCancel={() => setIsShowMemberSearch(false)}
-          />
-        ) : null} */}
-
         {mediaOpen === true ? (
           <div className='Post-Append-Media post-Append'>
             <div
@@ -591,21 +582,19 @@ const EditPostMediaScheduleAppend = (props) => {
               style={{ display: 'none' }}
               ref={fileUpload}
               onChange={(e) => {
+                setChange(true);
                 for (let i = 0; i < e.target.files.length; i++) {
                   const reader = new FileReader();
-                  setPostAddMediaListSrc([]);
                   reader.addEventListener('load', (e) => {
-                    postAddMediaListSrc.push(e.target.result);
-                    console.log(postAddMediaListSrc);
+                    updatePostAddMediaListSrc.push(e.target.result);
                   });
                   reader.readAsDataURL(e.target.files[i]);
                 }
-                // e.target.value = null;
               }}
             />
-            {postAddMediaListSrc === null
-              ? null
-              : postAddMediaListSrc.map((value, index) => (
+            {(postAddMediaListSrc.length > 0 && updatePostAddMediaListSrc.length > 0) ||
+            (postAddMediaListSrc.length < 1 && updatePostAddMediaListSrc.length > 0)
+              ? updatePostAddMediaListSrc.map((value, index) => (
                   <div style={{ marginLeft: '10px' }} key={`${index}-postAddImg`}>
                     <img
                       style={{
@@ -619,7 +608,24 @@ const EditPostMediaScheduleAppend = (props) => {
                       src={value}
                     />
                   </div>
-                ))}
+                ))
+              : postAddMediaListSrc.length > 0 && updatePostAddMediaListSrc.length < 1
+              ? postAddMediaListSrc.map((value, index) => (
+                  <div style={{ marginLeft: '10px' }} key={`${index}-postAddImg`}>
+                    <img
+                      style={{
+                        boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
+                        width: '60px',
+                        height: '60px',
+                        objectFit: 'cover',
+                      }}
+                      id='postAddImg'
+                      alt='postAddImg'
+                      src={value}
+                    />
+                  </div>
+                ))
+              : null}
           </div>
         ) : null}
         {alert}
