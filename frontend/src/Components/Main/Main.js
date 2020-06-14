@@ -6,10 +6,6 @@ import Timeline from '../Timeline/Timeline';
 import TimelineWeekSchedule from '../Timeline/TimelineWeekSchedule';
 
 const Main = (props) => {
-  useEffect(() => {
-    console.log(props);
-  });
-
   return (
     <main>
       <div id='timeline-list'>

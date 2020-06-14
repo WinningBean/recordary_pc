@@ -5,6 +5,9 @@ import * as dateFns from 'date-fns';
 import './Timeline.css';
 import { styled } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
+import { Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText } from '@material-ui/core';
+
+import EditPostMediaScheduleAppend from '../../Containers/Profile/PostMediaScheduleAppend';
 import CommentList from './CommentList';
 import LongMenu from '../Other/MoreMenu';
 import PostShare from '../../Containers/Profile/PostShare';
@@ -59,14 +62,29 @@ const TimelineWeekSchedule = (props) => {
     setWriteRecomment(e.target.value);
   };
 
-  const userPostMoreButtonClick = (selectedValue) => {
+  const userPostMoreButtonClick = (selectedValue, value) => {
     switch (selectedValue) {
       case '나에게 공유':
         setMenuDialog(<PostShare onCancel={() => setMenuDialog(null)} />);
         break;
       case '수정':
+        setMenuDialog(<EditPostMediaScheduleAppend data={data} onCancel={() => setMenuDialog(null)} />);
         break;
       case '삭제':
+        setMenuDialog(
+          <Dialog open={true} onClose={() => setMenuDialog(null)}>
+            <DialogTitle id='alert-dialog-title'>게시물 삭제</DialogTitle>
+            <DialogContent>
+              <DialogContentText id='alert-dialog-description'>게시물을 삭제하시겠습니까?</DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setMenuDialog(null)} color='primary' autoFocus>
+                취소
+              </Button>
+              <Button color='primary'>확인</Button>
+            </DialogActions>
+          </Dialog>
+        );
         break;
     }
   };
@@ -80,6 +98,7 @@ const TimelineWeekSchedule = (props) => {
             ex={data.scheduleFK.scheduleEx}
             startDay={data.scheduleFK.scheduleStr}
             endDay={data.scheduleFK.scheduleEnd}
+            memberList={data.scheduleFK.scheduleMemberList}
           />
         );
       case 2:
@@ -137,10 +156,14 @@ const TimelineWeekSchedule = (props) => {
             {data.commentList.length > 0 ? (
               <CommentList tData={data.commentList} user={props.user} />
             ) : (
-              <div>
-                <div>
-                  {data.userFK.userId}({data.userFK.userNm})게시물에 첫번째 댓글을 달아주세용
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div className='recomment-reply-users-img'>
+                  <img alt={`${data.userFK.userId} img`} src={data.userFK.userPic} />
                 </div>
+                <div style={{ fontWeight: 'bold', marginLeft: '5px' }}>
+                  {data.userFK.userId}({data.userFK.userNm})
+                </div>
+                <div style={{ marginLeft: '5px' }}>게시물에 첫번째 댓글을 달아주세요</div>
               </div>
             )}
           </div>
