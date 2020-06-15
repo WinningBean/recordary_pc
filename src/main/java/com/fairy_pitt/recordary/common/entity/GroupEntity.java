@@ -52,6 +52,10 @@ public class GroupEntity extends BaseTimeEntity{
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK", cascade = CascadeType.REMOVE)
     private  List<ScheduleEntity> groupScheduleList = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupFK", cascade = CascadeType.REMOVE)
+    private List<ChatRoomEntity> groupChatRoomList = new ArrayList<>();
+
     @Builder
     public GroupEntity(UserEntity gMstUserFK,
                        String groupNm,
