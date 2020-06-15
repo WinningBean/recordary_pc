@@ -276,7 +276,7 @@ const PostShareTimeline = (props) => {
             </>
           </div>
           <div className='timeline-context'>
-            <div style={{ margin: '5px' }}>{postOriginData.postEx}</div>
+            <div style={{ margin: '5px' }}>{data.postEx}</div>
           </div>
         </div>
         <div className='comment-context'>
