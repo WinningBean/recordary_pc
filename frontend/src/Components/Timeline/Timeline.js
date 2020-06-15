@@ -58,7 +58,7 @@ const Timeline = (props) => {
   const userPostMoreButtonClick = (selectedValue, value) => {
     switch (selectedValue) {
       case '나에게 공유':
-        setMenuDialog(<PostShare onCancel={() => setMenuDialog(null)} />);
+        setMenuDialog(<PostShare originCd={data.postCd} onCancel={() => setMenuDialog(null)} />);
         break;
       case '수정':
         setMenuDialog(<EditPostMediaSchedule mediaList={mediaList} data={data} onCancel={() => setMenuDialog(null)} />);
@@ -383,9 +383,7 @@ const Timeline = (props) => {
               )}
             </div>
           </div>
-          <div className='timeline-context'>
-            <div style={{ margin: '5px' }}>{data.postEx}</div>
-          </div>
+          <div className='timeline-context'>{data.postEx}</div>
         </div>
         <div className='comment-context'>
           <div className='comment-reply' style={{ overflowY: 'auto' }}>

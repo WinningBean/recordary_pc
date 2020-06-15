@@ -127,7 +127,7 @@
   border-radius: 5px;
 }
 .timeline-shareForm:hover {
-  cursor: pointer;
+  /* cursor: pointer; */
   box-shadow: 1px 1px 5px rgba(100, 100, 100, 0.9);
 }
 .timeline-share-userInfo > img {
@@ -176,6 +176,7 @@
   font-size: 16px;
   line-height: 150%;
   overflow-y: scroll;
+  padding: 10px;
 }
 
 .timeline-picture-bottom {
