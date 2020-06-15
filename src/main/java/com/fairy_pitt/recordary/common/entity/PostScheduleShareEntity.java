@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "POST_SCHEDULE_SHARE_TB")
 @IdClass(PostScheduleSharePK.class)
-public class PostScheduleShareEntity {
+public class PostScheduleShareEntity extends BaseTimeEntity {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_FK", nullable = false)
