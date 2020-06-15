@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import EditPostMediaScheduleAppend from '../../Components/Profile/EditPostMediaScheduleAppend';
+import EditPostMediaSchedule from '../../Components/Profile/EditPostMediaSchedule';
 
 const mapStateToProps = (state) => {
   return {
@@ -9,4 +9,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(EditPostMediaScheduleAppend);
+export default connect(mapStateToProps)(EditPostMediaSchedule);
