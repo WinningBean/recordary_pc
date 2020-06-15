@@ -21,10 +21,10 @@ public class ToDoService {
     private final ToDoRepository toDoRepository;
     private final UserService userService;
 
-    public Boolean create(TodoRequestDto requestDto){
+    public Long create(TodoRequestDto requestDto){
 
         UserEntity user = userService.findEntity(requestDto.getUserCd());
-        return Optional.ofNullable(toDoRepository.save(requestDto.toEntity(user))).isPresent();
+        return toDoRepository.save(requestDto.toEntity(user)).getToDoCd();
     }
 
     public Boolean update(Long toDoCd)

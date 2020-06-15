@@ -16,7 +16,7 @@ public class ToDoController {
     private final ToDoService toDoService;
 
     @PostMapping("/")
-    public Boolean create(@RequestBody TodoRequestDto requestDto){
+    public Long create(@RequestBody TodoRequestDto requestDto){
         return toDoService.create(requestDto);
     }
 
