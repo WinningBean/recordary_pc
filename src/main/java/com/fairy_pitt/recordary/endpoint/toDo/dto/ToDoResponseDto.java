@@ -2,10 +2,12 @@ package com.fairy_pitt.recordary.endpoint.toDo.dto;
 
 import com.fairy_pitt.recordary.common.entity.ToDoEntity;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Getter
+@NoArgsConstructor
 public class ToDoResponseDto {
 
     private Long toDoCd;

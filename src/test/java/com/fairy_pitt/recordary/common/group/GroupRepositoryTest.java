@@ -1,7 +1,10 @@
 package com.fairy_pitt.recordary.common.group;
 
 import com.fairy_pitt.recordary.common.entity.GroupEntity;
+import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
+import com.fairy_pitt.recordary.common.repository.UserRepository;
+import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,10 +23,14 @@ public class GroupRepositoryTest {
     @Autowired
     private GroupRepository groupRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @After
     public void cleanUp()
     {
         groupRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
@@ -33,9 +40,14 @@ public class GroupRepositoryTest {
         String groupName = "테스트 그룹";
         String  groupEx = "그룹 생성 테스트 중입니다";
 
+        UserEntity saveUser = userRepository.save(UserEntity.builder()
+                .userId("test")
+                .userPw("test")
+                .userNm("테스트 유저")
+                .build());
 
         groupRepository.save(GroupEntity.builder()
-                .gMstUserFK(null)
+                .gMstUserFK(saveUser)
                 .groupNm(groupName)
                 .groupState(true)
                 .groupPic(null)

@@ -7,8 +7,7 @@ import com.fairy_pitt.recordary.common.repository.GroupMemberRepository;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupPageResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupSaveRequestDto;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.group.dto.*;
 import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
@@ -32,7 +31,7 @@ public class GroupService {
     private final S3UploadComponent s3UploadComponent;
 
     @Transactional
-    public Long save(@RequestBody GroupSaveRequestDto requestDto) {
+    public Long save(@RequestBody GroupRequestDto requestDto) {
         UserEntity user = userService.findEntity(requestDto.getUserCd());
             return  groupRepository.save(
                     requestDto.toEntity(user,"https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/group/basic.png"))
@@ -40,7 +39,7 @@ public class GroupService {
     }
 
     @Transactional
-    public Long updateGroupInfo(Long id, @RequestBody GroupUpdateRequestDto groupDto) {
+    public Long updateGroupInfo(Long id, GroupRequestDto groupDto) {
         GroupEntity groupEntity = groupRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
 

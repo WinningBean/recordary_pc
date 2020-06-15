@@ -4,7 +4,6 @@ import com.fairy_pitt.recordary.endpoint.group.dto.*;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
 import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
-import com.fairy_pitt.recordary.endpoint.post.dto.GroupPostResponseDto;
 import com.fairy_pitt.recordary.endpoint.post.service.PostService;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleDateRequestDto;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleResponseDto;
@@ -12,13 +11,11 @@ import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleService;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -35,13 +32,13 @@ public class GroupController {
     private final UserService userService;
 
     @PostMapping("create")
-    public Long groupCreate(@RequestBody GroupSaveRequestDto requestDto) {
+    public Long groupCreate(@RequestBody GroupRequestDto requestDto) {
         return groupService.save(requestDto);
     }
 
     @PostMapping("update/{id}")
     public Long update(@PathVariable Long id,
-                       @RequestBody GroupUpdateRequestDto requestDto) {
+                       @RequestBody GroupRequestDto requestDto) {
         return groupService.updateGroupInfo(id, requestDto);
     }
 
@@ -69,8 +66,8 @@ public class GroupController {
         return groupService.findGroupByName(groupNm);
     }
 
-    @GetMapping("{groupCd}")
-    public GroupPageResponseDto groupPage(@PathVariable Long groupCd) {
+    @GetMapping("/")
+    public GroupPageResponseDto groupPage(@RequestParam(value = "input") Long groupCd) {
 
         return groupService.groupPage(groupCd);
     }

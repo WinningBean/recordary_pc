@@ -47,12 +47,12 @@ public class ScheduleMemberService {
     }
 
     @Transactional
-    public Boolean update(ScheduleMemberEntityPK id, ScheduleMemberUpdateRequestDto requestDto)
+    public Boolean update(ScheduleMemberEntityPK id, Boolean scheduleState)
     {
         ScheduleMemberEntity scheduleMemberEntity = scheduleMemberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
 
-        scheduleMemberEntity.scheduleMemberUpdate(requestDto.getScheduleState());
+        scheduleMemberEntity.scheduleMemberUpdate(scheduleState);
         return true;
     }
 

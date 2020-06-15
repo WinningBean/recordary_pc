@@ -20,7 +20,6 @@ class App extends React.Component {
   }
   connectSession = async () => {
     const { data } = await axios.get('/user/sessionInfo');
-    console.log(data);
     if (data === '') {
       this.setState({ isRedirect: false });
       return;
@@ -64,8 +63,8 @@ class App extends React.Component {
           <Route path='/:userId' component={ProfilePage} />
           <Redirect path='*' to='/' />
         </Switch>
-        {this.props.isLogin ? <MainPageButton data={this.props.user} /> : null}
-        <Fab
+        {this.props.isLogin ? <MainPageButton data={this.props.user} groupList={this.props.groupList} /> : null}
+        {/* <Fab
           id='topBtn'
           class='MuiButtonBase-root MuiFab-root MuiFab-sizeSmall MuiFab-secondary animation'
           color='secondary'
@@ -80,7 +79,7 @@ class App extends React.Component {
           }}
         >
           <KeyboardArrowUpIcon />
-        </Fab>
+        </Fab> */}
       </div>
     );
   }

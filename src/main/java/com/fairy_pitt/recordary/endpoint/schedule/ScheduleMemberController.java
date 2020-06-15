@@ -4,7 +4,6 @@ import com.fairy_pitt.recordary.common.pk.ScheduleMemberEntityPK;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleMemberService;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleService;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleMemberSaveRequestDto;
-import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleMemberUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,9 +27,9 @@ public class ScheduleMemberController {
 
     @PostMapping("update")
     public  Boolean update(@RequestBody ScheduleMemberEntityPK id,
-                           @RequestBody ScheduleMemberUpdateRequestDto requestDto){
+                           @RequestBody Boolean scheduleState){
 
-        scheduleMemberService.update(id,requestDto);
+        scheduleMemberService.update(id,scheduleState);
         return true;
     }
 

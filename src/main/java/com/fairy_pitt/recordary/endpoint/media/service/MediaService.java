@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -32,10 +33,11 @@ public class MediaService {
         return this.findPath(findEntity(mediaCd).getMediaPath());
     }
 
-    public void delete(Long mediaCd){
+    public Boolean delete(Long mediaCd){
         MediaEntity mediaEntity = findEntity(mediaCd);
         s3UploadComponent.mediaDelete(mediaEntity.getMediaPath());
         mediaRepository.delete(mediaEntity);
+        return !Optional.ofNullable(this.findEntity(mediaCd)).isPresent();
     }
 
     private List<String> findPath(String path){

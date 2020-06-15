@@ -91,12 +91,13 @@ public class UserService {
     }
 
     @Transactional
-    public void delete(Long userCd){
+    public Boolean delete(Long userCd){
         UserEntity userEntity = Optional.ofNullable(userRepository.findByUserCd(userCd))
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. cd = " + userCd));
 
         deleteOnlyUserPossession(userEntity);
         userRepository.delete(userEntity);
+        return !Optional.ofNullable(this.findEntity(userCd)).isPresent();
     }
 
     @Transactional(readOnly = true)
@@ -141,18 +142,21 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public Long currentUserCd(){
+        if (httpSession.getAttribute("loginUser") != null) return Long.parseLong(String.valueOf(httpSession.getAttribute("loginUser")));
+        return null;
+    }
+
+    @Transactional(readOnly = true)
     public UserEntity currentUser(){
         return findEntity(currentUserCd());
     }
 
     @Transactional(readOnly = true)
-    public Long currentUserCd(){
-        return Long.parseLong(String.valueOf(httpSession.getAttribute("loginUser")));
-    }
-
-    @Transactional(readOnly = true)
     public UserResponseDto currentUserInfo(){
-        return new UserResponseDto(currentUser());
+        UserEntity userEntity = currentUser();
+        if (userEntity != null) return new UserResponseDto(userEntity);
+        return null;
     }
 
     @Transactional(readOnly = true)

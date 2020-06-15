@@ -36,11 +36,12 @@ public class PostTagService {
     }
 
     @Transactional
-    public void delete(Long postCd, Long userCd){
+    public Boolean delete(Long postCd, Long userCd){
         PostTagEntity postTagEntity = Optional.ofNullable(
                 postTagRepository.findByPostFKAndUserFK(postService.findEntity(postCd), userService.findEntity(userCd)))
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물에 태그되어 있지 않습니다. post_code = " + postCd + ", user_cd = " + userCd));
         postTagRepository.delete(postTagEntity);
+        return !Optional.ofNullable(this.findEntity(postCd, userCd)).isPresent();
     }
 
     @Transactional(readOnly = true)
@@ -65,5 +66,12 @@ public class PostTagService {
         return postEntityList.stream()
                 .map(PostResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public PostTagEntity findEntity(Long postCd, Long userCd){
+        PostEntity postEntity = postService.findEntity(postCd);
+        UserEntity userEntity = userService.findEntity(userCd);
+        return postTagRepository.findByPostFKAndUserFK(postEntity, userEntity);
     }
 }

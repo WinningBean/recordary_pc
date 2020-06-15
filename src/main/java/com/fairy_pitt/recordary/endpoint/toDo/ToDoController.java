@@ -16,7 +16,7 @@ public class ToDoController {
     private final ToDoService toDoService;
 
     @PostMapping("/")
-    public Boolean create(@RequestBody TodoRequestDto requestDto){
+    public Long create(@RequestBody TodoRequestDto requestDto){
         return toDoService.create(requestDto);
     }
 
@@ -36,6 +36,12 @@ public class ToDoController {
     public List<ToDoResponseDto> getPreTodoList(@PathVariable Long userCd)
     {
         return toDoService.getPreTodoList(userCd);
+    }
+
+    @DeleteMapping("{toDoCd}")
+    public Boolean delete(@PathVariable Long toDoCd)
+    {
+        return toDoService.delete(toDoCd);
     }
 
 }

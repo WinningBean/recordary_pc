@@ -22,7 +22,7 @@ public class ScheduleEntity extends BaseTimeEntity{
    private Long scheduleCd;
 
    @ManyToOne(fetch = FetchType.LAZY)
-   @JoinColumn(name = "SCHEDULE_USER_FK")
+   @JoinColumn(name = "SCHEDULE_USER_FK", nullable = false)
    private  UserEntity userFk;
 
    @ManyToOne(fetch = FetchType.LAZY)
@@ -33,24 +33,24 @@ public class ScheduleEntity extends BaseTimeEntity{
    @JoinColumn(name = "SCHEDULE_GB_FK")
    private ScheduleTabEntity tabFK;
 
-   @Column(name = "SCHEDULE_NM")
+   @Column(name = "SCHEDULE_NM", nullable = false)
    private String scheduleNm;
 
    @Column(name = "SCHEDULE_EX")
    private String scheduleEx;
 
    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-   @Column(name = "SCHEDULE_STR_DT")
+   @Column(name = "SCHEDULE_STR_DT", nullable = false)
    private Date scheduleStr;
 
    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-   @Column(name = "SCHEDULE_END_DT")
+   @Column(name = "SCHEDULE_END_DT", nullable = false)
    private Date scheduleEnd;
 
    @Column(name = "SCHEDULE_COLOR")
    private String scheduleCol;
 
-   @Column(name = "SCHEDULE_PB_ST")
+   @Column(name = "SCHEDULE_PB_ST", nullable = false)
    private int schedulePublicState;
 
    @JsonIgnore
@@ -84,13 +84,15 @@ public class ScheduleEntity extends BaseTimeEntity{
                               String scheduleEx,
                               Date scheduleStr,
                               Date scheduleEnd,
-                              String scheduleCol){
+                              String scheduleCol,
+                              int schedulePublicState){
       this.tabFK = TabCodeFK;
       this.scheduleNm = scheduleNm;
       this.scheduleEx = scheduleEx;
       this.scheduleStr = scheduleStr;
       this.scheduleEnd = scheduleEnd;
       this.scheduleCol = scheduleCol;
+      this.schedulePublicState = schedulePublicState;
    }
    //private String scheduleLocation;
 

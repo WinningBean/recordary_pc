@@ -21,7 +21,7 @@ public class PostEntity extends BaseTimeEntity{
     private Long postCd;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "POST_USER_FK")
+    @JoinColumn(name = "POST_USER_FK", nullable = false)
     private UserEntity userFK;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,7 +36,7 @@ public class PostEntity extends BaseTimeEntity{
     @JoinColumn(name = "POST_SCHEDULE_FK")
     private ScheduleEntity scheduleFK;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_MEDIA_FK")
     private MediaEntity mediaFK;
 
@@ -90,12 +90,16 @@ public class PostEntity extends BaseTimeEntity{
         this.postEndYMD = postEndYMD;
     }
 
-    public void update(String postEx, int postPublicState) {
+    public void update(GroupEntity groupFK,
+                       ScheduleEntity scheduleFK,
+                       MediaEntity mediaFK,
+                       String postEx,
+                       int postPublicState) {
+
+        this.groupFK = groupFK;
+        this.scheduleFK = scheduleFK;
+        this.mediaFK = mediaFK;
         this.postEx = postEx;
         this.postPublicState = postPublicState;
-    }
-
-    public void addMedea(MediaEntity mediaFK){
-        this.mediaFK = mediaFK;
     }
 }

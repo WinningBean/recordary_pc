@@ -74,26 +74,36 @@ public class PostService {
         PostEntity postEntity = Optional.ofNullable(postRepository.findByPostCd(postCd))
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. code = " + postCd));
 
-        postEntity.update(requestDto.getPostEx(), requestDto.getPostPublicState());
+        postEntity.update(groupService.findEntity(requestDto.getGroupCd()),
+                scheduleService.findEntity(requestDto.getScheduleCd()),
+                mediaService.findEntity(requestDto.getMediaCd()),
+                requestDto.getPostEx(),
+                requestDto.getPostPublicState());
         return postCd;
     }
 
     @Transactional
     public Boolean addMedia(Long scheduleCd, Long mediaCd){
         ScheduleEntity scheduleEntity = scheduleService.findEntity(scheduleCd);
-        PostEntity postEntity = postRepository.findByScheduleFK(scheduleEntity);
         MediaEntity mediaEntity = mediaService.findEntity(mediaCd);
-        postEntity.addMedea(mediaEntity);
+        PostEntity postEntity = postRepository.findByScheduleFK(scheduleEntity);
+        postEntity.update(postEntity.getGroupFK(),
+                scheduleEntity,
+                mediaEntity,
+                postEntity.getPostEx(),
+                postEntity.getPostPublicState());
         return true;
     }
 
     @Transactional
-    public void delete (Long postCd) {
+    public Boolean delete (Long postCd) {
         PostEntity postEntity = Optional.ofNullable(postRepository.findByPostCd(postCd))
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. code = " + postCd));
 
+        scheduleService.delete(postEntity.getScheduleFK().getScheduleCd());
         mediaService.delete(postEntity.getMediaFK().getMediaCd());
         postRepository.delete(postEntity);
+        return !Optional.ofNullable(this.findEntity(postCd)).isPresent();
     }
 
     private PostResponseDto checkCurrentUserLikePost(PostResponseDto postResponseDto) {

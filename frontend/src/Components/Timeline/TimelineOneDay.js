@@ -3,7 +3,7 @@ import Avatar from '@material-ui/core/Avatar';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import * as dateFns from 'date-fns';
 
-function TimelineOneDay({ title, ex, startDay, endDay }) {
+function TimelineOneDay({ title, ex, startDay, endDay, memberList }) {
   return (
     <>
       <div
@@ -48,13 +48,21 @@ function TimelineOneDay({ title, ex, startDay, endDay }) {
           <span style={{ fontWeight: 'bold' }}>{dateFns.format(Date.parse(endDay), 'yyyy.M.d EEE h:mm a')}</span>
         </div>
       </div>
-      <div style={{ flex: 1, marginTop: '6px', marginLeft: '6px' }}>
-        <AvatarGroup>
-          <Avatar alt='Remy Sharp' src='http://placehold.it/40x40' />
-          <Avatar alt='Travis Howard' src='http://placehold.it/40x40' />
-          <Avatar alt='Cindy Baker' src='http://placehold.it/40x40' />
-          <Avatar>+3</Avatar>
-        </AvatarGroup>
+      <div style={{ flex: 1, marginTop: '6px', display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ marginTop: '10px', fontWeight: 'bold' }}>
+          <span>함께하는 친구</span>
+        </div>
+        {memberList.length < 1 ? (
+          <div style={{ marginTop: '10px', fontWeight: 'bold' }}>
+            <span>함께하는 친구가 없습니다.</span>
+          </div>
+        ) : (
+          <AvatarGroup>
+            {memberList.map((value, index) => (
+              <Avatar key={`${value.userCd}-${index}`} alt={`${value.userCd}-${index}`} src={value.userPic} />
+            ))}
+          </AvatarGroup>
+        )}
       </div>
     </>
   );

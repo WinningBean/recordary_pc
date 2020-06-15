@@ -14,25 +14,29 @@ public class TodoRequestDto {
     private  String toDoContent;
     private String toDoCol;
     private Date toDoEndDate;
+    private Boolean toDoSate;
 
+    @Builder
     public  TodoRequestDto( Long userCd,
                             String toDoContent,
                             Date toDoEndDate,
-                            String toDoCol)
+                            String toDoCol,
+                            Boolean toDoSate)
     {
         this.userCd = userCd;
         this.toDoContent = toDoContent;
         this.toDoEndDate = toDoEndDate;
         this.toDoCol = toDoCol;
+        this.toDoSate = toDoSate;
     }
 
-    @Builder
     public ToDoEntity toEntity(UserEntity user)
     {
         return  ToDoEntity.builder()
                 .user(user)
                 .toDoEndDate(toDoEndDate)
                 .toDoCol(toDoCol)
+                .ToDoCompleteState(false)
                 .toDoContent(toDoContent)
                 .build();
     }

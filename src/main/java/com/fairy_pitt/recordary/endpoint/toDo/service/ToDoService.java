@@ -21,10 +21,10 @@ public class ToDoService {
     private final ToDoRepository toDoRepository;
     private final UserService userService;
 
-    public Boolean create(TodoRequestDto requestDto){
+    public Long create(TodoRequestDto requestDto){
 
         UserEntity user = userService.findEntity(requestDto.getUserCd());
-        return Optional.ofNullable(toDoRepository.save(requestDto.toEntity(user))).isPresent();
+        return toDoRepository.save(requestDto.toEntity(user)).getToDoCd();
     }
 
     public Boolean update(Long toDoCd)
@@ -39,15 +39,17 @@ public class ToDoService {
         return true;
     }
 
-    public void delete(Long toDoCd){
+    public Boolean delete(Long toDoCd){
         ToDoEntity toDoEntity = Optional.ofNullable(toDoRepository.findByToDoCd(toDoCd))
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. code = " + toDoCd));
         toDoRepository.delete(toDoEntity);
+
+        return true;
     }
 
     public List<ToDoResponseDto> getCurrTodoList(Long userCd){
         Date today = new Date();
-        return toDoRepository.findByUserFKAndToDoEndDateAfter(userService.findEntity(userCd), today)
+        return toDoRepository.findByUserFKAndToDoEndDateAfterOrderByToDoEndDate(userService.findEntity(userCd), today)
                 .stream()
                 .map(ToDoResponseDto :: new)
                 .collect(Collectors.toList());
@@ -55,14 +57,11 @@ public class ToDoService {
 
     public List<ToDoResponseDto> getPreTodoList(Long userCd){
         Date today = new Date();
-        return toDoRepository.findByUserFKAndToDoEndDateBefore(userService.findEntity(userCd), today)
+        return toDoRepository.findByUserFKAndToDoEndDateBeforeOrderByToDoEndDate(userService.findEntity(userCd), today)
                 .stream()
                 .map(ToDoResponseDto :: new)
                 .collect(Collectors.toList());
     }
-
-
-
 
 }
 

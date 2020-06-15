@@ -718,37 +718,41 @@ class Profile extends React.Component {
             {this.state.showProfileList ? (
               <>
                 <div className='profile-MediaTimeline'>
-                  {this.state.post.map((value, index) => (
-                    <div
-                      className='media-box-hover'
-                      style={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        height: '272px',
-                        width: '272px',
-                        overflow: 'hidden',
-                        margin: '10px',
-                      }}
-                      key={`${index}- img`}
-                    >
-                      <img
-                        className='media-box'
-                        alt={`${index}- img`}
-                        src={value.mediaFK.mediaFirstPath}
-                        onClick={() => {
-                          this.state.post.map(async (val, i) => {
-                            try {
-                              if (val.postCd === value.postCd) {
-                                this.setState({ val: (this.state.post[i] = { ...val, postImgClick: true }) });
-                              } else return null;
-                            } catch (error) {
-                              console.log(error);
-                            }
-                          });
-                        }}
-                      />
-                    </div>
-                  ))}
+                  {this.state.post.map((value, index) => {
+                    if (value.mediaFK !== null) {
+                      return (
+                        <div
+                          className='media-box-hover'
+                          style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            height: '272px',
+                            width: '272px',
+                            overflow: 'hidden',
+                            margin: '10px',
+                          }}
+                          key={`${index}- img`}
+                        >
+                          <img
+                            className='media-box'
+                            alt={`${index}- img`}
+                            src={value.mediaFK.mediaFirstPath}
+                            onClick={() => {
+                              this.state.post.map(async (val, i) => {
+                                try {
+                                  if (val.postCd === value.postCd) {
+                                    this.setState({ val: (this.state.post[i] = { ...val, postImgClick: true }) });
+                                  } else return null;
+                                } catch (error) {
+                                  console.log(error);
+                                }
+                              });
+                            }}
+                          />
+                        </div>
+                      );
+                    } else return null;
+                  })}
                 </div>
                 {this.state.post.map((value, index) => {
                   if (value.postImgClick === true) {
@@ -770,22 +774,12 @@ class Profile extends React.Component {
             ) : (
               this.state.post.map((value) => {
                 if (value.mediaFK === null) {
-                  if (value.scheduleFK !== null && value.postStrYMD !== null) {
-                    return (
-                      <div className='profile-ScheduleTimeLine'>
-                        <TimelineWeekSchedule key={value.postCd} data={value} postForm={1} />
-                      </div>
-                    );
-                  } else if (value.scheduleFK === null && value.postStrYMD !== null) {
-                    return (
-                      <div className='profile-ScheduleTimeLine'>
-                        <TimelineWeekSchedule key={value.postCd} data={value} postForm={2} />
-                      </div>
-                    );
-                  }
-                } else {
-                  return <Timeline data={value} user={this.props.user} />;
-                }
+                  return (
+                    <div className='profile-ScheduleTimeLine' style={{ marginBottom: '50px' }}>
+                      <TimelineWeekSchedule key={value.postCd} data={value} user={this.props.user} />
+                    </div>
+                  );
+                } else return null;
               })
             )}
             {this.state.alert}

@@ -7,6 +7,7 @@ import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 
 const MainPage = (props) => {
+  // const scrollPaging = React.createRef();
   const [data, setData] = useState({
     ...props.data,
   });
@@ -25,7 +26,6 @@ const MainPage = (props) => {
         } else {
           console.log(timeLineDataList);
           setTimeline(JSON.parse(JSON.stringify(timeLineDataList)));
-          console.log(timeline);
         }
       } catch (e) {
         console.error(e);
@@ -42,7 +42,6 @@ const MainPage = (props) => {
       <Header />
       <div id='main-page'>
         <div id='main-wrap'>
-          {console.log(timeline)}
           <Main data={data} timeline={timeline} />
           <Aside data={data}></Aside>
         </div>

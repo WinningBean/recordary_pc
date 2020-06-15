@@ -63,7 +63,7 @@ function rgbToHex(r, g, b) {
 
 const PostMediaScheduleAppend = (props) => {
   const classes = useStyles();
-  const [data, setData] = useState(props.data);
+  const [data, setData] = useState(props.user);
   const [postAddMediaListSrc, setPostAddMediaListSrc] = useState([]);
   const [mediaOpen, setMediaOpen] = useState(false);
   const [scheduleOpen, setScheduleOpen] = useState(false);
@@ -89,7 +89,7 @@ const PostMediaScheduleAppend = (props) => {
     scheduleCd: null,
     mediaCd: null,
     postEx: null,
-    postPublicState: null,
+    postPublicState: 0,
     postStrYMD: null,
     postEndYMD: null,
   });
@@ -349,20 +349,31 @@ const PostMediaScheduleAppend = (props) => {
       <div className='Post-Media-Schedule-Append-Form '>
         <div className='Post-Append-Group' style={{ marginLeft: '12px' }}>
           <div>
-            <SelectGroup />
+            {props.groupList === undefined ? (
+              <SelectGroup options={['그룹없음']} />
+            ) : (
+              <SelectGroup
+                options={props.groupList}
+                onSetSelectedGroup={(selectGroupCd) => setPost({ ...post, groupCd: selectGroupCd })}
+              />
+            )}
           </div>
           <div className='schedule-media-button '>
             {scheduleInfo.scheduleMembers.length > 0 ? (
               <PublicRange
                 options={['전체공개', '비공개']}
-                onSetSelectedIndex={(index) =>
-                  setScheduleInfo({ ...scheduleInfo, schedulePublicState: index === 0 ? 0 : 3 })
-                }
+                onSetSelectedIndex={(index) => {
+                  setScheduleInfo({ ...scheduleInfo, schedulePublicState: index === 0 ? 0 : 3 });
+                  setPost({ ...post, postPublicState: index === 0 ? 0 : 3 });
+                }}
                 selectedIndex={scheduleInfo.schedulePublicState}
               />
             ) : (
               <PublicRange
-                onSetSelectedIndex={(index) => setScheduleInfo({ ...scheduleInfo, schedulePublicState: index })}
+                onSetSelectedIndex={(index) => {
+                  setScheduleInfo({ ...scheduleInfo, schedulePublicState: index });
+                  setPost({ ...post, postPublicState: index === 0 ? 0 : 3 });
+                }}
                 selectedIndex={scheduleInfo.schedulePublicState}
               />
             )}

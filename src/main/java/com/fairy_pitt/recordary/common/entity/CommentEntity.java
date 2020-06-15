@@ -22,18 +22,18 @@ public class CommentEntity extends BaseTimeEntity{
     private Long commentCd;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "COMMENT_USER_FK")
+    @JoinColumn(name = "COMMENT_USER_FK", nullable = false)
     private UserEntity commentUserFK;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "COMMENT_POST_FK")
+    @JoinColumn(name = "COMMENT_POST_FK", nullable = false)
     private PostEntity commentPostFK;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "COMMENT_ORIGIN_FK")
     private CommentEntity commentOriginFK;
 
-    @Column(name = "COMMENT_CONTENT")
+    @Column(name = "COMMENT_CONTENT", nullable = false)
     @Type(type = "text")
     private String commentContent;
 

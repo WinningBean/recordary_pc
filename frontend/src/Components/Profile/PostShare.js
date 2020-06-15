@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './PostAppend.css';
 import SelectGroup from '../UI/SelectGroup';
 import PublicRange from '../UI/PublicRange';
@@ -19,19 +19,24 @@ import store from '../../store';
 const PostShare = (props) => {
   const [open, setOpen] = React.useState(false);
   const [alert, setAlert] = useState(null);
+  const [data, setData] = useState(props.user);
 
   const [post, setPost] = useState({
-    userCd: store.getState().user.userCd,
+    userCd: data.userCd,
     // group_cd: store.getState().user.userGroup[0].group_cd,
     groupCd: null,
     postOriginCd: null,
     scheduleCd: null,
     mediaCd: null,
     postEx: null,
-    postPublicState: null,
+    postPublicState: 0,
     postStrYMD: null,
     postEndYMD: null,
   });
+
+  useEffect(() => {
+    console.log(props);
+  }, []);
 
   const changeHandle = (e) => {
     setPost({
@@ -103,7 +108,14 @@ const PostShare = (props) => {
       <div className='Post-Media-Schedule-Append-Form '>
         <div className='Post-Append-Group' style={{ marginLeft: '12px' }}>
           <div>
-            <SelectGroup />
+            {props.groupList === undefined ? (
+              <SelectGroup options={['그룹없음']} />
+            ) : (
+              <SelectGroup
+                options={props.groupList}
+                // onSetSelectedGroup={(selectGroupCd) => setPost({ ...post, groupCd: selectGroupCd })}
+              />
+            )}
           </div>
 
           <div className='schedule-media-button '>
