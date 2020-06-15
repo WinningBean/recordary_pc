@@ -30,7 +30,7 @@ public class ToDoService {
     public Boolean update(Long toDoCd)
     {
         ToDoEntity toDoEntity = toDoRepository.findByToDoCd(toDoCd);
-        if(!toDoEntity.getToDoCompleteState())
+        if(toDoEntity.getToDoCompleteState())
         {
             toDoEntity.updateToDoState(false);
         }else {
