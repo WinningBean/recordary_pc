@@ -42,8 +42,7 @@ const ScheduleShare = (props) => {
     mediaCd: null,
     postEx: null,
     postPublicState: 0,
-    postStrYMD: null,
-    postEndYMD: null,
+    postScheduleShareState: false,
   });
 
   const changeHandle = (e) => {

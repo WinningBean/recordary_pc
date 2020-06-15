@@ -289,7 +289,7 @@ const EditPostMediaSchedule = (props) => {
               <PublicRange
                 onSetSelectedIndex={(index) => {
                   setScheduleInfo({ ...scheduleInfo, schedulePublicState: index });
-                  setPost({ ...post, postPublicState: index === 0 ? 0 : 3 });
+                  setPost({ ...post, postPublicState: index });
                 }}
                 selectedIndex={scheduleInfo.schedulePublicState}
               />

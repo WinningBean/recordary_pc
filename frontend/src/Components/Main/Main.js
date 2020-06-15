@@ -10,8 +10,6 @@ const Main = (props) => {
   return (
     <main>
       <div id='timeline-list'>
-        {/* <PostShareTimeline /> */}
-
         {props.timeline.map((value, index) => {
           if (value.mediaFK !== null) {
             return (
@@ -22,7 +20,13 @@ const Main = (props) => {
           } else if (value.scheduleFK !== null) {
             return (
               <div className='timeline-Margin' key={`${value.postCd}-${index}`}>
-                <TimelineWeekSchedule data={value} user={props.data}></TimelineWeekSchedule>
+                <TimelineWeekSchedule data={value} user={props.data} />
+              </div>
+            );
+          } else if (value.originFK !== null) {
+            return (
+              <div className='timeline-Margin' key={`${value.postCd}-${index}`}>
+                <PostShareTimeline data={value} user={props.data} />
               </div>
             );
           } else return null;

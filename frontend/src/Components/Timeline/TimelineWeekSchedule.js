@@ -65,7 +65,7 @@ const TimelineWeekSchedule = (props) => {
   const userPostMoreButtonClick = (selectedValue, value) => {
     switch (selectedValue) {
       case '나에게 공유':
-        setMenuDialog(<PostShare onCancel={() => setMenuDialog(null)} />);
+        setMenuDialog(<PostShare originCd={data.postCd} onCancel={() => setMenuDialog(null)} />);
         break;
       case '수정':
         setMenuDialog(<EditPostMediaSchedule mediaList={[]} data={data} onCancel={() => setMenuDialog(null)} />);

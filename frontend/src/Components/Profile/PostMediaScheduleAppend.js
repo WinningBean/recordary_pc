@@ -91,8 +91,7 @@ const PostMediaScheduleAppend = (props) => {
     mediaCd: null,
     postEx: null,
     postPublicState: 0,
-    postStrYMD: null,
-    postEndYMD: null,
+    postScheduleShareState: false,
   });
 
   const [scheduleInfo, setScheduleInfo] = useState({
@@ -164,7 +163,6 @@ const PostMediaScheduleAppend = (props) => {
   };
 
   const onSubmit = async () => {
-    // setDialog(<Snackbar severit='info' content='데이터 요청중...' onClose={() => setDialog(null)} />);
     try {
       const str = switchInfo ? startOfDay(scheduleInfo.scheduleStr) : scheduleInfo.scheduleStr;
       const end = switchInfo ? startOfSecond(endOfDay(scheduleInfo.scheduleEnd)) : scheduleInfo.scheduleEnd;
@@ -224,7 +222,7 @@ const PostMediaScheduleAppend = (props) => {
       ).data;
       console.log(postData);
 
-      if (postData) {
+      if (postData !== '') {
         setAlert(
           <AlertDialog
             severity='success'
@@ -292,7 +290,7 @@ const PostMediaScheduleAppend = (props) => {
               <PublicRange
                 onSetSelectedIndex={(index) => {
                   setScheduleInfo({ ...scheduleInfo, schedulePublicState: index });
-                  setPost({ ...post, postPublicState: index === 0 ? 0 : 3 });
+                  setPost({ ...post, postPublicState: index });
                 }}
                 selectedIndex={scheduleInfo.schedulePublicState}
               />
@@ -495,11 +493,11 @@ const PostMediaScheduleAppend = (props) => {
               <DialogContentText id='alert-dialog-description'>작성한 게시물을 추가하시겠습니까?</DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={(handleClose, () => props.onCancel(), onSubmit)} color='primary'>
-                확인
-              </Button>
               <Button onClick={handleClose} color='primary' autoFocus>
                 취소
+              </Button>
+              <Button onClick={(handleClose, () => props.onCancel(), onSubmit)} color='primary'>
+                확인
               </Button>
             </DialogActions>
           </Dialog>
