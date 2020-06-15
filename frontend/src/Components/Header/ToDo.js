@@ -1,17 +1,40 @@
 import React, { useState, useEffect } from 'react';
 
+import Popover from '@material-ui/core/Popover';
+import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+
+import { format, differenceInCalendarDays, startOfSecond, endOfDay, isAfter } from 'date-fns';
+
 import { ChromePicker } from 'react-color';
 import axios from 'axios';
 import { TextField } from '@material-ui/core';
 
-const ToDo = ({ open }) => {
+import AlertDialog from '../Other/AlertDialog';
+import Snackbar from '../UI/Snackbar';
+
+const colorList = [
+  '#1abc9c',
+  '#2ecc71',
+  '#3498db',
+  '#9b59b6',
+  '#f1c40f',
+  '#e67e22',
+  '#e74c3c',
+  '#f6e58d',
+  '#4834d4',
+  '#30336b',
+];
+
+const ToDo = ({ open, userCd }) => {
   useEffect(() => {
-    // axios.post('/toDo', {
-    //   userCd : 15,
-    //   toDoContent: new Date(),
-    //   toDoEndDate: new Date(),
-    //   toDoCol : '#444'
-    // });
+    const data = (async () => {
+      const { data } = await axios.get(`/toDo/${userCd}`);
+      console.log(data);
+      setToDoList(data.map((value) => ({ ...value, toDoEndDate: new Date(value.toDoEndDate) })));
+    })();
     const today = new Date().getHours();
     console.log(today);
     if (today >= 21) {
@@ -26,18 +49,93 @@ const ToDo = ({ open }) => {
 
     // const { data } = axios.get(`/toDo/15`);
   }, []);
-  const [list, setList] = useState([
-    { ex: 'Hello World', isPass: false },
-    { ex: '일어나서 씻고 자기 공부하기', isPass: false },
-    { ex: 'Hello World my name is react', isPass: true },
-    { ex: '경기도 부천시 원미구 부천로 7번길 대표 송데이비드호섭', isPass: false },
-  ]);
+  const [toDoList, setToDoList] = useState([]);
   const [bgImage, setBgImage] = useState(null);
   const [inputText, setInputText] = useState('');
-  const [color, setColor] = useState(
-    `#${parseInt(Math.random() * 255, 16)}${parseInt(Math.random() * 255, 16)}${parseInt(Math.random() * 255, 16)}`
-  );
-  const [isClickColor, setIsClickColor] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [isClickDate, setIsClickDate] = useState(false);
+  const [color, setColor] = useState(colorList[Math.floor(Math.random() * colorList.length)]);
+  const [colorRef, setColorRef] = useState(null);
+  const [alert, setAlert] = useState(null);
+
+  var koreanWeek = undefined;
+  var currentDate = new Date();
+
+  const submitToDo = async () => {
+    console.log({
+      userCd: userCd,
+      toDoContent: inputText,
+      toDoCol: color,
+      toDoEndDate: selectedDate.getTime(),
+      toDoCompleteState: false,
+    });
+    const { data } = await axios.post('/toDo/', {
+      userCd: userCd,
+      toDoContent: inputText,
+      toDoEndDate: startOfSecond(endOfDay(selectedDate)).getTime(),
+      toDoCol: color,
+      toDoSate: false,
+    });
+
+    var currectedIndex = toDoList.length;
+
+    toDoList.some((value, index) => {
+      if (isAfter(value.toDoEndDate, selectedDate)) {
+        currectedIndex = index;
+        return true;
+      }
+    });
+
+    const copyList = toDoList.slice();
+    copyList.splice(currectedIndex, 0, {
+      toDoCd: data,
+      toDoContent: inputText,
+      toDoCol: color,
+      toDoEndDate: selectedDate,
+      toDoSate: false,
+    });
+    setToDoList(copyList);
+  };
+
+  const deleteToDo = async (value, index) => {
+    setAlert(<Snackbar severity='info' content={`수정중.....`} duration={999999} />);
+    try {
+      await axios.delete(`/toDo/${value.toDoCd}`);
+      const copyList = toDoList.slice();
+      copyList.splice(index, 1);
+      setToDoList(copyList);
+      setAlert(<Snackbar severity='success' content={`'${value.toDoContent}' 삭제`} onClose={() => setAlert(null)} />);
+    } catch (error) {
+      setAlert(<Snackbar severity='error' content={error} onClose={() => setAlert(null)} />);
+    }
+  };
+
+  switch (format(selectedDate, 'i')) {
+    case '0':
+      koreanWeek = '일요일';
+      break;
+    case '1':
+      koreanWeek = '월요일';
+      break;
+    case '2':
+      koreanWeek = '화요일';
+      break;
+    case '3':
+      koreanWeek = '수요일';
+      break;
+    case '4':
+      koreanWeek = '목요일';
+      break;
+    case '5':
+      koreanWeek = '금요일';
+      break;
+    case '6':
+      koreanWeek = '토요일';
+      break;
+    default:
+      koreanWeek = '에러';
+  }
+
   return (
     <div
       className='todo-animation'
@@ -66,6 +164,9 @@ const ToDo = ({ open }) => {
           position: 'relative',
         }}
       >
+        <div style={{ position: 'absolute', top: '6px', right: '6px', color: 'white' }}>
+          <PlaylistAddCheckIcon />
+        </div>
         <div
           style={{
             position: 'absolute',
@@ -80,23 +181,25 @@ const ToDo = ({ open }) => {
         </div>
       </div>
       <div style={{ flex: 3, backgroundColor: 'white' }}>
-        {list.map((value, index) => {
-          const isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(value.ex);
+        {toDoList.map((value, index) => {
+          const isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(value.toDoContent);
           var fontSize = undefined;
           if (isKorean) {
-            const textLength = value.ex.length;
+            const textLength = value.toDoContent.length;
             if (textLength > 16) fontSize = 10;
             else if (textLength > 13) fontSize = 12;
             else if (textLength > 10) fontSize = 14;
             else if (textLength > 8) fontSize = 16;
           } else {
-            const textLength = value.ex.length;
+            const textLength = value.toDoContent.length;
             if (textLength > 20) fontSize = 12;
             else if (textLength > 16) fontSize = 15;
             else if (textLength > 13) fontSize = 18;
             else if (textLength > 10) fontSize = 21;
             else if (textLength > 8) fontSize = 24;
           }
+
+          const diffDay = differenceInCalendarDays(value.toDoEndDate, currentDate);
           return (
             <div
               key={`todo-${index}`}
@@ -106,6 +209,15 @@ const ToDo = ({ open }) => {
                 paddingLeft: '6px',
                 display: 'flex',
                 alignItems: 'center',
+                position: 'relative',
+              }}
+              onMouseEnter={() => {
+                const dom = document.getElementById(`todo-delete-${index}`);
+                dom.style.opacity = '100%';
+              }}
+              onMouseLeave={() => {
+                const dom = document.getElementById(`todo-delete-${index}`);
+                dom.style.opacity = '0';
               }}
             >
               <div
@@ -117,32 +229,65 @@ const ToDo = ({ open }) => {
                   alignItems: 'center',
                 }}
               >
-                {value.isPass ? (
-                  <div
-                    style={{
-                      width: '26px',
-                      height: '26px',
-                      borderRadius: '50%',
-                      backgroundColor: 'limegreen',
-                    }}
-                  />
-                ) : (
-                  <div style={{ width: '26px', height: '26px', borderRadius: '50%', border: '2px solid black' }} />
-                )}
+                <div
+                  className='transition-all'
+                  style={{
+                    cursor: 'pointer',
+                    width: '26px',
+                    height: '26px',
+                    borderRadius: '50%',
+                    backgroundColor: value.toDoCompleteState ? '#eee' : '#eee3',
+                    border: value.toDoCompleteState ? `2px solid #ddd` : `2px solid ${value.toDoCol}`,
+                  }}
+                  onClick={async () => {
+                    try {
+                      setAlert(<Snackbar severity='info' content={`수정중.....`} duration={999999} />);
+                      console.log('toDoCd', value.toDoCd);
+                      await axios.post(`/toDo/update/${value.toDoCd}`);
+                      var array = toDoList.slice();
+                      array[index] = { ...toDoList[index], toDoCompleteState: !value.toDoCompleteState };
+                      setToDoList(array);
+                      setAlert(
+                        <Snackbar
+                          severity='success'
+                          content={`수정 완료`}
+                          duration={800}
+                          onClose={() => setAlert(null)}
+                        />
+                      );
+                    } catch (error) {
+                      setAlert(<Snackbar severity='error' content={error} onClose={() => setAlert(null)} />);
+                    }
+                  }}
+                />
               </div>
               <div
+                className='transition-all'
                 style={{
                   flex: 1,
                   fontWeight: 'bold',
                   fontSize: `${fontSize}px`,
                   textOverflow: 'ellipsis',
                   overflow: 'hidden',
-                  // whiteSpace: 'nowrap',
+                  textDecoration: value.toDoCompleteState ? 'line-through' : 'none',
+                  color: value.toDoCompleteState ? '#bbb' : 'black',
                 }}
               >
-                {value.ex}
+                {value.toDoContent}
               </div>
-              <div style={{ width: '46px' }} />
+              <div
+                className='transition-all'
+                id={`todo-delete-${index}`}
+                style={{ opacity: 0, width: '32px', cursor: 'pointer' }}
+                onClick={() => {
+                  deleteToDo(value, index);
+                }}
+              >
+                <DeleteIcon fontSize='small' />
+              </div>
+              <div style={{ position: 'absolute', bottom: 0, left: '53px', color: 'green', fontSize: '10px' }}>
+                {diffDay === 0 ? 'D-DAY' : diffDay > 0 ? `${diffDay}일 후` : `${-diffDay}일 전`}
+              </div>
             </div>
           );
         })}
@@ -157,20 +302,59 @@ const ToDo = ({ open }) => {
           display: 'flex',
         }}
       >
-        <div style={{ width: '50px', padding: '4px 6px' }}>
+        <div
+          style={{
+            width: '100px',
+            padding: '4px 0px',
+            paddingLeft: '4px',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
           <div
-            onClick={() => {
-              setIsClickColor(!isClickColor);
+            style={{
+              flex: 1,
+              fontSize: '11px',
+              lineHeight: '200%',
+              fontWeight: 'bold',
+              overflow: 'hidden',
+            }}
+            onClick={() => setIsClickDate(true)}
+          >
+            {`${format(selectedDate, 'yyyy/MM/dd')}
+${koreanWeek}까지`}
+          </div>
+          <div style={{ display: 'none' }}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                disableToolbar
+                open={isClickDate}
+                onClose={() => setIsClickDate(false)}
+                format='MM/dd/yyyy'
+                value={selectedDate}
+                onChange={(date) => {
+                  setSelectedDate(date);
+                }}
+                KeyboardButtonProps={{
+                  'aria-label': 'change date',
+                }}
+              />
+            </MuiPickersUtilsProvider>
+          </div>
+        </div>
+        <div style={{ width: '40px', padding: '4px 6px', borderRight: '1px solid #eee' }}>
+          <div
+            onClick={(e) => {
+              setColorRef(e.currentTarget);
             }}
             style={{
-              backgroundColor: color,
-              width: '100%',
               height: '100%',
+              backgroundColor: color,
+
               borderRadius: '5%',
               // boxShadow: '0px 0px 1px rgba(0,0,0,1)',
             }}
           />
-          {isClickColor ? <ChromePicker color={color} onChange={(color) => setColor(color.hex)} /> : null}
         </div>
         <input
           placeholder='Add a To-do'
@@ -179,11 +363,29 @@ const ToDo = ({ open }) => {
           onKeyPress={(e) => {
             if (e.key === 'Enter') {
               e.preventDefault();
+              submitToDo();
+              e.currentTarget.value = '';
               setInputText('');
             }
           }}
         />
       </div>
+      <Popover
+        open={Boolean(colorRef)}
+        anchorEl={colorRef}
+        anchorOrigin={{
+          vertical: 'center',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'center',
+          horizontal: 'left',
+        }}
+        onClose={() => setColorRef(null)}
+      >
+        <ChromePicker onChangeComplete={(color) => setColor(color.hex)} color={color} />
+      </Popover>
+      {alert}
     </div>
   );
 };

@@ -92,7 +92,7 @@ class Header extends React.Component {
             <IconButton onClick={() => this.setState({ isOpenToDo: !this.state.isOpenToDo })}>
               <AssignmentIcon style={{ fontSize: '30px', color: 'white' }} />
             </IconButton>
-            {this.state.isOpenToDo ? <ToDo /> : null}
+            {this.state.isOpenToDo ? <ToDo userCd={this.props.userCd} /> : null}
           </div>
           <div className='profile-icon'>
             <Link to={`/${this.props.userId}`}>

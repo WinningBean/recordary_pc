@@ -11,7 +11,7 @@ export default function LongMenu(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
-  const handleClick = event => {
+  const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -23,6 +23,7 @@ export default function LongMenu(props) {
   return (
     <>
       <MoreIconButton
+        style={props.hide ? { position: 'absolute', height: '100%', width: '100%', top: 0, left: 0, opacity: 0 } : null}
         aria-label='more'
         aria-controls='long-menu'
         aria-haspopup='true'
@@ -39,15 +40,16 @@ export default function LongMenu(props) {
         PaperProps={{
           style: {
             maxHeight: ITEM_HEIGHT * 4.5,
-            width: 120
-          }
+            width: 120,
+          },
         }}
       >
-        {options.map(option => (
+        {options.map((option) => (
           <MenuItem
             key={option}
-            onClick={e => {
+            onClick={(e) => {
               props.returnValue(e.currentTarget.innerText, props.code);
+              handleClose();
             }}
           >
             {option}
@@ -60,5 +62,5 @@ export default function LongMenu(props) {
 
 const MoreIconButton = styled(Button)({
   minWidth: '30px',
-  height: '50px'
+  height: '50px',
 });

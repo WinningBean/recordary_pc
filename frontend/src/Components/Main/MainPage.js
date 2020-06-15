@@ -11,8 +11,12 @@ const MainPage = (props) => {
     ...props.data,
   });
   const [timeline, setTimeline] = useState([]);
+  const [isRedirect, setIsRedirect] = useState(false);
 
   useEffect(() => {
+    if (!props.isLogin) {
+      setIsRedirect(true);
+    }
     (async () => {
       try {
         const timeLineDataList = (await axios.get(`/post/timeLine/${data.userCd}`)).data;
@@ -28,6 +32,10 @@ const MainPage = (props) => {
       }
     })();
   }, []);
+
+  if (isRedirect) {
+    return <Redirect to='/' />;
+  }
 
   return (
     <>

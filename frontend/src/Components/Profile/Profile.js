@@ -116,7 +116,7 @@ class Profile extends React.Component {
 
   getGroupInfo = async () => {
     try {
-      const groupInfo = (await axios.get(`/group/${this.props.match.params.groupCd}`)).data;
+      const groupInfo = (await axios.get('/group/', { params: { input: this.props.match.params.groupCd } })).data;
       console.log(groupInfo);
       var groupApply = null;
       var type = 5;

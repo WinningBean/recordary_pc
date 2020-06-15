@@ -9,6 +9,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import LeftIcon from '@material-ui/icons/ChevronLeft';
 import RightIcon from '@material-ui/icons/ChevronRight';
 
+import LongMenu from '../Other/MoreMenu';
 import SnackBar from '../UI/Snackbar';
 import AddSchedule from './AddSchedule';
 import AlertDialog from '../Other/AlertDialog';
@@ -29,6 +30,7 @@ const Calendar = (props) => {
   // 5 : 남의 그룹 프로필
   const [userDate, setUserDate] = useState([]);
 
+  const [publicState, SetPublicState] = useState(0);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [dayLocation, setDayLocation] = useState(null);
   const [popover, setPopover] = useState(null);
@@ -331,7 +333,60 @@ const Calendar = (props) => {
           </div>
         </div>
         <div className='calendar-header-center'>
-          <span>{dateFns.format(currentMonth, 'MMM yyyy')}</span>
+          <div>{dateFns.format(currentMonth, 'MMM yyyy')}</div>
+          {type === 0 || type === 2 || type === 3 || type === 4 ? (
+            <div
+              style={{
+                fontSize: '11px',
+                color: '#666',
+                cursor: 'pointer',
+                userSelect: 'none',
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
+              {`${
+                publicState === 0
+                  ? '전체'
+                  : publicState === 1
+                  ? '팔로워만'
+                  : publicState === 2
+                  ? '친구만'
+                  : publicState === 3
+                  ? '나만'
+                  : null
+              } ▼`}
+              <LongMenu
+                hide={true}
+                options={['전체공개', '팔로워만', '친구만', '나만보기']}
+                returnValue={(selectedValue) => {
+                  console.log(selectedValue);
+                  switch (selectedValue) {
+                    case '전체공개':
+                      if (publicState !== 0) {
+                        SetPublicState(0);
+                      }
+                      break;
+                    case '팔로워만':
+                      if (publicState !== 1) {
+                        SetPublicState(1);
+                      }
+                      break;
+                    case '친구만':
+                      if (publicState !== 2) {
+                        SetPublicState(2);
+                      }
+                      break;
+                    case '나만보기':
+                      if (publicState !== 3) {
+                        SetPublicState(3);
+                      }
+                      break;
+                  }
+                }}
+              />
+            </div>
+          ) : null}
         </div>
         <div className='calendar-header-side'>
           <div
@@ -349,7 +404,7 @@ const Calendar = (props) => {
         </div>
       </div>
     );
-  }, [currentMonth]);
+  }, [currentMonth, publicState]);
 
   const CalendarDays = useMemo(() => {
     console.log('render CalendarDays');
@@ -607,6 +662,9 @@ const Calendar = (props) => {
 
     var copyDayLocation = dayLocation.map((value) => ({ ...value }));
     copyDraft.forEach((value) => {
+      if (value.state !== publicState) {
+        return;
+      }
       var index = null;
       var secondBlock = false;
       var beforeStartDay = false;

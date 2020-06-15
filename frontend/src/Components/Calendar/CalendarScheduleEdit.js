@@ -44,7 +44,7 @@ const CalendarScheduleEdit = ({
 }) => {
   const classes = useStyles();
   const [dialog, setDialog] = useState(null);
-  const [colorClick, setColorClick] = useState(false);
+  const [colorRef, setColorRef] = useState(null);
   const [switchInfo, setSwitchInfo] = useState(false);
   const [schedule, setSchedule] = useState(info);
   const [addedSchedule, setAddedSchedule] = useState([]);
@@ -85,7 +85,7 @@ const CalendarScheduleEdit = ({
               <span>일정 색상 설정</span>
               <div
                 className='selectColor'
-                onClick={() => setColorClick(true)}
+                onClick={(e) => setColorRef(e.currentTarget)}
                 style={{
                   backgroundColor: schedule.color,
                 }}
@@ -208,28 +208,28 @@ const CalendarScheduleEdit = ({
             일정에 같이 참여하는 유저를 추가할 수 있습니다.
           </div>
         </div>
-        {colorClick === true ? (
-          <Popover
-            open={colorClick}
-            anchorOrigin={{
-              vertical: 'center',
-              horizontal: 'center',
+        <Popover
+          open={Boolean(colorRef)}
+          anchorEl={colorRef}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+          disableRestoreFocus
+          onClose={() => setColorRef(null)}
+        >
+          <ChromePicker
+            disableAlpha={true}
+            color={schedule.color}
+            onChange={(color) => {
+              setSchedule({ ...schedule, color: color.hex });
             }}
-            transformOrigin={{
-              vertical: 'center',
-              horizontal: 'left',
-            }}
-            onClose={() => setColorClick(false)}
-          >
-            <ChromePicker
-              disableAlpha={true}
-              color={schedule.color}
-              onChange={(color) => {
-                setSchedule({ ...schedule, color: color.hex });
-              }}
-            />
-          </Popover>
-        ) : null}
+          />
+        </Popover>
         <div className='Post-Append-Bottom'>
           <div className='Post-Upload-buttons'>
             {groupCd !== undefined ? (

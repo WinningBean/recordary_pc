@@ -8,8 +8,6 @@ import Loading from './Loading/Loading';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import axios from 'axios';
 
-import ToDo from './Header/ToDo';
-
 import Fab from '@material-ui/core/Fab';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
@@ -24,7 +22,7 @@ class App extends React.Component {
     const { data } = await axios.get('/user/sessionInfo');
     console.log(data);
     if (data === '') {
-      this.setState({ isRedirect: true });
+      this.setState({ isRedirect: false });
       return;
     }
     console.log(data);
@@ -59,7 +57,6 @@ class App extends React.Component {
 
     return (
       <div id='wrapper'>
-        <ToDo />
         <Switch>
           <Route exact path='/' component={LoginPage} />
           <Route exact path='/main' component={MainPage} />

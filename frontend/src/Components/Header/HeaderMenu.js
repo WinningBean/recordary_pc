@@ -307,7 +307,7 @@ const HeaderMenu = (props) => {
         return (
           <li key={`friend-${index}`}>
             <div className='button-wrap'>
-              <Link to={`/profile/${value.userId}`}>
+              <Link to={`/${value.userId}`}>
                 <GroupButton>
                   <div
                     style={{
