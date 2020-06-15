@@ -25,8 +25,7 @@ public class PostResponseDto implements Comparable<PostResponseDto>{
     private List<CommentResponseDto> commentList;
     private String postEx;
     private int postPublicState;
-    private String postStrYMD;
-    private String postEndYMD;
+    private Boolean postScheduleShareState;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     private int postLikeCount;
@@ -46,8 +45,7 @@ public class PostResponseDto implements Comparable<PostResponseDto>{
                 .collect(Collectors.toList());
         this.postEx = postEntity.getPostEx();
         this.postPublicState = postEntity.getPostPublicState();
-        this.postStrYMD = postEntity.getPostStrYMD();
-        this.postEndYMD = postEntity.getPostEndYMD();
+        this.postScheduleShareState = postEntity.getPostScheduleShareState();
         this.createdDate = postEntity.getCreatedDate();
         this.modifiedDate = postEntity.getModifiedDate();
         this.postLikeCount = postEntity.getPostLikeList().size();

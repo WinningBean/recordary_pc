@@ -1,7 +1,6 @@
 package com.fairy_pitt.recordary.common.post;
 
 import com.fairy_pitt.recordary.common.entity.PostEntity;
-import com.fairy_pitt.recordary.common.entity.PostLikeEntity;
 import com.fairy_pitt.recordary.common.entity.PostTagEntity;
 import com.fairy_pitt.recordary.common.entity.UserEntity;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
@@ -60,8 +59,7 @@ public class PostTagRepositoryTest {
                 .userFK(user1)
                 .postEx("테스트 게시글")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
+                .postScheduleShareState(false)
                 .build());
 
         postTagRepository.save(PostTagEntity.builder()
@@ -99,8 +97,7 @@ public class PostTagRepositoryTest {
                 .userFK(user1)
                 .postEx("테스트 게시글")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
+                .postScheduleShareState(false)
                 .build());
 
         postTagRepository.save(PostTagEntity.builder()

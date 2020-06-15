@@ -55,8 +55,7 @@ public class PostLikeRepositoryTest {
                 .userFK(user1)
                 .postEx("테스트 게시글")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
+                .postScheduleShareState(false)
                 .build());
 
         postLikeRepository.save(PostLikeEntity.builder()
@@ -94,8 +93,7 @@ public class PostLikeRepositoryTest {
                 .userFK(user1)
                 .postEx("테스트 게시글")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
+                .postScheduleShareState(false)
                 .build());
 
         postLikeRepository.save(PostLikeEntity.builder()

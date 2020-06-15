@@ -2,7 +2,6 @@ package com.fairy_pitt.recordary.endpoint.post.dto;
 
 import com.fairy_pitt.recordary.common.entity.PostEntity;
 import com.fairy_pitt.recordary.endpoint.comment.dto.CommentResponseDto;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
 import com.fairy_pitt.recordary.endpoint.media.dto.MediaResponseDto;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
@@ -26,8 +25,7 @@ public class GroupPostResponseDto {
     private List<CommentResponseDto> commentList;
     private String postEx;
     private int postPublicState;
-    private String postStrYMD;
-    private String postEndYMD;
+    private Boolean postScheduleShareState;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
@@ -43,8 +41,7 @@ public class GroupPostResponseDto {
                 .collect(Collectors.toList());
         this.postEx = postEntity.getPostEx();
         this.postPublicState = postEntity.getPostPublicState();
-        this.postStrYMD = postEntity.getPostStrYMD();
-        this.postEndYMD = postEntity.getPostEndYMD();
+        this.postScheduleShareState = postEntity.getPostScheduleShareState();
         this.createdDate = postEntity.getCreatedDate();
         this.modifiedDate = postEntity.getModifiedDate();
     }

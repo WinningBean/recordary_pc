@@ -14,8 +14,7 @@ public class PostSaveRequestDto {
     private Long mediaCd;
     private String postEx;
     private int postPublicState;
-    private String postStrYMD;
-    private String postEndYMD;
+    private Boolean postScheduleShareState;
 
     @Builder
     public PostSaveRequestDto(Long userCd,
@@ -25,8 +24,7 @@ public class PostSaveRequestDto {
                               Long mediaCd,
                               String postEx,
                               int postPublicState,
-                              String postStrYMD,
-                              String postEndYMD) {
+                              Boolean postScheduleShareState) {
         this.userCd = userCd;
         this.groupCd = groupCd;
         this.postOriginCd = postOriginCd;
@@ -34,7 +32,6 @@ public class PostSaveRequestDto {
         this.mediaCd = mediaCd;
         this.postEx = postEx;
         this.postPublicState = postPublicState;
-        this.postStrYMD = postStrYMD;
-        this.postEndYMD = postEndYMD;
+        this.postScheduleShareState = postScheduleShareState;
     }
 }

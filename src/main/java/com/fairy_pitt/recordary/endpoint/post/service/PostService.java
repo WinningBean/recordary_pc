@@ -50,8 +50,7 @@ public class PostService {
                 .mediaFK(mediaService.findEntity(requestDto.getMediaCd()))
                 .postEx(requestDto.getPostEx())
                 .postPublicState(requestDto.getPostPublicState())
-                .postStrYMD(requestDto.getPostStrYMD())
-                .postEndYMD(requestDto.getPostEndYMD())
+                .postScheduleShareState(requestDto.getPostScheduleShareState())
                 .build();
 
         return Optional.ofNullable(postRepository.save(postEntity)).isPresent();

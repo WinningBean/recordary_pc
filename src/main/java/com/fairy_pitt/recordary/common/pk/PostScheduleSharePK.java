@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Getter
 @Embeddable
-public class PostLikePK implements Serializable {
+public class PostScheduleSharePK implements Serializable {
     private Long postFK;
-    private Long userFK;
+    private Long scheduleFK;
 }
