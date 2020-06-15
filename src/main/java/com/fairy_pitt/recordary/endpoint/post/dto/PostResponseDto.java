@@ -26,6 +26,7 @@ public class PostResponseDto implements Comparable<PostResponseDto>{
     private String postEx;
     private int postPublicState;
     private Boolean postScheduleShareState;
+    private List<ScheduleResponseDto> shareScheduleList;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     private int postLikeCount;
@@ -46,6 +47,10 @@ public class PostResponseDto implements Comparable<PostResponseDto>{
         this.postEx = postEntity.getPostEx();
         this.postPublicState = postEntity.getPostPublicState();
         this.postScheduleShareState = postEntity.getPostScheduleShareState();
+        this.shareScheduleList = postEntity.getPostScheduleShareList().stream()
+                .map(pss -> pss.getScheduleFK())
+                .map(ScheduleResponseDto::new)
+                .collect(Collectors.toList());
         this.createdDate = postEntity.getCreatedDate();
         this.modifiedDate = postEntity.getModifiedDate();
         this.postLikeCount = postEntity.getPostLikeList().size();
