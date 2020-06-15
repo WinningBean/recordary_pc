@@ -86,6 +86,18 @@ public class UserEntity extends BaseTimeEntity{
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = CascadeType.REMOVE)
     private List<FollowerEntity> userTodoList = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = CascadeType.REMOVE)
+    private List<ChatEntity> chatUser = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "targetFK", cascade = CascadeType.REMOVE)
+    private List<ChatRoomEntity> chatRoomTarget = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = CascadeType.REMOVE)
+    private List<ChatRoomEntity> chatRoomUser = new ArrayList<>();
+
     @Builder
     public UserEntity(String userId, String userPw, String userNm, String userPic){
         this.userId = userId;
