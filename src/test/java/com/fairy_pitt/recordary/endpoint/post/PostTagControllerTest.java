@@ -61,8 +61,7 @@ public class PostTagControllerTest {
                 .userFK(user1)
                 .postEx("테스트 게시글")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
+                .postScheduleShareState(false)
                 .build());
 
         Long requestLong = user2.getUserCd();
@@ -108,8 +107,7 @@ public class PostTagControllerTest {
                 .userFK(user1)
                 .postEx("테스트 게시글")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
+                .postScheduleShareState(false)
                 .build());
 
         postTagRepository.save(PostTagEntity.builder()
@@ -148,22 +146,19 @@ public class PostTagControllerTest {
                 .userFK(user1)
                 .postEx("테스트 게시글")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
+                .postScheduleShareState(false)
                 .build());
         PostEntity post2 = postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .postEx("테스트 게시글")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
+                .postScheduleShareState(false)
                 .build());
         PostEntity post3 = postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .postEx("테스트 게시글")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
+                .postScheduleShareState(false)
                 .build());
 
         postTagRepository.save(PostTagEntity.builder()

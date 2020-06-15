@@ -57,6 +57,10 @@ public class ScheduleEntity extends BaseTimeEntity{
    @OneToMany(fetch = FetchType.LAZY, mappedBy = "scheduleFK", cascade = CascadeType.REMOVE)
    private List<ScheduleMemberEntity> scheduleMembers = new ArrayList<>();
 
+   @JsonIgnore
+   @OneToMany(fetch = FetchType.LAZY, mappedBy = "scheduleFK", cascade = CascadeType.REMOVE)
+   private List<PostScheduleShareEntity> postScheduleShareList = new ArrayList<>();
+
    @Builder
    public ScheduleEntity(ScheduleTabEntity tabFK,
                          UserEntity userFK,

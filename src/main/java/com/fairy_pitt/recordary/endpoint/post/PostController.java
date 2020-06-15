@@ -17,7 +17,7 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/")
-    public Boolean save(@RequestBody PostSaveRequestDto requestDto){
+    public Long save(@RequestBody PostSaveRequestDto requestDto){
         return postService.save(requestDto);
     }
 
