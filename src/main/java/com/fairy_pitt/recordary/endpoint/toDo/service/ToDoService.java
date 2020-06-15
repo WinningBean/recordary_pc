@@ -49,7 +49,7 @@ public class ToDoService {
 
     public List<ToDoResponseDto> getCurrTodoList(Long userCd){
         Date today = new Date();
-        return toDoRepository.findByUserFKAndToDoEndDateAfter(userService.findEntity(userCd), today)
+        return toDoRepository.findByUserFKAndToDoEndDateAfterOrderByToDoEndDate(userService.findEntity(userCd), today)
                 .stream()
                 .map(ToDoResponseDto :: new)
                 .collect(Collectors.toList());
@@ -57,7 +57,7 @@ public class ToDoService {
 
     public List<ToDoResponseDto> getPreTodoList(Long userCd){
         Date today = new Date();
-        return toDoRepository.findByUserFKAndToDoEndDateBefore(userService.findEntity(userCd), today)
+        return toDoRepository.findByUserFKAndToDoEndDateBeforeOrderByToDoEndDate(userService.findEntity(userCd), today)
                 .stream()
                 .map(ToDoResponseDto :: new)
                 .collect(Collectors.toList());
