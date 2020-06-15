@@ -10,11 +10,8 @@ import CommentList from './CommentList';
 import LongMenu from '../Other/MoreMenu';
 import PostShare from '../../Containers/Profile/PostShare';
 import EditPostMediaSchedule from '../../Containers/Profile/EditPostMediaSchedule';
-
-import Avatar from '@material-ui/core/Avatar';
-import AvatarGroup from '@material-ui/lab/AvatarGroup';
+import SmsIcon from '@material-ui/icons/Sms';
 import ThumbUpRoundedIcon from '@material-ui/icons/ThumbUpRounded';
-import TodayIcon from '@material-ui/icons/Today';
 import CloseIcon from '@material-ui/icons/Close';
 import CommentTimeline from './CommentTimeline';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
@@ -30,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Timeline = (props) => {
+const PostShareTimeline = (props) => {
   const classes = useStyles();
   const [dialog, setDialog] = useState(null);
   const [data, setData] = useState(props.data);
@@ -39,28 +36,33 @@ const Timeline = (props) => {
   const [clickSchedule, setClickSchedule] = useState(false);
   const [mediaList, setMediaList] = useState([]);
   const [timelineRender, setTimelineRender] = useState(false);
+  const [shareMediaList, setShareMediaList] = useState([
+    'https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.png',
+    'https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.png',
+  ]);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const mediaSrc = (await axios.get(`/media/${data.mediaFK.mediaCd}`)).data;
-        if (mediaSrc.length < 0) {
-          return null;
-        } else {
-          setMediaList(mediaList.concat(JSON.parse(JSON.stringify(mediaSrc))));
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       const mediaSrc = (await axios.get(`/media/${data.mediaFK.mediaCd}`)).data;
+  //       if (mediaSrc.length < 0) {
+  //         return null;
+  //       } else {
+  //         setMediaList(mediaList.concat(JSON.parse(JSON.stringify(mediaSrc))));
+  //       }
+  //     } catch (e) {
+  //       console.error(e);
+  //     }
+  //   })();
+  // }, []);
 
   const userPostMoreButtonClick = (selectedValue, value) => {
     switch (selectedValue) {
-      case '나에게 공유':
+      case '공유 게시물 확인':
         setMenuDialog(<PostShare onCancel={() => setMenuDialog(null)} />);
         break;
       case '수정':
+        // 게시물 EX만 수정할 수 있도록 만들기
         setMenuDialog(<EditPostMediaSchedule mediaList={mediaList} data={data} onCancel={() => setMenuDialog(null)} />);
         break;
       case '삭제':
@@ -69,7 +71,7 @@ const Timeline = (props) => {
             <DialogTitle id='alert-dialog-title'>게시물 삭제</DialogTitle>
             <DialogContent>
               <DialogContentText id='alert-dialog-description'>게시물을 삭제하시겠습니까?</DialogContentText>
-              <DialogContentText style={{ fontSize: '12px', color: 'red' }}>
+              <DialogContentText style={{ fontSize: '13px', color: 'red' }}>
                 *관련된 일정과 미디어도 모두 삭제됩니다.
               </DialogContentText>
             </DialogContent>
@@ -78,34 +80,39 @@ const Timeline = (props) => {
                 취소
               </Button>
               <Button
-                onClick={async () => {
-                  try {
-                    const Success = (await axios.delete(`post/${data.postCd}`)).data;
-                    console.log(Success);
-                    if (Success) {
+                onClick={
+                  (async () => {
+                    try {
+                      const Success = (await axios.delete(`post/${data.postCd}`)).data;
+                      console.log(Success);
+                      if (Success) {
+                        setDialog(
+                          <AlertDialog
+                            severity='success'
+                            content='게시물이 삭제되었습니다.'
+                            duration={1000}
+                            onAlertClose={() => setDialog(null)}
+                          />
+                        );
+                      } else {
+                        setDialog(
+                          <AlertDialog
+                            severity='success'
+                            content='게시물 삭제 실패'
+                            duration={1000}
+                            onAlertClose={() => setDialog(null)}
+                          />
+                        );
+                      }
+                    } catch (e) {
+                      console.log(e);
                       setDialog(
-                        <AlertDialog
-                          severity='success'
-                          content='게시물이 삭제되었습니다.'
-                          duration={1000}
-                          onAlertClose={() => setDialog(null)}
-                        />
-                      );
-                    } else {
-                      setDialog(
-                        <AlertDialog
-                          severity='success'
-                          content='게시물 삭제 실패'
-                          duration={1000}
-                          onAlertClose={() => setDialog(null)}
-                        />
+                        <AlertDialog severity='error' content='서버에러' onAlertClose={() => setDialog(null)} />
                       );
                     }
-                  } catch (e) {
-                    console.log(e);
-                    setDialog(<AlertDialog severity='error' content='서버에러' onAlertClose={() => setDialog(null)} />);
-                  }
-                }}
+                  },
+                  () => setMenuDialog(null))
+                }
                 color='primary'
               >
                 확인
@@ -120,7 +127,7 @@ const Timeline = (props) => {
   const pictureList = () => {
     try {
       if (mediaList.length < 2) {
-        return <img alt='timeline-img' src={data.mediaFK.mediaFirstPath} />;
+        // return <img alt='timeline-img' src={data.mediaFK.mediaFirstPath} />;
       } else {
         return (
           <>
@@ -237,159 +244,167 @@ const Timeline = (props) => {
   };
 
   return (
-    <div className='timeline'>
+    <div className='timeline' style={{ marginBottom: '50px' }}>
       <div className='timeline-profile'>
         <div className='profile-picture'>
-          <img alt={`${data.userFK.userId} img`} src={data.userFK.userPic} />
+          <img alt='가나다' src='https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.png' />
+          {/* <img alt={`${data.userFK.userId} img`} src={data.userFK.userPic} /> */}
         </div>
         <div className='profile-name'>
-          {data.userFK.userId}({data.userFK.userNm})
+          hsg(황수경)
+          {/* {data.userFK.userId}({data.userFK.userNm}) */}
         </div>
-        {data.scheduleFK === null ? (
-          <div />
-        ) : (
-          <div className='timeline-showSchedule' onClick={() => setClickSchedule(true)}>
-            <TodayIcon style={{ fontSize: '40px' }} />
-          </div>
-        )}
         <div className='profile-time'>
           <div className='profile-time-text'>
-            {Math.abs(dateFns.differenceInDays(Date.parse(data.modifiedDate), new Date())) === 0
+            오늘
+            {/* {Math.abs(dateFns.differenceInDays(Date.parse(data.modifiedDate), new Date())) === 0
               ? '오늘'
-              : `${Math.abs(dateFns.differenceInDays(Date.parse(data.modifiedDate), new Date()))}일 전`}
+              : `${Math.abs(dateFns.differenceInDays(Date.parse(data.modifiedDate), new Date()))}일 전`} */}
           </div>
         </div>
         <div className='profile-moreIcon'>
-          {props.user.userCd !== data.userFK.userCd ? (
-            <LongMenu options={['나에게 공유']} returnValue={userPostMoreButtonClick} />
+          {/* {props.user.userCd !== data.userFK.userCd ? (
+            <LongMenu options={['공유 게시물 확인']} returnValue={userPostMoreButtonClick} />
           ) : (
-            <LongMenu options={['나에게 공유', ' 수정 ', ' 삭제 ']} returnValue={userPostMoreButtonClick} />
-          )}
+            <LongMenu options={['공유 게시물 확인', ' 수정 ', ' 삭제 ']} returnValue={userPostMoreButtonClick} />
+          )} */}
+          <LongMenu options={['공유 게시물 확인']} returnValue={userPostMoreButtonClick} />
         </div>
       </div>
       <div className='timeline-info'>
         <div className='time-line-picture-info'>
-          <div className='timeline-picture'>
-            {pictureList()}
-            <div
-              className='transition-all'
-              style={
-                !clickSchedule
-                  ? {
-                      position: 'absolute',
-                      bottom: '0',
-                      height: 0,
-                      width: '100%',
-                      backgroundColor: 'rgb(253,253,253)',
-                    }
-                  : {
-                      position: 'absolute',
-                      bottom: '0',
-                      width: '98%',
-                      height: '100%',
-                      zIndex: '1',
-                      backgroundColor: 'rgb(253,253,253)',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      padding: '5px 5px',
-                      borderTop: `3px solid ${data.scheduleFK.scheduleCol}`,
-                    }
-              }
-            >
-              {!clickSchedule ? null : (
-                <>
-                  <div
-                    style={{
-                      flex: 1,
-                      fontSize: '18px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      fontWeight: 'bold',
-                      borderBottom: '1px solid rgb(229, 229, 229)',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <div style={{ paddingLeft: '8px' }}>{data.scheduleFK.scheduleNm}</div>
-                    <div style={{ paddingRight: '8px', display: 'flex' }} className='Close-hover'>
-                      <CloseIcon onClick={() => setClickSchedule(false)} />
-                    </div>
-                  </div>
-                  <div style={{ flex: 3, height: '150px', display: 'flex', paddingTop: '8px' }}>
-                    {data.scheduleFK.scheduleEx}
-                  </div>
-                  <div style={{ flex: 2 }}>
-                    <div
-                      style={{
-                        height: '50%',
-                        display: 'flex',
-                        fontSize: '15px',
-                        justifyContent: 'space-between',
-                        borderBottom: '1px solid rgb(229, 229, 229)',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <span style={{ fontWeight: 'bold' }}>시작</span>
-                      <span style={{ fontWeight: 'bold' }}>
-                        {dateFns.format(Date.parse(data.scheduleFK.scheduleStr), 'yyyy.M.d EEE h:mm a')}
-                      </span>
-                    </div>
-                    <div
-                      style={{
-                        height: '50%',
-                        display: 'flex',
-                        fontSize: '15px',
-                        justifyContent: 'space-between',
-                        borderBottom: '1px solid rgb(229, 229, 229)',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <span style={{ fontWeight: 'bold' }}>종료</span>
-                      <span style={{ fontWeight: 'bold' }}>
-                        {dateFns.format(Date.parse(data.scheduleFK.scheduleStr), 'yyyy.M.d EEE h:mm a')}
-                      </span>
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      flex: 1,
-                      marginTop: '6px',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                    }}
-                  >
+          <div className='timeline-shareForm'>
+            <>
+              <div
+                style={{
+                  flex: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  borderBottom: '1px solid rgb(229, 229, 229)',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <div className='timeline-share-userInfo'>
+                  <img
+                    alt='가나다'
+                    src='https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.png'
+                  />
+                  <div>wsb(위승빈)</div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', padding: '8px 0px', borderBottom: '1px solid rgb(229, 229, 229)' }}>
+                공유된 일정의 제목
+              </div>
+              <div
+                style={{
+                  height: '140px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  padding: '8px 0px',
+                  borderBottom: '1px solid rgb(229, 229, 229)',
+                  overflowX: 'auto',
+                }}
+              >
+                {/* {data.scheduleFK.scheduleEx} */}
+                <span style={{ paddingBottom: '8px' }}>공유된 게시물의 내용kkkk</span>
+                <div style={{ display: 'flex', overflowY: 'auto' }}>
+                  {shareMediaList.length > 0
+                    ? shareMediaList.map((value, index) => (
+                        <div style={{ marginRight: '10px' }} key={`${index}-postAddImg`}>
+                          <img
+                            style={{
+                              boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
+                              width: '60px',
+                              height: '60px',
+                              objectFit: 'cover',
+                            }}
+                            id={`postshareImg-${index}`}
+                            alt={`postshareImg-${index}`}
+                            src={value}
+                          />
+                        </div>
+                      ))
+                    : null}
+                </div>
+              </div>
+              <div style={{ flex: 2 }}>
+                <div
+                  style={{
+                    height: '50%',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    borderBottom: '1px solid rgb(229, 229, 229)',
+                    alignItems: 'center',
+                    padding: '8px 0px',
+                  }}
+                >
+                  <span>시작</span>
+                  <span>
+                    {/* {dateFns.format(Date.parse(data.scheduleFK.scheduleStr), 'yyyy.M.d EEE h:mm a')} */}
+                    2018.2.3.언젠가
+                  </span>
+                </div>
+                <div
+                  style={{
+                    height: '50%',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    borderBottom: '1px solid rgb(229, 229, 229)',
+                    alignItems: 'center',
+                    padding: '8px 0px',
+                  }}
+                >
+                  <span>종료</span>
+                  <span>
+                    1919.2.3.언젠가
+                    {/* {dateFns.format(Date.parse(data.scheduleFK.scheduleStr), 'yyyy.M.d EEE h:mm a')} */}
+                  </span>
+                </div>
+              </div>
+              <div
+                style={{
+                  flex: 1,
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                }}
+              >
+                <div style={{ margin: '8px 10px', display: 'flex', alignItems: 'center' }}>
+                  <ThumbUpRoundedIcon style={{ fontSize: '20' }} />
+                  <div style={{ marginLeft: '3px' }}>10</div>
+                </div>
+                <div style={{ margin: '8px 0px', display: 'flex', alignItems: 'center' }}>
+                  <SmsIcon style={{ fontSize: '20' }} />
+                  <div style={{ marginLeft: '3px' }}>15</div>
+                </div>
+                {/* {data.scheduleFK.scheduleMemberList < 1 ? (
                     <div style={{ marginTop: '10px', fontWeight: 'bold' }}>
-                      <span>함께하는 친구</span>
+                      <span>함께하는 친구가 없습니다.</span>
                     </div>
-                    {data.scheduleFK.scheduleMemberList < 1 ? (
-                      <div style={{ marginTop: '10px', fontWeight: 'bold' }}>
-                        <span>함께하는 친구가 없습니다.</span>
-                      </div>
-                    ) : (
-                      <div>
-                        <AvatarGroup>
-                          {data.scheduleFK.scheduleMemberList.map((value, index) => (
-                            <Avatar
-                              key={`${value.userCd}-${index}`}
-                              alt={`${value.userCd}-${index}`}
-                              src={value.userPic}
-                            />
-                          ))}
-                        </AvatarGroup>
-                      </div>
-                    )}
-                  </div>
-                </>
-              )}
-            </div>
+                  ) : (
+                    <div>
+                      <AvatarGroup>
+                        {data.scheduleFK.scheduleMemberList.map((value, index) => (
+                          <Avatar
+                            key={`${value.userCd}-${index}`}
+                            alt={`${value.userCd}-${index}`}
+                            src={value.userPic}
+                          />
+                        ))}
+                      </AvatarGroup>
+                    </div>
+                  )} */}
+              </div>
+            </>
           </div>
           <div className='timeline-context'>
-            <div style={{ margin: '5px' }}>{data.postEx}</div>
+            {/* <div style={{ margin: '5px' }}>{data.postEx}</div> */}
+            g하이하이
           </div>
         </div>
         <div className='comment-context'>
           <div className='comment-reply' style={{ overflowY: 'auto' }}>
-            {data.commentList.length > 0 ? (
+            {/* {data.commentList.length > 0 ? (
               <CommentList tData={data.commentList} user={props.user} />
             ) : (
               <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -401,14 +416,29 @@ const Timeline = (props) => {
                 </div>
                 <div style={{ marginLeft: '5px' }}>게시물에 첫번째 댓글을 달아주세요</div>
               </div>
-            )}
+            )} */}
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div className='recomment-reply-users-img'>
+                {/* <img alt={`${data.userFK.userId} img`} src={data.userFK.userPic} /> */}
+                <img
+                  alt='가나다'
+                  src='https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.png'
+                />
+              </div>
+              <div style={{ fontWeight: 'bold', marginLeft: '5px' }}>
+                {/* {data.userFK.userId}({data.userFK.userNm}) */}
+                hsg(황수경)
+              </div>
+              <div style={{ marginLeft: '5px' }}>게시물에 첫번째 댓글을 달아주세요</div>
+            </div>
           </div>
 
           <div className='comment-context-icon'>
             <div className='comment-icon-left'>
               <div className='likeIcon'>
                 <ThumbUpRoundedIcon
-                  style={data.currentUserLikePost ? { color: 'rgba(20, 81, 51, 0.9)', fontSize: 25 } : { fontSize: 25 }}
+                  // style={data.currentUserLikePost ? { color: 'rgba(20, 81, 51, 0.9)', fontSize: 25 } : { fontSize: 25 }}
+                  style={{ fontSize: 25 }}
                   onClick={async () => {
                     try {
                       if (data.currentUserLikePost === false) {
@@ -433,7 +463,7 @@ const Timeline = (props) => {
                   }}
                 />
               </div>
-              {data.postLikeCount < 1 ? (
+              {/* {data.postLikeCount < 1 ? (
                 <div className='comment-title'>첫번째 좋아요를 눌러주세욤</div>
               ) : data.postLikeCount === 1 ? (
                 <div className='comment-title'>{`${data.postLikeFirstUser.userId}(${data.postLikeFirstUser.userNm}) 님이 좋아합니다`}</div>
@@ -441,13 +471,14 @@ const Timeline = (props) => {
                 <div className='comment-title'>{`${data.postLikeFirstUser.userId}(${
                   data.postLikeFirstUser.userNm
                 }) 님 외 ${data.postLikeCount - 1}명이 좋아합니다`}</div>
-              )}
+              )} */}
+              <div className='comment-title'>첫번째 좋아요를 눌러주세욤</div>
             </div>
           </div>
           <div className='comment-write'>
             <CommentTimeline
               user={props.user}
-              postCd={data.postCd}
+              // postCd={data.postCd}
               onSuccess={(commentInfo) => {
                 setData({
                   ...data,
@@ -469,4 +500,4 @@ const SendButton = styled(Button)({
   height: '20px',
 });
 
-export default Timeline;
+export default PostShareTimeline;

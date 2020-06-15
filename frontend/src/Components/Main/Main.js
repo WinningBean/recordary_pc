@@ -4,11 +4,14 @@ import './mainPage.css';
 import axios from 'axios';
 import Timeline from '../Timeline/Timeline';
 import TimelineWeekSchedule from '../Timeline/TimelineWeekSchedule';
+import PostShareTimeline from '../Timeline/PostShareTimeline';
 
 const Main = (props) => {
   return (
     <main>
       <div id='timeline-list'>
+        {/* <PostShareTimeline /> */}
+
         {props.timeline.map((value, index) => {
           if (value.mediaFK !== null) {
             return (
