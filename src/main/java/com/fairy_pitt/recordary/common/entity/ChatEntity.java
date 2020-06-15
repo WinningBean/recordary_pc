@@ -11,7 +11,7 @@ import java.net.UnknownServiceException;
 @NoArgsConstructor
 @Entity
 @Table(name = "CHAT_TB")
-public class ChatEntity {
+public class ChatEntity extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

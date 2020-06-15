@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "CHAT_ROOM_TB")
-public class ChatRoomEntity {
+public class ChatRoomEntity extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,11 +26,11 @@ public class ChatRoomEntity {
     private UserEntity userFK;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CHAT_ROOM_TARGET_FK", nullable = false)
+    @JoinColumn(name = "CHAT_ROOM_TARGET_FK")
     private UserEntity targetFK;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CHAT_ROOM_GROUP_FK", nullable = false)
+    @JoinColumn(name = "CHAT_ROOM_GROUP_FK")
     private GroupEntity groupFK;
 
     @JsonIgnore
