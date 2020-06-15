@@ -67,10 +67,9 @@ public class toDoControllerTest {
 
         String url = "http://localhost:" + port + "/toDo/";
 
-        ResponseEntity<Boolean> responseEntity = restTemplate.postForEntity(url, requestDto, Boolean.class);
+        ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url, requestDto, Long.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).isEqualTo(true);
 
         List<ToDoEntity> all = toDoRepository.findAll();
         assertThat(all.get(0).getUserFK().getUserCd()).isEqualTo(user.getUserCd());
