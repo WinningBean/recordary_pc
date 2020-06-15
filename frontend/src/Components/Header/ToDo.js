@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
+import Tooltip from '@material-ui/core/Tooltip';
 import Popover from '@material-ui/core/Popover';
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -32,11 +33,9 @@ const ToDo = ({ open, userCd }) => {
   useEffect(() => {
     const data = (async () => {
       const { data } = await axios.get(`/toDo/${userCd}`);
-      console.log(data);
       setToDoList(data.map((value) => ({ ...value, toDoEndDate: new Date(value.toDoEndDate) })));
     })();
     const today = new Date().getHours();
-    console.log(today);
     if (today >= 21) {
       setBgImage('https://cdn.pixabay.com/photo/2016/11/21/03/56/landscape-1844231_1280.png');
     } else if (today >= 18) {
@@ -95,6 +94,7 @@ const ToDo = ({ open, userCd }) => {
       toDoSate: false,
     });
     setToDoList(copyList);
+    setColor(colorList[Math.floor(Math.random() * colorList.length)]);
   };
 
   const deleteToDo = async (value, index) => {
@@ -164,9 +164,39 @@ const ToDo = ({ open, userCd }) => {
           position: 'relative',
         }}
       >
-        <div style={{ position: 'absolute', top: '6px', right: '6px', color: 'white' }}>
-          <PlaylistAddCheckIcon />
-        </div>
+        <Tooltip title='완료된 모든 할일을 지웁니다.' placement='bottom'>
+          <div
+            style={{ position: 'absolute', top: '6px', right: '6px', color: 'white', cursor: 'pointer' }}
+            onClick={() =>
+              setAlert(
+                <AlertDialog
+                  severity='info'
+                  content='완료되어진 모든 할일을 지우시겠습니까?'
+                  onAlertClose={() => {
+                    setAlert(null);
+                  }}
+                  onAlertSubmit={() => {
+                    setAlert(<Snackbar severity='info' content={`작업중...`} duration={999999} />);
+                    try {
+                      const list = toDoList.filter((value) => {
+                        if (!value.toDoCompleteState) {
+                          return true;
+                        }
+                        axios.delete(`/toDo/${value.toDoCd}`);
+                      });
+                      setToDoList(list);
+                      setAlert(<Snackbar severity='success' content='완료' onClose={() => setAlert(null)} />);
+                    } catch (error) {
+                      setAlert(<Snackbar severity='error' content={error} onClose={() => setAlert(null)} />);
+                    }
+                  }}
+                />
+              )
+            }
+          >
+            <PlaylistAddCheckIcon />
+          </div>
+        </Tooltip>
         <div
           style={{
             position: 'absolute',
@@ -177,10 +207,10 @@ const ToDo = ({ open, userCd }) => {
             fontSize: '18px',
           }}
         >
-          Wednesday, Mar 13
+          {format(currentDate, 'EEEE, MMM d')}
         </div>
       </div>
-      <div style={{ flex: 3, backgroundColor: 'white' }}>
+      <div style={{ flex: 3, backgroundColor: 'white', overflow: 'hidden', marginBottom: '50px', overflowY: 'auto' }}>
         {toDoList.map((value, index) => {
           const isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(value.toDoContent);
           var fontSize = undefined;
@@ -189,35 +219,37 @@ const ToDo = ({ open, userCd }) => {
             if (textLength > 16) fontSize = 10;
             else if (textLength > 13) fontSize = 12;
             else if (textLength > 10) fontSize = 14;
-            else if (textLength > 8) fontSize = 16;
+            else fontSize = 16;
           } else {
             const textLength = value.toDoContent.length;
             if (textLength > 20) fontSize = 12;
             else if (textLength > 16) fontSize = 15;
             else if (textLength > 13) fontSize = 18;
             else if (textLength > 10) fontSize = 21;
-            else if (textLength > 8) fontSize = 24;
+            else fontSize = 24;
           }
 
           const diffDay = differenceInCalendarDays(value.toDoEndDate, currentDate);
           return (
             <div
-              key={`todo-${index}`}
+              key={`todo-${value.toDoCd}`}
+              id={`todo-line-${index}`}
               style={{
-                height: '46px',
+                backgroundColor: 'white',
                 borderBottom: '1px solid #eee',
                 paddingLeft: '6px',
                 display: 'flex',
                 alignItems: 'center',
                 position: 'relative',
+                transition: 'all 0.15s ease-out',
               }}
               onMouseEnter={() => {
-                const dom = document.getElementById(`todo-delete-${index}`);
-                dom.style.opacity = '100%';
+                document.getElementById(`todo-delete-${index}`).style.opacity = '100%';
+                document.getElementById(`todo-line-${index}`).style.backgroundColor = `${value.toDoCol}70`;
               }}
               onMouseLeave={() => {
-                const dom = document.getElementById(`todo-delete-${index}`);
-                dom.style.opacity = '0';
+                document.getElementById(`todo-delete-${index}`).style.opacity = '0';
+                document.getElementById(`todo-line-${index}`).style.backgroundColor = 'white';
               }}
             >
               <div
@@ -242,7 +274,6 @@ const ToDo = ({ open, userCd }) => {
                   onClick={async () => {
                     try {
                       setAlert(<Snackbar severity='info' content={`수정중.....`} duration={999999} />);
-                      console.log('toDoCd', value.toDoCd);
                       await axios.post(`/toDo/update/${value.toDoCd}`);
                       var array = toDoList.slice();
                       array[index] = { ...toDoList[index], toDoCompleteState: !value.toDoCompleteState };
@@ -271,6 +302,8 @@ const ToDo = ({ open, userCd }) => {
                   overflow: 'hidden',
                   textDecoration: value.toDoCompleteState ? 'line-through' : 'none',
                   color: value.toDoCompleteState ? '#bbb' : 'black',
+                  paddingTop: '10px',
+                  paddingBottom: '10px',
                 }}
               >
                 {value.toDoContent}
@@ -300,6 +333,7 @@ const ToDo = ({ open, userCd }) => {
           width: '100%',
           borderTop: '1px solid #eee',
           display: 'flex',
+          backgroundColor: 'white',
         }}
       >
         <div
@@ -318,6 +352,8 @@ const ToDo = ({ open, userCd }) => {
               lineHeight: '200%',
               fontWeight: 'bold',
               overflow: 'hidden',
+              cursor: 'pointer',
+              userSelect: 'none',
             }}
             onClick={() => setIsClickDate(true)}
           >

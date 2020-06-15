@@ -85,10 +85,10 @@ class Header extends React.Component {
           <div className='search-user' style={{ marginRight: '10px' }}>
             <SearchAppBar userCd={this.props.userCd} />
           </div>
-          <div className='header-ring'>
+          <div>
             <NotifyPopup style={{ fontSize: 40, color: 'white' }}></NotifyPopup>
           </div>
-          <div className='header-ring' style={{ position: 'relative' }}>
+          <div style={{ position: 'relative' }}>
             <IconButton onClick={() => this.setState({ isOpenToDo: !this.state.isOpenToDo })}>
               <AssignmentIcon style={{ fontSize: '30px', color: 'white' }} />
             </IconButton>
