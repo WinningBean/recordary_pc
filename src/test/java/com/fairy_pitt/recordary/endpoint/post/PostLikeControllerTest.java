@@ -1,8 +1,8 @@
 package com.fairy_pitt.recordary.endpoint.post;
 
-import com.fairy_pitt.recordary.common.entity.PostEntity;
-import com.fairy_pitt.recordary.common.entity.PostLikeEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.domain.PostEntity;
+import com.fairy_pitt.recordary.common.domain.PostLikeEntity;
+import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.common.repository.PostLikeRepository;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;

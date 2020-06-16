@@ -1,4 +1,4 @@
-package com.fairy_pitt.recordary.common.entity;
+package com.fairy_pitt.recordary.common.domain;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "CHAT_TB")
-public class ChatEntity extends BaseTimeEntity {
+public class ChatEntity extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

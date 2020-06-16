@@ -1,8 +1,8 @@
 package com.fairy_pitt.recordary.common.post;
 
-import com.fairy_pitt.recordary.common.entity.PostEntity;
-import com.fairy_pitt.recordary.common.entity.PostTagEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.domain.PostEntity;
+import com.fairy_pitt.recordary.common.domain.PostTagEntity;
+import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.common.repository.PostTagRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
@@ -77,7 +77,7 @@ public class PostTagRepositoryTest {
     }
 
     @Test
-    public void BaseTimeEntity_등록() {
+    public void BaseTime_등록() {
         //given
         LocalDateTime now = LocalDateTime.of(2020, 3, 11, 0, 0, 0);
 

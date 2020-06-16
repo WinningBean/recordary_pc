@@ -1,7 +1,7 @@
 package com.fairy_pitt.recordary.endpoint.toDo.service;
 
-import com.fairy_pitt.recordary.common.entity.ToDoEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.domain.ToDoEntity;
+import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.common.repository.ToDoRepository;
 import com.fairy_pitt.recordary.endpoint.toDo.dto.ToDoResponseDto;
 import com.fairy_pitt.recordary.endpoint.toDo.dto.TodoRequestDto;

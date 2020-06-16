@@ -1,4 +1,4 @@
-package com.fairy_pitt.recordary.common.entity;
+package com.fairy_pitt.recordary.common.domain;
 
 import com.fairy_pitt.recordary.common.pk.FollowerPK;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Entity
 @Table(name="FOLLOWER_TB")
 @IdClass(FollowerPK.class)
-public class FollowerEntity extends BaseTimeEntity{
+public class FollowerEntity extends BaseTime {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "FOLLOWER_USER_FK", nullable = false)

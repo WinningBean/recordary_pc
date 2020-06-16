@@ -1,8 +1,8 @@
 package com.fairy_pitt.recordary.endpoint.user.service;
 
-import com.fairy_pitt.recordary.common.entity.PostEntity;
-import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.domain.PostEntity;
+import com.fairy_pitt.recordary.common.domain.ScheduleEntity;
+import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.common.repository.MediaRepository;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.common.repository.ScheduleRepository;

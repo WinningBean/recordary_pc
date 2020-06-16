@@ -1,6 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.toDo.dto;
 
-import com.fairy_pitt.recordary.common.entity.ToDoEntity;
+import com.fairy_pitt.recordary.common.domain.ToDoEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

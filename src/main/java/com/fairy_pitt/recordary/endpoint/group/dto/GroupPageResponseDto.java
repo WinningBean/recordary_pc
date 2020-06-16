@@ -1,9 +1,7 @@
 package com.fairy_pitt.recordary.endpoint.group.dto;
 
-import com.fairy_pitt.recordary.common.entity.GroupEntity;
-import com.fairy_pitt.recordary.common.entity.PostEntity;
+import com.fairy_pitt.recordary.common.domain.GroupEntity;
 import com.fairy_pitt.recordary.endpoint.post.dto.GroupPostResponseDto;
-import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import lombok.Getter;
 

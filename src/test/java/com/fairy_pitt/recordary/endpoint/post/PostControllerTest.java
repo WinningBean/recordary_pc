@@ -1,6 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.post;
 
-import com.fairy_pitt.recordary.common.entity.*;
+import com.fairy_pitt.recordary.common.domain.*;
 import com.fairy_pitt.recordary.common.repository.*;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostUpdateRequestDto;

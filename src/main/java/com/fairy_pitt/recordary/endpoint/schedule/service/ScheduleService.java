@@ -1,6 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.schedule.service;
 
-import com.fairy_pitt.recordary.common.entity.*;
+import com.fairy_pitt.recordary.common.domain.*;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.common.repository.ScheduleRepository;
 import com.fairy_pitt.recordary.common.repository.ScheduleTabRepository;

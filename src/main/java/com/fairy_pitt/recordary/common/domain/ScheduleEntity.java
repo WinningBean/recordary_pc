@@ -1,4 +1,4 @@
-package com.fairy_pitt.recordary.common.entity;
+package com.fairy_pitt.recordary.common.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "Schedule_TB")
 @NoArgsConstructor
 @Entity
-public class ScheduleEntity extends BaseTimeEntity{
+public class ScheduleEntity extends BaseTime {
 
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)

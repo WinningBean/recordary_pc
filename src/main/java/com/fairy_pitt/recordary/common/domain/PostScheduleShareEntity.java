@@ -1,4 +1,4 @@
-package com.fairy_pitt.recordary.common.entity;
+package com.fairy_pitt.recordary.common.domain;
 
 import com.fairy_pitt.recordary.common.pk.PostScheduleSharePK;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "POST_SCHEDULE_SHARE_TB")
 @IdClass(PostScheduleSharePK.class)
-public class PostScheduleShareEntity extends BaseTimeEntity {
+public class PostScheduleShareEntity extends BaseTime {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_FK", nullable = false)

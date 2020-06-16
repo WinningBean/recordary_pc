@@ -1,6 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.post.service;
 
-import com.fairy_pitt.recordary.common.entity.*;
+import com.fairy_pitt.recordary.common.domain.*;
 import com.fairy_pitt.recordary.common.repository.PostLikeRepository;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.common.repository.PostScheduleShareRepository;

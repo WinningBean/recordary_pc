@@ -1,4 +1,4 @@
-package com.fairy_pitt.recordary.common.entity;
+package com.fairy_pitt.recordary.common.domain;
 
 import com.fairy_pitt.recordary.common.pk.ScheduleMemberEntityPK;
 import lombok.Builder;
@@ -13,7 +13,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @IdClass(ScheduleMemberEntityPK.class)
 @Entity
-public class ScheduleMemberEntity extends BaseTimeEntity implements Serializable {
+public class ScheduleMemberEntity extends BaseTime implements Serializable {
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)

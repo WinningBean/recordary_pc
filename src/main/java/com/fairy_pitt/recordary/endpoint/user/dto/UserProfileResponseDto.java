@@ -1,6 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.user.dto;
 
-import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleTabResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

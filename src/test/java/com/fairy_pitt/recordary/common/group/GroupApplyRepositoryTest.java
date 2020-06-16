@@ -1,8 +1,8 @@
 package com.fairy_pitt.recordary.common.group;
 
-import com.fairy_pitt.recordary.common.entity.GroupApplyEntity;
-import com.fairy_pitt.recordary.common.entity.GroupEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.domain.GroupApplyEntity;
+import com.fairy_pitt.recordary.common.domain.GroupEntity;
+import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.common.repository.GroupApplyRepository;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
@@ -70,8 +70,5 @@ public class GroupApplyRepositoryTest {
         GroupApplyEntity groupApplyEntity = applyEntityList.get(0);
         assertThat(groupApplyEntity.getGroupFK().getGroupCd()).isEqualTo(groupEntity.getGroupCd());
     }
-
-
-
 
 }

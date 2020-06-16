@@ -1,4 +1,4 @@
-package com.fairy_pitt.recordary.common.entity;
+package com.fairy_pitt.recordary.common.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "GROUP_TB")
 @NoArgsConstructor
 @Entity
-public class GroupEntity extends BaseTimeEntity{
+public class GroupEntity extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

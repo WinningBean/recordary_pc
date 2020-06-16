@@ -1,6 +1,6 @@
 package com.fairy_pitt.recordary.common.post;
 
-import com.fairy_pitt.recordary.common.entity.*;
+import com.fairy_pitt.recordary.common.domain.*;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.common.repository.PostScheduleShareRepository;
 import com.fairy_pitt.recordary.common.repository.ScheduleRepository;
@@ -79,7 +79,7 @@ public class PostScheduleShareRepositoryTest {
     }
 
     @Test
-    public void BaseTimeEntity_등록() {
+    public void BaseTime_등록() {
         //given
         LocalDateTime now = LocalDateTime.of(2020, 6, 15, 0, 0, 0);
 

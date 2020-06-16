@@ -1,8 +1,8 @@
 package com.fairy_pitt.recordary.endpoint.post.service;
 
-import com.fairy_pitt.recordary.common.entity.PostEntity;
-import com.fairy_pitt.recordary.common.entity.PostScheduleShareEntity;
-import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
+import com.fairy_pitt.recordary.common.domain.PostEntity;
+import com.fairy_pitt.recordary.common.domain.PostScheduleShareEntity;
+import com.fairy_pitt.recordary.common.domain.ScheduleEntity;
 import com.fairy_pitt.recordary.common.repository.PostScheduleShareRepository;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostScheduleShareSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleService;
