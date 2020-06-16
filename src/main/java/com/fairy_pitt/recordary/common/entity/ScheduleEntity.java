@@ -22,7 +22,7 @@ public class ScheduleEntity extends BaseTimeEntity{
    private Long scheduleCd;
 
    @ManyToOne(fetch = FetchType.LAZY)
-   @JoinColumn(name = "SCHEDULE_USER_FK", nullable = false)
+   @JoinColumn(name = "SCHEDULE_USER_FK")
    private  UserEntity userFk;
 
    @ManyToOne(fetch = FetchType.LAZY)

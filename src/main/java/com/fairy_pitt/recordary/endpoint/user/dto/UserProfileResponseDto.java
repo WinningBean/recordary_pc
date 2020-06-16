@@ -20,7 +20,7 @@ public class UserProfileResponseDto {
         this.userInfo = new UserResponseDto(userEntity);
         this.followerCount = (userEntity.getFollowTarget()).size();
         this.followingCount = (userEntity.getFollowUser()).size();
-        this.scheduleTabInfo = userEntity.getUserScheduleTab().stream()
+        this.scheduleTabInfo = userEntity.getScheduleTab().stream()
                 .map(ScheduleTabResponseDto::new)
                 .collect(Collectors.toList());
     }

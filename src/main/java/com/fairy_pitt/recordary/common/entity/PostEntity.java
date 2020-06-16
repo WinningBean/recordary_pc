@@ -21,7 +21,7 @@ public class PostEntity extends BaseTimeEntity{
     private Long postCd;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "POST_USER_FK", nullable = false)
+    @JoinColumn(name = "POST_USER_FK")
     private UserEntity userFK;
 
     @ManyToOne(fetch = FetchType.LAZY)

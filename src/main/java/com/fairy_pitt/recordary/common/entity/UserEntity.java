@@ -67,12 +67,12 @@ public class UserEntity extends BaseTimeEntity{
     private List<PostLikeEntity> postLikeList = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFk", cascade = CascadeType.REMOVE)
-    private  List<ScheduleEntity> userScheduleList = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFk")
+    private  List<ScheduleEntity> scheduleList = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFk", cascade = CascadeType.REMOVE)
-    private  List<ScheduleTabEntity> userScheduleTab = new ArrayList<>();
+    private  List<ScheduleTabEntity> scheduleTab = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = CascadeType.REMOVE)
@@ -80,23 +80,23 @@ public class UserEntity extends BaseTimeEntity{
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "commentUserFK", cascade = CascadeType.REMOVE)
-    private List<CommentEntity> userComments = new ArrayList<>();
+    private List<CommentEntity> comments = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = CascadeType.REMOVE)
-    private List<FollowerEntity> userTodoList = new ArrayList<>();
+    private List<ToDoEntity> todoList = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = CascadeType.REMOVE)
-    private List<ChatEntity> chatUser = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK")
+    private List<ChatEntity> chat = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "targetFK", cascade = CascadeType.REMOVE)
-    private List<ChatRoomEntity> chatRoomTarget = new ArrayList<>();
-
-    @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK", cascade = CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userFK")
     private List<ChatRoomEntity> chatRoomUser = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "targetFK")
+    private List<ChatRoomEntity> chatRoomTarget = new ArrayList<>();
 
     @Builder
     public UserEntity(String userId, String userPw, String userNm, String userPic){
