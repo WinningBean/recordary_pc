@@ -101,8 +101,8 @@ public class PostService {
         for (PostScheduleShareEntity postScheduleShareEntity : postScheduleShareRepository.findAllByPostFK(postEntity)){
             postScheduleShareRepository.delete(postScheduleShareEntity);
         }
-        scheduleService.delete(postEntity.getScheduleFK().getScheduleCd());
-        mediaService.delete(postEntity.getMediaFK().getMediaCd());
+        if (postEntity.getScheduleFK() != null) scheduleService.delete(postEntity.getScheduleFK().getScheduleCd());
+        if (postEntity.getMediaFK() != null) mediaService.delete(postEntity.getMediaFK().getMediaCd());
         postRepository.delete(postEntity);
         return !Optional.ofNullable(this.findEntity(postCd)).isPresent();
     }
