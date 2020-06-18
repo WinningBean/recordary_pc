@@ -69,22 +69,16 @@ const Calendar = (props) => {
     (async () => {
       setAlert(
         <div
+          // className='loading'
           style={{
             position: 'absolute',
-            top: 0,
+            top: '106px',
             left: 0,
             width: '100%',
-            height: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#ddd3',
-            fontWeight: 'bold',
-            fontSize: '18px',
+            height: '444px',
+            backgroundColor: '#eee8',
           }}
-        >
-          Loading...
-        </div>
+        />
       );
       const monthStart = dateFns.startOfMonth(currentMonth);
       const monthEnd = dateFns.endOfMonth(monthStart);
@@ -1182,6 +1176,7 @@ const Calendar = (props) => {
           type={props.type}
           data={props.info}
           clickTab={props.clickTab}
+          tabInfo={props.tabInfo}
           onClose={() => setClickDate(null)}
           clickDate={clickDate}
           onSuccess={(newSc) => {

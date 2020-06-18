@@ -167,12 +167,12 @@ class Profile extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.match.params.userId !== undefined) {
       if (this.props.match.params.userId !== prevProps.match.params.userId) {
-        this.setState({ ...this.state, isLoading: true });
+        this.setState({ isLoading: true });
         this.getUserInfo();
       }
     } else if (this.props.match.params.groupCd !== undefined) {
       if (this.props.match.params.groupCd !== prevProps.match.params.groupCd) {
-        this.setState({ ...this.state, isLoading: true });
+        this.setState({ isLoading: true });
         this.getGroupInfo();
       }
     }
@@ -678,6 +678,7 @@ class Profile extends React.Component {
                           ? this.state.info
                           : this.state.info.userInfo
                       }
+                      tabInfo={this.state.info.scheduleTabInfo}
                       clickTab={
                         this.state.clickTab === undefined
                           ? undefined
