@@ -100,24 +100,22 @@ footer{
     background-color: lightgray;
 } */
 /* 스크롤 css */
-/* ::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   border-radius: 8px;
-  background-color: transparent;
-  position: relative;
+  background: transparent;
 }
 
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
-  -webkit-appearance: none;
+  z-index: -1;
 }
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
   background-color: lightgray;
-  position: relative;
-  z-index: -1;
-} */
-/* ::-webkit-transform: t ranslate3d(0, 0, 0) */
+  z-index: 99999;
+}
+
 input:focus {
   outline: none;
 }

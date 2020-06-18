@@ -38,7 +38,6 @@ const Timeline = (props) => {
   const [pictureCount, setPictureCount] = useState(0);
   const [clickSchedule, setClickSchedule] = useState(false);
   const [mediaList, setMediaList] = useState([]);
-  const [timelineRender, setTimelineRender] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -54,6 +53,10 @@ const Timeline = (props) => {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    setData(props.data);
+  }, [props.data]);
 
   const userPostMoreButtonClick = (selectedValue, value) => {
     switch (selectedValue) {
@@ -80,7 +83,7 @@ const Timeline = (props) => {
               <Button
                 onClick={async () => {
                   try {
-                    const Success = (await axios.delete(`post/${data.postCd}`)).data;
+                    const Success = (await axios.delete(`/post/${data.postCd}`)).data;
                     console.log(Success);
                     if (Success) {
                       setDialog(

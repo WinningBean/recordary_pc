@@ -254,7 +254,7 @@ const EditPostMediaSchedule = (props) => {
           transitionProperty: 'background-color',
           transitionDuration: '0.3s',
           transitionTimingFunction: 'ease-out',
-          backgroundColor: scheduleInfo.scheduleCol,
+          backgroundColor: props.data.scheduleFK === null ? 'rgba(20, 81, 51, 0.9)' : scheduleInfo.scheduleCol,
         }}
       >
         <div className='Post-Append-titleName'>

@@ -85,39 +85,34 @@ const TimelineWeekSchedule = (props) => {
                 취소
               </Button>
               <Button
-                onClick={
-                  (async () => {
-                    try {
-                      const Success = (await axios.delete(`post/${data.postCd}`)).data;
-                      console.log(Success);
-                      if (Success) {
-                        setDialog(
-                          <AlertDialog
-                            severity='success'
-                            content='게시물이 삭제되었습니다.'
-                            duration={1000}
-                            onAlertClose={() => setDialog(null)}
-                          />
-                        );
-                      } else {
-                        setDialog(
-                          <AlertDialog
-                            severity='success'
-                            content='게시물 삭제 실패'
-                            duration={1000}
-                            onAlertClose={() => setDialog(null)}
-                          />
-                        );
-                      }
-                    } catch (e) {
-                      console.log(e);
+                onClick={async () => {
+                  try {
+                    const Success = (await axios.delete(`/post/${data.postCd}`)).data;
+                    console.log(Success);
+                    if (Success) {
                       setDialog(
-                        <AlertDialog severity='error' content='서버에러' onAlertClose={() => setDialog(null)} />
+                        <AlertDialog
+                          severity='success'
+                          content='게시물이 삭제되었습니다.'
+                          duration={1000}
+                          onAlertClose={() => setDialog(null)}
+                        />
+                      );
+                    } else {
+                      setDialog(
+                        <AlertDialog
+                          severity='success'
+                          content='게시물 삭제 실패'
+                          duration={1000}
+                          onAlertClose={() => setDialog(null)}
+                        />
                       );
                     }
-                  },
-                  () => setMenuDialog(null))
-                }
+                  } catch (e) {
+                    console.log(e);
+                    setDialog(<AlertDialog severity='error' content='서버에러' onAlertClose={() => setDialog(null)} />);
+                  }
+                }}
                 color='primary'
               >
                 확인

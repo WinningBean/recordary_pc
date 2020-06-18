@@ -5,7 +5,6 @@ const Aside = (props) => {
   const [user, setUser] = useState({
     ...props.data,
   });
-  console.log(user);
 
   return (
     <aside>
