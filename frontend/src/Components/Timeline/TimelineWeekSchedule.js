@@ -53,8 +53,6 @@ const TimelineWeekSchedule = (props) => {
   useEffect(() => {
     if (data.scheduleFK !== null) {
       setPostForm(1);
-    } else {
-      return null;
     }
   }, []);
 
