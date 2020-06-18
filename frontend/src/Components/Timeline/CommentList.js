@@ -33,13 +33,13 @@ const SendButton = styled(Button)({
 
 export default ({ tData, user }) => {
   useEffect(() => {
+    console.log(tData);
     setData(
       tData.map((value) => ({
         ...value,
         showRecommentClick: { recommentList: [], click: false },
         updateClick: false,
         deleteClick: false,
-        reIconClick: false,
       }))
     );
   }, [tData]);
@@ -51,7 +51,6 @@ export default ({ tData, user }) => {
       showRecommentClick: { recommentList: [], click: false },
       updateClick: false,
       deleteClick: false,
-      reIconClick: false,
     }))
   );
   const [dialog, setDialog] = useState(null);
@@ -65,14 +64,14 @@ export default ({ tData, user }) => {
     setWriteRecomment(e.target.value);
   };
 
-  const getRecommentList = async (value, index) => {
+  const getRecommentList = async (value, index, bool) => {
     try {
       const recommentListData = (await axios.get(`/comment/${value.commentCd}`)).data;
       setData(
         data.map((val, listIndex) => {
           if (index === listIndex) {
             return produce(val, (draft) => {
-              draft.showRecommentClick.click = !draft.showRecommentClick.click;
+              draft.showRecommentClick.click = !bool;
               draft.showRecommentClick.recommentList = JSON.parse(JSON.stringify(recommentListData));
             });
           } else {
@@ -219,26 +218,12 @@ export default ({ tData, user }) => {
           </div>
           <div className='commentIconFlex'>
             <div
-              className='commentIcon-hover'
-              onClick={() => {
-                setData(
-                  data.map((val, listIndex) => {
-                    if (index === listIndex) {
-                      return produce(val, (draft) => {
-                        draft.reIconClick = !draft.reIconClick;
-                      });
-                    } else {
-                      return produce(val, (draft) => {
-                        draft.reIconClick = draft.reIconClick;
-                      });
-                    }
-                  })
-                );
-              }}
+              className='show-more-comment'
+              onClick={() => getRecommentList(value, index, value.showRecommentClick.click)}
             >
               <CommentIcon
                 style={
-                  value.reIconClick === true
+                  value.showRecommentClick.click === true
                     ? {
                         fontSize: '20',
                         paddingRight: '5px',
@@ -250,87 +235,85 @@ export default ({ tData, user }) => {
                       }
                 }
               />
+              {value.reCommentCount > 0 ? (
+                value.showRecommentClick.click === false ? (
+                  <span style={{ fontSize: '12px' }}>{`댓글 ${
+                    value.showRecommentClick.recommentList.length > 0
+                      ? value.showRecommentClick.recommentList.length
+                      : value.reCommentCount
+                  }개 모두 보기`}</span>
+                ) : (
+                  <span style={{ fontSize: '12px' }}>{`댓글 접기`}</span>
+                )
+              ) : null}
+              {/* {value.showRecommentClick.click === false ? (
+                <span style={{ fontSize: '12px' }}>{`댓글 ${value.reCommentCount}개 모두 보기`}</span>
+              ) : (
+                <span style={{ fontSize: '12px' }}>{`댓글 접기`}</span>
+              )} */}
             </div>
-            {value.reCommentCount > 0 ? (
-              <>
-                <div className='show-more-comment' onClick={() => getRecommentList(value, index)}>
-                  <div>
-                    <MoreHorizIcon
-                      style={{
-                        fontSize: '15',
-                        paddingTop: '3px',
-                      }}
-                    />
-                    {value.showRecommentClick.click === false ? (
-                      <span style={{ fontSize: '12px' }}>{`댓글 ${value.reCommentCount}개 모두 보기`}</span>
-                    ) : (
-                      <span style={{ fontSize: '12px' }}>{`댓글 접기`}</span>
-                    )}
-                  </div>
-                </div>
-              </>
-            ) : null}
           </div>
         </div>
       </div>
       {value.showRecommentClick.click === true ? (
-        <ShowRecommentList list={value.showRecommentClick.recommentList} user={user} />
-      ) : null}
-      {value.reIconClick === true ? (
-        <div className='show-recomment-write' style={{ marginBottom: '5px' }}>
-          <TextField
-            inputRef={textField}
-            id='recommentWrite'
-            autoFocus={true}
-            multiline
-            rowsMax='2'
-            onChange={handleChange}
-            InputProps={{
-              classes: {
-                input: classes.textFieldSize,
-              },
-              startAdornment: (
-                <InputAdornment position='start'>
-                  <div className='recommentProfileImg'>
-                    <img alt={`${user.userId} img`} src={user.userPic} />
-                  </div>
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position='end'>
-                  <SendButton
-                    onClick={async (e) => {
-                      e.preventDefault();
-                      textField.current.value = '';
-                      try {
-                        const recommentCd = (
-                          await axios.post(`/comment/`, {
-                            userCd: user.userCd,
-                            postCd: data.postCd,
-                            commentContent: writeRecomment,
-                            commentOriginCd: value.commentCd,
-                          })
-                        ).data;
-                        console.log(recommentCd);
-                      } catch (e) {
-                        console.log(e + 'comment Error');
-                        setDialog(
-                          <AlertDialog
-                            severity='error'
-                            content='서버에러로 댓글입력에 실패하였습니다.'
-                            onAlertClose={() => setDialog(null)}
-                          />
-                        );
-                      }
-                    }}
-                  >
-                    <SubdirectoryArrowLeftIcon style={{ fontSize: '15px' }} />
-                  </SendButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-        </div>
+        <>
+          <ShowRecommentList list={value.showRecommentClick.recommentList} user={user} />
+          <div className='show-recomment-write' style={{ marginBottom: '5px' }}>
+            <TextField
+              inputRef={textField}
+              id='recommentWrite'
+              autoFocus={true}
+              multiline
+              rowsMax='2'
+              onChange={handleChange}
+              InputProps={{
+                classes: {
+                  input: classes.textFieldSize,
+                },
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <div className='recommentProfileImg'>
+                      <img alt={`${user.userId} img`} src={user.userPic} />
+                    </div>
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <SendButton
+                      onClick={async (e) => {
+                        e.preventDefault();
+                        textField.current.value = '';
+                        try {
+                          const recommentCd = (
+                            await axios.post(`/comment/`, {
+                              userCd: user.userCd,
+                              postCd: data.postCd,
+                              commentContent: writeRecomment,
+                              commentOriginCd: value.commentCd,
+                            })
+                          ).data;
+                          getRecommentList(value, index, false);
+                          console.log(recommentCd);
+                        } catch (e) {
+                          console.log(e + 'comment Error');
+                          setDialog(
+                            <AlertDialog
+                              severity='error'
+                              content='서버에러로 댓글입력에 실패하였습니다.'
+                              onAlertClose={() => setDialog(null)}
+                            />
+                          );
+                        }
+                      }}
+                    >
+                      <SubdirectoryArrowLeftIcon style={{ fontSize: '15px' }} />
+                    </SendButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </div>
+        </>
       ) : null}
       <Dialog
         open={value.deleteClick}
