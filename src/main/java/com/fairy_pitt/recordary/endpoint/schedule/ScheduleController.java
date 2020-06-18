@@ -70,7 +70,7 @@ public class ScheduleController {
         return scheduleMemberService.searchUserAsMemberScheduleList(id, result, name);
     }
 
-    @GetMapping("groupSearch/{id}")
+    @GetMapping("group/{id}/search")
     public List<ScheduleResponseDto> searchGroupSchedule(@PathVariable Long id, @RequestParam(value = "input") String name, @RequestParam(value = "istMember") Boolean isMember ){
         return scheduleService.searchGroupScheduleList(id, name, isMember);
     }
