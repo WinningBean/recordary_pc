@@ -121,12 +121,13 @@ class Profile extends React.Component {
       var groupApply = null;
       var type = 5;
 
+      console.log(this.props.user);
       if (this.props.isLogin && groupInfo.admin.userCd === this.props.user.userCd) {
         type = 2;
         groupApply = (await axios.get(`/groupApply/findUserApply/${this.props.match.params.groupCd}`)).data;
         console.log(groupApply, 'groupApply');
       }
-      for (let i = 0; groupInfo.memberList.length; i++) {
+      for (let i = 0; i < groupInfo.memberList.length; i++) {
         if (groupInfo.memberList[i].userCd === this.props.user.userCd) {
           type = 3;
           break;
