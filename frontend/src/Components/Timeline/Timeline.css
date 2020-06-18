@@ -70,6 +70,7 @@
   width: 300px;
   height: 60px;
   font-size: 18px;
+  font-weight: bold;
 }
 
 .profile-time {
@@ -114,6 +115,38 @@
   overflow: hidden;
 }
 
+.timeline-shareForm {
+  position: relative;
+  box-shadow: 0px 1px 3px rgba(161, 159, 159, 0.8);
+  margin-left: 10px;
+  margin-bottom: 15px;
+  width: 480px;
+  height: 330px;
+  padding: 10px;
+  overflow: hidden;
+  border-radius: 5px;
+}
+.timeline-shareForm:hover {
+  /* cursor: pointer; */
+  box-shadow: 1px 1px 5px rgba(100, 100, 100, 0.9);
+}
+.timeline-share-userInfo > img {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  box-shadow: 0px 1px 3px rgba(161, 159, 159, 0.8);
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.timeline-share-userInfo {
+  display: flex;
+  padding-bottom: 10px;
+  align-items: center;
+}
+.timeline-share-userInfo > div {
+  font-weight: bold;
+}
+
 .timeline-picture > img {
   width: 480px;
   height: 330px;
@@ -143,6 +176,7 @@
   font-size: 16px;
   line-height: 150%;
   overflow-y: scroll;
+  padding: 10px;
 }
 
 .timeline-picture-bottom {
@@ -203,6 +237,7 @@
 .recommentProfileImg > img {
   width: 20px;
   height: 20px;
+  margin-left: 5px;
   object-fit: cover;
   border-radius: 50%;
   box-shadow: 0px 1px 3px rgba(161, 159, 159, 0.8);
@@ -285,6 +320,7 @@ fieldset {
 }
 .show-recomment-write {
   margin-left: 50px;
+  margin-top: 10px;
   display: flex;
   align-content: center;
   font-size: '12px';
@@ -331,4 +367,9 @@ fieldset {
 
 .transition-all {
   transition: all 0.3s ease-out;
+}
+.clicked {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(161, 159, 159, 0.2);
 }

@@ -1,6 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.media.dto;
 
-import com.fairy_pitt.recordary.common.entity.MediaEntity;
+import com.fairy_pitt.recordary.common.domain.MediaEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

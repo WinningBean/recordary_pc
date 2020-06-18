@@ -1,4 +1,4 @@
-package com.fairy_pitt.recordary.common.entity;
+package com.fairy_pitt.recordary.common.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "CHAT_ROOM_TB")
-public class ChatRoomEntity {
+public class ChatRoomEntity extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,15 +22,15 @@ public class ChatRoomEntity {
     private Long roomCd;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CHAT_ROOM_USER_FK", nullable = false)
+    @JoinColumn(name = "CHAT_ROOM_USER_FK")
     private UserEntity userFK;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CHAT_ROOM_TARGET_FK", nullable = false)
+    @JoinColumn(name = "CHAT_ROOM_TARGET_FK")
     private UserEntity targetFK;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CHAT_ROOM_GROUP_FK", nullable = false)
+    @JoinColumn(name = "CHAT_ROOM_GROUP_FK")
     private GroupEntity groupFK;
 
     @JsonIgnore

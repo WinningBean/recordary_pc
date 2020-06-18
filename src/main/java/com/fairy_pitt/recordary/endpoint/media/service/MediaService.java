@@ -1,6 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.media.service;
 
-import com.fairy_pitt.recordary.common.entity.MediaEntity;
+import com.fairy_pitt.recordary.common.domain.MediaEntity;
 import com.fairy_pitt.recordary.common.repository.MediaRepository;
 import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
 import com.fairy_pitt.recordary.endpoint.media.dto.MediaRequestDto;

@@ -1,4 +1,4 @@
-package com.fairy_pitt.recordary.common.entity;
+package com.fairy_pitt.recordary.common.domain;
 
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
@@ -13,13 +13,13 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Table(name = "MEDIA_TB")
 @Entity
-public class MediaEntity extends BaseTimeEntity{
+public class MediaEntity extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MEDIA_CD")
     private Long mediaCd;
 
-    @Column(name = "MEDIA_PATH", nullable = false)
+    @Column(name = "MEDIA_PATH", unique=true, nullable = false)
     private String mediaPath;
 
     @Builder

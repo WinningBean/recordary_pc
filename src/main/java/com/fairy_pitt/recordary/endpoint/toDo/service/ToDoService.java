@@ -1,7 +1,7 @@
 package com.fairy_pitt.recordary.endpoint.toDo.service;
 
-import com.fairy_pitt.recordary.common.entity.ToDoEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.domain.ToDoEntity;
+import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.common.repository.ToDoRepository;
 import com.fairy_pitt.recordary.endpoint.toDo.dto.ToDoResponseDto;
 import com.fairy_pitt.recordary.endpoint.toDo.dto.TodoRequestDto;
@@ -30,7 +30,7 @@ public class ToDoService {
     public Boolean update(Long toDoCd)
     {
         ToDoEntity toDoEntity = toDoRepository.findByToDoCd(toDoCd);
-        if(!toDoEntity.getToDoCompleteState())
+        if(toDoEntity.getToDoCompleteState())
         {
             toDoEntity.updateToDoState(false);
         }else {

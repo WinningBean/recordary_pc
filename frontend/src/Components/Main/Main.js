@@ -4,6 +4,7 @@ import './mainPage.css';
 import axios from 'axios';
 import Timeline from '../Timeline/Timeline';
 import TimelineWeekSchedule from '../Timeline/TimelineWeekSchedule';
+import PostShareTimeline from '../Timeline/PostShareTimeline';
 
 const Main = (props) => {
   return (
@@ -16,10 +17,16 @@ const Main = (props) => {
                 <Timeline data={value} user={props.data} />
               </div>
             );
-          } else if (value.scheduleFK !== null) {
+          } else if (value.scheduleFK !== null || value.shareScheduleList.length > 0) {
             return (
               <div className='timeline-Margin' key={`${value.postCd}-${index}`}>
-                <TimelineWeekSchedule data={value} user={props.data}></TimelineWeekSchedule>
+                <TimelineWeekSchedule data={value} user={props.data} />
+              </div>
+            );
+          } else if (value.postOriginFK !== null) {
+            return (
+              <div className='timeline-Margin' key={`${value.postCd}-${index}`}>
+                <PostShareTimeline data={value} user={props.data} />
               </div>
             );
           } else return null;

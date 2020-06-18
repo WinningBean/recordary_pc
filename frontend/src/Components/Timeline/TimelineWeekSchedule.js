@@ -7,7 +7,7 @@ import { styled } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import { Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText } from '@material-ui/core';
 
-import EditPostMediaScheduleAppend from '../../Containers/Profile/EditPostMediaScheduleAppend';
+import EditPostMediaSchedule from '../../Containers/Profile/EditPostMediaSchedule';
 import CommentList from './CommentList';
 import LongMenu from '../Other/MoreMenu';
 import PostShare from '../../Containers/Profile/PostShare';
@@ -35,7 +35,7 @@ const SendButton = styled(Button)({
 const TimelineWeekSchedule = (props) => {
   const classes = useStyles();
   const [data, setData] = useState(props.data);
-  const [postForm, setPostForm] = useState(0);
+  const [postForm, setPostForm] = useState(props.data.shareScheduleList.length < 1 ? 1 : 2);
   const [isClickList, setIsClickList] = useState(
     data.commentList.map(() => ({ recommentList: [], clickIndex: false }))
   );
@@ -50,12 +50,6 @@ const TimelineWeekSchedule = (props) => {
 
   const textField = useRef();
 
-  useEffect(() => {
-    if (data.scheduleFK !== null) {
-      setPostForm(1);
-    }
-  }, []);
-
   const handleChange = (e) => {
     setWriteRecomment(e.target.value);
   };
@@ -63,10 +57,10 @@ const TimelineWeekSchedule = (props) => {
   const userPostMoreButtonClick = (selectedValue, value) => {
     switch (selectedValue) {
       case '나에게 공유':
-        setMenuDialog(<PostShare onCancel={() => setMenuDialog(null)} />);
+        setMenuDialog(<PostShare originCd={data.postCd} onCancel={() => setMenuDialog(null)} />);
         break;
       case '수정':
-        setMenuDialog(<EditPostMediaScheduleAppend mediaList={[]} data={data} onCancel={() => setMenuDialog(null)} />);
+        setMenuDialog(<EditPostMediaSchedule mediaList={[]} data={data} onCancel={() => setMenuDialog(null)} />);
         break;
       case '삭제':
         setMenuDialog(
@@ -74,12 +68,47 @@ const TimelineWeekSchedule = (props) => {
             <DialogTitle id='alert-dialog-title'>게시물 삭제</DialogTitle>
             <DialogContent>
               <DialogContentText id='alert-dialog-description'>게시물을 삭제하시겠습니까?</DialogContentText>
+              <DialogContentText style={{ fontSize: '13px', color: 'red' }}>
+                *관련된 일정과 미디어도 모두 삭제됩니다.
+              </DialogContentText>
             </DialogContent>
             <DialogActions>
               <Button onClick={() => setMenuDialog(null)} color='primary' autoFocus>
                 취소
               </Button>
-              <Button color='primary'>확인</Button>
+              <Button
+                onClick={async () => {
+                  try {
+                    const Success = (await axios.delete(`/post/${data.postCd}`)).data;
+                    console.log(Success);
+                    if (Success) {
+                      setDialog(
+                        <AlertDialog
+                          severity='success'
+                          content='게시물이 삭제되었습니다.'
+                          duration={1000}
+                          onAlertClose={() => setDialog(null)}
+                        />
+                      );
+                    } else {
+                      setDialog(
+                        <AlertDialog
+                          severity='success'
+                          content='게시물 삭제 실패'
+                          duration={1000}
+                          onAlertClose={() => setDialog(null)}
+                        />
+                      );
+                    }
+                  } catch (e) {
+                    console.log(e);
+                    setDialog(<AlertDialog severity='error' content='서버에러' onAlertClose={() => setDialog(null)} />);
+                  }
+                }}
+                color='primary'
+              >
+                확인
+              </Button>
             </DialogActions>
           </Dialog>
         );
@@ -101,14 +130,12 @@ const TimelineWeekSchedule = (props) => {
         );
       case 2:
         return (
-          // <TimelineMultiDay
-          //   // title={data.post_title}
-          //   // ex={data.post_ex}
-          //   sharedSchedual={data.sharedSchedual}
-          //   sharedStartDay={data.sharedStartDay}
-          //   sharedEndDay={data.sharedEndDay}
-          // />
-          <div></div>
+          <TimelineMultiDay
+            ex={data.post_ex}
+            sharedSchedule={data.shareScheduleList}
+            sharedStartDay={Date.parse(data.shareScheduleList[0].scheduleStr)}
+            sharedEndDay={Date.parse(data.shareScheduleList[0].scheduleEnd)}
+          />
         );
     }
   })();

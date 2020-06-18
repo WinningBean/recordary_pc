@@ -9,6 +9,7 @@ import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleTabService;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.*;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -61,4 +62,17 @@ public class ScheduleController {
     public List<ScheduleResponseDto> showGroupSchedule(@PathVariable Long id, @RequestBody ScheduleDateRequestDto responseDto){
        return scheduleService.findGroupSchedule(id, responseDto);
     }
+
+    @GetMapping("search/{id}")
+    public List<ScheduleResponseDto> searchUserSchedule(@PathVariable Long id, @RequestParam(value = "input") String name ){
+//        Long currUserCd = Long.parseLong("2");
+        List<ScheduleResponseDto> result = scheduleService.searchSchedule(id, followerService.checkPublicStateToTarget(userService.currentUserCd() /*currUserCd*/, id),name);
+        return scheduleMemberService.searchUserAsMemberScheduleList(id, result, name);
+    }
+
+    @GetMapping("group/{id}/search")
+    public List<ScheduleResponseDto> searchGroupSchedule(@PathVariable Long id, @RequestParam(value = "input") String name, @RequestParam(value = "istMember") Boolean isMember ){
+        return scheduleService.searchGroupScheduleList(id, name, isMember);
+    }
+
 }

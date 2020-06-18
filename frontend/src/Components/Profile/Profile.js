@@ -10,6 +10,8 @@ import Header from '../../Containers/Header/Header';
 import Calendar from '../Calendar/Calendar';
 import TimelineWeekSchedule from '../Timeline/TimelineWeekSchedule';
 import Timeline from '../Timeline/Timeline';
+import PostShareTimeline from '../Timeline/PostShareTimeline';
+
 import Loading from '../Loading/Loading';
 import NotifyPopup from '../UI/NotifyPopup';
 import Snackbar from '../UI/Snackbar';
@@ -721,7 +723,7 @@ class Profile extends React.Component {
               <>
                 <div className='profile-MediaTimeline'>
                   {this.state.post.map((value, index) => {
-                    if (value.mediaFK !== null) {
+                    if (value.mediaFK !== null && value.postOriginFK === null) {
                       return (
                         <div
                           className='media-box-hover'
@@ -774,11 +776,23 @@ class Profile extends React.Component {
                 {console.log(this.state.post)}
               </>
             ) : (
-              this.state.post.map((value) => {
-                if (value.mediaFK === null) {
+              this.state.post.map((value, index) => {
+                if (value.mediaFK !== null) {
                   return (
-                    <div className='profile-ScheduleTimeLine' style={{ marginBottom: '50px' }}>
-                      <TimelineWeekSchedule key={value.postCd} data={value} user={this.props.user} />
+                    <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
+                      <Timeline data={value} user={this.props.user} />
+                    </div>
+                  );
+                } else if (value.scheduleFK !== null || value.shareScheduleList.length > 0) {
+                  return (
+                    <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
+                      <TimelineWeekSchedule data={value} user={this.props.user} />
+                    </div>
+                  );
+                } else if (value.postOriginFK !== null) {
+                  return (
+                    <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
+                      <PostShareTimeline data={value} user={this.props.user} />
                     </div>
                   );
                 } else return null;

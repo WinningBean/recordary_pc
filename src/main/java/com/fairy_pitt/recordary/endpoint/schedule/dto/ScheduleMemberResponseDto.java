@@ -1,6 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.schedule.dto;
 
-import com.fairy_pitt.recordary.common.entity.ScheduleMemberEntity;
+import com.fairy_pitt.recordary.common.domain.ScheduleMemberEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

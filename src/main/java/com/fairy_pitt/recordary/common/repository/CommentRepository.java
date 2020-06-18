@@ -1,7 +1,7 @@
 package com.fairy_pitt.recordary.common.repository;
 
-import com.fairy_pitt.recordary.common.entity.CommentEntity;
-import com.fairy_pitt.recordary.common.entity.PostEntity;
+import com.fairy_pitt.recordary.common.domain.CommentEntity;
+import com.fairy_pitt.recordary.common.domain.PostEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

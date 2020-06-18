@@ -313,7 +313,6 @@ const HeaderMenu = (props) => {
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      marginBottom: '10px',
                       fontWeight: 'bold',
                     }}
                   >

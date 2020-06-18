@@ -1,11 +1,9 @@
 package com.fairy_pitt.recordary.endpoint.post.service;
 
-import com.fairy_pitt.recordary.common.entity.MediaEntity;
-import com.fairy_pitt.recordary.common.entity.PostEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.domain.*;
 import com.fairy_pitt.recordary.common.repository.PostLikeRepository;
-import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
+import com.fairy_pitt.recordary.common.repository.PostScheduleShareRepository;
 import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
@@ -14,7 +12,6 @@ import com.fairy_pitt.recordary.endpoint.media.service.MediaService;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostUpdateRequestDto;
-import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleService;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
@@ -39,9 +36,10 @@ public class PostService {
     private final MediaService mediaService;
 
     private final PostLikeRepository postLikeRepository;
+    private final PostScheduleShareRepository postScheduleShareRepository;
 
     @Transactional
-    public Boolean save(PostSaveRequestDto requestDto) {
+    public Long save(PostSaveRequestDto requestDto) {
         PostEntity postEntity = PostEntity.builder()
                 .userFK(userService.findEntity(requestDto.getUserCd()))
                 .groupFK(groupService.findEntity(requestDto.getGroupCd()))
@@ -50,23 +48,10 @@ public class PostService {
                 .mediaFK(mediaService.findEntity(requestDto.getMediaCd()))
                 .postEx(requestDto.getPostEx())
                 .postPublicState(requestDto.getPostPublicState())
-                .postStrYMD(requestDto.getPostStrYMD())
-                .postEndYMD(requestDto.getPostEndYMD())
+                .postScheduleShareState(requestDto.getPostScheduleShareState())
                 .build();
 
-        return Optional.ofNullable(postRepository.save(postEntity)).isPresent();
-    }
-
-    public Boolean saveSchedulePost(ScheduleSaveRequestDto requestDto, Long scheduleCd)
-    {
-        PostEntity postEntity = PostEntity.builder()
-                .userFK(userService.findEntity(requestDto.getUserCd()))
-                .groupFK(groupService.findEntity(requestDto.getGroupCd()))
-                .scheduleFK(scheduleService.findEntity(scheduleCd))
-                .postPublicState(requestDto.getSchedulePublicState())
-                .build();
-
-        return Optional.ofNullable(postRepository.save(postEntity)).isPresent();
+        return postRepository.save(postEntity).getPostCd();
     }
 
     @Transactional
@@ -100,8 +85,11 @@ public class PostService {
         PostEntity postEntity = Optional.ofNullable(postRepository.findByPostCd(postCd))
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. code = " + postCd));
 
-        scheduleService.delete(postEntity.getScheduleFK().getScheduleCd());
-        mediaService.delete(postEntity.getMediaFK().getMediaCd());
+        for (PostScheduleShareEntity postScheduleShareEntity : postScheduleShareRepository.findAllByPostFK(postEntity)){
+            postScheduleShareRepository.delete(postScheduleShareEntity);
+        }
+        if (postEntity.getScheduleFK() != null) scheduleService.delete(postEntity.getScheduleFK().getScheduleCd());
+        if (postEntity.getMediaFK() != null) mediaService.delete(postEntity.getMediaFK().getMediaCd());
         postRepository.delete(postEntity);
         return !Optional.ofNullable(this.findEntity(postCd)).isPresent();
     }

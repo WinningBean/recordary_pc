@@ -1,6 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.group.dto;
 
-import com.fairy_pitt.recordary.common.entity.GroupApplyEntity;
+import com.fairy_pitt.recordary.common.domain.GroupApplyEntity;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

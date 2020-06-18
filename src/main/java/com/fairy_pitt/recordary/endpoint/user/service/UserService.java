@@ -1,8 +1,8 @@
 package com.fairy_pitt.recordary.endpoint.user.service;
 
-import com.fairy_pitt.recordary.common.entity.PostEntity;
-import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.domain.PostEntity;
+import com.fairy_pitt.recordary.common.domain.ScheduleEntity;
+import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.common.repository.MediaRepository;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.common.repository.ScheduleRepository;
@@ -79,10 +79,10 @@ public class UserService {
                 .collect(Collectors.toList());
         for (PostEntity postEntity : onlyUserPostList) {
             mediaRepository.delete(postEntity.getMediaFK()); // 오직 사용자의 미디어
-            postRepository.delete(postEntity); // 오직 사용자의 포스
+            postRepository.delete(postEntity); // 오직 사용자의 포스트
         }
 
-        List<ScheduleEntity> onlyUserScheduleList = user.getUserScheduleList().stream()
+        List<ScheduleEntity> onlyUserScheduleList = user.getScheduleList().stream()
                 .filter(s -> s.getGroupFK() == null)
                 .collect(Collectors.toList());
         for (ScheduleEntity scheduleEntity : onlyUserScheduleList){

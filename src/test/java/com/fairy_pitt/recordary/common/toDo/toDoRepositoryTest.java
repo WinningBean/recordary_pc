@@ -1,10 +1,9 @@
 package com.fairy_pitt.recordary.common.toDo;
 
-import com.fairy_pitt.recordary.common.entity.ToDoEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.domain.ToDoEntity;
+import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.common.repository.ToDoRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
-import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Test;

@@ -7,6 +7,7 @@ import AlertDialog from '../Other/AlertDialog';
 import Snackbar from '../UI/Snackbar';
 import Calendar from '../Calendar/Calendar';
 
+import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -31,19 +32,20 @@ const ScheduleShare = (props) => {
     start: null,
     end: null,
   });
-  const [scheduleList, setScheduleList] = useState(null);
+  const [selectedSchedule, setSelectedSchedule] = useState(false);
+  const [scheduleList, setScheduleList] = useState([]);
+  const [publicState, setPublicState] = useState(null);
+  const [shareScheduleList, setShareScheduleList] = useState([]);
 
   const [post, setPost] = useState({
     userCd: user.userCd,
-    // group_cd: store.getState().user.userGroup[0].group_cd,
     groupCd: null,
     postOriginCd: null,
     scheduleCd: null,
     mediaCd: null,
     postEx: null,
     postPublicState: 0,
-    postStrYMD: null,
-    postEndYMD: null,
+    postScheduleShareState: false,
   });
 
   const changeHandle = (e) => {
@@ -62,58 +64,43 @@ const ScheduleShare = (props) => {
 
   const onSubmit = async () => {
     setAlert(<Backdrop />);
+    console.log(shareScheduleList);
+    try {
+      const postData = (
+        await axios.post(`/post/scheduleShare`, {
+          postFK: post,
+          scheduleCdList: shareScheduleList,
+        })
+      ).data;
+      console.log(postData);
 
-    // try {
-    //   console.log(userPost);
-
-    //   const form = new FormData();
-    //   form.append('user_id', userPost.user_id);
-    //   form.append('group_cd', userPost.group_cd);
-    //   form.append('inputPost', userPost.inputPost);
-
-    //   const { data } = await axios.post('/post/write', form);
-
-    //   console.log(data);
-
-    //   if (data.isWrite) {
-    //     setAlert(
-    //       <AlertDialog severity='success' content='게시물이 추가되었습니다.' onAlertClose={() => setAlert(null)} />
-    //     );
-    //   } else {
-    //     setAlert(<Snackbar severity='error' content='게시물을 추가하지 못했습니다.' onClose={() => setAlert(null)} />);
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    //   setAlert(
-    //     <Snackbar
-    //       severity='error'
-    //       content='서버 에러로 게시물을 추가하지 못했습니다..'
-    //       onClose={() => setAlert(null)}
-    //     />
-    //   );
-    // }
+      if (postData !== null) {
+        props.onCancel();
+        setAlert(
+          <AlertDialog severity='success' content='게시물이 추가되었습니다.' onAlertClose={() => setAlert(null)} />
+        );
+      } else {
+        setAlert(<Snackbar severity='error' content='일정을 공유하지 못했습니다.' onClose={() => setAlert(null)} />);
+      }
+    } catch (error) {
+      console.log(error);
+      setAlert(
+        <Snackbar
+          severity='error'
+          content='서버 에러로 게시물을 추가하지 못했습니다..'
+          onClose={() => setAlert(null)}
+        />
+      );
+    }
   };
 
   const saveScheduleList = (userDate, choiceDate) => {
     const sc = userDate.filter((value) => choiceDate.start <= value.start && choiceDate.end >= value.end);
-    setScheduleList(
-      sc.map((value) => (
-        <div key={value.cd} style={{ display: 'flex' }}>
-          <div>
-            <Checkbox defaultChecked color='default' />
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: '18px', marginTop: '10px' }}>{value.ex}</span>
-            <span style={{ fontSize: '13px', color: 'gray', marginTop: '3px' }}>
-              {dateFns.format(value.start, 'yyyy.MM.dd hh:mm') + ' ~ ' + dateFns.format(value.end, 'yyyy.MM.dd hh:mm')}
-            </span>
-          </div>
-        </div>
-      ))
-    );
+    const publicStateSc = sc.filter((value) => value.state === publicState);
+
+    setScheduleList(publicStateSc);
   };
 
-  console.log(scheduleList);
   return (
     <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
       <div className='post-append-header' style={{ width: '600px' }}>
@@ -135,20 +122,32 @@ const ScheduleShare = (props) => {
             )}{' '}
           </div>
           <div className='schedule-media-button '>
-            <div className='plus-button-design' onClick={() => setIsCalendarOpen(!isCalendarOpen)}>
-              <div className='plus-button-design-2'>
-                <EventAvailableIcon style={{ fontSize: '30px' }} />
-                <span style={{ fontSize: '15px', marginLeft: '5px' }}>일정찾기</span>
-              </div>
+            <div
+              className='plus-button-design'
+              onClick={() => {
+                setIsCalendarOpen(!isCalendarOpen);
+                setChoiceDate({ start: null, end: null });
+                setSelectedSchedule(true);
+                setUserDate([]);
+              }}
+            >
+              {selectedSchedule ? (
+                <div className='plus-button-design-2 clicked'>
+                  <EventAvailableIcon style={{ fontSize: '30px' }} />
+                  <span style={{ fontSize: '15px', marginLeft: '5px' }}>일정찾기</span>
+                </div>
+              ) : (
+                <div className='plus-button-design-2'>
+                  <EventAvailableIcon style={{ fontSize: '30px' }} />
+                  <span style={{ fontSize: '15px', marginLeft: '5px' }}>일정찾기</span>
+                </div>
+              )}
             </div>
-            <PublicRange
-              // onSetSelectedIndex={(index) => {
-              // setScheduleInfo({ ...scheduleInfo, schedulePublicState: index });
-              //   setPost({ ...post, postPublicState: index === 0 ? 0 : 3 });
-              // }}
-              selectedIndex={post.postPublicState}
-            />
+            <PublicRange selectedIndex={post.postPublicState} />
           </div>
+        </div>
+        <div className='Post-Append-text post-Append'>
+          <TextField id='post_text' label='내용' multiline rowsMax='5' rows='3' name='postEx' onChange={changeHandle} />
         </div>
         {isCalendarOpen === false ? null : (
           <Dialog
@@ -171,7 +170,7 @@ const ScheduleShare = (props) => {
                       marginLeft: '10px',
                     }}
                   />
-                  <div className='PostAdd-title'>시작날짜를 선택하세요.</div>{' '}
+                  <div className='PostAdd-title'>시작날짜를 선택하세요.</div>
                 </div>
               </div>
             ) : (
@@ -202,7 +201,11 @@ const ScheduleShare = (props) => {
                 info={user}
                 choiceSharedStartDate={choiceDate.start}
                 choiceSharedEndDate={choiceDate.end}
-                onChoice={(date, userDate) => {
+                onChoice={(date, userDate, _publicState) => {
+                  if (publicState !== _publicState) {
+                    setPublicState(_publicState);
+                    setPost({ ...post, postPublicState: _publicState });
+                  }
                   setUserDate(userDate);
                   if (choiceDate.start === null) {
                     setChoiceDate({
@@ -232,6 +235,7 @@ const ScheduleShare = (props) => {
                 onClick={() => {
                   setIsCalendarOpen(false);
                   saveScheduleList(userDate, choiceDate);
+                  setSelectedSchedule(true);
                 }}
                 disabled={choiceDate.end !== null ? false : true}
               >
@@ -240,11 +244,32 @@ const ScheduleShare = (props) => {
             </div>
           </Dialog>
         )}
-        {scheduleList}
+        <div style={{ marginTop: '20px', overflowY: 'auto', maxHeight: '250px' }}>
+          {scheduleList.length > 0
+            ? scheduleList.map((value) => (
+                <div key={value.cd} style={{ display: 'flex' }}>
+                  <div>
+                    <Checkbox
+                      color='default'
+                      onChange={() => setShareScheduleList(shareScheduleList.concat(value.cd))}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span style={{ fontSize: '15px', marginTop: '10px' }}>{value.nm}</span>
+                    <span style={{ fontSize: '13px', color: 'gray', marginTop: '3px' }}>
+                      {dateFns.format(value.start, 'yyyy.MM.dd hh:mm') +
+                        ' ~ ' +
+                        dateFns.format(value.end, 'yyyy.MM.dd hh:mm')}
+                    </span>
+                  </div>
+                </div>
+              ))
+            : null}
+        </div>
         <div className='Post-Append-Bottom'>
           <div className='Post-Upload-buttons'>
-            <Button onClick={handleClickOpen}>게시</Button>
             <Button onClick={() => props.onCancel()}>취소</Button>
+            <Button onClick={handleClickOpen}>게시</Button>
           </div>
           <Dialog
             open={open}
@@ -252,19 +277,18 @@ const ScheduleShare = (props) => {
             aria-labelledby='alert-dialog-title'
             aria-describedby='alert-dialog-description'
           >
-            <DialogTitle id='alert-dialog-title'> {'내 일정 공유'}</DialogTitle>
+            <DialogTitle id='alert-dialog-title'>{'내 일정 공유'}</DialogTitle>
             <DialogContent>
-              <DialogContentText id='alert-dialog-description'>게시물을 공유하시겠습니까?</DialogContentText>
+              <DialogContentText id='alert-dialog-description'>일정을 공유하시겠습니까?</DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={(handleClose, () => props.onCancel(), onSubmit)} color='primary'>
-                확인
-              </Button>
               <Button onClick={handleClose} color='primary' autoFocus>
                 취소
               </Button>
+              <Button onClick={(handleClose, () => props.onCancel(), onSubmit)} color='primary'>
+                확인
+              </Button>
             </DialogActions>
-            {{ alert }}
           </Dialog>
         </div>
       </div>

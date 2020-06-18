@@ -108,15 +108,18 @@ footer{
 /* 스크롤 css */
 ::-webkit-scrollbar-track {
   border-radius: 8px;
+  background: transparent;
 }
 
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
+  z-index: -1;
 }
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
   background-color: lightgray;
+  z-index: 99999;
 }
 
 input:focus {

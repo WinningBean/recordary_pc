@@ -1,8 +1,8 @@
 package com.fairy_pitt.recordary.common.repository;
 
-import com.fairy_pitt.recordary.common.entity.ScheduleEntity;
-import com.fairy_pitt.recordary.common.entity.ScheduleMemberEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.domain.ScheduleEntity;
+import com.fairy_pitt.recordary.common.domain.ScheduleMemberEntity;
+import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.common.pk.ScheduleMemberEntityPK;
 import org.springframework.data.jpa.repository.JpaRepository;
 

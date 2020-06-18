@@ -1,10 +1,9 @@
 package com.fairy_pitt.recordary.common.group;
 
-import com.fairy_pitt.recordary.common.entity.GroupEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.domain.GroupEntity;
+import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
-import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;

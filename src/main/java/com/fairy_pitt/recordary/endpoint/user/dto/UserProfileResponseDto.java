@@ -1,6 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.user.dto;
 
-import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleTabResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +20,7 @@ public class UserProfileResponseDto {
         this.userInfo = new UserResponseDto(userEntity);
         this.followerCount = (userEntity.getFollowTarget()).size();
         this.followingCount = (userEntity.getFollowUser()).size();
-        this.scheduleTabInfo = userEntity.getUserScheduleTab().stream()
+        this.scheduleTabInfo = userEntity.getScheduleTab().stream()
                 .map(ScheduleTabResponseDto::new)
                 .collect(Collectors.toList());
     }

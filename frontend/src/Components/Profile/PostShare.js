@@ -19,19 +19,16 @@ import store from '../../store';
 const PostShare = (props) => {
   const [open, setOpen] = React.useState(false);
   const [alert, setAlert] = useState(null);
-  const [data, setData] = useState(props.user);
 
   const [post, setPost] = useState({
-    userCd: data.userCd,
-    // group_cd: store.getState().user.userGroup[0].group_cd,
+    userCd: props.user.userCd,
     groupCd: null,
-    postOriginCd: null,
+    postOriginCd: props.originCd,
     scheduleCd: null,
     mediaCd: null,
     postEx: null,
     postPublicState: 0,
-    postStrYMD: null,
-    postEndYMD: null,
+    postScheduleShareState: false,
   });
 
   useEffect(() => {
@@ -55,46 +52,31 @@ const PostShare = (props) => {
 
   const onSubmit = async () => {
     setAlert(<Backdrop />);
+    try {
+      const postData = (await axios.post(`/post/`, post)).data;
+      console.log(postData);
 
-    //   try {
-    //     console.log(userPost);
-
-    //     const form = new FormData();
-    //     form.append('user_id', userPost.user_id);
-    //     form.append('group_cd', userPost.group_cd);
-    //     form.append('inputPost', userPost.inputPost);
-
-    //     const { data } = await axios.post('/post/write', form);
-
-    //     console.log(data);
-
-    //     if (data.isWrite) {
-    //       setAlert(
-    //         <AlertDialog
-    //           severity='success'
-    //           content='게시물이 추가되었습니다.'
-    //           onAlertClose={() => setAlert(null)}
-    //         />
-    //       );
-    //     } else {
-    //       setAlert(
-    //         <Snackbar
-    //           severity='error'
-    //           content='게시물을 추가하지 못했습니다.'
-    //           onClose={() => setAlert(null)}
-    //         />
-    //       );
-    //     }
-    //   } catch (error) {
-    //     console.log(error);
-    //     setAlert(
-    //       <Snackbar
-    //         severity='error'
-    //         content='서버 에러로 게시물을 추가하지 못했습니다..'
-    //         onClose={() => setAlert(null)}
-    //       />
-    //     );
-    //   }
+      if (postData !== '') {
+        setAlert(
+          <AlertDialog
+            severity='success'
+            content='게시물을 공유하였습니다.'
+            onAlertClose={(() => setAlert(null), () => props.onCancel())}
+          />
+        );
+      } else {
+        setAlert(<Snackbar severity='error' content='게시물을 공유하지 못했습니다.' onClose={() => setAlert(null)} />);
+      }
+    } catch (error) {
+      console.log(error);
+      setAlert(
+        <Snackbar
+          severity='error'
+          content='서버 에러로 게시물을 공유하지 못했습니다..'
+          onClose={() => setAlert(null)}
+        />
+      );
+    }
   };
 
   return (
@@ -113,13 +95,18 @@ const PostShare = (props) => {
             ) : (
               <SelectGroup
                 options={props.groupList}
-                // onSetSelectedGroup={(selectGroupCd) => setPost({ ...post, groupCd: selectGroupCd })}
+                onSetSelectedGroup={(selectGroupCd) => setPost({ ...post, groupCd: selectGroupCd })}
               />
             )}
           </div>
 
           <div className='schedule-media-button '>
-            <PublicRange />
+            <PublicRange
+              selectedIndex={post.postPublicState}
+              onSetSelectedIndex={(index) => {
+                setPost({ ...post, postPublicState: index });
+              }}
+            />
           </div>
         </div>
 
@@ -137,8 +124,8 @@ const PostShare = (props) => {
 
         <div className='Post-Append-Bottom'>
           <div className='Post-Upload-buttons'>
-            <Button onClick={handleClickOpen}>게시</Button>
             <Button onClick={() => props.onCancel()}>취소</Button>
+            <Button onClick={handleClickOpen}>공유</Button>
           </div>
           <Dialog
             open={open}
@@ -151,14 +138,14 @@ const PostShare = (props) => {
               <DialogContentText id='alert-dialog-description'>게시물을 공유하시겠습니까?</DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={(handleClose, () => props.onCancel(), onSubmit)} color='primary'>
-                확인
-              </Button>
               <Button onClick={handleClose} color='primary' autoFocus>
                 취소
               </Button>
+              <Button onClick={(handleClose, () => props.onCancel(), onSubmit)} color='primary'>
+                확인
+              </Button>
             </DialogActions>
-            {/* {alert} */}
+            {alert}
           </Dialog>
         </div>
       </div>

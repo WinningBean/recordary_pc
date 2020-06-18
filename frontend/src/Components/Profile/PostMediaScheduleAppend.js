@@ -10,6 +10,7 @@ import Backdrop from '../UI/Backdrop';
 import AlertDialog from '../Other/AlertDialog';
 import Snackbar from '../UI/Snackbar';
 import GroupMemberSearch from '../Group/GroupMemberSearch';
+import PhotoIcon from '@material-ui/icons/Photo';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -83,15 +84,13 @@ const PostMediaScheduleAppend = (props) => {
 
   const [post, setPost] = useState({
     userCd: data.userCd,
-    // group_cd: store.getState().user.userGroup[0].group_cd,
     groupCd: null,
     postOriginCd: null,
     scheduleCd: null,
     mediaCd: null,
     postEx: null,
     postPublicState: 0,
-    postStrYMD: null,
-    postEndYMD: null,
+    postScheduleShareState: false,
   });
 
   const [scheduleInfo, setScheduleInfo] = useState({
@@ -112,6 +111,15 @@ const PostMediaScheduleAppend = (props) => {
       ...post,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const mediaOpenClick = () => {
+    if (!mediaOpen) {
+      setPostAddMediaListSrc([]);
+      setMediaOpen(!mediaOpen);
+    } else {
+      setMediaOpen(!mediaOpen);
+    }
   };
 
   const dataURLToBlob = (dataURL) => {
@@ -153,85 +161,7 @@ const PostMediaScheduleAppend = (props) => {
     setOpen(false);
   };
 
-  const getScheduleCd = async () => {
-    if (scheduleInfo.scheduleNm !== '') {
-      const str = switchInfo ? startOfDay(scheduleInfo.scheduleStr) : scheduleInfo.scheduleStr;
-      const end = switchInfo ? startOfSecond(endOfDay(scheduleInfo.scheduleEnd)) : scheduleInfo.scheduleEnd;
-      if (str >= end) {
-        setDialog(
-          <AlertDialog
-            severity='error'
-            content='시작일보다 종료일이 더 빠릅니다.'
-            onAlertClose={() => setDialog(null)}
-          />
-        );
-        return;
-      }
-
-      console.log({
-        // tabCd: clickTab === undefined ? null : clickTab,
-        tabCd: null,
-        userCd: data.userCd,
-        scheduleNm: scheduleInfo.scheduleNm,
-        scheduleEx: scheduleInfo.scheduleEx,
-        scheduleStr: str.getTime(),
-        scheduleEnd: end.getTime(),
-        scheduleCol: rgbToHex(scheduleColor.r, scheduleColor.g, scheduleColor.b),
-        scheduleMember: scheduleInfo.scheduleMembers.map((value) => value.userCd),
-        schedulePublicState: scheduleInfo.schedulePublicState,
-      });
-
-      try {
-        const scheduleInfoCd = (
-          await axios.post('/schedule/', {
-            // tabCd: clickTab === undefined ? null : clickTab,
-            tabCd: null,
-            userCd: data.userCd,
-            scheduleNm: scheduleInfo.scheduleNm,
-            scheduleEx: scheduleInfo.scheduleEx,
-            scheduleStr: str.getTime(),
-            scheduleEnd: end.getTime(),
-            scheduleCol: rgbToHex(scheduleColor.r, scheduleColor.g, scheduleColor.b),
-            scheduleMember: scheduleInfo.scheduleMembers.map((value) => value.userCd),
-            schedulePublicState: scheduleInfo.schedulePublicState,
-          })
-        ).data;
-        console.log(scheduleInfoCd);
-        return scheduleInfoCd;
-      } catch (e) {
-        console.log(e);
-        setDialog(
-          <AlertDialog severity='error' content='스케줄 추가를 실패하였습니다.' onAlertClose={() => setDialog(null)} />
-        );
-      }
-    } else return null;
-  };
-  // const getMediaCd = async () => {
-  //   if (postAddMediaListSrc.length > 0) {
-  //     try {
-  //       const formData = new FormData();
-  //       console.log(postAddMediaListSrc);
-  //       postAddMediaListSrc.map((value, index) => {
-  //         formData.append('mediaFiles', dataURLToBlob(value));
-  //       });
-  //       const mediaListCd = (
-  //         await axios.post(`/media/${post.userCd}`, formData, {
-  //           headers: { 'Content-Type': 'multipart/form-data; boundary=------WebKitFormBoundary7MA4YWxkTrZu0gW' },
-  //         })
-  //       ).data;
-  //       console.log(mediaListCd);
-  //       return mediaListCd;
-  //     } catch (e) {
-  //       console.log(e);
-  //       setDialog(
-  //         <AlertDialog severity='error' content='미디어 추가를 실패하였습니다.' onAlertClose={() => setDialog(null)} />
-  //       );
-  //     }
-  //   } else return null;
-  // };
-
   const onSubmit = async () => {
-    // setDialog(<Snackbar severit='info' content='데이터 요청중...' onClose={() => setDialog(null)} />);
     try {
       const str = switchInfo ? startOfDay(scheduleInfo.scheduleStr) : scheduleInfo.scheduleStr;
       const end = switchInfo ? startOfSecond(endOfDay(scheduleInfo.scheduleEnd)) : scheduleInfo.scheduleEnd;
@@ -245,19 +175,6 @@ const PostMediaScheduleAppend = (props) => {
         );
         return;
       }
-
-      console.log({
-        // tabCd: clickTab === undefined ? null : clickTab,
-        tabCd: null,
-        userCd: data.userCd,
-        scheduleNm: scheduleInfo.scheduleNm,
-        scheduleEx: scheduleInfo.scheduleEx,
-        scheduleStr: str.getTime(),
-        scheduleEnd: end.getTime(),
-        scheduleCol: rgbToHex(scheduleColor.r, scheduleColor.g, scheduleColor.b),
-        scheduleMember: scheduleInfo.scheduleMembers.map((value) => value.userCd),
-        schedulePublicState: scheduleInfo.schedulePublicState,
-      });
 
       var getScheduleCd = null;
       if (scheduleInfo.scheduleNm !== '') {
@@ -304,7 +221,7 @@ const PostMediaScheduleAppend = (props) => {
       ).data;
       console.log(postData);
 
-      if (postData) {
+      if (postData !== '') {
         setAlert(
           <AlertDialog
             severity='success'
@@ -372,7 +289,7 @@ const PostMediaScheduleAppend = (props) => {
               <PublicRange
                 onSetSelectedIndex={(index) => {
                   setScheduleInfo({ ...scheduleInfo, schedulePublicState: index });
-                  setPost({ ...post, postPublicState: index === 0 ? 0 : 3 });
+                  setPost({ ...post, postPublicState: index });
                 }}
                 selectedIndex={scheduleInfo.schedulePublicState}
               />
@@ -396,15 +313,15 @@ const PostMediaScheduleAppend = (props) => {
                 }
               })()}
             </div>
-            <div className='plus-button-design' onClick={() => setMediaOpen(!mediaOpen)}>
+            <div className='plus-button-design' onClick={mediaOpenClick}>
               {mediaOpen === true ? (
                 <div className='plus-button-design-2 clicked'>
-                  <AddPhotoAlternateIcon style={{ fontSize: '30px' }} />
+                  <PhotoIcon style={{ fontSize: '30px' }} />
                   <span style={{ fontSize: '15px', marginLeft: '10px' }}>미디어</span>
                 </div>
               ) : (
                 <div className='plus-button-design-2 '>
-                  <AddPhotoAlternateIcon style={{ fontSize: '30px' }} />
+                  <PhotoIcon style={{ fontSize: '30px' }} />
                   <span style={{ fontSize: '15px', marginLeft: '10px' }}>미디어</span>
                 </div>
               )}
@@ -575,11 +492,11 @@ const PostMediaScheduleAppend = (props) => {
               <DialogContentText id='alert-dialog-description'>작성한 게시물을 추가하시겠습니까?</DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={(handleClose, () => props.onCancel(), onSubmit)} color='primary'>
-                확인
-              </Button>
               <Button onClick={handleClose} color='primary' autoFocus>
                 취소
+              </Button>
+              <Button onClick={(handleClose, () => props.onCancel(), onSubmit)} color='primary'>
+                확인
               </Button>
             </DialogActions>
           </Dialog>
