@@ -20,14 +20,14 @@ public class ScheduleMemberService {
 
 
     private final ScheduleMemberRepository scheduleMemberRepository;
-    private final ScheduleService scheduleService ;
+    private final ScheduleService scheduleService;
     private final UserService userService;
 
     @Transactional
-    public void delete( List<Long> userCd, Long ScheduleCd) {
+    public void delete(List<Long> userCd, Long ScheduleCd) {
         ScheduleEntity schedule = scheduleService.findEntity(ScheduleCd);
 
-        for(Long temp : userCd) {
+        for (Long temp : userCd) {
             UserEntity user = userService.findEntity(temp);
             ScheduleMemberEntity scheduleMemberEntity = scheduleMemberRepository.findByUserFKAndScheduleFK(user, schedule);
             scheduleMemberRepository.delete(scheduleMemberEntity);
@@ -35,10 +35,9 @@ public class ScheduleMemberService {
     }
 
     @Transactional
-    public Boolean save(List<Long> userCd, Long ScheduleCd)
-    {
+    public Boolean save(List<Long> userCd, Long ScheduleCd) {
         ScheduleEntity schedule = scheduleService.findEntity(ScheduleCd);
-        for(Long temp : userCd) {
+        for (Long temp : userCd) {
             UserEntity user = userService.findEntity(temp);
             ScheduleMemberSaveRequestDto requestDto = new ScheduleMemberSaveRequestDto();
             scheduleMemberRepository.save(requestDto.toEntity(schedule, user));
@@ -47,8 +46,7 @@ public class ScheduleMemberService {
     }
 
     @Transactional
-    public Boolean update(ScheduleMemberEntityPK id, Boolean scheduleState)
-    {
+    public Boolean update(ScheduleMemberEntityPK id, Boolean scheduleState) {
         ScheduleMemberEntity scheduleMemberEntity = scheduleMemberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
 
@@ -57,9 +55,8 @@ public class ScheduleMemberService {
     }
 
     @Transactional(readOnly = true)
-    public List<ScheduleResponseDto> findUserAsMemberScheduleList(Long targetUserCd, List<ScheduleResponseDto> responseDto, ScheduleDateRequestDto date)
-    {
-        if(date.getTabCd() == null) {
+    public List<ScheduleResponseDto> findUserAsMemberScheduleList(Long targetUserCd, List<ScheduleResponseDto> responseDto, ScheduleDateRequestDto date) {
+        if (date.getTabCd() == null) {
             UserEntity targetUser = userService.findEntity(targetUserCd);
             Long currUserCd = userService.currentUserCd();
             //Long currUserCd = Long.parseLong("2");
@@ -89,9 +86,41 @@ public class ScheduleMemberService {
             }
         }
 
-        return  scheduleService.scheduleSort(responseDto);
+        return scheduleService.scheduleSort(responseDto);
     }
 
+    @Transactional(readOnly = true)
+    public List<ScheduleResponseDto> searchUserAsMemberScheduleList(Long targetUserCd, List<ScheduleResponseDto> responseDto, String name) {
 
+        UserEntity targetUser = userService.findEntity(targetUserCd);
+        Long currUserCd = userService.currentUserCd();
+//        Long currUserCd = Long.parseLong("2");
 
+        List<ScheduleResponseDto> schedule = scheduleMemberRepository.findByUserFKAndAndScheduleState(targetUser, true)
+                .stream()
+                .filter(scheduleMemberEntity -> scheduleMemberEntity.getScheduleFK().getScheduleNm().contains(name))
+                .map(ScheduleResponseDto::new)
+                .collect(Collectors.toList());
+
+        if (!currUserCd.equals(targetUserCd)) {
+            for (ScheduleResponseDto temp : schedule) {
+                if (temp.getSchedulePublicState() == 0) {
+                    responseDto.add(temp);
+                }
+            }
+            return scheduleService.searchIasMemberScheduleList(targetUserCd, responseDto, name);
+        } else {
+            for (ScheduleResponseDto temp : schedule) {
+                {
+                    responseDto.add(temp);
+                }
+            }
+        }
+
+        return scheduleService.scheduleSort(responseDto);
+    }
 }
+
+
+
+

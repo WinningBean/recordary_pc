@@ -128,6 +128,35 @@ public class ScheduleService implements Comparator< ScheduleResponseDto > {
 
         return scheduleSort(responseDto);
     }
+
+    @Transactional(readOnly =  true)
+    public  List<ScheduleResponseDto> searchSchedule(Long userCd, int state, String name)
+    {
+        UserEntity user = userService.findEntity(userCd);
+        return  scheduleRepository.findByUserFkAndGroupFKIsNullAndScheduleNmLikeAndSchedulePublicStateLessThanEqual(user, "%"+name+"%", state).stream()
+                .map(ScheduleResponseDto :: new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ScheduleResponseDto> searchIasMemberScheduleList(Long targetUserCd,List<ScheduleResponseDto> responseDto, String name)
+    {
+        UserEntity user = userService.findEntity(targetUserCd);
+        List<ScheduleResponseDto> schedule = scheduleRepository.findByUserFkAndGroupFKIsNullAndScheduleNmLikeAndSchedulePublicStateOrderByScheduleStr(user, name, 3).stream()
+         .map(ScheduleResponseDto :: new)
+          .collect(Collectors.toList());
+
+        for(ScheduleResponseDto scheduleTemp : schedule) {
+            List<ScheduleMemberResponseDto> scheduleMembers = scheduleTemp.getScheduleMemberList();
+            for (ScheduleMemberResponseDto MemberTemp : scheduleMembers) {
+                if (MemberTemp.getUserCd().equals(targetUserCd)) {
+                    responseDto.add(scheduleTemp);
+                }
+            }
+        }
+        return scheduleSort(responseDto);
+    }
+
     @Transactional(readOnly = true)
     public List<ScheduleResponseDto> findPostSchedule(Long userCd, Date strDate, int stat, Date endDate)
     {
