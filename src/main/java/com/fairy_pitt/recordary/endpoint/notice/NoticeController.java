@@ -2,29 +2,24 @@ package com.fairy_pitt.recordary.endpoint.notice;
 
 import com.fairy_pitt.recordary.endpoint.notice.dto.NoticeDto;
 import com.fairy_pitt.recordary.endpoint.notice.service.NoticeService;
-import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
 
 @RequiredArgsConstructor
-@RestController
+@Controller
 public class NoticeController {
 
-    private final UserService userService;
     private final NoticeService noticeService;
 
-    @MessageMapping("/notice/{userCd}")
-    public void userNotice(@DestinationVariable Long userCd, @Payload NoticeDto noticeDto){
-        if (userService.currentUserCd() != userCd) return;
+    @MessageMapping("/notice")
+    public void userNotice(@Payload NoticeDto noticeDto){
         noticeService.sendNotice(noticeDto);
     }
 
-    @MessageMapping("/timeLine/{userCd}")
-    public void timeLineNotice(@DestinationVariable Long userCd, @Payload Long postCd){
-        if (userService.currentUserCd() != userCd) return;
+    @MessageMapping("/timeLine")
+    public void timeLineNotice(@Payload Long postCd){
         noticeService.sendTimeLine(postCd);
     }
 }
