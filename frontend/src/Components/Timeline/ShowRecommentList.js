@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import produce from 'immer';
 
@@ -26,7 +26,18 @@ const SendButton = styled(Button)({
   height: '20px',
 });
 
-export default ({ list, user }) => {
+export default ({ list, user, onSuccess }) => {
+  useEffect(() => {
+    console.log(list);
+    setData(
+      list.map((value) => ({
+        ...value,
+        updateClick: false,
+        deleteClick: false,
+      }))
+    );
+  }, [list]);
+
   const [dialog, setDialog] = useState(null);
   const [writeRecomment, setWriteRecomment] = useState('');
   const [updateRecomment, setUpdateRecomment] = useState('');

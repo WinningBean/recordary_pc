@@ -32,7 +32,18 @@ const SendButton = styled(Button)({
 });
 
 export default ({ tData, user }) => {
-  // console.log(tData);
+  useEffect(() => {
+    setData(
+      tData.map((value) => ({
+        ...value,
+        showRecommentClick: { recommentList: [], click: false },
+        updateClick: false,
+        deleteClick: false,
+        reIconClick: false,
+      }))
+    );
+  }, [tData]);
+
   const classes = useStyles();
   const [data, setData] = useState(
     tData.map((value) => ({
@@ -303,6 +314,13 @@ export default ({ tData, user }) => {
                         console.log(recommentCd);
                       } catch (e) {
                         console.log(e + 'comment Error');
+                        setDialog(
+                          <AlertDialog
+                            severity='error'
+                            content='서버에러로 댓글입력에 실패하였습니다.'
+                            onAlertClose={() => setDialog(null)}
+                          />
+                        );
                       }
                     }}
                   >

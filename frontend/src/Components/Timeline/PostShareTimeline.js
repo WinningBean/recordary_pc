@@ -34,7 +34,6 @@ const PostShareTimeline = (props) => {
   const [dialog, setDialog] = useState(null);
   const [data, setData] = useState(props.data);
   const [postOriginData, setPostOriginData] = useState(props.data.postOriginFK);
-
   const [menuDialog, setMenuDialog] = useState(null);
   const [pictureCount, setPictureCount] = useState(0);
   const [mediaList, setMediaList] = useState([]);
@@ -89,7 +88,7 @@ const PostShareTimeline = (props) => {
                 onClick={
                   (async () => {
                     try {
-                      const Success = (await axios.delete(`post/${data.postCd}`)).data;
+                      const Success = (await axios.delete(`/post/${data.postCd}`)).data;
                       console.log(Success);
                       if (Success) {
                         setDialog(
@@ -178,7 +177,7 @@ const PostShareTimeline = (props) => {
                 }}
               >
                 <div className='timeline-share-userInfo'>
-                  <img alt={`${postOriginData.userFK.userId} img`} src={postOriginData.userFK.userPic} />
+                  <img alt={`${postOriginData.userFK.userId}-img`} src={postOriginData.userFK.userPic} />
                   <div>
                     {postOriginData.userFK.userId}({postOriginData.userFK.userNm})
                   </div>
@@ -198,7 +197,6 @@ const PostShareTimeline = (props) => {
                 }}
               >
                 <span style={{ paddingBottom: '8px' }}>
-                  {' '}
                   {postOriginData.scheduleFK === null ? null : postOriginData.scheduleFK.scheduleEx}
                 </span>
                 <div style={{ display: 'flex', overflowX: 'auto' }}>
@@ -340,7 +338,7 @@ const PostShareTimeline = (props) => {
           <div className='comment-write'>
             <CommentTimeline
               user={props.user}
-              // postCd={data.postCd}
+              postCd={data.postCd}
               onSuccess={(commentInfo) => {
                 setData({
                   ...data,
