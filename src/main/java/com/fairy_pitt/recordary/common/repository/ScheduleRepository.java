@@ -20,4 +20,6 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity,Long> {
     List<ScheduleEntity> findByGroupFKAndScheduleStrBetween(GroupEntity group, Date fromDate, Date toDate);
     List<ScheduleEntity> findByUserFkAndGroupFKIsNullAndScheduleNmLikeAndSchedulePublicStateLessThanEqual(UserEntity user, String name, int stat);
     List<ScheduleEntity> findByUserFkAndGroupFKIsNullAndScheduleNmLikeAndSchedulePublicStateOrderByScheduleStr(UserEntity user, String name, int stat);
+    List<ScheduleEntity> findByGroupFKAndSchedulePublicStateAndScheduleNmLike(GroupEntity group, int state, String name);
+    List<ScheduleEntity> findByGroupFKAndScheduleNmLike(GroupEntity group, String name);
 }

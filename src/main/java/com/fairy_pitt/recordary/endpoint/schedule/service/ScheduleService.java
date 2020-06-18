@@ -158,6 +158,24 @@ public class ScheduleService implements Comparator< ScheduleResponseDto > {
     }
 
     @Transactional(readOnly = true)
+    public List<ScheduleResponseDto> searchGroupScheduleList(Long groupCd, String name, Boolean isMember)
+    {
+        GroupEntity group = groupService.findEntity(groupCd);
+        if(isMember){
+            return scheduleRepository.findByGroupFKAndScheduleNmLike(group, name)
+                    .stream()
+                    .map(ScheduleResponseDto::new)
+                    .collect(Collectors.toList());
+        } else {
+            return scheduleRepository.findByGroupFKAndSchedulePublicStateAndScheduleNmLike(group, 0, name)
+                    .stream()
+                    .map(ScheduleResponseDto::new)
+                    .collect(Collectors.toList());
+        }
+
+    }
+
+    @Transactional(readOnly = true)
     public List<ScheduleResponseDto> findPostSchedule(Long userCd, Date strDate, int stat, Date endDate)
     {
         UserEntity user = userService.findEntity(userCd);
