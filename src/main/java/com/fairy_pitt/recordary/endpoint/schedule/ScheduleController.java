@@ -69,4 +69,10 @@ public class ScheduleController {
         List<ScheduleResponseDto> result = scheduleService.searchSchedule(id, followerService.checkPublicStateToTarget(userService.currentUserCd() /*currUserCd*/, id),name);
         return scheduleMemberService.searchUserAsMemberScheduleList(id, result, name);
     }
+
+    @GetMapping("group/{id}/search")
+    public List<ScheduleResponseDto> searchGroupSchedule(@PathVariable Long id, @RequestParam(value = "input") String name, @RequestParam(value = "istMember") Boolean isMember ){
+        return scheduleService.searchGroupScheduleList(id, name, isMember);
+    }
+
 }
