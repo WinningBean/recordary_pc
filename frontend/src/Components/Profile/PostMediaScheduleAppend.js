@@ -84,7 +84,6 @@ const PostMediaScheduleAppend = (props) => {
 
   const [post, setPost] = useState({
     userCd: data.userCd,
-    // group_cd: store.getState().user.userGroup[0].group_cd,
     groupCd: null,
     postOriginCd: null,
     scheduleCd: null,

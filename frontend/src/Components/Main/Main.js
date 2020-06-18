@@ -17,13 +17,13 @@ const Main = (props) => {
                 <Timeline data={value} user={props.data} />
               </div>
             );
-          } else if (value.scheduleFK !== null) {
+          } else if (value.scheduleFK !== null || value.shareScheduleList.length > 0) {
             return (
               <div className='timeline-Margin' key={`${value.postCd}-${index}`}>
                 <TimelineWeekSchedule data={value} user={props.data} />
               </div>
             );
-          } else if (value.originFK !== null) {
+          } else if (value.postOriginFK !== null) {
             return (
               <div className='timeline-Margin' key={`${value.postCd}-${index}`}>
                 <PostShareTimeline data={value} user={props.data} />

@@ -35,7 +35,7 @@ const SendButton = styled(Button)({
 const TimelineWeekSchedule = (props) => {
   const classes = useStyles();
   const [data, setData] = useState(props.data);
-  const [postForm, setPostForm] = useState(0);
+  const [postForm, setPostForm] = useState(props.data.shareScheduleList.length < 1 ? 1 : 2);
   const [isClickList, setIsClickList] = useState(
     data.commentList.map(() => ({ recommentList: [], clickIndex: false }))
   );
@@ -50,13 +50,7 @@ const TimelineWeekSchedule = (props) => {
 
   const textField = useRef();
 
-  useEffect(() => {
-    if (data.scheduleFK !== null) {
-      setPostForm(1);
-    } else {
-      return null;
-    }
-  }, []);
+  useEffect(() => {}, []);
 
   const handleChange = (e) => {
     setWriteRecomment(e.target.value);
@@ -138,14 +132,12 @@ const TimelineWeekSchedule = (props) => {
         );
       case 2:
         return (
-          // <TimelineMultiDay
-          //   // title={data.post_title}
-          //   // ex={data.post_ex}
-          //   sharedSchedual={data.sharedSchedual}
-          //   sharedStartDay={data.sharedStartDay}
-          //   sharedEndDay={data.sharedEndDay}
-          // />
-          <div></div>
+          <TimelineMultiDay
+            ex={data.post_ex}
+            sharedSchedule={data.shareScheduleList}
+            sharedStartDay={Date.parse(data.shareScheduleList[0].scheduleStr)}
+            sharedEndDay={Date.parse(data.shareScheduleList[0].scheduleEnd)}
+          />
         );
     }
   })();

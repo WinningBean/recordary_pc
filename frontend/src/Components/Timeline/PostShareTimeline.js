@@ -34,7 +34,6 @@ const PostShareTimeline = (props) => {
   const [dialog, setDialog] = useState(null);
   const [data, setData] = useState(props.data);
   const [postOriginData, setPostOriginData] = useState(props.data.postOriginFK);
-
   const [menuDialog, setMenuDialog] = useState(null);
   const [pictureCount, setPictureCount] = useState(0);
   const [mediaList, setMediaList] = useState([]);
@@ -178,7 +177,7 @@ const PostShareTimeline = (props) => {
                 }}
               >
                 <div className='timeline-share-userInfo'>
-                  <img alt={`${postOriginData.userFK.userId} img`} src={postOriginData.userFK.userPic} />
+                  <img alt={`${postOriginData.userFK.userId}-img`} src={postOriginData.userFK.userPic} />
                   <div>
                     {postOriginData.userFK.userId}({postOriginData.userFK.userNm})
                   </div>

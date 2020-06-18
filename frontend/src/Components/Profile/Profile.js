@@ -774,23 +774,23 @@ class Profile extends React.Component {
                 {console.log(this.state.post)}
               </>
             ) : (
-              this.state.post.map((value) => {
+              this.state.post.map((value, index) => {
                 if (value.mediaFK !== null) {
                   return (
-                    <div className='profile-ScheduleTimeLine' style={{ marginBottom: '50px' }}>
-                      <Timeline key={value.postCd} data={value} user={this.props.user} />
+                    <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
+                      <Timeline data={value} user={this.props.user} />
                     </div>
                   );
-                } else if (value.scheduleFK !== null) {
+                } else if (value.scheduleFK !== null || value.shareScheduleList.length > 0) {
                   return (
-                    <div className='profile-ScheduleTimeLine' style={{ marginBottom: '50px' }}>
-                      <TimelineWeekSchedule key={value.postCd} data={value} user={this.props.user} />
+                    <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
+                      <TimelineWeekSchedule data={value} user={this.props.user} />
                     </div>
                   );
-                } else if (value.originFK !== null) {
+                } else if (value.postOriginFK !== null) {
                   return (
-                    <div className='profile-ScheduleTimeLine'>
-                      <PostShareTimeline key={value.postCd} data={value} user={this.props.user} />
+                    <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
+                      <PostShareTimeline data={value} user={this.props.user} />
                     </div>
                   );
                 } else return null;

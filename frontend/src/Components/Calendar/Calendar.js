@@ -142,8 +142,6 @@ const Calendar = (props) => {
 
   console.log(userDate);
 
-  const onChoice = useCallback((currDay) => props.onChoice(currDay, userDate), [props, userDate]);
-
   //#region Handler
   var id = undefined;
   var x = null;
@@ -461,7 +459,7 @@ const Calendar = (props) => {
             key={day}
             onClick={() => {
               if (type === 4) {
-                onChoice(currDay);
+                props.onChoice(currDay, userDate, publicState);
               } else if (type === 0 || type === 2 || type === 3) {
                 setClickDate(currDay);
               }
@@ -515,7 +513,7 @@ const Calendar = (props) => {
 
     setDayLocation(location);
     return rows;
-  }, [currentMonth, type, props.choiceSharedStartDate, props.choiceSharedEndDate, onChoice]);
+  }, [currentMonth, type, props.choiceSharedStartDate, props.choiceSharedEndDate, props.onChoice]);
   //#endregion
 
   //#region Schedule View
