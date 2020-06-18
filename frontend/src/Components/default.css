@@ -59,6 +59,12 @@ button {
   align-items: center;
 }
 
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /* nav{
     display: flex;
     align-items: center;

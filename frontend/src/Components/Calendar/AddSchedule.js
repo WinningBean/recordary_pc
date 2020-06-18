@@ -220,12 +220,27 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, type, tabInfo }
                   schedulePublicState: info.schedulePublicState,
                 })
               ).data;
+
+              const postData = (
+                await axios.post(`/post/`, {
+                  userCd: type === 2 || type === 3 ? data.currentUserCd : data.userCd,
+                  groupCd: type === 2 || type === 3 ? data.groupCd : null,
+                  postOriginCd: null,
+                  scheduleCd: scCd,
+                  mediaCd: null,
+                  postEx: info.scheduleEx,
+                  postPublicState: 0,
+                  postScheduleShareState: false,
+                })
+              ).data;
+              console.log(postData);
               console.log(scCd);
               onSuccess({
                 tab: clickTab === undefined ? null : clickTab,
                 cd: scCd,
                 nm: info.scheduleNm,
                 ex: info.scheduleEx,
+                state: info.schedulePublicState,
                 start: str,
                 end: end,
                 members: info.scheduleMembers,

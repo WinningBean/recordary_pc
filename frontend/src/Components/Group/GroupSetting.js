@@ -57,7 +57,7 @@ const GroupSetting = (props) => {
   useEffect(() => {
     (async () => {
       try {
-        const groupInfo = (await axios.get(`/group/${data.group.groupCd}`)).data;
+        const groupInfo = (await axios.get('/group/', { params: { input: data.group.groupCd } })).data;
         console.log(groupInfo);
         const groupMember = (await axios.get(`/group/member/${data.group.groupCd}`)).data;
         console.log(groupMember);

@@ -152,7 +152,7 @@ const Calendar = (props) => {
     if (alert !== null) {
       return;
     }
-    id = e.currentTarget.className;
+    id = e.currentTarget.className.substring(25);
     console.log('start holding', id);
   };
 
@@ -178,7 +178,7 @@ const Calendar = (props) => {
         moveBlockY = -(parseInt(y / 74) - parseInt(moveY / 74));
       }
 
-      const moveObjDate = userDate.filter((value) => value.cd == id.substring(2, 4))[0];
+      const moveObjDate = userDate.filter((value) => value.cd == id.substring(3))[0];
       setAlert(
         <AlertDialog
           severity='info'
@@ -251,7 +251,7 @@ const Calendar = (props) => {
           }}
         />
       );
-      const realObj = document.querySelectorAll('.' + id.substring(0, 4));
+      const realObj = document.querySelectorAll('.' + id);
       for (let i = 0; i < realObj.length; i++) {
         realObj[i].style.opacity = 1.0;
       }
@@ -270,7 +270,7 @@ const Calendar = (props) => {
       if (moveLife-- < 0) {
         if (!isMove) {
           // 기존 옮기는 div를 투명하게 처리
-          const realObj = document.querySelectorAll('.' + id.substring(0, 4));
+          const realObj = document.querySelectorAll('.' + id);
           for (let i = 0; i < realObj.length; i++) {
             realObj[i].style.opacity = 0.5;
           }
@@ -515,7 +515,8 @@ const Calendar = (props) => {
   //#region Schedule View
   const shortSC = (cd, x, y, nm, color) => (
     <div
-      className={`sc${cd} transition-all animation`}
+      className={`transition-all animation sc-${cd}`}
+      data-id={cd}
       key={cd}
       style={{
         position: 'absolute',
@@ -576,7 +577,7 @@ const Calendar = (props) => {
     const borderLeft = index === 0 ? `2px solid ${color}` : '';
     return (
       <div
-        className={`sc${cd} transition-all animation`}
+        className={`transition-all animation sc-${cd}`}
         key={`${cd}-${index === undefined ? '' : index}`}
         style={{
           position: 'absolute',
@@ -656,7 +657,7 @@ const Calendar = (props) => {
 
     var copyDayLocation = dayLocation.map((value) => ({ ...value }));
     copyDraft.forEach((value) => {
-      if (value.state !== publicState) {
+      if (publicState !== 0 && value.state !== publicState) {
         return;
       }
       var index = null;

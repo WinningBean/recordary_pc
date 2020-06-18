@@ -214,7 +214,7 @@ class Profile extends React.Component {
             <ScrollToTopOnMount />
             <div id='main-profile'>
               <div className='profile-search-schedule'>
-                <ScheduleSearch data={this.state.userDate}></ScheduleSearch>
+                <ScheduleSearch data={this.state.info}></ScheduleSearch>
               </div>
               <div className='main-profile-info-postIt'>
                 <div className='postIt'>
