@@ -129,10 +129,10 @@ const ToDo = ({ open, userCd }) => {
       style={{
         position: 'absolute',
         top: '50px',
-        right: 0,
+        right: '-26px',
         height: '550px',
         width: '300px',
-        boxShadow: '0px 0px 1px #0001',
+        boxShadow: 'rgba(161, 159, 159, 0.8) 0px 1px 3px',
         borderTopLeftRadius: '4%',
         borderTopRightRadius: '4%',
         display: 'flex',
