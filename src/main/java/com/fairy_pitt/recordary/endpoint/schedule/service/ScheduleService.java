@@ -1,7 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.schedule.service;
 
 import com.fairy_pitt.recordary.common.domain.*;
-import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.common.repository.ScheduleRepository;
 import com.fairy_pitt.recordary.common.repository.ScheduleTabRepository;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
@@ -12,7 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,7 +26,6 @@ public class ScheduleService implements Comparator< ScheduleResponseDto > {
     private final ScheduleTabRepository scheduleTabRepository;
     private final GroupService groupService;
     private final UserService userService;
-    private final PostRepository postRepository;
 
     @Transactional
     public Long save(ScheduleSaveRequestDto requestDto)
@@ -200,6 +201,31 @@ public class ScheduleService implements Comparator< ScheduleResponseDto > {
                 .stream()
                 .map(ScheduleMemberResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ScheduleTodayResponseDto> getTodayUserSchedule(Long userCd){
+        UserEntity userEntity = userService.findEntity(userCd);
+
+        List<ScheduleTodayResponseDto> todayScheduleList = new ArrayList<>();
+        for (ScheduleEntity scheduleEntity : scheduleRepository.findAllByUserFkAndScheduleStrLessThanEqualAndScheduleEndGreaterThanEqual(userEntity, new Date(), new Date())){
+            todayScheduleList.add(new ScheduleTodayResponseDto(scheduleEntity, 0));
+        }
+        for (GroupMemberEntity groupMemberEntity : userEntity.getGroups()){
+            GroupEntity groupEntity = groupMemberEntity.getGroupFK();
+            List<ScheduleEntity> scheduleEntityList = scheduleRepository.findAllByGroupFK(groupEntity);
+            for (ScheduleEntity scheduleEntity : scheduleEntityList){
+                ScheduleEntity schedule = scheduleRepository.findByScheduleCdAndScheduleStrLessThanEqualAndScheduleEndGreaterThanEqual(scheduleEntity.getScheduleCd(), new Date(), new Date());
+                if (schedule != null) todayScheduleList.add(new ScheduleTodayResponseDto(schedule, 1));
+            }
+        }
+        for (ScheduleMemberEntity scheduleMemberEntity : userEntity.getScheduleMembers()){
+            Long scheduleCd = scheduleMemberEntity.getScheduleFK().getScheduleCd();
+            ScheduleEntity scheduleEntity = scheduleRepository.findByScheduleCdAndScheduleStrLessThanEqualAndScheduleEndGreaterThanEqual(scheduleCd, new Date(), new Date());
+            if (scheduleEntity != null) todayScheduleList.add(new ScheduleTodayResponseDto(scheduleEntity, 2));
+        }
+
+        return todayScheduleList;
     }
 
     @Transactional(readOnly = true)

@@ -3,10 +3,7 @@ package com.fairy_pitt.recordary.endpoint.schedule;
 import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
 import com.fairy_pitt.recordary.endpoint.media.service.MediaService;
 import com.fairy_pitt.recordary.endpoint.post.service.PostService;
-import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleDateRequestDto;
-import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleResponseDto;
-import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleSaveRequestDto;
-import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleUpdateRequestDto;
+import com.fairy_pitt.recordary.endpoint.schedule.dto.*;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleMemberService;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleService;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
@@ -73,4 +70,8 @@ public class ScheduleController {
         return scheduleService.searchGroupScheduleList(id, name, isMember);
     }
 
+    @GetMapping("/today")
+    public List<ScheduleTodayResponseDto> todaySchedule(@RequestParam Long userCd){
+        return scheduleService.getTodayUserSchedule(userCd);
+    }
 }
