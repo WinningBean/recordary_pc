@@ -123,12 +123,13 @@ class Profile extends React.Component {
       var groupApply = null;
       var type = 5;
 
+      console.log(this.props.user);
       if (this.props.isLogin && groupInfo.admin.userCd === this.props.user.userCd) {
         type = 2;
         groupApply = (await axios.get(`/groupApply/findUserApply/${this.props.match.params.groupCd}`)).data;
         console.log(groupApply, 'groupApply');
       }
-      for (let i = 0; groupInfo.memberList.length; i++) {
+      for (let i = 0; i < groupInfo.memberList.length; i++) {
         if (groupInfo.memberList[i].userCd === this.props.user.userCd) {
           type = 3;
           break;
@@ -168,12 +169,12 @@ class Profile extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.match.params.userId !== undefined) {
       if (this.props.match.params.userId !== prevProps.match.params.userId) {
-        this.setState({ ...this.state, isLoading: true });
+        this.setState({ isLoading: true });
         this.getUserInfo();
       }
     } else if (this.props.match.params.groupCd !== undefined) {
       if (this.props.match.params.groupCd !== prevProps.match.params.groupCd) {
-        this.setState({ ...this.state, isLoading: true });
+        this.setState({ isLoading: true });
         this.getGroupInfo();
       }
     }
@@ -215,7 +216,7 @@ class Profile extends React.Component {
             <ScrollToTopOnMount />
             <div id='main-profile'>
               <div className='profile-search-schedule'>
-                <ScheduleSearch data={this.state.userDate}></ScheduleSearch>
+                <ScheduleSearch data={this.state.info}></ScheduleSearch>
               </div>
               <div className='main-profile-info-postIt'>
                 <div className='postIt'>
@@ -679,6 +680,7 @@ class Profile extends React.Component {
                           ? this.state.info
                           : this.state.info.userInfo
                       }
+                      tabInfo={this.state.info.scheduleTabInfo}
                       clickTab={
                         this.state.clickTab === undefined
                           ? undefined

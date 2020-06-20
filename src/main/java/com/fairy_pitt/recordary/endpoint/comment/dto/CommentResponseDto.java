@@ -1,6 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.comment.dto;
 
-import com.fairy_pitt.recordary.common.entity.CommentEntity;
+import com.fairy_pitt.recordary.common.domain.CommentEntity;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

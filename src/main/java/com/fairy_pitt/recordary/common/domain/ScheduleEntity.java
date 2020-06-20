@@ -1,4 +1,4 @@
-package com.fairy_pitt.recordary.common.entity;
+package com.fairy_pitt.recordary.common.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "Schedule_TB")
 @NoArgsConstructor
 @Entity
-public class ScheduleEntity extends BaseTimeEntity{
+public class ScheduleEntity extends BaseTime {
 
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class ScheduleEntity extends BaseTimeEntity{
    private Long scheduleCd;
 
    @ManyToOne(fetch = FetchType.LAZY)
-   @JoinColumn(name = "SCHEDULE_USER_FK", nullable = false)
+   @JoinColumn(name = "SCHEDULE_USER_FK")
    private  UserEntity userFk;
 
    @ManyToOne(fetch = FetchType.LAZY)
@@ -56,6 +56,10 @@ public class ScheduleEntity extends BaseTimeEntity{
    @JsonIgnore
    @OneToMany(fetch = FetchType.LAZY, mappedBy = "scheduleFK", cascade = CascadeType.REMOVE)
    private List<ScheduleMemberEntity> scheduleMembers = new ArrayList<>();
+
+   @JsonIgnore
+   @OneToMany(fetch = FetchType.LAZY, mappedBy = "scheduleFK", cascade = CascadeType.REMOVE)
+   private List<PostScheduleShareEntity> postScheduleShareList = new ArrayList<>();
 
    @Builder
    public ScheduleEntity(ScheduleTabEntity tabFK,

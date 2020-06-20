@@ -1,6 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.post;
 
-import com.fairy_pitt.recordary.common.entity.*;
+import com.fairy_pitt.recordary.common.domain.*;
 import com.fairy_pitt.recordary.common.repository.*;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostUpdateRequestDto;
@@ -71,8 +71,7 @@ public class PostControllerTest {
                 .mediaCd(null)
                 .postEx(postEx)
                 .postPublicState(postPublicState)
-                .postStrYMD(postStrYMD)
-                .postEndYMD(postEndYMD)
+                .postScheduleShareState(false)
                 .build();
 
         String url = "http://localhost:" + port + "/post/";
@@ -88,8 +87,7 @@ public class PostControllerTest {
         assertThat(all.get(0).getUserFK().getUserCd()).isEqualTo(user1.getUserCd());
         assertThat(all.get(0).getPostEx()).isEqualTo(postEx);
         assertThat(all.get(0).getPostPublicState()).isEqualTo(postPublicState);
-        assertThat(all.get(0).getPostStrYMD()).isEqualTo(postStrYMD);
-        assertThat(all.get(0).getPostEndYMD()).isEqualTo(postEndYMD);
+        assertThat(all.get(0).getPostScheduleShareState()).isEqualTo(false);
     }
 
     @Test
@@ -105,6 +103,7 @@ public class PostControllerTest {
                 .userFK(user1)
                 .postEx("테스트 게시글")
                 .postPublicState(1)
+                .postScheduleShareState(false)
                 .build());
 
         Long updateCd = savedPost.getPostCd();
@@ -145,6 +144,7 @@ public class PostControllerTest {
                 .userFK(user1)
                 .postEx("테스트 게시글")
                 .postPublicState(1)
+                .postScheduleShareState(false)
                 .build());
 
         String url = "http://localhost:" + port + "/post/" + post.getPostCd();
@@ -172,21 +172,25 @@ public class PostControllerTest {
                 .userFK(user1)
                 .postEx("테스트 게시글1")
                 .postPublicState(1)
+                .postScheduleShareState(false)
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .postEx("테스트 게시글2")
                 .postPublicState(1)
+                .postScheduleShareState(false)
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .postEx("테스트 게시글3")
                 .postPublicState(1)
+                .postScheduleShareState(false)
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .postEx("테스트 게시글4")
                 .postPublicState(1)
+                .postScheduleShareState(false)
                 .build());
 
         String url = "http://localhost:" + port + "/post/user/" + user1.getUserCd();
@@ -212,21 +216,25 @@ public class PostControllerTest {
                 .userFK(user1)
                 .postEx("테스트 게시글1")
                 .postPublicState(1)
+                .postScheduleShareState(false)
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .postEx("테스트 게시글2")
                 .postPublicState(1)
+                .postScheduleShareState(false)
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .postEx("테스트 게시글3")
                 .postPublicState(1)
+                .postScheduleShareState(false)
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .postEx("게시글4")
                 .postPublicState(1)
+                .postScheduleShareState(false)
                 .build());
 
         String searchContent = "테스트";
@@ -263,24 +271,28 @@ public class PostControllerTest {
                 .groupFK(group1)
                 .postEx("테스트 게시글1")
                 .postPublicState(1)
+                .postScheduleShareState(false)
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .groupFK(group1)
                 .postEx("테스트 게시글2")
                 .postPublicState(1)
+                .postScheduleShareState(false)
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .groupFK(group1)
                 .postEx("테스트 게시글3")
                 .postPublicState(1)
+                .postScheduleShareState(false)
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .groupFK(group1)
                 .postEx("게시글4")
                 .postPublicState(1)
+                .postScheduleShareState(false)
                 .build());
 
         String searchContent = "테스트";
@@ -360,38 +372,45 @@ public class PostControllerTest {
                 .userFK(user1)
                 .postEx("테스트 게시글1")
                 .postPublicState(3)
+                .postScheduleShareState(false)
                 .build()); // user1이 비공개로 쓴 글 (timeline 1)
         postRepository.save(PostEntity.builder()
                 .userFK(user2)
                 .postEx("테스트 게시글2")
                 .postPublicState(2)
+                .postScheduleShareState(false)
                 .build()); // user2가 친구 공개로 쓴 글 (timeline 2)
         postRepository.save(PostEntity.builder()
                 .userFK(user2)
                 .postEx("테스트 게시글3")
                 .postPublicState(3)
+                .postScheduleShareState(false)
                 .build()); // user2가 비공개로 쓴 글 (timeline X)
         postRepository.save(PostEntity.builder()
                 .userFK(user3)
                 .groupFK(group1)
                 .postEx("테스트 게시글4")
                 .postPublicState(0)
+                .postScheduleShareState(false)
                 .build()); // user1이 속한 그룹 글 (timeline 3)
         postRepository.save(PostEntity.builder()
                 .userFK(user3)
                 .postEx("테스트 게시글5")
                 .postPublicState(1)
+                .postScheduleShareState(false)
                 .build()); // user3이 팔로 공개로 쓴 글 (timeline 4)
         postRepository.save(PostEntity.builder()
                 .userFK(user4)
                 .groupFK(group2)
                 .postEx("테스트 게시글6")
                 .postPublicState(0)
+                .postScheduleShareState(false)
                 .build()); // user4가 그룹에 쓴 글 (timeline X)
         postRepository.save(PostEntity.builder()
                 .userFK(user4)
                 .postEx("테스트 게시글7")
                 .postPublicState(2)
+                .postScheduleShareState(false)
                 .build()); // user4가 친구 공개로 쓴 글 (timeline X)
 
         String url = "http://localhost:" + port + "/post/timeLine/" + user1.getUserCd();
@@ -427,66 +446,79 @@ public class PostControllerTest {
                 .userFK(user1)
                 .postEx("테스트 게시글1")
                 .postPublicState(0)
+                .postScheduleShareState(false)
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .postEx("테스트 게시글2")
                 .postPublicState(0)
+                .postScheduleShareState(false)
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .postEx("테스트 게시글3")
                 .postPublicState(0)
+                .postScheduleShareState(false)
                 .build());
         PostEntity lastPost = postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .postEx("테스트 게시글4")
                 .postPublicState(0)
+                .postScheduleShareState(false)
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user2)
                 .postEx("테스트 게시글5")
                 .postPublicState(0)
+                .postScheduleShareState(false)
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user2)
                 .postEx("테스트 게시글6")
                 .postPublicState(0)
+                .postScheduleShareState(false)
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user2)
                 .postEx("테스트 게시글7")
                 .postPublicState(0)
+                .postScheduleShareState(false)
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user2)
                 .postEx("테스트 게시글8")
                 .postPublicState(0)
+                .postScheduleShareState(false)
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user2)
                 .postEx("테스트 게시글9")
                 .postPublicState(0)
+                .postScheduleShareState(false)
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user2)
                 .postEx("테스트 게시글10")
                 .postPublicState(0)
+                .postScheduleShareState(false)
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user2)
                 .postEx("테스트 게시글11")
                 .postPublicState(0)
+                .postScheduleShareState(false)
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user2)
                 .postEx("테스트 게시글12")
                 .postPublicState(0)
+                .postScheduleShareState(false)
                 .build());
         postRepository.save(PostEntity.builder()
                 .userFK(user2)
                 .postEx("테스트 게시글13")
                 .postPublicState(0)
+                .postScheduleShareState(false)
                 .build());
 
         String url1 = "http://localhost:" + port + "/post/pagingTimeLine/" + user1.getUserCd();

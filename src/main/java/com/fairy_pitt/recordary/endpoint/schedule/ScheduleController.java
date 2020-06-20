@@ -3,16 +3,16 @@ package com.fairy_pitt.recordary.endpoint.schedule;
 import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
 import com.fairy_pitt.recordary.endpoint.media.service.MediaService;
 import com.fairy_pitt.recordary.endpoint.post.service.PostService;
+import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleDateRequestDto;
+import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleResponseDto;
+import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleSaveRequestDto;
+import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleUpdateRequestDto;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleMemberService;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleService;
-import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleTabService;
-import com.fairy_pitt.recordary.endpoint.schedule.dto.*;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 
@@ -61,4 +61,16 @@ public class ScheduleController {
     public List<ScheduleResponseDto> showGroupSchedule(@PathVariable Long id, @RequestBody ScheduleDateRequestDto responseDto){
        return scheduleService.findGroupSchedule(id, responseDto);
     }
+
+    @GetMapping("search/{id}")
+    public List<ScheduleResponseDto> searchUserSchedule(@PathVariable Long id, @RequestParam(value = "input") String name ){
+        List<ScheduleResponseDto> result = scheduleService.searchSchedule(id, followerService.checkPublicStateToTarget(userService.currentUserCd() /*currUserCd*/, id),name);
+        return scheduleMemberService.searchUserAsMemberScheduleList(id, result, name);
+    }
+
+    @GetMapping("group/{id}/search")
+    public List<ScheduleResponseDto> searchGroupSchedule(@PathVariable Long id, @RequestParam(value = "input") String name, @RequestParam(value = "istMember") Boolean isMember ){
+        return scheduleService.searchGroupScheduleList(id, name, isMember);
+    }
+
 }

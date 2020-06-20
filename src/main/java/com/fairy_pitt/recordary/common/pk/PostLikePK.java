@@ -1,7 +1,5 @@
 package com.fairy_pitt.recordary.common.pk;
 
-
-
 import lombok.Getter;
 
 import javax.persistence.Embeddable;

@@ -54,7 +54,7 @@ const SearchFieldResult = (props) => {
       return (
         <li key={value.userInfo.userId} key={value.userInfo.userId}>
           <div className='follower_list'>
-            <Link to={`/profile/${value.userInfo.userId}`}>
+            <Link to={`/${value.userInfo.userId}`}>
               <div
                 style={{
                   display: 'flex',

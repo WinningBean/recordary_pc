@@ -1,4 +1,4 @@
-package com.fairy_pitt.recordary.common.entity;
+package com.fairy_pitt.recordary.common.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
@@ -14,14 +14,14 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "POST_TB")
-public class PostEntity extends BaseTimeEntity{
+public class PostEntity extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "POST_CD")
     private Long postCd;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "POST_USER_FK", nullable = false)
+    @JoinColumn(name = "POST_USER_FK")
     private UserEntity userFK;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -47,11 +47,8 @@ public class PostEntity extends BaseTimeEntity{
     @Column(name = "POST_PB_ST", nullable = false)
     private int postPublicState;
 
-    @Column(name = "POST_STR_YMD")
-    private String postStrYMD;
-
-    @Column(name = "POST_END_YMD")
-    private String postEndYMD;
+    @Column(name = "POST_SCHEDULE_SHARE_ST", nullable = false)
+    private Boolean postScheduleShareState;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "postFK", cascade = CascadeType.REMOVE)
@@ -66,6 +63,10 @@ public class PostEntity extends BaseTimeEntity{
     private List<PostLikeEntity> postLikeList = new ArrayList<>();
 
     @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postFK", cascade = CascadeType.REMOVE)
+    private List<PostScheduleShareEntity> postScheduleShareList = new ArrayList<>();
+
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "commentPostFK", cascade = CascadeType.REMOVE)
     private List<CommentEntity> postComments = new ArrayList<>();
 
@@ -77,8 +78,7 @@ public class PostEntity extends BaseTimeEntity{
                       MediaEntity mediaFK,
                       String postEx,
                       int postPublicState,
-                      String postStrYMD,
-                      String postEndYMD){
+                      Boolean postScheduleShareState){
         this.userFK = userFK;
         this.groupFK = groupFK;
         this.postOriginFK = postOriginFK;
@@ -86,8 +86,7 @@ public class PostEntity extends BaseTimeEntity{
         this.mediaFK = mediaFK;
         this.postEx = postEx;
         this.postPublicState = postPublicState;
-        this.postStrYMD = postStrYMD;
-        this.postEndYMD = postEndYMD;
+        this.postScheduleShareState = postScheduleShareState;
     }
 
     public void update(GroupEntity groupFK,

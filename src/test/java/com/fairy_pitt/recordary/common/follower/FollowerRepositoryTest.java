@@ -1,7 +1,7 @@
 package com.fairy_pitt.recordary.common.follower;
 
-import com.fairy_pitt.recordary.common.entity.FollowerEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.domain.FollowerEntity;
+import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.common.repository.FollowerRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import org.junit.After;
@@ -59,7 +59,7 @@ public class FollowerRepositoryTest {
     }
 
     @Test
-    public void BaseTimeEntity_등록(){
+    public void BaseTime_등록(){
         //given
         LocalDateTime now = LocalDateTime.of(2020, 3, 11, 0, 0, 0);
 

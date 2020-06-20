@@ -1,6 +1,6 @@
 package com.fairy_pitt.recordary.common.media;
 
-import com.fairy_pitt.recordary.common.entity.MediaEntity;
+import com.fairy_pitt.recordary.common.domain.MediaEntity;
 import com.fairy_pitt.recordary.common.repository.MediaRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import org.junit.After;
@@ -47,7 +47,7 @@ public class MediaRepositoryTest {
     }
 
     @Test
-    public void BaseTimeEntity_등록(){
+    public void BaseTime_등록(){
         //given
         LocalDateTime now = LocalDateTime.of(2020, 5, 11, 0, 0, 0);
 

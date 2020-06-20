@@ -1,7 +1,7 @@
 package com.fairy_pitt.recordary.endpoint.follower;
 
-import com.fairy_pitt.recordary.common.entity.FollowerEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.domain.FollowerEntity;
+import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.common.repository.FollowerRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import org.junit.After;

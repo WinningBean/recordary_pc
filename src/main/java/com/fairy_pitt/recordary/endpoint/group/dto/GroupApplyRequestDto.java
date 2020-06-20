@@ -1,8 +1,8 @@
 package com.fairy_pitt.recordary.endpoint.group.dto;
 
-import com.fairy_pitt.recordary.common.entity.GroupApplyEntity;
-import com.fairy_pitt.recordary.common.entity.GroupEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.domain.GroupApplyEntity;
+import com.fairy_pitt.recordary.common.domain.GroupEntity;
+import com.fairy_pitt.recordary.common.domain.UserEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

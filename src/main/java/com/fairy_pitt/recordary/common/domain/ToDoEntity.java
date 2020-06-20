@@ -1,4 +1,4 @@
-package com.fairy_pitt.recordary.common.entity;
+package com.fairy_pitt.recordary.common.domain;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Table(name = "TODO_TB")
 @Entity
-public class ToDoEntity extends BaseTimeEntity {
+public class ToDoEntity extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

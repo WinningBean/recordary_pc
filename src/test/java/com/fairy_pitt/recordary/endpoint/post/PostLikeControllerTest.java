@@ -1,8 +1,8 @@
 package com.fairy_pitt.recordary.endpoint.post;
 
-import com.fairy_pitt.recordary.common.entity.PostEntity;
-import com.fairy_pitt.recordary.common.entity.PostLikeEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.domain.PostEntity;
+import com.fairy_pitt.recordary.common.domain.PostLikeEntity;
+import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.common.repository.PostLikeRepository;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
@@ -62,8 +62,7 @@ public class PostLikeControllerTest {
                 .userFK(user1)
                 .postEx("테스트 게시글")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
+                .postScheduleShareState(false)
                 .build());
 
         Long requestLong = user2.getUserCd();
@@ -109,8 +108,7 @@ public class PostLikeControllerTest {
                 .userFK(user1)
                 .postEx("테스트 게시글")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
+                .postScheduleShareState(false)
                 .build());
 
         postLikeRepository.save(PostLikeEntity.builder()
@@ -153,29 +151,25 @@ public class PostLikeControllerTest {
                 .userFK(user1)
                 .postEx("테스트 게시글1")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
+                .postScheduleShareState(false)
                 .build());
         PostEntity post2 = postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .postEx("테스트 게시글2")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
+                .postScheduleShareState(false)
                 .build());
         PostEntity post3 = postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .postEx("테스트 게시글3")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
+                .postScheduleShareState(false)
                 .build());
         PostEntity post4 = postRepository.save(PostEntity.builder()
                 .userFK(user1)
                 .postEx("테스트 게시글4")
                 .postPublicState(1)
-                .postStrYMD("20200310")
-                .postEndYMD("20200311")
+                .postScheduleShareState(false)
                 .build());
 
         postLikeRepository.save(PostLikeEntity.builder()

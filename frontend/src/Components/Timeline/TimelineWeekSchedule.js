@@ -50,8 +50,6 @@ const TimelineWeekSchedule = (props) => {
 
   const textField = useRef();
 
-  useEffect(() => {}, []);
-
   const handleChange = (e) => {
     setWriteRecomment(e.target.value);
   };

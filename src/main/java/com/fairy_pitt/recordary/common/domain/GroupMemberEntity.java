@@ -1,4 +1,4 @@
-package com.fairy_pitt.recordary.common.entity;
+package com.fairy_pitt.recordary.common.domain;
 
 import com.fairy_pitt.recordary.common.pk.GroupMemberPK;
 import lombok.Builder;
@@ -13,7 +13,7 @@ import java.io.Serializable;
 @IdClass(GroupMemberPK.class)
 @NoArgsConstructor
 @Entity
-public class GroupMemberEntity extends BaseTimeEntity implements Serializable {
+public class GroupMemberEntity extends BaseTime implements Serializable {
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)

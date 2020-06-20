@@ -1,6 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.post.dto;
 
-import com.fairy_pitt.recordary.common.entity.PostEntity;
+import com.fairy_pitt.recordary.common.domain.PostEntity;
 import com.fairy_pitt.recordary.endpoint.comment.dto.CommentResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
 import com.fairy_pitt.recordary.endpoint.media.dto.MediaResponseDto;
@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,8 +26,10 @@ public class PostResponseDto implements Comparable<PostResponseDto>{
     private List<CommentResponseDto> commentList;
     private String postEx;
     private int postPublicState;
-    private String postStrYMD;
-    private String postEndYMD;
+    private Boolean postScheduleShareState;
+    private List<ScheduleResponseDto> shareScheduleList;
+    private Date shareScheduleStartDate;
+    private Date shareScheduleEndDate;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     private int postLikeCount;
@@ -46,8 +49,19 @@ public class PostResponseDto implements Comparable<PostResponseDto>{
                 .collect(Collectors.toList());
         this.postEx = postEntity.getPostEx();
         this.postPublicState = postEntity.getPostPublicState();
-        this.postStrYMD = postEntity.getPostStrYMD();
-        this.postEndYMD = postEntity.getPostEndYMD();
+        this.postScheduleShareState = postEntity.getPostScheduleShareState();
+        this.shareScheduleList = postEntity.getPostScheduleShareList().stream()
+                .map(pss -> pss.getScheduleFK())
+                .map(ScheduleResponseDto::new)
+                .collect(Collectors.toList());
+        if (shareScheduleList.size() != 0) this.shareScheduleStartDate = shareScheduleList.stream()
+                .map(ssl -> ssl.getScheduleStr())
+                .sorted()
+                .findFirst().get();
+        if (shareScheduleList.size() != 0) this.shareScheduleEndDate = shareScheduleList.stream()
+                .map(ssl -> ssl.getScheduleEnd())
+                .sorted((se1, se2) -> se2.compareTo(se1))
+                .findFirst().get();
         this.createdDate = postEntity.getCreatedDate();
         this.modifiedDate = postEntity.getModifiedDate();
         this.postLikeCount = postEntity.getPostLikeList().size();

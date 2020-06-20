@@ -1,17 +1,16 @@
-package com.fairy_pitt.recordary.common.entity;
+package com.fairy_pitt.recordary.common.domain;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.net.UnknownServiceException;
 
 @Getter
 @NoArgsConstructor
 @Entity
 @Table(name = "CHAT_TB")
-public class ChatEntity {
+public class ChatEntity extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +18,7 @@ public class ChatEntity {
     private Long chatCd;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CHAT_USER_FK", nullable = false)
+    @JoinColumn(name = "CHAT_USER_FK")
     private UserEntity userFK;
 
     @ManyToOne(fetch = FetchType.LAZY)

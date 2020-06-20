@@ -1,7 +1,7 @@
 package com.fairy_pitt.recordary.endpoint.schedule;
 
-import com.fairy_pitt.recordary.common.entity.ScheduleTabEntity;
-import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.domain.ScheduleTabEntity;
+import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.common.repository.ScheduleTabRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleTabRequestDto;

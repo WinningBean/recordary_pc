@@ -1,6 +1,6 @@
 package com.fairy_pitt.recordary.common.user;
 
-import com.fairy_pitt.recordary.common.entity.UserEntity;
+import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.user.service.UserPasswordHashService;
 import org.junit.After;
@@ -55,7 +55,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void BaseTimeEntity_등록() {
+    public void BaseTime_등록() {
         //given
         LocalDateTime now = LocalDateTime.of(2020, 3, 11, 0, 0, 0);
         userRepository.save(UserEntity.builder()

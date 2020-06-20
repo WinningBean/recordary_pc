@@ -55,17 +55,17 @@ const useStyles = makeStyles((theme) => ({
 export default function ScheduleSearch(props) {
   const classes = useStyles();
   const data = props.data;
-  const [searchState, setsearchState] = useState(false);
+  const [searchedList, setSearchedList] = useState(null);
   const [scheduleSearch, setScheduleSearch] = useState('');
 
   const SearchedList = () => {
-    const copyList =
-      scheduleSearch === '' ? [...data] : data.filter((value) => new RegExp(scheduleSearch, 'i').exec(value.ex));
+    // const copyList =
+    //   scheduleSearch === '' ? [...data] : data.filter((value) => new RegExp(scheduleSearch, 'i').exec(value.ex));
     console.log(scheduleSearch, data);
-    return copyList.map((value) => (
+    return searchedList.map((value) => (
       <li
         className='schedule-list'
-        key={value.cd}
+        key={value.scheduleCd}
         style={{
           height: '50px',
           borderBottom: '1px solid lightgray',
@@ -96,23 +96,23 @@ export default function ScheduleSearch(props) {
               whiteSpace: 'nowrap',
             }}
           >
-            {value.ex}
+            {value.scheduleNm}
           </div>
         </div>
         <div style={{ fontWeight: 'bold' }}>
-          {dateFns.differenceInCalendarDays(value.start, value.end) === 0
-            ? dateFns.format(value.start, 'yyyy-MM-dd')
-            : `${dateFns.format(value.start, 'yyyy-MM-dd')}
-          ~${dateFns.format(value.end, 'yyyy-MM-dd')}`}
+          {dateFns.differenceInCalendarDays(value.scheduleStr, value.scheduleEnd) === 0
+            ? dateFns.format(value.scheduleStr, 'yyyy-MM-dd')
+            : `${dateFns.format(value.scheduleStr, 'yyyy-MM-dd')}
+          ~${dateFns.format(value.scheduleEnd, 'yyyy-MM-dd')}`}
         </div>
       </li>
     ));
   };
   const setEnterKeyPress = () => {
-    if (searchState === true) {
+    if (searchedList !== null) {
       console.log(data);
       return (
-        <Dialog open onClose={() => setsearchState(false)}>
+        <Dialog open onClose={() => setSearchedList(null)}>
           <div style={{ height: '500px', maxHeight: '500px', width: '400px' }}>
             <div className='dialog-header'>
               <div className='dialog-header-icon'>
@@ -121,7 +121,7 @@ export default function ScheduleSearch(props) {
               &nbsp;
               <span>'{scheduleSearch}'에 대한 일정</span>
               <div className='dialog-header-icon' style={{ position: 'absolute', right: '5px' }}>
-                <IconButton onClick={() => setsearchState(false)}>
+                <IconButton onClick={() => setSearchedList(null)}>
                   <CloseIcon style={{ color: '#ffffff', fontSize: '20px' }} />
                 </IconButton>
               </div>
@@ -135,12 +135,21 @@ export default function ScheduleSearch(props) {
   };
 
   const handleKeyPress = async (e) => {
+    console.log(props.data, scheduleSearch);
     if (e.key === 'Enter') {
-      // const userData = (await axios.get("http://172.30.1.47:8080/user/search", {params : { userSearch : userSearch}})).data;
+      const userData = (
+        await axios.get(`/schedule/search/${props.data.userInfo.userCd}`, { params: { input: scheduleSearch } })
+      ).data;
       // const groupData = (await axios.get("http://172.30.1.47:8080/group/search", {params : { groupSearch : userSearch}})).data;
-      // console.log(data);
+      console.log(userData);
 
-      setsearchState(true);
+      setSearchedList(
+        userData.map((value) => ({
+          ...value,
+          scheduleStr: new Date(value.scheduleStr),
+          scheduleEnd: new Date(value.scheduleEnd),
+        }))
+      );
     }
   };
 
