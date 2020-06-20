@@ -68,7 +68,7 @@ const PostShareTimeline = (props) => {
 
       case '수정':
         // 게시물 EX만 수정할 수 있도록 만들기
-        setMenuDialog(<EditPostMediaSchedule mediaList={mediaList} data={data} onCancel={() => setMenuDialog(null)} />);
+        setMenuDialog(<EditPostMediaSchedule mediaList={[]} data={data} onCancel={() => setMenuDialog(null)} />);
         break;
       case '삭제':
         setMenuDialog(

@@ -298,7 +298,7 @@ const ToDo = ({ open, userCd }) => {
                   {value.toDoContent}
                 </div>
                 <div
-                  className='transition-all'
+                  className='`trans`ition-all'
                   id={`todo-delete-${index}`}
                   style={{ opacity: 0, width: '32px', cursor: 'pointer' }}
                   onClick={() => {

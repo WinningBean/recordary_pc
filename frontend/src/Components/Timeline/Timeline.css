@@ -314,9 +314,12 @@ fieldset {
 }
 
 .show-more-comment {
-  /* margin-left: 50px; */
   display: flex;
-  align-content: center;
+  align-items: center;
+}
+.show-more-comment :hover {
+  background-color: rgba(161, 159, 159, 0.1);
+  cursor: pointer;
 }
 .show-recomment-write {
   margin-left: 50px;
@@ -324,11 +327,6 @@ fieldset {
   display: flex;
   align-content: center;
   font-size: '12px';
-}
-
-.show-more-comment > div:hover {
-  background-color: rgba(161, 159, 159, 0.1);
-  cursor: pointer;
 }
 
 /* 일정만 => Week일때 */

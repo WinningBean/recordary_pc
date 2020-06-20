@@ -31,15 +31,13 @@ const SendButton = styled(Button)({
   height: '20px',
 });
 
-export default ({ tData, user }) => {
+export default ({ tData, user, onSuccess }) => {
   useEffect(() => {
     setData(
       tData.map((value) => ({
         ...value,
         showRecommentClick: { recommentList: [], click: false },
         updateClick: false,
-        deleteClick: false,
-        reIconClick: false,
       }))
     );
   }, [tData]);
@@ -50,14 +48,13 @@ export default ({ tData, user }) => {
       ...value,
       showRecommentClick: { recommentList: [], click: false },
       updateClick: false,
-      deleteClick: false,
-      reIconClick: false,
     }))
   );
   const [dialog, setDialog] = useState(null);
   const [writeRecomment, setWriteRecomment] = useState('');
   const [updateComment, setUpdateComment] = useState('');
   const [updateRecomment, setUpdateRecomment] = useState('');
+  const [deleteClick, setDeleteClick] = useState(false);
 
   const textField = useRef();
 
@@ -65,14 +62,14 @@ export default ({ tData, user }) => {
     setWriteRecomment(e.target.value);
   };
 
-  const getRecommentList = async (value, index) => {
+  const getRecommentList = async (value, index, bool) => {
     try {
       const recommentListData = (await axios.get(`/comment/${value.commentCd}`)).data;
       setData(
         data.map((val, listIndex) => {
           if (index === listIndex) {
             return produce(val, (draft) => {
-              draft.showRecommentClick.click = !draft.showRecommentClick.click;
+              draft.showRecommentClick.click = !bool;
               draft.showRecommentClick.recommentList = JSON.parse(JSON.stringify(recommentListData));
             });
           } else {
@@ -189,21 +186,7 @@ export default ({ tData, user }) => {
                         }}
                       />
                       <ClearIcon
-                        onClick={() => {
-                          setData(
-                            data.map((val, listIndex) => {
-                              if (index === listIndex) {
-                                return produce(val, (draft) => {
-                                  draft.deleteClick = !draft.deleteClick;
-                                });
-                              } else {
-                                return produce(val, (draft) => {
-                                  draft.deleteClick = draft.deleteClick;
-                                });
-                              }
-                            })
-                          );
-                        }}
+                        onClick={() => setDeleteClick(true)}
                         style={{
                           color: 'gray',
                           fontSize: '20',
@@ -219,26 +202,12 @@ export default ({ tData, user }) => {
           </div>
           <div className='commentIconFlex'>
             <div
-              className='commentIcon-hover'
-              onClick={() => {
-                setData(
-                  data.map((val, listIndex) => {
-                    if (index === listIndex) {
-                      return produce(val, (draft) => {
-                        draft.reIconClick = !draft.reIconClick;
-                      });
-                    } else {
-                      return produce(val, (draft) => {
-                        draft.reIconClick = draft.reIconClick;
-                      });
-                    }
-                  })
-                );
-              }}
+              className='show-more-comment'
+              onClick={() => getRecommentList(value, index, value.showRecommentClick.click)}
             >
               <CommentIcon
                 style={
-                  value.reIconClick === true
+                  value.showRecommentClick.click === true
                     ? {
                         fontSize: '20',
                         paddingRight: '5px',
@@ -250,139 +219,108 @@ export default ({ tData, user }) => {
                       }
                 }
               />
+              {value.reCommentCount > 0 ? (
+                value.showRecommentClick.click === false ? (
+                  <span style={{ fontSize: '12px' }}>{`댓글 ${
+                    value.showRecommentClick.recommentList.length > 0
+                      ? value.showRecommentClick.recommentList.length
+                      : value.reCommentCount
+                  }개 모두 보기`}</span>
+                ) : (
+                  <span style={{ fontSize: '12px' }}>{`댓글 접기`}</span>
+                )
+              ) : null}
             </div>
-            {value.reCommentCount > 0 ? (
-              <>
-                <div className='show-more-comment' onClick={() => getRecommentList(value, index)}>
-                  <div>
-                    <MoreHorizIcon
-                      style={{
-                        fontSize: '15',
-                        paddingTop: '3px',
-                      }}
-                    />
-                    {value.showRecommentClick.click === false ? (
-                      <span style={{ fontSize: '12px' }}>{`댓글 ${value.reCommentCount}개 모두 보기`}</span>
-                    ) : (
-                      <span style={{ fontSize: '12px' }}>{`댓글 접기`}</span>
-                    )}
-                  </div>
-                </div>
-              </>
-            ) : null}
           </div>
         </div>
       </div>
       {value.showRecommentClick.click === true ? (
-        <ShowRecommentList list={value.showRecommentClick.recommentList} user={user} />
-      ) : null}
-      {value.reIconClick === true ? (
-        <div className='show-recomment-write' style={{ marginBottom: '5px' }}>
-          <TextField
-            inputRef={textField}
-            id='recommentWrite'
-            autoFocus={true}
-            multiline
-            rowsMax='2'
-            onChange={handleChange}
-            InputProps={{
-              classes: {
-                input: classes.textFieldSize,
-              },
-              startAdornment: (
-                <InputAdornment position='start'>
-                  <div className='recommentProfileImg'>
-                    <img alt={`${user.userId} img`} src={user.userPic} />
-                  </div>
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position='end'>
-                  <SendButton
-                    onClick={async (e) => {
-                      e.preventDefault();
-                      textField.current.value = '';
-                      try {
-                        const recommentCd = (
-                          await axios.post(`/comment/`, {
-                            userCd: user.userCd,
-                            postCd: data.postCd,
-                            commentContent: writeRecomment,
-                            commentOriginCd: value.commentCd,
-                          })
-                        ).data;
-                        console.log(recommentCd);
-                      } catch (e) {
-                        console.log(e + 'comment Error');
-                        setDialog(
-                          <AlertDialog
-                            severity='error'
-                            content='서버에러로 댓글입력에 실패하였습니다.'
-                            onAlertClose={() => setDialog(null)}
-                          />
-                        );
-                      }
-                    }}
-                  >
-                    <SubdirectoryArrowLeftIcon style={{ fontSize: '15px' }} />
-                  </SendButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-        </div>
+        <>
+          <ShowRecommentList list={value.showRecommentClick.recommentList} user={user} />
+          <div className='show-recomment-write' style={{ marginBottom: '5px' }}>
+            <TextField
+              inputRef={textField}
+              id='recommentWrite'
+              autoFocus={true}
+              multiline
+              rowsMax='2'
+              onChange={handleChange}
+              InputProps={{
+                classes: {
+                  input: classes.textFieldSize,
+                },
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <div className='recommentProfileImg'>
+                      <img alt={`${user.userId} img`} src={user.userPic} />
+                    </div>
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <SendButton
+                      onClick={async (e) => {
+                        e.preventDefault();
+                        textField.current.value = '';
+                        try {
+                          const recommentCd = (
+                            await axios.post(`/comment/`, {
+                              userCd: user.userCd,
+                              postCd: data.postCd,
+                              commentContent: writeRecomment,
+                              commentOriginCd: value.commentCd,
+                            })
+                          ).data;
+                          getRecommentList(value, index, false);
+                          console.log(recommentCd);
+                        } catch (e) {
+                          console.log(e + 'comment Error');
+                          setDialog(
+                            <AlertDialog
+                              severity='error'
+                              content='서버에러로 댓글입력에 실패하였습니다.'
+                              onAlertClose={() => setDialog(null)}
+                            />
+                          );
+                        }
+                      }}
+                    >
+                      <SubdirectoryArrowLeftIcon style={{ fontSize: '15px' }} />
+                    </SendButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </div>
+        </>
       ) : null}
       <Dialog
-        open={value.deleteClick}
-        onClose={() =>
-          setData(
-            data.map((val, listIndex) => {
-              if (index === listIndex) {
-                return produce(val, (draft) => {
-                  draft.deleteClick = !draft.deleteClick;
-                });
-              } else {
-                return produce(val, (draft) => {
-                  draft.deleteClick = draft.deleteClick;
-                });
-              }
-            })
-          )
-        }
+        open={deleteClick}
+        onClose={() => setDeleteClick(false)}
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
       >
         <DialogTitle id='alert-dialog-title'>댓글 삭제</DialogTitle>
         <DialogContent>
           <DialogContentText id='alert-dialog-description'>댓글을 삭제하시겠습니까?</DialogContentText>
+          <DialogContentText style={{ color: 'red', fontSize: '12px' }}>
+            *관련된 댓글도 모두 삭제됩니다.
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={() =>
-              setData(
-                data.map((val, listIndex) => {
-                  if (index === listIndex) {
-                    return produce(val, (draft) => {
-                      draft.deleteClick = !draft.deleteClick;
-                    });
-                  } else {
-                    return produce(val, (draft) => {
-                      draft.deleteClick = draft.deleteClick;
-                    });
-                  }
-                })
-              )
-            }
-            color='primary'
-          >
+          <Button onClick={() => deleteClick(false)} color='primary'>
             취소
           </Button>
           <Button
             onClick={async () => {
               try {
-                const commentDeletedCd = (await axios.delete(`/comment/${value.commentCd}`)).data;
-                console.log(commentDeletedCd);
-                if (commentDeletedCd) {
+                const commentDeleted = (await axios.delete(`/comment/${value.commentCd}`)).data;
+                console.log(commentDeleted);
+                if (commentDeleted) {
+                  const copyList = data.slice();
+                  copyList.slice(index, 1);
+                  setData(copyList);
+                  onSuccess(copyList);
                   setDialog(
                     <AlertDialog
                       severity='success'
@@ -401,19 +339,7 @@ export default ({ tData, user }) => {
                   />
                 );
               }
-              setData(
-                data.map((val, listIndex) => {
-                  if (index === listIndex) {
-                    return produce(val, (draft) => {
-                      draft.deleteClick = !draft.deleteClick;
-                    });
-                  } else {
-                    return produce(val, (draft) => {
-                      draft.deleteClick = draft.deleteClick;
-                    });
-                  }
-                })
-              );
+              setDeleteClick(false);
             }}
             color='primary'
             autoFocus
