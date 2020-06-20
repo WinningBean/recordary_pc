@@ -500,15 +500,15 @@ const Chatting = ({ isOpen }) => {
           ? {
               opacity: '100%',
               transform: 'translateX(0)',
-              width: '360px',
-              height: '660px',
+              width: '300px',
+              height: '550px',
               boxShadow: `0px 1px 5px rgba(161, 159, 159, 0.8)`,
             }
           : {
               opacity: 0,
-              transform: 'translateX(200px)',
-              width: '360px',
-              height: '660px',
+              transform: 'translateX(300px)',
+              width: '300px',
+              height: '550px',
               overflow: 'hidden',
             }
       }

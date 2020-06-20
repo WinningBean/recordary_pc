@@ -199,6 +199,7 @@ const ScheduleShare = (props) => {
               <Calendar
                 type={4}
                 info={user}
+                searchedSchedule={null}
                 choiceSharedStartDate={choiceDate.start}
                 choiceSharedEndDate={choiceDate.end}
                 onChoice={(date, userDate, _publicState) => {

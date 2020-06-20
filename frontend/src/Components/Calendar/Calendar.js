@@ -66,6 +66,13 @@ const Calendar = (props) => {
   };
 
   useEffect(() => {
+    if (props.searchedSchedule === null) {
+      return;
+    }
+    setCurrentMonth(props.searchedSchedule.scheduleStr);
+  }, [props.searchedSchedule]);
+
+  useEffect(() => {
     (async () => {
       setAlert(
         <div
@@ -653,11 +660,17 @@ const Calendar = (props) => {
     //   moreList[i].style.display = 'none';
     // }
 
+    var isSelect = false;
+    if (props.searchedSchedule !== null) {
+      isSelect = true;
+    }
+
     var copyDayLocation = dayLocation.map((value) => ({ ...value }));
     copyDraft.forEach((value) => {
       if (publicState !== 0 && value.state !== publicState) {
         return;
       }
+
       var index = null;
       var secondBlock = false;
       var beforeStartDay = false;
@@ -880,6 +893,22 @@ const Calendar = (props) => {
           index++;
         }
       }
+      if (isSelect && props.searchedSchedule.scheduleCd === value.cd) {
+        const cloneElement = React.cloneElement(
+          sc[sc.length - 1],
+          { style: sc[sc.length - 1].props.style },
+          React.Children.map(sc[sc.length - 1].props.children, (child) =>
+            React.cloneElement(child, {
+              style: {
+                ...child.props.style,
+                border: '2px solid darkslategray',
+              },
+            })
+          )
+        );
+        sc.pop();
+        sc.push(cloneElement);
+      }
     });
     return sc;
   };
@@ -1082,10 +1111,11 @@ const Calendar = (props) => {
                       <div>
                         <img
                           style={{
-                            width: '50px',
-                            height: '50px',
+                            width: '40px',
+                            height: '40px',
                             marginRight: '4px',
                             objectFit: 'cover',
+                            borderRadius: '20%',
                             border: value.scheduleState ? `3px solid ${selectedDetailedSC.color}` : null,
                           }}
                           src={value.userPic}

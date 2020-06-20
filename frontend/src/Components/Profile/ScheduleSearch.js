@@ -74,6 +74,14 @@ export default function ScheduleSearch(props) {
           justifyContent: 'space-between',
           padding: '0px 10px',
         }}
+        onClick={() => {
+          props.onSelect({
+            ...value,
+            scheduleStr: new Date(value.scheduleStr),
+            scheduleEnd: new Date(value.scheduleEnd),
+          });
+          setSearchedList(null);
+        }}
       >
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div
