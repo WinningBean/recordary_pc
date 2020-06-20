@@ -73,4 +73,8 @@ public class ScheduleController {
         return scheduleService.searchGroupScheduleList(id, name, isMember);
     }
 
+    @GetMapping("/today")
+    public List<ScheduleResponseDto> todaySchedule(@RequestParam Long userCd){
+        return scheduleService.getTodayUserSchedule(userCd);
+    }
 }
