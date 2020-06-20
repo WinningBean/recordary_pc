@@ -428,12 +428,16 @@ const Timeline = (props) => {
                             headers: { 'Content-Type': 'application/json' },
                           })
                         ).data;
-                        console.log(like);
+                        if (like) {
+                          setData({ ...data, currentUserLikePost: true });
+                        }
                       } else {
                         const unLike = (
                           await axios.delete(`/post/${data.postCd}/unLike`, { params: { userCd: props.user.userCd } })
                         ).data;
-                        console.log(unLike);
+                        if (unLike) {
+                          setData({ ...data, currentUserLikePost: false });
+                        }
                       }
                     } catch (e) {
                       console.log(e);

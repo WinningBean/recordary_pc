@@ -226,7 +226,9 @@ const PostMediaScheduleAppend = (props) => {
           <AlertDialog
             severity='success'
             content='게시물이 추가되었습니다.'
-            onAlertClose={(() => setAlert(null), () => props.onCancel())}
+            onAlertClose={
+              (() => setAlert(null), () => props.onCancel(), () => setTimeout(() => window.location.reload(), 1000))
+            }
           />
         );
         console.log(store.getState());
@@ -478,8 +480,8 @@ const PostMediaScheduleAppend = (props) => {
         {alert}
         <div className='Post-Append-Bottom'>
           <div className='Post-Upload-buttons'>
-            <Button onClick={handleClickOpen}>게시</Button>
             <Button onClick={() => props.onCancel()}>취소</Button>
+            <Button onClick={handleClickOpen}>게시</Button>
           </div>
           <Dialog
             open={open}

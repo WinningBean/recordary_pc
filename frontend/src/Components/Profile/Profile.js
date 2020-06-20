@@ -75,6 +75,7 @@ class Profile extends React.Component {
       isRemoveAllScheduleInTab: false,
       contextMenu: undefined,
       post: [],
+      groupPost: [],
       isOpenAddTab: false,
       searchedSchedule: null,
     };
@@ -136,7 +137,6 @@ class Profile extends React.Component {
           break;
         }
       }
-
       console.log('type = ', type);
       this.setState({
         ...this.state,
@@ -150,6 +150,13 @@ class Profile extends React.Component {
         isLoading: false,
         isClickMember: false,
       });
+      try {
+        const groupPostList = (await axios.get(`/post/group/${this.props.match.params.groupCd}`)).data;
+        this.setState({ groupPost: JSON.parse(JSON.stringify(groupPostList)) });
+        console.log(this.state.groupPost);
+      } catch (error) {
+        console.log(error);
+      }
     } catch (error) {
       console.error(error);
       this.setState({ ...this.state, redirect: true });
@@ -680,6 +687,85 @@ class Profile extends React.Component {
                 </NavButton>
               </div>
             </nav>
+            {this.state.type >= 2 && this.state.showProfileList ? (
+              <>
+                <div className='profile-MediaTimeline'>
+                  {this.state.groupPost.map((value, index) => {
+                    if (value.mediaFK !== null && value.postOriginFK === null) {
+                      return (
+                        <div
+                          className='media-box-hover'
+                          style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            height: '272px',
+                            width: '272px',
+                            overflow: 'hidden',
+                            margin: '10px',
+                          }}
+                          key={`${index}- img`}
+                        >
+                          <img
+                            className='media-box'
+                            alt={`${index}- img`}
+                            src={value.mediaFK.mediaFirstPath}
+                            onClick={() => {
+                              this.state.groupPost.map(async (val, i) => {
+                                try {
+                                  if (val.postCd === value.postCd) {
+                                    this.setState({ val: (this.state.post[i] = { ...val, postImgClick: true }) });
+                                  } else return null;
+                                } catch (error) {
+                                  console.log(error);
+                                }
+                              });
+                            }}
+                          />
+                        </div>
+                      );
+                    } else return null;
+                  })}
+                </div>
+                {this.state.groupPost.map((value, index) => {
+                  if (value.postImgClick === true) {
+                    return (
+                      <Dialog
+                        open
+                        key={value.postCd}
+                        onClose={() => {
+                          this.setState({ value: (this.state.post[index] = { ...value, postImgClick: false }) });
+                        }}
+                      >
+                        <Timeline data={value} user={this.props.user} />
+                      </Dialog>
+                    );
+                  }
+                })}
+                {console.log(this.state.groupPost)}
+              </>
+            ) : (
+              this.state.groupPost.map((value, index) => {
+                if (value.mediaFK !== null) {
+                  return (
+                    <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
+                      <Timeline data={value} user={this.props.user} />
+                    </div>
+                  );
+                } else if (value.scheduleFK !== null || value.shareScheduleList.length > 0) {
+                  return (
+                    <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
+                      <TimelineWeekSchedule data={value} user={this.props.user} />
+                    </div>
+                  );
+                } else if (value.postOriginFK !== null) {
+                  return (
+                    <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
+                      <PostShareTimeline data={value} user={this.props.user} />
+                    </div>
+                  );
+                } else return null;
+              })
+            )}
             {this.state.showProfileList ? (
               <>
                 <div className='profile-MediaTimeline'>

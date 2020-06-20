@@ -61,7 +61,9 @@ const PostShare = (props) => {
           <AlertDialog
             severity='success'
             content='게시물을 공유하였습니다.'
-            onAlertClose={(() => setAlert(null), () => props.onCancel())}
+            onAlertClose={
+              (() => setAlert(null), () => props.onCancel(), () => setTimeout(() => window.location.reload(), 1000))
+            }
           />
         );
       } else {

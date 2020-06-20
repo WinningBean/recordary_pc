@@ -65,9 +65,9 @@ const PostShareTimeline = (props) => {
           </Dialog>
         );
         break;
-
       case '수정':
         // 게시물 EX만 수정할 수 있도록 만들기
+        // 따로 ex 디자인 추가하여 수정하기
         setMenuDialog(<EditPostMediaSchedule mediaList={[]} data={data} onCancel={() => setMenuDialog(null)} />);
         break;
       case '삭제':
@@ -323,12 +323,12 @@ const PostShareTimeline = (props) => {
                             headers: { 'Content-Type': 'application/json' },
                           })
                         ).data;
-                        console.log(like);
+                        setData({ ...data, currentUserLikePost: true });
                       } else {
                         const unLike = (
                           await axios.delete(`/post/${data.postCd}/unLike`, { params: { userCd: props.user.userCd } })
                         ).data;
-                        console.log(unLike);
+                        setData({ ...data, currentUserLikePost: false });
                       }
                     } catch (e) {
                       console.log(e);

@@ -1107,8 +1107,8 @@ const Calendar = (props) => {
             >
               <div style={{ display: 'flex' }}>
                 {selectedDetailedSC !== null
-                  ? selectedDetailedSC.members.map((value) => (
-                      <div>
+                  ? selectedDetailedSC.members.map((value, index) => (
+                      <div key={`${value.userCd}-${index}`}>
                         <img
                           style={{
                             width: '40px',

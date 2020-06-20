@@ -63,7 +63,7 @@ function rgbToHex(r, g, b) {
 }
 
 const EditPostMediaSchedule = (props) => {
-  // console.log(props);
+  //공유 게시물은 미디어, 일정부분 안나오도록 하기
   const classes = useStyles();
   const [user, setUser] = useState(props.user);
   const [data, setData] = useState(props.data);
@@ -278,7 +278,17 @@ const EditPostMediaSchedule = (props) => {
             )}
           </div>
           <div className='schedule-media-button '>
-            {data.scheduleFK.scheduleMemberList.length > 0 ? (
+            {data.scheduleFK === null ? (
+              <PublicRange
+                onSetSelectedIndex={(index) => {
+                  if (scheduleOpen) {
+                    setScheduleInfo({ ...scheduleInfo, schedulePublicState: index });
+                  }
+                  setPost({ ...post, postPublicState: index });
+                }}
+                selectedIndex={data.postPublicState}
+              />
+            ) : data.scheduleFK.scheduleMemberList.length > 0 ? (
               <PublicRange
                 options={['전체공개', '비공개']}
                 onSetSelectedIndex={(index) => {
@@ -296,38 +306,42 @@ const EditPostMediaSchedule = (props) => {
                 selectedIndex={scheduleInfo.schedulePublicState}
               />
             )}
-            <div className='plus-button-design' onClick={() => setScheduleOpen(!scheduleOpen)}>
-              {(() => {
-                if (scheduleOpen === false) {
-                  return (
-                    <div className='plus-button-design-2'>
-                      <DateRangeIcon style={{ fontSize: '30px' }} />
-                      <span style={{ fontSize: '15px', marginLeft: '5px' }}>일정추가</span>
-                    </div>
-                  );
-                } else {
-                  return (
+            {data.shareScheduleList.length > 0 ? null : (
+              <>
+                <div className='plus-button-design' onClick={() => setScheduleOpen(!scheduleOpen)}>
+                  {(() => {
+                    if (scheduleOpen === false) {
+                      return (
+                        <div className='plus-button-design-2'>
+                          <DateRangeIcon style={{ fontSize: '30px' }} />
+                          <span style={{ fontSize: '15px', marginLeft: '5px' }}>일정추가</span>
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div className='plus-button-design-2 clicked'>
+                          <DateRangeIcon style={{ fontSize: '30px' }} />
+                          <span style={{ fontSize: '15px', marginLeft: '5px' }}>일정추가</span>
+                        </div>
+                      );
+                    }
+                  })()}
+                </div>
+                <div className='plus-button-design' onClick={mediaOpenClick}>
+                  {mediaOpen === true ? (
                     <div className='plus-button-design-2 clicked'>
-                      <DateRangeIcon style={{ fontSize: '30px' }} />
-                      <span style={{ fontSize: '15px', marginLeft: '5px' }}>일정추가</span>
+                      <PhotoIcon style={{ fontSize: '30px' }} />
+                      <span style={{ fontSize: '15px', marginLeft: '10px' }}>미디어</span>
                     </div>
-                  );
-                }
-              })()}
-            </div>
-            <div className='plus-button-design' onClick={mediaOpenClick}>
-              {mediaOpen === true ? (
-                <div className='plus-button-design-2 clicked'>
-                  <PhotoIcon style={{ fontSize: '30px' }} />
-                  <span style={{ fontSize: '15px', marginLeft: '10px' }}>미디어</span>
+                  ) : (
+                    <div className='plus-button-design-2 '>
+                      <PhotoIcon style={{ fontSize: '30px' }} />
+                      <span style={{ fontSize: '15px', marginLeft: '10px' }}>미디어</span>
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <div className='plus-button-design-2 '>
-                  <PhotoIcon style={{ fontSize: '30px' }} />
-                  <span style={{ fontSize: '15px', marginLeft: '10px' }}>미디어</span>
-                </div>
-              )}
-            </div>
+              </>
+            )}
           </div>
         </div>
         <div className='Post-Append-text post-Append'>
