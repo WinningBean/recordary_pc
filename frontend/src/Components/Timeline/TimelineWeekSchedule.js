@@ -87,7 +87,10 @@ const TimelineWeekSchedule = (props) => {
                           severity='success'
                           content='게시물이 삭제되었습니다.'
                           duration={1000}
-                          onAlertClose={() => setDialog(null)}
+                          onAlertClose={() => {
+                            setMenuDialog(null);
+                            props.onPostDelete(data.postCd);
+                          }}
                         />
                       );
                     } else {
