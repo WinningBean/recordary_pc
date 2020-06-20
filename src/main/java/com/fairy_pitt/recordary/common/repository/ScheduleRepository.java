@@ -13,6 +13,7 @@ import java.util.List;
 @Repository
 public interface ScheduleRepository extends JpaRepository<ScheduleEntity,Long> {
     ScheduleEntity findByScheduleCd(Long scheduleCd);
+    List<ScheduleEntity> findAllByGroupFK(GroupEntity groupEntity);
     List<ScheduleEntity> findAllByScheduleStrLessThanEqualAndScheduleEndGreaterThanEqual(Date strDate, Date endDate);
     ScheduleEntity findByScheduleCdAndScheduleStrLessThanEqualAndScheduleEndGreaterThanEqual(Long scheduleCd, Date strDate, Date endDate);
     List<ScheduleEntity> findAllByUserFkAndScheduleStrLessThanEqualAndScheduleEndGreaterThanEqual(UserEntity userEntity, Date strDate, Date endDate);

@@ -204,17 +204,25 @@ public class ScheduleService implements Comparator< ScheduleResponseDto > {
     }
 
     @Transactional(readOnly = true)
-    public List<ScheduleResponseDto> getTodayUserSchedule(Long userCd){
+    public List<ScheduleTodayResponseDto> getTodayUserSchedule(Long userCd){
         UserEntity userEntity = userService.findEntity(userCd);
 
-        List<ScheduleResponseDto> todayScheduleList = new ArrayList<>();
+        List<ScheduleTodayResponseDto> todayScheduleList = new ArrayList<>();
         for (ScheduleEntity scheduleEntity : scheduleRepository.findAllByUserFkAndScheduleStrLessThanEqualAndScheduleEndGreaterThanEqual(userEntity, new Date(), new Date())){
-            todayScheduleList.add(new ScheduleResponseDto(scheduleEntity));
+            todayScheduleList.add(new ScheduleTodayResponseDto(scheduleEntity, 0));
+        }
+        for (GroupMemberEntity groupMemberEntity : userEntity.getGroups()){
+            GroupEntity groupEntity = groupMemberEntity.getGroupFK();
+            List<ScheduleEntity> scheduleEntityList = scheduleRepository.findAllByGroupFK(groupEntity);
+            for (ScheduleEntity scheduleEntity : scheduleEntityList){
+                ScheduleEntity schedule = scheduleRepository.findByScheduleCdAndScheduleStrLessThanEqualAndScheduleEndGreaterThanEqual(scheduleEntity.getScheduleCd(), new Date(), new Date());
+                if (schedule != null) todayScheduleList.add(new ScheduleTodayResponseDto(schedule, 1));
+            }
         }
         for (ScheduleMemberEntity scheduleMemberEntity : userEntity.getScheduleMembers()){
             Long scheduleCd = scheduleMemberEntity.getScheduleFK().getScheduleCd();
             ScheduleEntity scheduleEntity = scheduleRepository.findByScheduleCdAndScheduleStrLessThanEqualAndScheduleEndGreaterThanEqual(scheduleCd, new Date(), new Date());
-            todayScheduleList.add(new ScheduleResponseDto(scheduleEntity));
+            if (scheduleEntity != null) todayScheduleList.add(new ScheduleTodayResponseDto(scheduleEntity, 2));
         }
 
         return todayScheduleList;
