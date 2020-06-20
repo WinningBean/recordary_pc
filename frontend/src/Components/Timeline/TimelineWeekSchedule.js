@@ -36,13 +36,8 @@ const TimelineWeekSchedule = (props) => {
   const classes = useStyles();
   const [data, setData] = useState(props.data);
   const [postForm, setPostForm] = useState(props.data.shareScheduleList.length < 1 ? 1 : 2);
-  const [isClickList, setIsClickList] = useState(
-    data.commentList.map(() => ({ recommentList: [], clickIndex: false }))
-  );
-  const [writeRecommentShow, setWriteRecommentShow] = useState(data.commentList.map(() => false));
   const [writeRecomment, setWriteRecomment] = useState('');
   const [updateComment, setUpdateComment] = useState('');
-  const [editComment, setEditComment] = useState(data.commentList.map(() => false));
   const [editRecomment, setEditRecomment] = useState([]);
   const [updateRecomment, setUpdateRecomment] = useState('');
   const [menuDialog, setMenuDialog] = useState(null);
@@ -87,7 +82,10 @@ const TimelineWeekSchedule = (props) => {
                           severity='success'
                           content='게시물이 삭제되었습니다.'
                           duration={1000}
-                          onAlertClose={() => setDialog(null)}
+                          onAlertClose={() => {
+                            setMenuDialog(null);
+                            props.onPostDelete(data.postCd);
+                          }}
                         />
                       );
                     } else {
@@ -179,7 +177,14 @@ const TimelineWeekSchedule = (props) => {
         <div className='comment-context'>
           <div className='comment-reply' style={{ height: '220px', overflowY: 'auto' }}>
             {data.commentList.length > 0 ? (
-              <CommentList tData={data.commentList} user={props.user} />
+              <CommentList
+                tData={data.commentList}
+                user={props.user}
+                onSuccess={(commentInfo) => {
+                  console.log(commentInfo);
+                  setData({ ...data, commentList: commentInfo });
+                }}
+              />
             ) : (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div className='recomment-reply-users-img'>

@@ -96,7 +96,10 @@ const PostShareTimeline = (props) => {
                             severity='success'
                             content='게시물이 삭제되었습니다.'
                             duration={1000}
-                            onAlertClose={() => setDialog(null)}
+                            onAlertClose={() => {
+                              setMenuDialog(null);
+                              props.onPostDelete(data.postCd);
+                            }}
                           />
                         );
                       } else {
@@ -280,7 +283,19 @@ const PostShareTimeline = (props) => {
         <div className='comment-context'>
           <div className='comment-reply' style={{ overflowY: 'auto' }}>
             {data.commentList.length > 0 ? (
-              <CommentList tData={data.commentList} user={props.user} />
+              <CommentList
+                tData={data.commentList}
+                user={props.user}
+                onSuccess={(commentInfo) => {
+                  console.log(commentInfo);
+                  setData(
+                    commentInfo.map((value) => ({
+                      ...data,
+                      commentList: value,
+                    }))
+                  );
+                }}
+              />
             ) : (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div className='recomment-reply-users-img'>

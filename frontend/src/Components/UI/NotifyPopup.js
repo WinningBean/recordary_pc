@@ -19,7 +19,7 @@ const NotifyPopup = ({ data, onAccept, onDenial }) => {
       <div>
         <IconButton {...bindTrigger(popupState)}>
           <StyledBadge badgeContent={data.length} color='secondary'>
-            <NotificationsIcon style={{ fontSize: 38, color: 'lightsteelblue' }} />
+            <NotificationsIcon style={{ fontSize: 30, color: 'lightsteelblue' }} />
           </StyledBadge>
         </IconButton>
         <Menu
@@ -42,12 +42,21 @@ const NotifyPopup = ({ data, onAccept, onDenial }) => {
             data.map((value, index) => (
               <div
                 key={index}
-                style={{ margin: '5px 10px', paddingBottom: '5px', borderBottom: '1px solid lightgray' }}
+                style={{
+                  margin: '5px 10px',
+                  paddingBottom: '5px',
+                  borderBottom: '1px solid lightgray',
+                  width: '280px',
+                }}
               >
                 <MenuItem>
                   <div className='notify-list'>
-                    <div className='notify-list-time'>시간도 보내줘야돼</div>
-                    <div>{`${value.userId}(${value.userNm}) 님이 그룹신청을 하였습니다.`}</div>
+                    <div className='notify-list-time' style={{ fontSize: '14px' }}>
+                      시간도 보내줘야돼
+                    </div>
+                    <div
+                      style={{ fontSize: '14px' }}
+                    >{`${value.userId}(${value.userNm}) 님이 그룹신청을 하였습니다.`}</div>
                   </div>
                 </MenuItem>
                 <div style={{ display: 'flex' }}>

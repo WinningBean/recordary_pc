@@ -91,7 +91,10 @@ const Timeline = (props) => {
                           severity='success'
                           content='게시물이 삭제되었습니다.'
                           duration={1000}
-                          onAlertClose={() => setDialog(null)}
+                          onAlertClose={() => {
+                            setMenuDialog(null);
+                            props.onPostDelete(data.postCd);
+                          }}
                         />
                       );
                     } else {
@@ -396,12 +399,7 @@ const Timeline = (props) => {
                 user={props.user}
                 onSuccess={(commentInfo) => {
                   console.log(commentInfo);
-                  setData(
-                    commentInfo.map((value) => ({
-                      ...data,
-                      commentList: value,
-                    }))
-                  );
+                  setData({ ...data, commentList: commentInfo });
                 }}
               />
             ) : (

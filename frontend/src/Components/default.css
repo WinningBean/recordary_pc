@@ -134,6 +134,7 @@ input:focus {
   animation-name: todo;
   animation-duration: 0.25s;
   animation-delay: 0;
+  box-shadow: rgb(161, 159, 159);
 }
 
 @keyframes todo {

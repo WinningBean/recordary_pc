@@ -123,7 +123,7 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
 
     const location = [];
     var x = 0;
-    var y = 20;
+    var y = 2;
     // var x = 68.43;
     // var y = 56;
 
@@ -161,31 +161,25 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
               <>
                 <div
                   style={{
-                    height: '15px',
+                    height: '100%',
+                    width: '100%',
                     textAlign: 'center',
-                    fontSize: '9px',
-                    fontWeight: 'bold',
-                    backgroundColor: 'rgba(20, 81, 51, 0.6)',
-                    lineHeight: '1.7',
-                    color: 'white',
+                    fontSize: '38px',
+                    lineHeight: '160%',
+                    color: '#ddd',
                   }}
                 >
                   {formattedDate}
                 </div>
-                <div style={{ height: '100%', borderRight: '1px solid lightgray' }} />
               </>
             ) : (
               <div
                 style={{
-                  height: '15px',
-                  textAlign: 'center',
-                  fontSize: '9px',
-                  fontWeight: 'bold',
-                  lineHeight: '1.7',
+                  height: '100%',
+                  width: '100%',
+                  backgroundColor: 'white',
                 }}
-              >
-                {formattedDate}
-              </div>
+              ></div>
             )}
 
             <div className='more' />
@@ -198,7 +192,7 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
           y,
           day,
         });
-        x += 68.43;
+        x += 67.14;
         day = dateFns.addDays(day, 1);
       }
       y += 56;
@@ -269,7 +263,6 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
               height: `${size}px`,
               backgroundColor: `${color}80`,
               borderRadius: '4px',
-              marginLeft: '5px',
               borderLeft: isBeforeStartDay === false ? `3px solid ${color}` : null,
               cursor: 'pointer',
             }}
@@ -298,7 +291,6 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
                 width: `470px`,
                 height: `${size}px`,
                 backgroundColor: `${color}80`,
-                marginLeft: '5px',
                 borderRadius: '4px',
                 cursor: 'pointer',
               }}
@@ -329,7 +321,6 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
               height: `${size}px`,
               backgroundColor: `${color}80`,
               borderRadius: '4px',
-              marginLeft: '5px',
               borderRight: `3px solid ${color}`,
               cursor: 'pointer',
             }}
@@ -345,6 +336,7 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
 
         return;
       } else {
+        console.log(overlap);
         if (dateFns.isSameDay(Date.parse(scheduleValue.scheduleStr), Date.parse(scheduleValue.scheduleEnd))) {
           // console.log(`${dayLocation[index].day}-${overlap[index]}`);
           sc.push(
@@ -358,7 +350,6 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
                 height: `${size}px`,
                 backgroundColor: `${color}80`,
                 borderRadius: '4px',
-                marginLeft: '5px',
                 borderLeft: isBeforeStartDay === false ? `3px solid ${color}` : null,
                 cursor: 'pointer',
               }}
@@ -368,7 +359,11 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
           ++overlap[index];
           return;
         } else {
-          // console.log(`${dayLocation[index].day}-${overlap[index]}`);
+          const diffDays =
+            dateFns.differenceInCalendarDays(
+              Date.parse(scheduleValue.scheduleEnd),
+              Date.parse(scheduleValue.scheduleStr)
+            ) + 1;
           sc.push(
             <div
               key={`${dayLocation[index].day}-${overlap[index]}`}
@@ -376,11 +371,10 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
                 position: 'absolute',
                 left: `${dayLocation[index].x}px`,
                 top: `${dayLocation[index].y + (size + 2) * overlap[index]}px`,
-                width: `${480 - dayLocation[index].x - 10}px`,
+                width: `${68.43 * diffDays - 5}px`,
                 height: `${size}px`,
                 backgroundColor: `${color}80`,
                 borderRadius: '4px',
-                marginLeft: '5px',
                 borderLeft: isBeforeStartDay === false ? `3px solid ${color}` : null,
                 borderRight: `3px solid ${color}`,
                 cursor: 'pointer',
@@ -390,7 +384,7 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
           );
           const endOfWeek = Date.parse(scheduleValue.scheduleEnd);
           const startOfWeek = dayLocation[index].day;
-          for (let k = 0; k < dateFns.differenceInDays(endOfWeek, startOfWeek) + 1; k++) {
+          for (let k = 0; k <= diffDays; k++) {
             ++overlap[index];
             ++index;
           }
@@ -405,7 +399,7 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
 
   return (
     <>
-      <div style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
         {CalendarHeader}
         {CalendarDays}
         <div style={{ position: 'relative' }}>
@@ -420,12 +414,15 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
                   position: 'absolute',
                   bottom: '0',
                   height: 0,
+                  transform: 'translateY(400px)',
                   width: '100%',
+                  height: '100%',
                   backgroundColor: 'rgb(253,253,253)',
                 }
               : {
                   position: 'absolute',
                   bottom: '0',
+                  transform: 'translateY(0)',
                   width: '100%',
                   height: '100%',
                   zIndex: '1',

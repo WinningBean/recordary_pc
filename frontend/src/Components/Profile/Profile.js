@@ -148,7 +148,6 @@ class Profile extends React.Component {
         },
         type: type,
         isLoading: false,
-        isHover: false,
         isClickMember: false,
       });
     } catch (error) {
@@ -521,7 +520,7 @@ class Profile extends React.Component {
                         </div>
                         {this.state.type >= 2 ? (
                           <>
-                            <div>
+                            <div style={{ textAlign: 'center' }}>
                               <span className='followerName'>그룹 멤버</span>
                               <Link
                                 component='button'
@@ -563,6 +562,7 @@ class Profile extends React.Component {
                                         >
                                           <img
                                             style={{
+                                              boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)',
                                               height: '50px',
                                               width: '50px',
                                               objectFit: 'cover',
@@ -586,62 +586,18 @@ class Profile extends React.Component {
                                 </Dialog>
                               ) : null}
                             </div>
-                            <div style={{ position: 'relative' }}>
+                            <div style={{ textAlign: 'center' }}>
                               <span className='followerName'>그룹장</span>
-                              <RouterLink to={`/profile/${this.state.info.admin.userCd}`}>
+                              <RouterLink to={`/${this.state.info.admin.userId}`}>
                                 <Link component='button'>
-                                  <span
-                                    className='followerNum'
-                                    onMouseEnter={() => this.setState({ ...this.state, isHover: true })}
-                                    onMouseOut={() => this.setState({ ...this.state, isHover: false })}
-                                  >
-                                    {this.state.info.admin.userNm}
-                                  </span>
+                                  <span className='followerNum'>{this.state.info.admin.userNm}</span>
                                 </Link>
                               </RouterLink>
-                              <div
-                                className='transition-all'
-                                style={{
-                                  position: 'absolute',
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  bottom: '-100px',
-                                  left: 0,
-                                  // padding: '6px 8px',
-                                  height: '100px',
-                                  width: '160px',
-                                  border: '1px solid gray',
-                                  // backgroundColor: '#eee',
-                                  zIndex: this.state.isHover ? 6 : -6,
-                                  opacity: this.state.isHover ? 100 : 0,
-                                  transform: this.state.isHover ? 'translateY(18px)' : 'translateX(0px)',
-                                }}
-                              >
-                                <div style={{ height: '60px', display: 'flex' }}>
-                                  <img
-                                    style={{ height: '60px', width: '60px', objectFit: 'cover', borderRadius: '50%' }}
-                                    alt='admin img'
-                                    src='https://i.pinimg.com/originals/0d/e8/86/0de8869350e89fd300edaeef3b659674.jpg'
-                                  />
-                                  <div
-                                    style={{
-                                      flex: 1,
-                                      textAlign: 'center',
-                                      lineHeight: '60px',
-                                      fontSize: '18px',
-                                      fontWeight: 'bold',
-                                    }}
-                                  >
-                                    {this.state.info.userNm}
-                                  </div>
-                                </div>
-                                <div style={{ flex: 1, backgroundColor: 'tomato' }}>hello world</div>
-                              </div>
                             </div>
                           </>
                         ) : (
                           <>
-                            <div>
+                            <div style={{ textAlign: 'center' }}>
                               <span className='followerName'>팔로워</span>
                               <Link
                                 component='button'
@@ -655,7 +611,7 @@ class Profile extends React.Component {
                               </Link>
                             </div>
                             {FollowerShow()}
-                            <div>
+                            <div style={{ textAlign: 'center' }}>
                               <span className='followerName'>팔로우</span>
                               <Link
                                 component='button'

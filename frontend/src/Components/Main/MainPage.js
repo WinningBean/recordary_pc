@@ -14,32 +14,13 @@ const MainPage = (props) => {
   const [isRedirect, setIsRedirect] = useState(false);
   const [timelineLastCd, setTimelineLastCd] = useState(null);
 
-  useEffect(() => {
-    if (!props.isLogin) {
-      setIsRedirect(true);
-    }
-    (async () => {
-      try {
-        const timeLineDataList = (await axios.get(`/post/timeLine/${data.userCd}`)).data;
-        if (timeLineDataList.length < 0) {
-          return null;
-        } else {
-          console.log(timeLineDataList);
-          setTimeline(JSON.parse(JSON.stringify(timeLineDataList)));
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    })();
-  }, []);
-
   // useEffect(() => {
   //   if (!props.isLogin) {
   //     setIsRedirect(true);
   //   }
   //   (async () => {
   //     try {
-  //       const timeLineDataList = (await axios.get(`post/pagingTimeLine/${data.userCd}`)).data;
+  //       const timeLineDataList = (await axios.get(`/post/timeLine/${data.userCd}`)).data;
   //       if (timeLineDataList.length < 0) {
   //         return null;
   //       } else {
@@ -51,6 +32,25 @@ const MainPage = (props) => {
   //     }
   //   })();
   // }, []);
+
+  useEffect(() => {
+    if (!props.isLogin) {
+      setIsRedirect(true);
+    }
+    (async () => {
+      try {
+        const timeLineDataList = (await axios.get(`post/pagingTimeLine/${data.userCd}`)).data;
+        if (timeLineDataList.length < 0) {
+          return;
+        } else {
+          console.log(timeLineDataList);
+          setTimeline(JSON.parse(JSON.stringify(timeLineDataList)));
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    })();
+  }, []);
 
   // useEffect(() => {
   //   window.addEventListener('scroll', () => {
@@ -93,7 +93,23 @@ const MainPage = (props) => {
       <Header />
       <div id='main-page'>
         <div id='main-wrap'>
-          <Main data={data} timeline={timeline} />
+          <Main
+            data={data}
+            timeline={timeline}
+            onPostDelete={(postCd) => {
+              var index = undefined;
+              for (let i = 0; i < timeline.length; i++) {
+                console.log(postCd, timeline[i].postCd);
+                if (postCd === timeline[i].postCd) {
+                  index = i;
+                  break;
+                }
+              }
+              const copyTimeLine = timeline.slice();
+              copyTimeLine.splice(index, 1);
+              setTimeline(copyTimeLine);
+            }}
+          />
           <Aside data={data}></Aside>
         </div>
       </div>

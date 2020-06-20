@@ -217,6 +217,7 @@ const HeaderMenu = (props) => {
                               width: '40px',
                               height: '40px',
                               objectFit: 'cover',
+                              boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)',
                             }}
                             src={value.groupPic}
                           />
@@ -326,6 +327,7 @@ const HeaderMenu = (props) => {
                           objectFit: 'cover',
                           marginRight: '10px',
                           borderRadius: '50%',
+                          boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)',
                         }}
                         src={'http://placehold.it/250x250'}
                       />
@@ -338,6 +340,7 @@ const HeaderMenu = (props) => {
                           objectFit: 'cover',
                           marginRight: '10px',
                           borderRadius: '50%',
+                          boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)',
                         }}
                         src={value.userPic}
                       />
@@ -403,7 +406,16 @@ const HeaderMenu = (props) => {
                   })
                 : null}
 
-              <img alt='userPic' src={data.userPic} style={{ borderRadius: '50%', width: '30px', overFit: 'cover' }} />
+              <img
+                alt='userPic'
+                src={data.userPic}
+                style={{
+                  borderRadius: '50%',
+                  width: '30px',
+                  overFit: 'cover',
+                  boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)',
+                }}
+              />
             </div>
             <span>
               {data.userId}({data.userNm})
