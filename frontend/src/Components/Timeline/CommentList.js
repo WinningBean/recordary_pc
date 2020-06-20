@@ -33,7 +33,6 @@ const SendButton = styled(Button)({
 
 export default ({ tData, user }) => {
   useEffect(() => {
-    console.log(tData);
     setData(
       tData.map((value) => ({
         ...value,
@@ -246,11 +245,6 @@ export default ({ tData, user }) => {
                   <span style={{ fontSize: '12px' }}>{`댓글 접기`}</span>
                 )
               ) : null}
-              {/* {value.showRecommentClick.click === false ? (
-                <span style={{ fontSize: '12px' }}>{`댓글 ${value.reCommentCount}개 모두 보기`}</span>
-              ) : (
-                <span style={{ fontSize: '12px' }}>{`댓글 접기`}</span>
-              )} */}
             </div>
           </div>
         </div>

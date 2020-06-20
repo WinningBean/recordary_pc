@@ -135,8 +135,8 @@ const TimelineWeekSchedule = (props) => {
           <TimelineMultiDay
             ex={data.post_ex}
             sharedSchedule={data.shareScheduleList}
-            sharedStartDay={Date.parse(data.shareScheduleList[0].scheduleStr)}
-            sharedEndDay={Date.parse(data.shareScheduleList[0].scheduleEnd)}
+            sharedStartDay={Date.parse(data.shareScheduleStartDate)}
+            sharedEndDay={Date.parse(data.shareScheduleEndDate)}
           />
         );
     }
