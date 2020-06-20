@@ -142,7 +142,7 @@ const ToDo = ({ open, userCd }) => {
     >
       <div
         style={{
-          flex: 0.7,
+          flex: 0.3,
           paddingLeft: '10px',
           borderRadius: '15px 15px 0 0',
           backgroundColor: 'lightseagreen',

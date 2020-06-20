@@ -33,7 +33,6 @@ export default ({ list, user, onSuccess }) => {
       list.map((value) => ({
         ...value,
         updateClick: false,
-        deleteClick: false,
       }))
     );
   }, [list]);
@@ -41,12 +40,12 @@ export default ({ list, user, onSuccess }) => {
   const [dialog, setDialog] = useState(null);
   const [writeRecomment, setWriteRecomment] = useState('');
   const [updateRecomment, setUpdateRecomment] = useState('');
+  const [deleteClick, setDeleteClick] = useState(false);
 
   const [data, setData] = useState(
     list.map((value) => ({
       ...value,
       updateClick: false,
-      deleteClick: false,
     }))
   );
 
@@ -142,21 +141,7 @@ export default ({ list, user, onSuccess }) => {
                     }}
                   />
                   <ClearIcon
-                    onClick={() => {
-                      setData(
-                        data.map((val, listIndex) => {
-                          if (i === listIndex) {
-                            return produce(val, (draft) => {
-                              draft.deleteClick = !draft.deleteClick;
-                            });
-                          } else {
-                            return produce(val, (draft) => {
-                              draft.deleteClick = draft.deleteClick;
-                            });
-                          }
-                        })
-                      );
-                    }}
+                    onClick={() => setDeleteClick(true)}
                     style={{
                       color: 'gray',
                       fontSize: '20',
@@ -171,62 +156,40 @@ export default ({ list, user, onSuccess }) => {
         </div>
       </div>
       <Dialog
-        open={val.deleteClick}
-        onClose={() =>
-          setData(
-            data.map((val, listIndex) => {
-              if (i === listIndex) {
-                return produce(val, (draft) => {
-                  draft.deleteClick = !draft.deleteClick;
-                });
-              } else {
-                return produce(val, (draft) => {
-                  draft.deleteClick = draft.deleteClick;
-                });
-              }
-            })
-          )
-        }
+        open={deleteClick}
+        onClose={() => setDeleteClick(false)}
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
       >
         <DialogTitle id='alert-dialog-title'>댓글 삭제</DialogTitle>
         <DialogContent>
           <DialogContentText id='alert-dialog-description'>댓글을 삭제하시겠습니까?</DialogContentText>
+          <DialogContentText style={{ color: 'red', fontSize: '12px' }}>
+            *관련된 댓글도 모두 삭제됩니다.
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={() =>
-              setData(
-                data.map((val, listIndex) => {
-                  if (i === listIndex) {
-                    return produce(val, (draft) => {
-                      draft.deleteClick = !draft.deleteClick;
-                    });
-                  } else {
-                    return produce(val, (draft) => {
-                      draft.deleteClick = draft.deleteClick;
-                    });
-                  }
-                })
-              )
-            }
-            color='primary'
-          >
+          <Button onClick={() => setDeleteClick(false)} color='primary'>
             취소
           </Button>
           <Button
             onClick={async () => {
               try {
-                const recommentDeletedCd = (await axios.delete(`/comment/${val.commentCd}`)).data;
-                console.log(recommentDeletedCd);
-                setDialog(
-                  <AlertDialog
-                    severity='success'
-                    content='댓글을 삭제하였습니다.'
-                    onAlertClose={() => setDialog(null)}
-                  />
-                );
+                const recommentDeleted = (await axios.delete(`/comment/${val.commentCd}`)).data;
+                console.log(recommentDeleted);
+                if (recommentDeleted) {
+                  const copyList = data.slice();
+                  copyList.splice(i, 1);
+                  setData(copyList);
+                  onSuccess(copyList);
+                  setDialog(
+                    <AlertDialog
+                      severity='success'
+                      content='댓글을 삭제하였습니다.'
+                      onAlertClose={() => setDialog(null)}
+                    />
+                  );
+                }
               } catch (e) {
                 console.log(e);
                 setDialog(
@@ -237,19 +200,7 @@ export default ({ list, user, onSuccess }) => {
                   />
                 );
               }
-              setData(
-                data.map((val, listIndex) => {
-                  if (i === listIndex) {
-                    return produce(val, (draft) => {
-                      draft.deleteClick = !draft.deleteClick;
-                    });
-                  } else {
-                    return produce(val, (draft) => {
-                      draft.deleteClick = draft.deleteClick;
-                    });
-                  }
-                })
-              );
+              setDeleteClick(false);
             }}
             color='primary'
             autoFocus

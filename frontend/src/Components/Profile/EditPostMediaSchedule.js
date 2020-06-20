@@ -63,6 +63,7 @@ function rgbToHex(r, g, b) {
 }
 
 const EditPostMediaSchedule = (props) => {
+  // console.log(props);
   const classes = useStyles();
   const [user, setUser] = useState(props.user);
   const [data, setData] = useState(props.data);
@@ -221,15 +222,16 @@ const EditPostMediaSchedule = (props) => {
 
       console.log(postData);
 
-      if (postData) {
+      if (postData === post.postCd) {
         setAlert(
           <AlertDialog
             severity='success'
             content='게시물이 수정되었습니다.'
-            onAlertClose={(() => setAlert(null), () => props.onCancel())}
+            onAlertClose={
+              (() => setAlert(null), () => props.onCancel(), () => setTimeout(() => window.location.reload(), 1000))
+            }
           />
         );
-        console.log(store.getState());
       } else {
         setAlert(<Snackbar severity='error' content='게시물을 수정하지 못했습니다.' onClose={() => setAlert(null)} />);
       }
