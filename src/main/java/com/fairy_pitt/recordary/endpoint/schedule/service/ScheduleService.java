@@ -48,8 +48,7 @@ public class ScheduleService implements Comparator< ScheduleResponseDto > {
                 updateRequestDto.getScheduleStr(),
                 updateRequestDto.getScheduleEnd(),
                 updateRequestDto.getScheduleCol(),
-                updateRequestDto.getSchedulePublicState() );
-
+                updateRequestDto.getSchedulePublicState());
         return id;
     }
 
