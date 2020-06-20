@@ -76,6 +76,7 @@ class Profile extends React.Component {
       contextMenu: undefined,
       post: [],
       isOpenAddTab: false,
+      searchedSchedule: null,
     };
   }
 
@@ -216,7 +217,10 @@ class Profile extends React.Component {
             <ScrollToTopOnMount />
             <div id='main-profile'>
               <div className='profile-search-schedule'>
-                <ScheduleSearch data={this.state.info}></ScheduleSearch>
+                <ScheduleSearch
+                  data={this.state.info}
+                  onSelect={(value) => this.setState({ searchedSchedule: value })}
+                />
               </div>
               <div className='main-profile-info-postIt'>
                 <div className='postIt'>
@@ -674,6 +678,7 @@ class Profile extends React.Component {
                   </div>
                   <div id='schedule-area'>
                     <Calendar
+                      searchedSchedule={this.state.searchedSchedule}
                       type={this.state.type}
                       info={
                         this.state.type === 2 || this.state.type === 3 || this.state.type === 5
