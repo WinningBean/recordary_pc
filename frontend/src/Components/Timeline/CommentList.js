@@ -31,14 +31,13 @@ const SendButton = styled(Button)({
   height: '20px',
 });
 
-export default ({ tData, user }) => {
+export default ({ tData, user, onSuccess }) => {
   useEffect(() => {
     setData(
       tData.map((value) => ({
         ...value,
         showRecommentClick: { recommentList: [], click: false },
         updateClick: false,
-        deleteClick: false,
       }))
     );
   }, [tData]);
@@ -49,13 +48,13 @@ export default ({ tData, user }) => {
       ...value,
       showRecommentClick: { recommentList: [], click: false },
       updateClick: false,
-      deleteClick: false,
     }))
   );
   const [dialog, setDialog] = useState(null);
   const [writeRecomment, setWriteRecomment] = useState('');
   const [updateComment, setUpdateComment] = useState('');
   const [updateRecomment, setUpdateRecomment] = useState('');
+  const [deleteClick, setDeleteClick] = useState(false);
 
   const textField = useRef();
 
@@ -187,21 +186,7 @@ export default ({ tData, user }) => {
                         }}
                       />
                       <ClearIcon
-                        onClick={() => {
-                          setData(
-                            data.map((val, listIndex) => {
-                              if (index === listIndex) {
-                                return produce(val, (draft) => {
-                                  draft.deleteClick = !draft.deleteClick;
-                                });
-                              } else {
-                                return produce(val, (draft) => {
-                                  draft.deleteClick = draft.deleteClick;
-                                });
-                              }
-                            })
-                          );
-                        }}
+                        onClick={() => setDeleteClick(true)}
                         style={{
                           color: 'gray',
                           fontSize: '20',
@@ -310,56 +295,32 @@ export default ({ tData, user }) => {
         </>
       ) : null}
       <Dialog
-        open={value.deleteClick}
-        onClose={() =>
-          setData(
-            data.map((val, listIndex) => {
-              if (index === listIndex) {
-                return produce(val, (draft) => {
-                  draft.deleteClick = !draft.deleteClick;
-                });
-              } else {
-                return produce(val, (draft) => {
-                  draft.deleteClick = draft.deleteClick;
-                });
-              }
-            })
-          )
-        }
+        open={deleteClick}
+        onClose={() => setDeleteClick(false)}
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
       >
         <DialogTitle id='alert-dialog-title'>댓글 삭제</DialogTitle>
         <DialogContent>
           <DialogContentText id='alert-dialog-description'>댓글을 삭제하시겠습니까?</DialogContentText>
+          <DialogContentText style={{ color: 'red', fontSize: '12px' }}>
+            *관련된 댓글도 모두 삭제됩니다.
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={() =>
-              setData(
-                data.map((val, listIndex) => {
-                  if (index === listIndex) {
-                    return produce(val, (draft) => {
-                      draft.deleteClick = !draft.deleteClick;
-                    });
-                  } else {
-                    return produce(val, (draft) => {
-                      draft.deleteClick = draft.deleteClick;
-                    });
-                  }
-                })
-              )
-            }
-            color='primary'
-          >
+          <Button onClick={() => deleteClick(false)} color='primary'>
             취소
           </Button>
           <Button
             onClick={async () => {
               try {
-                const commentDeletedCd = (await axios.delete(`/comment/${value.commentCd}`)).data;
-                console.log(commentDeletedCd);
-                if (commentDeletedCd) {
+                const commentDeleted = (await axios.delete(`/comment/${value.commentCd}`)).data;
+                console.log(commentDeleted);
+                if (commentDeleted) {
+                  const copyList = data.slice();
+                  copyList.slice(index, 1);
+                  setData(copyList);
+                  onSuccess(copyList);
                   setDialog(
                     <AlertDialog
                       severity='success'
@@ -378,19 +339,7 @@ export default ({ tData, user }) => {
                   />
                 );
               }
-              setData(
-                data.map((val, listIndex) => {
-                  if (index === listIndex) {
-                    return produce(val, (draft) => {
-                      draft.deleteClick = !draft.deleteClick;
-                    });
-                  } else {
-                    return produce(val, (draft) => {
-                      draft.deleteClick = draft.deleteClick;
-                    });
-                  }
-                })
-              );
+              setDeleteClick(false);
             }}
             color='primary'
             autoFocus

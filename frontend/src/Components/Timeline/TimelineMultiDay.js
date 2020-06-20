@@ -14,7 +14,7 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
   const [clickPic, setClickPic] = useState(undefined);
 
   const CalendarHeader = useMemo(() => {
-    console.log('render header');
+    // console.log('render header');
     return (
       <div className='calendar-header' style={{ height: '25px' }}>
         <div className='calendar-header-side'>
@@ -83,7 +83,7 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
   }, [currentMonth, sharedStartDay, sharedEndDay]);
 
   const CalendarDays = useMemo(() => {
-    console.log('render day');
+    // console.log('render day');
     const days = [];
 
     let startDate = dateFns.startOfWeek(new Date());
@@ -108,7 +108,7 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
   }, []);
 
   const Cells = useMemo(() => {
-    console.log('render cells');
+    // console.log('render cells');
     const today = new Date();
     const monthStart = currentMonth;
     const monthEnd = dateFns.endOfMonth(monthStart);
@@ -257,7 +257,7 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
       var diffCount = dateFns.differenceInCalendarWeeks(Date.parse(scheduleValue.scheduleEnd), dayLocation[index].day);
 
       if (diffCount > 0) {
-        console.log(`${dayLocation[index].day}-${overlap[index]}`);
+        // console.log(`${dayLocation[index].day}-${overlap[index]}`);
         sc.push(
           <div
             key={`${dayLocation[index].day}-${overlap[index]}`}
@@ -287,7 +287,7 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
           if (dateFns.addWeeks(Date.parse(scheduleValue.scheduleStr), i) > endDate) {
             return;
           }
-          console.log(`${dayLocation[index].day}-${overlap[index]}`);
+          // console.log(`${dayLocation[index].day}-${overlap[index]}`);
           sc.push(
             <div
               key={`${dayLocation[index].day}-${overlap[index]}`}
@@ -317,7 +317,7 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
         const endDayLocation = dayLocation.filter((value) =>
           dateFns.isSameDay(value.day, Date.parse(scheduleValue.scheduleEnd))
         )[0];
-        console.log(`${dayLocation[index].day}-${overlap[index]}`);
+        // console.log(`${dayLocation[index].day}-${overlap[index]}`);
         sc.push(
           <div
             key={`${dayLocation[index].day}-${overlap[index]}`}
@@ -346,7 +346,7 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
         return;
       } else {
         if (dateFns.isSameDay(Date.parse(scheduleValue.scheduleStr), Date.parse(scheduleValue.scheduleEnd))) {
-          console.log(`${dayLocation[index].day}-${overlap[index]}`);
+          // console.log(`${dayLocation[index].day}-${overlap[index]}`);
           sc.push(
             <div
               key={`${dayLocation[index].day}-${overlap[index]}`}
@@ -368,7 +368,7 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
           ++overlap[index];
           return;
         } else {
-          console.log(`${dayLocation[index].day}-${overlap[index]}`);
+          // console.log(`${dayLocation[index].day}-${overlap[index]}`);
           sc.push(
             <div
               key={`${dayLocation[index].day}-${overlap[index]}`}
@@ -399,7 +399,7 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
         }
       }
     });
-    console.log(sc);
+    // console.log(sc);
     return sc;
   };
 

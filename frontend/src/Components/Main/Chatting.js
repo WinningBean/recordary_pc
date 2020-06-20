@@ -506,7 +506,7 @@ const Chatting = ({ isOpen }) => {
             }
           : {
               opacity: 0,
-              transform: 'translateX(200px)',
+              transform: 'translateX(500px)',
               width: '360px',
               height: '660px',
               overflow: 'hidden',
