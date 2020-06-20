@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class GroupEntity extends BaseTime {
     private String groupPic;
 
     @Column(name = "GROUP_EX")
+    @Type(type = "text")
     private String  groupEx;
 
     @JsonIgnore
