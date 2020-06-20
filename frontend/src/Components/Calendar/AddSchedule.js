@@ -88,7 +88,7 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, type, tabInfo }
                 }}
                 style={{
                   height: '36px',
-                  width: '56px',
+                  width: '200px',
                   backgroundColor: clickTabState === undefined ? '#ffc500' : clickTabInfo.scheduleTabColor,
                   marginLeft: '10px',
                   textAlign: 'center',
@@ -275,18 +275,19 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, type, tabInfo }
           open={Boolean(popover)}
           anchorEl={popover === null ? null : popover}
           anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
+            vertical: 'bottom',
+            horizontal: 'center',
           }}
           transformOrigin={{
             vertical: 'top',
-            horizontal: 'left',
+            horizontal: 'center',
           }}
           disableRestoreFocus
           onClose={() => setPopover(null)}
         >
           <div style={{ display: 'flex', flexDirection: 'column', backgroundColor: 'transparent' }}>
             <Button
+              style={{ width: '200px' }}
               onClick={() => {
                 setClickTabState(undefined);
                 setPopover(null);
@@ -303,7 +304,11 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, type, tabInfo }
                     setClickTabState(value.scheduleTabCd);
                     setPopover(null);
                   }}
-                  style={{ backgroundColor: value.scheduleTabColor, color: colorContrast(value.scheduleTabColor) }}
+                  style={{
+                    backgroundColor: value.scheduleTabColor,
+                    color: colorContrast(value.scheduleTabColor),
+                    width: '200px',
+                  }}
                 >
                   {value.scheduleTabNm}
                 </Button>
