@@ -28,9 +28,9 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentCd}")
-    public void delete(@PathVariable Long commentCd)
+    public Boolean delete(@PathVariable Long commentCd)
     {
-        commentService.delete(commentCd);
+        return commentService.delete(commentCd);
     }
 
     @GetMapping("/{commentCd}")
