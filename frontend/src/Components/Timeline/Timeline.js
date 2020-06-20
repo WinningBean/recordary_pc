@@ -396,12 +396,7 @@ const Timeline = (props) => {
                 user={props.user}
                 onSuccess={(commentInfo) => {
                   console.log(commentInfo);
-                  setData(
-                    commentInfo.map((value) => ({
-                      ...data,
-                      commentList: value,
-                    }))
-                  );
+                  setData({ ...data, commentList: commentInfo });
                 }}
               />
             ) : (

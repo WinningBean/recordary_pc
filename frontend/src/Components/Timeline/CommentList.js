@@ -236,7 +236,27 @@ export default ({ tData, user, onSuccess }) => {
       </div>
       {value.showRecommentClick.click === true ? (
         <>
-          <ShowRecommentList list={value.showRecommentClick.recommentList} user={user} />
+          <ShowRecommentList
+            list={value.showRecommentClick.recommentList}
+            user={user}
+            onSuccess={(commentInfo) => {
+              console.log(commentInfo);
+              setData(
+                data.map((val, listIndex) => {
+                  if (index === listIndex) {
+                    return produce(val, (draft) => {
+                      draft.showRecommentClick.click = true;
+                      draft.showRecommentClick.recommentList = commentInfo;
+                    });
+                  } else {
+                    return produce(val, (draft) => {
+                      draft.showRecommentClick.click = draft.showRecommentClick.click;
+                    });
+                  }
+                })
+              );
+            }}
+          />
           <div className='show-recomment-write' style={{ marginBottom: '5px' }}>
             <TextField
               inputRef={textField}
@@ -308,17 +328,16 @@ export default ({ tData, user, onSuccess }) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => deleteClick(false)} color='primary'>
+          <Button onClick={() => setDeleteClick(false)} color='primary'>
             취소
           </Button>
           <Button
             onClick={async () => {
               try {
                 const commentDeleted = (await axios.delete(`/comment/${value.commentCd}`)).data;
-                console.log(commentDeleted);
                 if (commentDeleted) {
                   const copyList = data.slice();
-                  copyList.slice(index, 1);
+                  copyList.splice(index, 1);
                   setData(copyList);
                   onSuccess(copyList);
                   setDialog(
