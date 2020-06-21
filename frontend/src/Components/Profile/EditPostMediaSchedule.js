@@ -28,6 +28,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import AddIcon from '@material-ui/icons/Add';
 import * as dateFns from 'date-fns';
+import { addHours, startOfDay, endOfDay, startOfSecond } from 'date-fns';
 
 import axios from 'axios';
 import store from '../../store';
@@ -63,7 +64,6 @@ function rgbToHex(r, g, b) {
 }
 
 const EditPostMediaSchedule = (props) => {
-  //공유 게시물은 미디어, 일정부분 안나오도록 하기
   const classes = useStyles();
   const [user, setUser] = useState(props.user);
   const [data, setData] = useState(props.data);
@@ -90,7 +90,17 @@ const EditPostMediaSchedule = (props) => {
     postPublicState: data.postPublicState === 0 ? 0 : data.postPublicState,
   });
 
-  const [scheduleInfo, setScheduleInfo] = useState(props.data.scheduleFK);
+  const [scheduleInfo, setScheduleInfo] = useState({
+    tabCd: data.scheduleFK === null ? null : null,
+    userCd: data.userCd,
+    scheduleCol: data.scheduleFK === null ? 'rgba(20, 81, 51, 0.9)' : data.scheduleFK.scheduleCol,
+    scheduleNm: data.scheduleFK === null ? null : data.scheduleFK.scheduleNm,
+    scheduleEx: data.scheduleFK === null ? null : data.scheduleFK.scheduleEx,
+    scheduleStr: data.scheduleFK === null ? new Date() : data.scheduleFK.scheduleStr,
+    scheduleEnd: data.scheduleFK === null ? addHours(new Date(), 1) : data.scheduleFK.scheduleEnd,
+    schedulePublicState: data.scheduleFK === null ? 0 : data.scheduleFK.schedulePublicState,
+    scheduleMemberList: data.scheduleFK === null ? [] : data.scheduleFK.scheduleMemberList,
+  });
   const [subtractedSchedule, setSubtractedSchedule] = useState([]);
   const [addedSchedule, setAddedSchedule] = useState([]);
 
@@ -268,7 +278,7 @@ const EditPostMediaSchedule = (props) => {
       <div className='Post-Media-Schedule-Append-Form '>
         <div className='Post-Append-Group' style={{ marginLeft: '12px' }}>
           <div>
-            {props.groupList === undefined ? (
+            {post.groupCd === null ? (
               <SelectGroup options={['그룹없음']} />
             ) : (
               <SelectGroup
@@ -366,7 +376,6 @@ const EditPostMediaSchedule = (props) => {
             </div>
           </Dialog>
         ) : null}
-
         {scheduleOpen === false ? null : (
           <div onClose={() => setScheduleOpen(null)}>
             <div className='Post-Append-title post-Append'>

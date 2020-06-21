@@ -55,7 +55,7 @@ export default ({ list, user, onSuccess }) => {
     <div key={`${val.commentCd}-${i}`}>
       <div className='comment-reply-users more-recomment-reply-users'>
         <div className='recomment-reply-users-img'>
-          <img alt={`${val.userFK.userCd} img`} src={val.userFK.userPic} />
+          <img alt={`${val.userFK.userCd}`} src={val.userFK.userPic} />
         </div>
         <div className='comment-reply-users-name'>
           <span style={{ fontWeight: 'bold', fontSize: '12px', marginRight: '5px' }}>

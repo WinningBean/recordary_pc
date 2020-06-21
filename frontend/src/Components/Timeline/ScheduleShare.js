@@ -77,7 +77,13 @@ const ScheduleShare = (props) => {
       if (postData !== null) {
         props.onCancel();
         setAlert(
-          <AlertDialog severity='success' content='게시물이 추가되었습니다.' onAlertClose={() => setAlert(null)} />
+          <AlertDialog
+            severity='success'
+            content='일정을 공유하였습니다.'
+            onAlertClose={
+              (() => setAlert(null), () => props.onCancel(), () => setTimeout(() => window.location.reload(), 1000))
+            }
+          />
         );
       } else {
         setAlert(<Snackbar severity='error' content='일정을 공유하지 못했습니다.' onClose={() => setAlert(null)} />);

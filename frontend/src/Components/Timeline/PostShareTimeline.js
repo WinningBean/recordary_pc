@@ -9,7 +9,7 @@ import './Timeline.css';
 import CommentList from './CommentList';
 import LongMenu from '../Other/MoreMenu';
 import Timeline from './Timeline';
-
+import TimelineWeekSchedule from './TimelineWeekSchedule';
 import PostShare from '../../Containers/Profile/PostShare';
 import EditPostMediaSchedule from '../../Containers/Profile/EditPostMediaSchedule';
 import SmsIcon from '@material-ui/icons/Sms';
@@ -133,7 +133,7 @@ const PostShareTimeline = (props) => {
   };
 
   return (
-    <div className='timeline' style={{ marginBottom: '50px' }}>
+    <div className='timeline'>
       <div className='timeline-profile'>
         <div className='profile-picture'>
           <img alt={`${data.userFK.userId} img`} src={data.userFK.userPic} />
@@ -160,13 +160,21 @@ const PostShareTimeline = (props) => {
         <div className='time-line-picture-info'>
           <div
             className='timeline-shareForm'
-            onClick={() =>
-              setMenuDialog(
-                <Dialog open onClose={() => setMenuDialog(null)}>
-                  <Timeline data={postOriginData} user={props.user} />
-                </Dialog>
-              )
-            }
+            onClick={() => {
+              if (postOriginData.mediaFK !== null) {
+                return setMenuDialog(
+                  <Dialog open onClose={() => setMenuDialog(null)}>
+                    <Timeline data={postOriginData} user={props.user} />
+                  </Dialog>
+                );
+              } else if (postOriginData.scheduleFK !== null || postOriginData.shareScheduleList.length > 0) {
+                return setMenuDialog(
+                  <Dialog open onClose={() => setMenuDialog(null)}>
+                    <TimelineWeekSchedule data={postOriginData} user={props.user} />
+                  </Dialog>
+                );
+              } else return null;
+            }}
           >
             <>
               <div
@@ -299,7 +307,7 @@ const PostShareTimeline = (props) => {
             ) : (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div className='recomment-reply-users-img'>
-                  <img alt={`${data.userFK.userId} img`} src={data.userFK.userPic} />
+                  <img alt={`${data.userFK.userId}`} src={data.userFK.userPic} />
                 </div>
                 <div style={{ fontWeight: 'bold', marginLeft: '5px' }}>
                   {data.userFK.userId}({data.userFK.userNm})

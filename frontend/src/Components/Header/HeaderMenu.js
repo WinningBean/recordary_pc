@@ -171,7 +171,12 @@ const HeaderMenu = (props) => {
 
   const ShowProfileEditForm = () => {
     if (profileEditForm === null) {
-      setProfileEditForm(<ProfileEditor data={data} onCancel={() => setProfileEditForm(null)} />);
+      setProfileEditForm(
+        <ProfileEditor
+          data={data}
+          onCancel={() => setProfileEditForm(null)}
+        />
+      );
       return;
     }
     setProfileEditForm(null);
