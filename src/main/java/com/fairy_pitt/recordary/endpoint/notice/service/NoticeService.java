@@ -21,6 +21,8 @@ public class NoticeService {
     private final PostRepository postRepository;
     private final ScheduleRepository scheduleRepository;
     private final CommentRepository commentRepository;
+    private final ChatRoomRepository chatRoomRepository;
+    private final ChatRepository chatRepository;
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
@@ -65,8 +67,17 @@ public class NoticeService {
             ownerCd = postRepository.findByPostCd(noticeDto.getTargetCd()).getUserFK().getUserCd();
             return getNoticeDestination(ownerCd);
         }
-        else if (noticeType == NoticeType.SCHEDULE_GROUP_NEW){
-            return getNoticeDestination(noticeDto.getTargetCd());
+        else if (noticeType == NoticeType.POST_GROUP_NEW){
+            GroupEntity groupEntity = groupRepository.findByGroupCd(noticeDto.getActiveCd());
+            UserEntity userEntity = postRepository.findByPostCd(noticeDto.getTargetCd()).getUserFK();
+
+            for (GroupMemberEntity groupMemberEntity : groupEntity.getMembers()){
+                ownerCd = groupMemberEntity.getUserFK().getUserCd();
+                if (userEntity.getUserCd() != ownerCd) {
+                    messagingTemplate.convertAndSend(getNoticeDestination(ownerCd));
+                }
+            }
+            return null;
         }
         else if (noticeType == NoticeType.SCHEDULE_MEMBER_INVITE){
             return getNoticeDestination(noticeDto.getTargetCd());

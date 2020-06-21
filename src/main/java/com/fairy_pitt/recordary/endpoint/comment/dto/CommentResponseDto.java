@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class CommentResponseDto {
     private Long commentCd;
     private UserResponseDto userFK;
+    private Long postCd;
     private String commentContent;
     private int reCommentCount;
 
@@ -17,6 +18,7 @@ public class CommentResponseDto {
     {
         this.commentCd = comment.getCommentCd();
         this.userFK = new UserResponseDto(comment.getCommentUserFK());
+        this.postCd = comment.getCommentPostFK().getPostCd();
         this.commentContent = comment.getCommentContent();
         this.reCommentCount = comment.getCommentOriginList().size();
     }

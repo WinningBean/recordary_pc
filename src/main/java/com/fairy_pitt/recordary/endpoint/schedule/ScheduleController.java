@@ -48,6 +48,11 @@ public class ScheduleController {
         return true;
     }
 
+    @GetMapping("/{scheduleCd}")
+    public ScheduleResponseDto findByScheduleCd(@PathVariable Long scheduleCd){
+        return new ScheduleResponseDto(scheduleService.findEntity(scheduleCd));
+    }
+
     @PostMapping("showUserSchedule/{id}")
     public List<ScheduleResponseDto> showUserSchedule(@PathVariable Long id, @RequestBody ScheduleDateRequestDto responseDto){
         List<ScheduleResponseDto> result = scheduleService.showUserSchedule(responseDto, id, followerService.checkPublicStateToTarget(userService.currentUserCd(), id));

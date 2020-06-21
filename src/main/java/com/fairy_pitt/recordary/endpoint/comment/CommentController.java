@@ -33,7 +33,12 @@ public class CommentController {
         return commentService.delete(commentCd);
     }
 
-    @GetMapping("/{commentCd}")
+    @GetMapping("{commentCd}")
+    public CommentResponseDto findByCommentCd(@PathVariable Long commentCd){
+        return new CommentResponseDto(commentService.findEntity(commentCd));
+    }
+
+    @GetMapping("/sub/{commentCd}")
     public List<CommentResponseDto> findChildComment(@PathVariable Long commentCd)
     {
         return commentService.findChildComment(commentCd);
