@@ -130,7 +130,7 @@ const PostShareTimeline = (props) => {
   };
 
   return (
-    <div className='timeline'>
+    <div className='timeline' style={data.groupFK !== null ? { borderTop: '4px solid tomato' } : null}>
       <div className='timeline-profile'>
         <div className='profile-picture'>
           <img alt={`${data.userFK.userId} img`} src={data.userFK.userPic} />
@@ -319,7 +319,6 @@ const PostShareTimeline = (props) => {
               <div className='likeIcon'>
                 <ThumbUpRoundedIcon
                   style={data.currentUserLikePost ? { color: 'rgba(20, 81, 51, 0.9)', fontSize: 25 } : { fontSize: 25 }}
-                  style={{ fontSize: 25 }}
                   onClick={async () => {
                     try {
                       if (data.currentUserLikePost === false) {

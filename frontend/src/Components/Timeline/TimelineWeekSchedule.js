@@ -140,7 +140,10 @@ const TimelineWeekSchedule = (props) => {
   })();
 
   return (
-    <div className='timeline' style={{ minHeight: '391px' }}>
+    <div
+      className='timeline'
+      style={data.groupFK !== null ? { borderTop: '4px solid tomato', minHeight: '391px' } : { minHeight: '391px' }}
+    >
       <div className='timeline-profile'>
         <div className='profile-picture'>
           <img alt={`${data.userFK.userCd} img`} src={data.userFK.userPic} />

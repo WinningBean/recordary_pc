@@ -245,7 +245,7 @@ const Timeline = (props) => {
   };
 
   return (
-    <div className='timeline'>
+    <div className='timeline' style={data.groupFK !== null ? { borderTop: '4px solid tomato' } : null}>
       <div className='timeline-profile'>
         <div className='profile-picture'>
           <img alt={`${data.userFK.userId} img`} src={data.userFK.userPic} />

@@ -753,11 +753,7 @@ class Profile extends React.Component {
                 this.state.groupPost.map((value, index) => {
                   if (value.mediaFK !== null) {
                     return (
-                      <div
-                        className='profile-ScheduleTimeLine'
-                        style={{ borderTop: value.groupFK !== null ? '4px solid tomato' : null }}
-                        key={`${value.postCd}-${index}`}
-                      >
+                      <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
                         <Timeline
                           data={value}
                           user={this.props.user}
@@ -778,11 +774,7 @@ class Profile extends React.Component {
                     );
                   } else if (value.scheduleFK !== null || value.shareScheduleList.length > 0) {
                     return (
-                      <div
-                        className='profile-ScheduleTimeLine'
-                        style={{ borderTop: value.groupFK !== null ? '4px solid tomato' : null }}
-                        key={`${value.postCd}-${index}`}
-                      >
+                      <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
                         <TimelineWeekSchedule
                           data={value}
                           user={this.props.user}
@@ -803,11 +795,7 @@ class Profile extends React.Component {
                     );
                   } else if (value.postOriginFK !== null) {
                     return (
-                      <div
-                        className='profile-ScheduleTimeLine'
-                        style={{ borderTop: value.groupFK !== null ? '4px solid tomato' : null }}
-                        key={`${value.postCd}-${index}`}
-                      >
+                      <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
                         <PostShareTimeline
                           data={value}
                           user={this.props.user}
@@ -891,11 +879,7 @@ class Profile extends React.Component {
                 this.state.post.map((value, index) => {
                   if (value.mediaFK !== null) {
                     return (
-                      <div
-                        className='profile-ScheduleTimeLine'
-                        style={{ borderTop: value.groupFK !== null ? '4px solid tomato' : null }}
-                        key={`${value.postCd}-${index}`}
-                      >
+                      <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
                         <Timeline
                           data={value}
                           user={this.props.user}
@@ -916,11 +900,7 @@ class Profile extends React.Component {
                     );
                   } else if (value.scheduleFK !== null || value.shareScheduleList.length > 0) {
                     return (
-                      <div
-                        className='profile-ScheduleTimeLine'
-                        style={{ borderTop: value.groupFK !== null ? '4px solid tomato' : null }}
-                        key={`${value.postCd}-${index}`}
-                      >
+                      <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
                         <TimelineWeekSchedule
                           data={value}
                           user={this.props.user}
@@ -941,11 +921,7 @@ class Profile extends React.Component {
                     );
                   } else if (value.postOriginFK !== null) {
                     return (
-                      <div
-                        className='profile-ScheduleTimeLine'
-                        style={{ borderTop: value.groupFK !== null ? '4px solid tomato' : null }}
-                        key={`${value.postCd}-${index}`}
-                      >
+                      <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
                         <PostShareTimeline
                           data={value}
                           user={this.props.user}
