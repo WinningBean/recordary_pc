@@ -61,6 +61,11 @@ public class GroupController {
         return groupCd;
     }
 
+    @GetMapping("/{groupCd}")
+    public GroupResponseDto findByGroupCd(@PathVariable Long groupCd){
+        return new GroupResponseDto(groupService.findEntity(groupCd));
+    }
+
     @GetMapping("findGroup/{groupNm}")
     public List<GroupResponseDto> findByGroupName(@PathVariable String groupNm) {
         return groupService.findGroupByName(groupNm);

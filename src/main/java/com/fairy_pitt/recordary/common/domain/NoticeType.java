@@ -44,9 +44,9 @@ public enum NoticeType {
     POST_LIKE_NEW, // 사용자의 게시물에 누군가 좋아요 할 경우
 
 
-    // activeCd = 스케줄 코드 / targetCd = 멤버인 사용자 코드
-    @JsonProperty("SCHEDULE_GROUP_NEW")
-    SCHEDULE_GROUP_NEW, // 사용자가 속한 그룹에 일정이 등록될 경우
+    // activeCd = 그룹코드 / targetCd = 게시물 코드
+    @JsonProperty("POST_GROUP_NEW")
+    POST_GROUP_NEW, // 사용자가 속한 그룹에 게시물이 등록될 경우
 
 
     // activeCd = 스케줄 코드 / targetCd = 신청된 사용자 코드
@@ -68,6 +68,5 @@ public enum NoticeType {
 
     // activeCd = 대댓글 코드 / targetCd = 댓글 코드
     @JsonProperty("COMMENT_SUB_NEW")
-    COMMENT_SUB_NEW // 사용자의 댓글에 누군가 대댓글을 등록할 경우
-
+    COMMENT_SUB_NEW, // 사용자의 댓글에 누군가 대댓글을 등록할 경우
 }
