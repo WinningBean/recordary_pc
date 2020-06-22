@@ -6,7 +6,7 @@ import './Timeline.css';
 import { styled } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import { Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText } from '@material-ui/core';
-
+import LikePersonList from './LikePersonList';
 import EditPostMediaSchedule from '../../Containers/Profile/EditPostMediaSchedule';
 import CommentList from './CommentList';
 import LongMenu from '../Other/MoreMenu';
@@ -44,6 +44,7 @@ const TimelineWeekSchedule = (props) => {
   const [updateRecomment, setUpdateRecomment] = useState('');
   const [menuDialog, setMenuDialog] = useState(null);
   const [dialog, setDialog] = useState(null);
+  const [likePersonList, setLikePersonList] = useState(false);
 
   const textField = useRef();
 
@@ -141,7 +142,10 @@ const TimelineWeekSchedule = (props) => {
   })();
 
   return (
-    <div className='timeline' style={{ minHeight: '391px' }}>
+    <div
+      className='timeline'
+      style={data.groupFK !== null ? { borderTop: '4px solid tomato', minHeight: '391px' } : { minHeight: '391px' }}
+    >
       <div className='timeline-profile'>
         <div className='profile-picture'>
           <img alt={`${data.userFK.userCd} img`} src={data.userFK.userPic} />
@@ -212,20 +216,34 @@ const TimelineWeekSchedule = (props) => {
                             headers: { 'Content-Type': 'application/json' },
                           })
                         ).data;
-                        store.dispatch({
-                          type: 'SAVE_NOTICE',
-                          notice: {
-                            noticeType: 'POST_LIKE_NEW', // 이벤트 타입
-                            activeCd: props.user.userCd, // 이벤트 주체
-                            targetCd: data.postCd, // 이벤트 대상
-                          },
-                        });
-                        setData({ ...data, currentUserLikePost: true });
+                        if (like) {
+                          store.dispatch({
+                            type: 'SAVE_NOTICE',
+                            notice: {
+                              noticeType: 'POST_LIKE_NEW', // 이벤트 타입
+                              activeCd: props.user.userCd, // 이벤트 주체
+                              targetCd: data.postCd, // 이벤트 대상
+                            },
+                          });
+                          setData({
+                            ...data,
+                            currentUserLikePost: true,
+                            postLikeCount: data.postLikeCount + 1,
+                            postLikeFirstUser: data.postLikeFirstUser === null ? props.user : data.postLikeFirstUser,
+                          });
+                        }
                       } else {
                         const unLike = (
                           await axios.delete(`/post/${data.postCd}/unLike`, { params: { userCd: props.user.userCd } })
                         ).data;
-                        setData({ ...data, currentUserLikePost: false });
+                        setData({
+                          ...data,
+                          currentUserLikePost: false,
+                          postLikeCount: data.postLikeCount - 1,
+                          postLikeFirstUser:
+                            data.postLikeFirstUser.userCd === props.user.userCd ? null : data.postLikeForstUser,
+                          // data.postLikeFirstUser.userCd === props.user.userCd ? 다음 사람의 데이터...ㅠ : data.postLikeForstUser,
+                        });
                       }
                     } catch (e) {
                       console.log(e);
@@ -237,13 +255,16 @@ const TimelineWeekSchedule = (props) => {
                 />
               </div>
               {data.postLikeCount < 1 ? (
-                <div className='comment-title'>첫번째 좋아요를 눌러주세욤</div>
+                <div className='comment-title-none'>첫번째 좋아요를 눌러주세욤</div>
               ) : data.postLikeCount === 1 ? (
-                <div className='comment-title'>{`${data.postLikeFirstUser.userId}(${data.postLikeFirstUser.userNm}) 님이 좋아합니다`}</div>
+                <div
+                  className='comment-title'
+                  onClick={() => setLikePersonList(true)}
+                >{`${data.postLikeFirstUser.userId}(${data.postLikeFirstUser.userNm}) 님이 좋아합니다`}</div>
               ) : (
-                <div className='comment-title'>{`${data.postLikeFirstUser.userId}(${
-                  data.postLikeFirstUser.userNm
-                }) 님 외 ${data.postLikeCount - 1}명이 좋아합니다`}</div>
+                <div className='comment-title' onClick={() => setLikePersonList(true)}>{`${
+                  data.postLikeFirstUser.userId
+                }(${data.postLikeFirstUser.userNm}) 님 외 ${data.postLikeCount - 1}명이 좋아합니다`}</div>
               )}
             </div>
           </div>
@@ -261,6 +282,8 @@ const TimelineWeekSchedule = (props) => {
           </div>
         </div>
       </div>
+      {likePersonList ? <LikePersonList postCd={data.postCd} onCancel={() => setLikePersonList(false)} /> : null}
+
       {menuDialog}
       {dialog}
     </div>

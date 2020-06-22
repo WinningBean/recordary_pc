@@ -10,6 +10,11 @@
 .searchField-result-list {
   padding: 10px;
 }
+.likeTitle {
+  font-size: 20px;
+  color: white;
+  margin-top: 5px;
+}
 .group-follow_change {
   display: flex;
   flex-direction: column;
@@ -19,6 +24,11 @@
   justify-content: space-between;
   width: 320px;
   margin-top: 10px;
+}
+.like_list {
+  display: flex;
+  justify-content: space-between;
+  width: 320px;
 }
 .MuiTabs-flexContainer {
   justify-content: center;

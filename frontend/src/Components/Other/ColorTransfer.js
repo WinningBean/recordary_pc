@@ -23,7 +23,7 @@ const colorContrast = (hexColor) => {
   var contrast = Math.sqrt(red * red * 0.241 + green * green * 0.691 + blue * blue * 0.068);
 
   if (contrast > 130) {
-    return '#000000';
+    return '#333';
   } else {
     return '#FFF';
   }

@@ -225,8 +225,18 @@
 .comment-reply-users-name > div > div > div {
   font-size: 15px;
 }
-
+.comment-title:hover {
+  cursor: pointer;
+}
 .comment-title {
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+  padding-left: 10px;
+  margin-bottom: 10px;
+  height: 30px;
+}
+.comment-title-none {
   display: flex;
   align-items: center;
   padding-top: 10px;

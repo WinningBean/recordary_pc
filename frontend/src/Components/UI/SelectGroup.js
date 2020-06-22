@@ -29,7 +29,7 @@ export default function SelectGroup({ options, onSetSelectedGroup, selectedIndex
     options.map((option) => {
       if (event.target.value === option.groupNm) {
         onSetSelectedGroup(option.groupCd);
-      } else return null;
+      } else return;
     });
   };
 

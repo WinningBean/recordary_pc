@@ -121,7 +121,7 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, type, tabInfo }
           <Chip
             avatar={
               // <Avatar alt={`${info.user_id} img`} src={info.user_pic} />
-              <Avatar alt={`${data.userNm} img`} src='img/RIcon.png' />
+              <Avatar alt={`${data.userNm} img`} src={data.userPic} />
             }
             label={data.userNm}
             style={{

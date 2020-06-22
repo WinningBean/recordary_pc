@@ -13,11 +13,7 @@ const Main = (props) => {
         {props.timeline.map((value, index) => {
           if (value.mediaFK !== null) {
             return (
-              <div
-                className='timeline-Margin'
-                key={`${value.postCd}-${index}`}
-                style={{ borderTop: value.groupFK !== null ? '4px solid tomato' : null }}
-              >
+              <div className='timeline-Margin' key={`${value.postCd}-${index}`}>
                 <Timeline
                   data={value}
                   user={props.data}
@@ -29,11 +25,7 @@ const Main = (props) => {
             );
           } else if (value.scheduleFK !== null || value.shareScheduleList.length > 0) {
             return (
-              <div
-                className='timeline-Margin'
-                key={`${value.postCd}-${index}`}
-                style={{ borderTop: value.groupFK !== null ? '4px solid tomato' : null }}
-              >
+              <div className='timeline-Margin' key={`${value.postCd}-${index}`}>
                 <TimelineWeekSchedule
                   data={value}
                   user={props.data}
@@ -45,11 +37,7 @@ const Main = (props) => {
             );
           } else if (value.postOriginFK !== null) {
             return (
-              <div
-                className='timeline-Margin'
-                key={`${value.postCd}-${index}`}
-                style={{ borderTop: value.groupFK !== null ? '4px solid tomato' : null }}
-              >
+              <div className='timeline-Margin' key={`${value.postCd}-${index}`}>
                 <PostShareTimeline
                   data={value}
                   user={props.data}
