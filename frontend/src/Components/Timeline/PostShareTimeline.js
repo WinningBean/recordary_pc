@@ -6,6 +6,7 @@ import { Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText } 
 import AlertDialog from '../Other/AlertDialog';
 
 import './Timeline.css';
+import LikePersonList from './LikePersonList';
 import CommentList from './CommentList';
 import LongMenu from '../Other/MoreMenu';
 import Timeline from './Timeline';
@@ -38,6 +39,7 @@ const PostShareTimeline = (props) => {
   const [pictureCount, setPictureCount] = useState(0);
   const [mediaList, setMediaList] = useState([]);
   const [timelineRender, setTimelineRender] = useState(false);
+  const [likePersonList, setLikePersonList] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -45,11 +47,11 @@ const PostShareTimeline = (props) => {
         if (postOriginData.mediaFK !== null) {
           const mediaSrc = (await axios.get(`/media/${postOriginData.mediaFK.mediaCd}`)).data;
           if (mediaSrc.length < 0) {
-            return null;
+            return;
           } else {
             setMediaList(mediaList.concat(JSON.parse(JSON.stringify(mediaSrc))));
           }
-        } else return null;
+        } else return;
       } catch (e) {
         console.error(e);
       }
@@ -76,7 +78,7 @@ const PostShareTimeline = (props) => {
             <DialogTitle id='alert-dialog-title'>게시물 삭제</DialogTitle>
             <DialogContent>
               <DialogContentText id='alert-dialog-description'>게시물을 삭제하시겠습니까?</DialogContentText>
-              <DialogContentText style={{ fontSize: '13px', color: 'red' }}>
+              <DialogContentText style={{ fontSize: '12px', color: 'red' }}>
                 *관련된 일정과 미디어도 모두 삭제됩니다.
               </DialogContentText>
             </DialogContent>
@@ -85,42 +87,37 @@ const PostShareTimeline = (props) => {
                 취소
               </Button>
               <Button
-                onClick={
-                  (async () => {
-                    try {
-                      const Success = (await axios.delete(`/post/${data.postCd}`)).data;
-                      console.log(Success);
-                      if (Success) {
-                        setDialog(
-                          <AlertDialog
-                            severity='success'
-                            content='게시물이 삭제되었습니다.'
-                            duration={1000}
-                            onAlertClose={() => {
-                              setMenuDialog(null);
-                              props.onPostDelete(data.postCd);
-                            }}
-                          />
-                        );
-                      } else {
-                        setDialog(
-                          <AlertDialog
-                            severity='success'
-                            content='게시물 삭제 실패'
-                            duration={1000}
-                            onAlertClose={() => setDialog(null)}
-                          />
-                        );
-                      }
-                    } catch (e) {
-                      console.log(e);
+                onClick={async () => {
+                  try {
+                    const Success = (await axios.delete(`/post/${data.postCd}`)).data;
+                    console.log(Success);
+                    if (Success) {
                       setDialog(
-                        <AlertDialog severity='error' content='서버에러' onAlertClose={() => setDialog(null)} />
+                        <AlertDialog
+                          severity='success'
+                          content='게시물이 삭제되었습니다.'
+                          duration={1000}
+                          onAlertClose={() => {
+                            setMenuDialog(null);
+                            props.onPostDelete(data.postCd);
+                          }}
+                        />
+                      );
+                    } else {
+                      setDialog(
+                        <AlertDialog
+                          severity='success'
+                          content='게시물 삭제 실패'
+                          duration={1000}
+                          onAlertClose={() => setDialog(null)}
+                        />
                       );
                     }
-                  },
-                  () => setMenuDialog(null))
-                }
+                  } catch (e) {
+                    console.log(e);
+                    setDialog(<AlertDialog severity='error' content='서버에러' onAlertClose={() => setDialog(null)} />);
+                  }
+                }}
                 color='primary'
               >
                 확인
@@ -331,12 +328,24 @@ const PostShareTimeline = (props) => {
                             headers: { 'Content-Type': 'application/json' },
                           })
                         ).data;
-                        setData({ ...data, currentUserLikePost: true });
+                        setData({
+                          ...data,
+                          currentUserLikePost: true,
+                          postLikeCount: data.postLikeCount + 1,
+                          postLikeFirstUser: data.postLikeFirstUser === null ? props.user : data.postLikeFirstUser,
+                        });
                       } else {
                         const unLike = (
                           await axios.delete(`/post/${data.postCd}/unLike`, { params: { userCd: props.user.userCd } })
                         ).data;
-                        setData({ ...data, currentUserLikePost: false });
+                        setData({
+                          ...data,
+                          currentUserLikePost: false,
+                          postLikeCount: data.postLikeCount - 1,
+                          postLikeFirstUser:
+                            data.postLikeFirstUser.userCd === props.user.userCd ? null : data.postLikeForstUser,
+                          // data.postLikeFirstUser.userCd === props.user.userCd ? 다음 사람의 데이터...ㅠ : data.postLikeForstUser,
+                        });
                       }
                     } catch (e) {
                       console.log(e);
@@ -348,13 +357,16 @@ const PostShareTimeline = (props) => {
                 />
               </div>
               {data.postLikeCount < 1 ? (
-                <div className='comment-title'>첫번째 좋아요를 눌러주세욤</div>
+                <div className='comment-title-none'>첫번째 좋아요를 눌러주세욤</div>
               ) : data.postLikeCount === 1 ? (
-                <div className='comment-title'>{`${data.postLikeFirstUser.userId}(${data.postLikeFirstUser.userNm}) 님이 좋아합니다`}</div>
+                <div
+                  className='comment-title'
+                  onClick={() => setLikePersonList(true)}
+                >{`${data.postLikeFirstUser.userId}(${data.postLikeFirstUser.userNm}) 님이 좋아합니다`}</div>
               ) : (
-                <div className='comment-title'>{`${data.postLikeFirstUser.userId}(${
-                  data.postLikeFirstUser.userNm
-                }) 님 외 ${data.postLikeCount - 1}명이 좋아합니다`}</div>
+                <div className='comment-title' onClick={() => setLikePersonList(true)}>{`${
+                  data.postLikeFirstUser.userId
+                }(${data.postLikeFirstUser.userNm}) 님 외 ${data.postLikeCount - 1}명이 좋아합니다`}</div>
               )}
             </div>
           </div>
@@ -372,6 +384,8 @@ const PostShareTimeline = (props) => {
           </div>
         </div>
       </div>
+      {likePersonList ? <LikePersonList postCd={data.postCd} onCancel={() => setLikePersonList(false)} /> : null}
+
       {menuDialog}
       {dialog}
     </div>

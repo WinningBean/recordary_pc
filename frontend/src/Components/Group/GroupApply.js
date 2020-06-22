@@ -31,7 +31,7 @@ const GroupApply = (props) => {
   const classes = useStyles();
   const [dialog, setDialog] = useState(null);
   const [info, setInfo] = useState(props.info);
-
+  console.log(props);
   return (
     <div className='dialog-wrap'>
       <DialogContent className={classes.content}>
@@ -41,10 +41,10 @@ const GroupApply = (props) => {
             <img
               style={{ width: '120px', height: '120px', objectFit: 'cover' }}
               alt='group-master-img'
-              src={info.userPic}
+              src={info.admin.userPic}
             />
             <div style={{ display: 'flex', flexDirection: 'column', flex: 1, paddingLeft: '20px' }}>
-              <div style={{ flex: 1, fontSize: '22px', fontWeight: 'bold' }}>{info.userNm}</div>
+              <div style={{ flex: 1, fontSize: '22px', fontWeight: 'bold' }}>{info.admin.userNm}</div>
               <Button
                 onClick={() =>
                   setDialog(

@@ -280,7 +280,9 @@ class Profile extends React.Component {
                                 }
                                 this.setState({ clickTab: index });
                               }}
-                            />
+                            >
+                              {value.scheduleTabNm}
+                            </TabButton>
                           </li>
                         ))}
                         <li
@@ -529,6 +531,14 @@ class Profile extends React.Component {
                         {this.state.type >= 2 ? (
                           <>
                             <div style={{ textAlign: 'center' }}>
+                              <span className='followerName'>그룹장</span>
+                              <RouterLink to={`/${this.state.info.admin.userId}`}>
+                                <Link component='button'>
+                                  <span className='followerNum'>{this.state.info.admin.userNm}</span>
+                                </Link>
+                              </RouterLink>
+                            </div>
+                            <div style={{ textAlign: 'center' }}>
                               <span className='followerName'>그룹 멤버</span>
                               <Link
                                 component='button'
@@ -594,14 +604,6 @@ class Profile extends React.Component {
                                 </Dialog>
                               ) : null}
                             </div>
-                            <div style={{ textAlign: 'center' }}>
-                              <span className='followerName'>그룹장</span>
-                              <RouterLink to={`/${this.state.info.admin.userId}`}>
-                                <Link component='button'>
-                                  <span className='followerNum'>{this.state.info.admin.userNm}</span>
-                                </Link>
-                              </RouterLink>
-                            </div>
                           </>
                         ) : (
                           <>
@@ -635,7 +637,7 @@ class Profile extends React.Component {
                           </>
                         )}
                       </div>
-                      <div className='status-content'>
+                      <div className='status-content' style={{ textAlign: 'center' }}>
                         <div>{this.state.type >= 2 ? this.state.info.groupEx : this.state.info.userInfo.userEx}</div>
                       </div>
                     </div>

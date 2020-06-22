@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText } from '@material-ui/core';
 import AlertDialog from '../Other/AlertDialog';
 
+import LikePersonList from './LikePersonList';
 import './Timeline.css';
 import CommentList from './CommentList';
 import LongMenu from '../Other/MoreMenu';
@@ -38,13 +39,14 @@ const Timeline = (props) => {
   const [pictureCount, setPictureCount] = useState(0);
   const [clickSchedule, setClickSchedule] = useState(false);
   const [mediaList, setMediaList] = useState([]);
+  const [likePersonList, setLikePersonList] = useState(false);
 
   useEffect(() => {
     (async () => {
       try {
         const mediaSrc = (await axios.get(`/media/${data.mediaFK.mediaCd}`)).data;
         if (mediaSrc.length < 0) {
-          return null;
+          return;
         } else {
           setMediaList(mediaList.concat(JSON.parse(JSON.stringify(mediaSrc))));
         }
@@ -428,16 +430,24 @@ const Timeline = (props) => {
                             headers: { 'Content-Type': 'application/json' },
                           })
                         ).data;
-                        if (like) {
-                          setData({ ...data, currentUserLikePost: true });
-                        }
+                        setData({
+                          ...data,
+                          currentUserLikePost: true,
+                          postLikeCount: data.postLikeCount + 1,
+                          postLikeFirstUser: data.postLikeFirstUser === null ? props.user : data.postLikeFirstUser,
+                        });
                       } else {
                         const unLike = (
                           await axios.delete(`/post/${data.postCd}/unLike`, { params: { userCd: props.user.userCd } })
                         ).data;
-                        if (unLike) {
-                          setData({ ...data, currentUserLikePost: false });
-                        }
+                        setData({
+                          ...data,
+                          currentUserLikePost: false,
+                          postLikeCount: data.postLikeCount - 1,
+                          postLikeFirstUser:
+                            data.postLikeFirstUser.userCd === props.user.userCd ? null : data.postLikeForstUser,
+                          // data.postLikeFirstUser.userCd === props.user.userCd ? 다음 사람의 데이터...ㅠ : data.postLikeForstUser,
+                        });
                       }
                     } catch (e) {
                       console.log(e);
@@ -449,13 +459,16 @@ const Timeline = (props) => {
                 />
               </div>
               {data.postLikeCount < 1 ? (
-                <div className='comment-title'>첫번째 좋아요를 눌러주세욤</div>
+                <div className='.comment-title-none'>첫번째 좋아요를 눌러주세욤</div>
               ) : data.postLikeCount === 1 ? (
-                <div className='comment-title'>{`${data.postLikeFirstUser.userId}(${data.postLikeFirstUser.userNm}) 님이 좋아합니다`}</div>
+                <div
+                  className='comment-title'
+                  onClick={() => setLikePersonList(true)}
+                >{`${data.postLikeFirstUser.userId}(${data.postLikeFirstUser.userNm}) 님이 좋아합니다`}</div>
               ) : (
-                <div className='comment-title'>{`${data.postLikeFirstUser.userId}(${
-                  data.postLikeFirstUser.userNm
-                }) 님 외 ${data.postLikeCount - 1}명이 좋아합니다`}</div>
+                <div className='comment-title' onClick={() => setLikePersonList(true)}>{`${
+                  data.postLikeFirstUser.userId
+                }(${data.postLikeFirstUser.userNm}) 님 외 ${data.postLikeCount - 1}명이 좋아합니다`}</div>
               )}
             </div>
           </div>
@@ -473,6 +486,7 @@ const Timeline = (props) => {
           </div>
         </div>
       </div>
+      {likePersonList ? <LikePersonList postCd={data.postCd} onCancel={() => setLikePersonList(false)} /> : null}
       {menuDialog}
       {dialog}
     </div>

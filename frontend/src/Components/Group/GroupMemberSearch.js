@@ -23,7 +23,7 @@ const GroupMemberSearch = (props) => {
       setAlert(
         <AlertDialog
           severity='error'
-          content='이름를 입력하세요'
+          content='이름을 입력하세요'
           onAlertClose={() => {
             setAlert(null);
           }}
