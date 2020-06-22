@@ -100,6 +100,11 @@ const SearchFieldResult = (props) => {
                             const copyList = userList.slice();
                             copyList[index] = { ...value, userFollowTarget: true };
                             setUserList(copyList);
+                            props.onSaveNotice({
+                              noticeType: 'FOLLOW_NEW', // 이벤트 타입
+                              activeCd: props.userCd, // 이벤트 주체
+                              targetCd: value.userInfo.userCd, // 이벤트 대상
+                            });
                             // props.onSaveFriend(value);
                             return;
                           } else {
@@ -238,6 +243,11 @@ const SearchFieldResult = (props) => {
                             });
                             console.log(data);
                             if (data) {
+                              props.onSaveNotice({
+                                noticeType: 'GROUP_APPLY_COME', // 이벤트 타입
+                                activeCd: props.userCd, // 이벤트 주체
+                                targetCd: value.groupCd, // 이벤트 대상
+                              });
                               setAlertDialog(
                                 <Snackbar
                                   severity='success'

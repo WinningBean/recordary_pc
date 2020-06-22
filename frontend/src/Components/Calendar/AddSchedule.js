@@ -22,6 +22,8 @@ import { addHours, startOfDay, endOfDay, startOfSecond } from 'date-fns';
 
 import axios from 'axios';
 
+import store from '../../store';
+
 // 255,197,0
 export default ({ data, clickTab, clickDate, onClose, onSuccess, type, tabInfo }) => {
   const [color, setColor] = useState({
@@ -233,6 +235,18 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, type, tabInfo }
                   postScheduleShareState: false,
                 })
               ).data;
+
+              info.scheduleMembers.forEach((value) => {
+                store.dispatch({
+                  type: 'SAVE_NOTICE',
+                  notice: {
+                    noticeType: 'GROUP_APPLY_INVITE', // 이벤트 타입
+                    activeCd: scCd, // 이벤트 주체
+                    targetCd: value.userCd, // 이벤트 대상
+                  },
+                });
+              });
+
               console.log(postData);
               console.log(scCd);
               onSuccess({

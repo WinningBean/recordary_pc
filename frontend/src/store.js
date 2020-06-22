@@ -7,6 +7,7 @@ const reducer = (state, action) => {
       user: {},
       friendList: undefined,
       groupList: undefined,
+      notice: null,
     };
   }
   switch (action.type) {
@@ -81,6 +82,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         friendList: state.friendList === undefined ? state.friendList : state.friendList.concat(action.friend),
+      };
+    case 'SAVE_NOTICE':
+      return {
+        ...state,
+        notice: action.notice,
       };
     // case 'SAVE_GROUP':
     //   return {

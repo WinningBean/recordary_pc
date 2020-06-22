@@ -6,6 +6,9 @@ const mapDispatchToProps = (dispatch) => {
     onSaveFriend: (data) => {
       dispatch({ type: 'SAVE_FRIEND', friend: data });
     },
+    onSaveNotice: (notice) => {
+      dispatch({ type: 'SAVE_NOTICE', notice: notice });
+    },
   };
 };
 

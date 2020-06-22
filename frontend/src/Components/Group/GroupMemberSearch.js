@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import '../Other/SearchField.css';
 import Snackbar from '../UI/Snackbar';
+import store from '../../store';
 
 import IconButton from '@material-ui/core/IconButton';
 import Dialog from '@material-ui/core/Dialog';
@@ -105,11 +106,19 @@ const GroupMemberSearch = (props) => {
                               console.log({ groupCd: props.info.groupCd, userCd: props.info.userCd });
                               const { data } = await axios.post('/groupApply/create', {
                                 groupCd: props.info.groupCd,
-                                userCd: props.info.admin.userCd,
+                                userCd: value.userInfo.userCd,
                                 applyState: 1,
                               });
                               if (data) {
                                 props.onAdd();
+                                store.dispatch({
+                                  type: 'SAVE_NOTICE',
+                                  notice: {
+                                    noticeType: 'GROUP_APPLY_INVITE', // 이벤트 타입
+                                    activeCd: props.info.groupCd, // 이벤트 주체
+                                    targetCd: value.userInfo.userCd, // 이벤트 대상
+                                  },
+                                });
                               } else {
                                 setAlert(
                                   <Snackbar
