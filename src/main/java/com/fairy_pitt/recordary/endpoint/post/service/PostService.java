@@ -131,6 +131,18 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
+    public List<PostResponseDto> pagingUserPost(Long userCd, Long lastPostCd){
+
+        Map<Long, LocalDateTime> postMap = new HashMap<>();
+
+        for (PostResponseDto postResponseDto : userPost(userCd)){
+            postMap.put(postResponseDto.getPostCd(), postResponseDto.getModifiedDate());
+        }
+
+        return sortPagingPost(postMap, lastPostCd);
+    }
+
+    @Transactional(readOnly = true)
     public List<PostResponseDto> groupPost(Long groupCd){
         List<PostEntity> postEntityList = new ArrayList<>(postRepository.findAllByGroupFKOrderByCreatedDateDesc(groupService.findEntity(groupCd)));
 
@@ -138,6 +150,18 @@ public class PostService {
         if (groupMemberService.findEntity(groupCd, userService.currentUserCd()) != null) publicState = 3;
 
         return checkCurrentUserForPost(postEntityList, publicState);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> pagingGroupPost(Long groupCd, Long lastPostCd){
+
+        Map<Long, LocalDateTime> postMap = new HashMap<>();
+
+        for (PostResponseDto postResponseDto : groupPost(groupCd)){
+            postMap.put(postResponseDto.getPostCd(), postResponseDto.getModifiedDate());
+        }
+
+        return sortPagingPost(postMap, lastPostCd);
     }
 
     @Transactional(readOnly = true)
@@ -208,6 +232,11 @@ public class PostService {
             postMap.put(postResponseDto.getPostCd(), postResponseDto.getModifiedDate());
         }
 
+        return sortPagingPost(postMap, lastPostCd);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> sortPagingPost(Map<Long, LocalDateTime> postMap, Long lastPostCd){
         List<Long> cdSetList = new ArrayList<>(postMap.keySet());
         Collections.sort(cdSetList, new Comparator<Long>() {
             @Override
@@ -223,7 +252,7 @@ public class PostService {
         List<PostResponseDto> postPagingList = new ArrayList<>();
 
         while (cdSetList.size() > currentIndex && postPagingList.size() < 10) {
-            postPagingList.add(new PostResponseDto(this.findEntity(cdSetList.get(currentIndex))));
+            postPagingList.add(checkCurrentUserLikePost(new PostResponseDto(this.findEntity(cdSetList.get(currentIndex)))));
             currentIndex++;
         }
 

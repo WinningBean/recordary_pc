@@ -41,9 +41,19 @@ public class PostController {
         return postService.userPost(userCd);
     }
 
+    @GetMapping("/paging/user/{userCd}")
+    public List<PostResponseDto> pagingUserPost(@PathVariable Long userCd, @RequestParam(value = "lastCd", required = false) Long lastPostCd){
+        return postService.pagingUserPost(userCd, lastPostCd);
+    }
+
     @GetMapping("/group/{groupCd}")
     public List<PostResponseDto> groupPost(@PathVariable Long groupCd){
         return postService.groupPost(groupCd);
+    }
+
+    @GetMapping("/paging/group/{groupCd}")
+    public List<PostResponseDto> pagingGroupPost(@PathVariable Long groupCd, @RequestParam(value = "lastCd", required = false) Long lastPostCd){
+        return postService.pagingGroupPost(groupCd, lastPostCd);
     }
 
     @GetMapping("/user/{userCd}/search")
