@@ -420,6 +420,14 @@ class Profile extends React.Component {
                                 groupCd: this.state.info.groupCd,
                                 userCd: this.state.info.groupApply[index].userCd,
                               });
+                              this.props.onSaveNotice({
+                                type: 'SAVE_NOTICE',
+                                notice: {
+                                  noticeType: 'GROUP_MEMBER_ALLOW', // 이벤트 타입
+                                  activeCd: this.state.info.groupCd, // 이벤트 주체
+                                  targetCd: this.state.info.groupApply[index].userCd, // 이벤트 대상
+                                },
+                              });
                               const copyList = this.state.info.groupApply.slice();
                               copyList.splice(index, 1);
                               this.setState({
@@ -456,10 +464,18 @@ class Profile extends React.Component {
                                 groupCd: this.state.info.groupCd,
                                 userCd: this.state.info.groupApply[index].userCd,
                               });
-                              // await axios.post('/groupApply/delete', {
-                              //   groupCd: this.state.info.groupCd,
-                              //   userCd: this.state.info.groupApply[index].userCd,
-                              // });
+                              await axios.post('/groupApply/delete', {
+                                groupCd: this.state.info.groupCd,
+                                userCd: this.state.info.groupApply[index].userCd,
+                              });
+                              this.props.onSaveNotice({
+                                type: 'SAVE_NOTICE',
+                                notice: {
+                                  noticeType: 'GROUP_APPLY_COME_NOT', // 이벤트 타입
+                                  activeCd: this.state.info.groupApply[index].userCd, // 이벤트 주체
+                                  targetCd: this.state.info.groupCd, // 이벤트 대상
+                                },
+                              });
                               const copyList = this.state.info.groupApply.slice();
                               copyList.splice(index, 1);
                               this.setState({

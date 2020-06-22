@@ -22,6 +22,8 @@ import axios from 'axios';
 import Button from '@material-ui/core/Button';
 import SubdirectoryArrowLeftIcon from '@material-ui/icons/SubdirectoryArrowLeft';
 
+import store from '../../store';
+
 const useStyles = makeStyles((theme) => ({
   textFieldSize: {
     fontSize: '12px',
@@ -323,6 +325,14 @@ const PostShareTimeline = (props) => {
                             headers: { 'Content-Type': 'application/json' },
                           })
                         ).data;
+                        store.dispatch({
+                          type: 'SAVE_NOTICE',
+                          notice: {
+                            noticeType: 'POST_LIKE_NEW', // 이벤트 타입
+                            activeCd: props.user.userCd, // 이벤트 주체
+                            targetCd: data.postCd, // 이벤트 대상
+                          },
+                        });
                         setData({ ...data, currentUserLikePost: true });
                       } else {
                         const unLike = (

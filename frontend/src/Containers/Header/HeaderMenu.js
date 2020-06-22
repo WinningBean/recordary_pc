@@ -24,6 +24,9 @@ const mapDispatchToProps = (dispatch) => {
     onLogout: () => {
       dispatch({ type: 'INIT' });
     },
+    onSaveNotice: (notice) => {
+      dispatch({ type: 'SAVE_NOTICE', notice: notice });
+    },
   };
 };
 

@@ -10,6 +10,8 @@ import SubdirectoryArrowLeftIcon from '@material-ui/icons/SubdirectoryArrowLeft'
 
 import axios from 'axios';
 
+import store from '../../store';
+
 const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
@@ -66,6 +68,16 @@ const CommentTimeline = ({ user, postCd, onSuccess }) => {
                             // commentOriginFK => 대댓글 코드 작성 시 수정
                           })
                         ).data;
+
+                        store.dispatch({
+                          type: 'SAVE_NOTICE',
+                          notice: {
+                            noticeType: 'COMMENT_NEW', // 이벤트 타입
+                            activeCd: commentCdData, // 이벤트 주체
+                            targetCd: postCd, // 이벤트 대상
+                          },
+                        });
+
                         onSuccess({
                           commentCd: commentCdData,
                           commentContent: writeComment,

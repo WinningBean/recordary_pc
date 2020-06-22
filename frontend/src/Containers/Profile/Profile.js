@@ -9,4 +9,12 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default withRouter(connect(mapStateToProps)(Profile));
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onSaveNotice: (notice) => {
+      dispatch({ type: 'SAVE_NOTICE', notice: notice });
+    },
+  };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Profile));

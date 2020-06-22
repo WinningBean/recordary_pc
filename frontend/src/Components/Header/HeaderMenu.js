@@ -99,6 +99,14 @@ const HeaderMenu = (props) => {
                   );
                   return;
                 } else {
+                  props.onSaveNotice({
+                    type: 'SAVE_NOTICE',
+                    notice: {
+                      noticeType: 'GROUP_MEMBER_AWAY', // 이벤트 타입
+                      activeCd: props.data.userCd, // 이벤트 주체
+                      targetCd: code, // 이벤트 대상
+                    },
+                  });
                   props.onDeleteGroupList(code);
                   setMenuDialog(
                     <AlertDialog
