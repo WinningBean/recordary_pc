@@ -6,9 +6,13 @@
   padding: 10px;
   height: 50px;
   background-color: rgba(20, 81, 51, 0.9);
+  color: white;
+  font-size: 20px;
 }
 .searchField-result-list {
   padding: 10px;
+  height: 444px;
+  overflow-y: scroll;
 }
 .group-follow_change {
   display: flex;
@@ -18,7 +22,8 @@
   display: flex;
   justify-content: space-between;
   width: 320px;
-  margin-top: 10px;
+  border-bottom: 1px solid #eee;
+  padding: 6px 0px;
 }
 .MuiTabs-flexContainer {
   justify-content: center;

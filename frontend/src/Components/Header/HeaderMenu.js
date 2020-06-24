@@ -215,6 +215,7 @@ const HeaderMenu = (props) => {
                             display: 'flex',
                             alignItems: 'center',
                             fontWeight: 'bold',
+                            textTransform: 'none',
                           }}
                         >
                           <img
@@ -323,6 +324,7 @@ const HeaderMenu = (props) => {
                       display: 'flex',
                       alignItems: 'center',
                       fontWeight: 'bold',
+                      textTransform: 'none',
                     }}
                   >
                     {/* 우선 redux에 저장하지 않음 */}

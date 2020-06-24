@@ -61,7 +61,11 @@ class App extends React.Component {
     return (
       <div id='wrapper'>
         <Switch>
-          <Route exact path='/' component={LoginPage} />
+          {!this.props.isLogin ? (
+            <Route exact path='/' component={LoginPage} />
+          ) : (
+            <Route exact path='/' component={MainPage} />
+          )}
           <Route exact path='/main' component={MainPage} />
           <Route path='/group/:groupCd' component={ProfilePage} />
           <Route path='/:userId' component={ProfilePage} />

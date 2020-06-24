@@ -178,7 +178,7 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, type, tabInfo }
             selectedIndex={info.schedulePublicState}
           />
         )}
-        <Button>취소</Button>
+        <Button onClick={() => onClose()}>취소</Button>
         <Button
           onClick={async () => {
             setDialog(<Snackbar severit='info' content='데이터 요청중...' onClose={() => setDialog(null)} />);
