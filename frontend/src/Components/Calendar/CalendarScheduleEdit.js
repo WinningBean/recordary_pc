@@ -41,6 +41,8 @@ const CalendarScheduleEdit = ({
   groupCd,
   onModify,
   userInfo,
+  tabInfo,
+  clickTab,
 }) => {
   const classes = useStyles();
   const [dialog, setDialog] = useState(null);
@@ -49,8 +51,21 @@ const CalendarScheduleEdit = ({
   const [schedule, setSchedule] = useState(info);
   const [addedSchedule, setAddedSchedule] = useState([]);
   const [subtractedSchedule, setSubtractedSchedule] = useState([]);
+  const [clickTabState, setClickTabState] = useState(info.tab === null ? undefined : info.tab);
+  const [tabPopover, setTabPopover] = useState(null);
 
   console.log(schedule);
+
+  var clickTabInfo = undefined;
+
+  if (clickTabState !== undefined) {
+    for (let i = 0; i < tabInfo.length; i++) {
+      if (tabInfo[i].scheduleTabCd === clickTabState) {
+        clickTabInfo = tabInfo[i];
+        break;
+      }
+    }
+  }
 
   return (
     <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }} onClose={() => onCancel()}>
@@ -99,6 +114,32 @@ const CalendarScheduleEdit = ({
               defaultValue={info.ex}
               onChange={(e) => setSchedule({ ...schedule, ex: e.target.value })}
             />
+            {tabInfo === undefined ? null : (
+              <>
+                <span>선택한 탭 :</span>
+                <div
+                  className='transition-all'
+                  onClick={(e) => {
+                    setTabPopover(e.currentTarget);
+                  }}
+                  style={{
+                    height: '36px',
+                    width: '200px',
+                    backgroundColor: clickTabState === undefined ? '#ffc500' : clickTabInfo.scheduleTabColor,
+                    marginLeft: '10px',
+                    textAlign: 'center',
+                    lineHeight: '36px',
+                    textTransform: 'uppercase',
+                    color: colorContrast(clickTabState === undefined ? '#ffc500' : clickTabInfo.scheduleTabColor),
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    userSelect: 'none',
+                  }}
+                >
+                  {clickTabState === undefined ? 'ALL' : clickTabInfo.scheduleTabNm}
+                </div>
+              </>
+            )}
           </div>
           <div className='Post-Append-Schedule'>
             <DTP
@@ -256,7 +297,7 @@ const CalendarScheduleEdit = ({
                 try {
                   await axios.post(`/schedule/update/${schedule.cd}`, {
                     groupCd: groupCd === undefined ? null : groupCd,
-                    TabCodeFK: schedule.tab,
+                    TabCodeFK: clickTabState === undefined ? null : clickTabState,
                     scheduleNm: schedule.nm,
                     scheduleEx: schedule.ex,
                     scheduleStr: str.getTime(),
@@ -279,6 +320,53 @@ const CalendarScheduleEdit = ({
         </div>
       </div>
       {dialog}
+      {tabInfo === undefined ? null : (
+        <Popover
+          open={Boolean(tabPopover)}
+          anchorEl={tabPopover === null ? null : tabPopover}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          disableRestoreFocus
+          onClose={() => setTabPopover(null)}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', backgroundColor: 'transparent' }}>
+            <Button
+              style={{ width: '200px' }}
+              onClick={() => {
+                setClickTabState(undefined);
+                setTabPopover(null);
+              }}
+              style={{ backgroundColor: '#ffc500', color: colorContrast('#ffc500') }}
+            >
+              ALL
+            </Button>
+            {tabInfo.map((value) => {
+              return (
+                <Button
+                  key={`tabInfo-${value.scheduleTabCd}`}
+                  onClick={() => {
+                    setClickTabState(value.scheduleTabCd);
+                    setTabPopover(null);
+                  }}
+                  style={{
+                    backgroundColor: value.scheduleTabColor,
+                    color: colorContrast(value.scheduleTabColor),
+                    width: '200px',
+                  }}
+                >
+                  {value.scheduleTabNm}
+                </Button>
+              );
+            })}
+          </div>
+        </Popover>
+      )}
     </Dialog>
   );
 };

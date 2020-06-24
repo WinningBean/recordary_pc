@@ -283,7 +283,7 @@ const SearchFieldResult = (props) => {
                           return;
                         }}
                       >
-                        <HowToRegIcon style={{ fontSize: '20px' }} />
+                        <AddIcon style={{ fontSize: '20px' }} />
                       </FollowButton>
                     );
                   } else {
@@ -333,7 +333,7 @@ const SearchFieldResult = (props) => {
                           }
                         }}
                       >
-                        <AddIcon style={{ fontSize: '20px' }} />
+                        <HowToRegIcon style={{ fontSize: '20px' }} />
                       </FollowButton>
                     );
                   }
@@ -348,7 +348,7 @@ const SearchFieldResult = (props) => {
 
   return (
     <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }} onClose={() => props.onCancel()}>
-      <div className='searchField-result'>
+      <div>
         <div className='searchField-title' style={{ display: 'flex', alignItems: 'center' }}>
           <SearchIcon
             style={{
@@ -361,25 +361,23 @@ const SearchFieldResult = (props) => {
           </div>
         </div>
         <hr />
-        <div className='searchField-result-list'>
-          <div className='group-follow_change'>
-            <div>
-              <Paper square style={{ marginBottom: '10px' }}>
-                <Tabs
-                  value={clickTab}
-                  indicatorColor='primary'
-                  textColor='primary'
-                  onChange={(e, newValue) => setClickTab(newValue)}
-                  aria-label='disabled tabs example'
-                >
-                  <Tab label='Follow' icon={<HowToRegIcon />} />
-                  <Tab label='Group' icon={<GroupIcon />} />
-                </Tabs>
-              </Paper>
-            </div>
-            <div className='follower_list'>
-              <ul>{clickTab === 0 ? exfollowList() : exGroupList()}</ul>
-            </div>
+        <div className='group-follow_change'>
+          <div>
+            <Paper square style={{ marginBottom: '10px' }}>
+              <Tabs
+                value={clickTab}
+                indicatorColor='primary'
+                textColor='primary'
+                onChange={(e, newValue) => setClickTab(newValue)}
+                aria-label='disabled tabs example'
+              >
+                <Tab label='Follow' icon={<HowToRegIcon />} />
+                <Tab label='Group' icon={<GroupIcon />} />
+              </Tabs>
+            </Paper>
+          </div>
+          <div className='searchField-result-list' style={{ width: '348px' }}>
+            <ul>{clickTab === 0 ? exfollowList() : exGroupList()}</ul>
           </div>
         </div>
       </div>

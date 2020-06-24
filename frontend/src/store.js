@@ -1,24 +1,19 @@
 import { createStore } from 'redux';
 
+const defaultValue = {
+  isLogin: false,
+  user: {},
+  friendList: undefined,
+  groupList: undefined,
+  notice: null,
+};
 const reducer = (state, action) => {
   if (state === undefined) {
-    return {
-      isLogin: false,
-      user: {},
-      friendList: undefined,
-      groupList: undefined,
-      notice: null,
-    };
+    return defaultValue;
   }
   switch (action.type) {
     case 'INIT':
-      return {
-        isLogin: false,
-        user: {},
-        friendList: undefined,
-        groupList: undefined,
-        postList: undefined,
-      };
+      return defaultValue;
     case 'CONNECT_SESSION':
       return {
         ...state,

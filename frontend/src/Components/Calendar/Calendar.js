@@ -670,6 +670,19 @@ const Calendar = (props) => {
       if (publicState !== 0 && value.state !== publicState) {
         return;
       }
+      console.log(props.tabInfo, props.clickTabIndex);
+      var color = undefined;
+      if (props.clickTab === undefined) {
+        // 탭 색상 반영 유무 체크
+        if (value.tab === null) {
+          color = value.color;
+        } else {
+          console.log(props.clickTab);
+          color = props.tabInfo.find((_value) => _value.scheduleTabCd === value.tab).scheduleTabColor;
+        }
+      } else {
+        color = value.color;
+      }
 
       var index = null;
       var secondBlock = false;
@@ -732,17 +745,15 @@ const Calendar = (props) => {
       if (dateFns.isSameDay(value.start, value.end)) {
         if (copyDayLocation[index].isSecondBlock) {
           if (dateFns.differenceInHours(value.end, value.start) >= 23) {
-            sc.push(
-              longSC(value.cd, 85, copyDayLocation[index].x, copyDayLocation[index].y + 25, value.nm, 0, value.color)
-            );
+            sc.push(longSC(value.cd, 85, copyDayLocation[index].x, copyDayLocation[index].y + 25, value.nm, 0, color));
           } else {
-            sc.push(shortSC(value.cd, copyDayLocation[index].x, copyDayLocation[index].y + 20, value.nm, value.color));
+            sc.push(shortSC(value.cd, copyDayLocation[index].x, copyDayLocation[index].y + 20, value.nm, color));
           }
         } else {
           if (dateFns.differenceInHours(value.end, value.start) >= 23) {
-            sc.push(longSC(value.cd, 85, copyDayLocation[index].x, copyDayLocation[index].y, value.nm, 0, value.color));
+            sc.push(longSC(value.cd, 85, copyDayLocation[index].x, copyDayLocation[index].y, value.nm, 0, color));
           } else {
-            sc.push(shortSC(value.cd, copyDayLocation[index].x, copyDayLocation[index].y, value.nm, value.color));
+            sc.push(shortSC(value.cd, copyDayLocation[index].x, copyDayLocation[index].y, value.nm, color));
           }
         }
         copyDayLocation[index].overlap = ++copyDayLocation[index].overlap;
@@ -759,7 +770,7 @@ const Calendar = (props) => {
                 copyDayLocation[index].y + 25,
                 value.nm,
                 beforeStartDay ? -1 : 0,
-                value.color
+                color
               )
             );
           } else {
@@ -772,7 +783,7 @@ const Calendar = (props) => {
                 copyDayLocation[index].y,
                 value.nm,
                 beforeStartDay ? -1 : 0,
-                value.color
+                color
               )
             );
           }
@@ -809,9 +820,9 @@ const Calendar = (props) => {
               return;
             }
             if (secondBlock) {
-              sc.push(longSC(value.cd, 595, 0, copyDayLocation[index].y + 25, '　', i + 1, value.color));
+              sc.push(longSC(value.cd, 595, 0, copyDayLocation[index].y + 25, '　', i + 1, color));
             } else {
-              sc.push(longSC(value.cd, 595, 0, copyDayLocation[index].y, '　', i + 1, value.color));
+              sc.push(longSC(value.cd, 595, 0, copyDayLocation[index].y, '　', i + 1, color));
             }
             // const currWeek = dateFns.addWeeks(value.start, i + 1);
             // const currWeekFisrtDay = dateFns.startOfWeek(currWeek);
@@ -844,9 +855,9 @@ const Calendar = (props) => {
           }
           const diffDay = dateFns.differenceInDays(value.end, copyDayLocation[index].day) + 1;
           if (secondBlock) {
-            sc.push(longSC(value.cd, 85 * diffDay, 0, copyDayLocation[index].y + 25, '　', i + 1, value.color));
+            sc.push(longSC(value.cd, 85 * diffDay, 0, copyDayLocation[index].y + 25, '　', i + 1, color));
           } else {
-            sc.push(longSC(value.cd, 85 * diffDay, 0, copyDayLocation[index].y, '　', i + 1, value.color));
+            sc.push(longSC(value.cd, 85 * diffDay, 0, copyDayLocation[index].y, '　', i + 1, color));
           }
 
           // const currWeek = dateFns.addWeeks(value.start, i + 1);
@@ -870,7 +881,7 @@ const Calendar = (props) => {
               copyDayLocation[index].y + 25,
               value.nm,
               beforeStartDay ? -1 : 0,
-              value.color
+              color
             )
           );
         } else {
@@ -882,7 +893,7 @@ const Calendar = (props) => {
               copyDayLocation[index].y,
               value.nm,
               beforeStartDay ? -1 : 0,
-              value.color
+              color
             )
           );
         }
@@ -1139,6 +1150,8 @@ const Calendar = (props) => {
                   userCd={type === 0 ? props.info.userCd : props.info.currentUserCd}
                   userInfo={type === 0 ? props.info : null}
                   info={selectedDetailedSC}
+                  clickTab={props.clickTab}
+                  tabInfo={props.tabInfo}
                   onModify={(data) => {
                     const copyUserDate = userDate.slice();
                     for (let i = 0; i < copyUserDate.length; i++) {

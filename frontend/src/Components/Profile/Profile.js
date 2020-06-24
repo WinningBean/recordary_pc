@@ -28,13 +28,15 @@ import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
-import RouterLink from 'react-router-dom/Link';
+import * as Router from 'react-router-dom';
 
 import { Redirect } from 'react-router-dom';
 
 import axios from 'axios';
 
 import * as dateFns from 'date-fns';
+
+const RouterLink = Router.Link;
 
 const IconButton = styled(Button)({
   minWidth: '30px',
@@ -197,7 +199,7 @@ class Profile extends React.Component {
       if (this.state.followerNumClick) {
         return (
           <Follower
-            userId={this.state.info.userInfo.userId}
+            userCd={this.state.info.userInfo.userCd}
             isFollower={true}
             onCancel={() => this.setState({ followerNumClick: false })}
           ></Follower>
@@ -205,7 +207,7 @@ class Profile extends React.Component {
       } else if (this.state.followingNumClick) {
         return (
           <Follower
-            userId={this.state.info.userInfo.userId}
+            userCd={this.state.info.userInfo.userCd}
             isFollower={false}
             onCancel={() => this.setState({ followingNumClick: false })}
           ></Follower>
@@ -653,8 +655,26 @@ class Profile extends React.Component {
                           </>
                         )}
                       </div>
-                      <div className='status-content' style={{ textAlign: 'center' }}>
-                        <div>{this.state.type >= 2 ? this.state.info.groupEx : this.state.info.userInfo.userEx}</div>
+                      <div className='status-content'>
+                        <div style={{ textAlign: 'center' }}>
+                          {this.state.type >= 2
+                            ? this.state.info.groupEx.split('\n').map((line) => {
+                                return (
+                                  <span>
+                                    {line}
+                                    <br />
+                                  </span>
+                                );
+                              })
+                            : this.state.info.userInfo.userEx.split('\n').map((line) => {
+                                return (
+                                  <span>
+                                    {line}
+                                    <br />
+                                  </span>
+                                );
+                              })}
+                        </div>
                       </div>
                     </div>
                   </div>
