@@ -32,7 +32,7 @@ const SendButton = styled(Button)({
   height: '20px',
 });
 
-export default ({ tData, user, onSuccess }) => {
+export default ({ postCd, tData, user, onSuccess }) => {
   useEffect(() => {
     setData(
       tData.map((value) => ({
@@ -65,7 +65,7 @@ export default ({ tData, user, onSuccess }) => {
 
   const getRecommentList = async (value, index, bool) => {
     try {
-      const recommentListData = (await axios.get(`/comment/${value.commentCd}`)).data;
+      const recommentListData = (await axios.get(`/comment/sub/${value.commentCd}`)).data;
       setData(
         data.map((val, listIndex) => {
           if (index === listIndex) {
@@ -287,7 +287,7 @@ export default ({ tData, user, onSuccess }) => {
                           const recommentCd = (
                             await axios.post(`/comment/`, {
                               userCd: user.userCd,
-                              postCd: data.postCd,
+                              postCd: postCd,
                               commentContent: writeRecomment,
                               commentOriginCd: value.commentCd,
                             })

@@ -38,6 +38,37 @@ const Aside = (props) => {
           <div className='aside-profile-TodaySchedule'>
             <hr />
             <div>Today's schedule</div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '10px' }}>
+              <span
+                style={{
+                  backgroundColor: 'rgba(20, 81, 51,.7)',
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                }}
+              />
+              <span style={{ paddingLeft: '5px' }}>내 일정</span>
+              <span
+                style={{
+                  marginLeft: '10px',
+                  backgroundColor: 'tomato',
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                }}
+              />
+              <span style={{ paddingLeft: '5px' }}>그룹</span>
+              <span
+                style={{
+                  marginLeft: '10px',
+                  backgroundColor: 'dodgerblue',
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                }}
+              />
+              <span style={{ paddingLeft: '5px' }}>참여 일정</span>
+            </div>
             <ul style={{ maxHeight: '100px', overflowY: 'scroll' }}>
               {todaySchedule !== null
                 ? todaySchedule.map((value, index) => {

@@ -399,6 +399,7 @@ const Timeline = (props) => {
           <div className='comment-reply' style={{ overflowY: 'auto' }}>
             {data.commentList.length > 0 ? (
               <CommentList
+                postCd={data.postCd}
                 tData={data.commentList}
                 user={props.user}
                 onSuccess={(commentInfo) => {

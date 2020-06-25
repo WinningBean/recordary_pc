@@ -175,76 +175,82 @@ const PostShareTimeline = (props) => {
               } else return null;
             }}
           >
-            <>
-              <div
-                style={{
-                  flex: 1,
-                  display: 'flex',
-                  alignItems: 'center',
-                  borderBottom: '1px solid rgb(229, 229, 229)',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <div className='timeline-share-userInfo'>
-                  <img alt={`${postOriginData.userFK.userId}-img`} src={postOriginData.userFK.userPic} />
-                  <div>
-                    {postOriginData.userFK.userId}({postOriginData.userFK.userNm})
-                  </div>
+            <div
+              style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                display: 'flex',
+                justifyContent: 'space-between',
+              }}
+            >
+              <div className='timeline-share-userInfo'>
+                <img alt={`${postOriginData.userFK.userId}-img`} src={postOriginData.userFK.userPic} />
+                <div>
+                  {postOriginData.userFK.userId}({postOriginData.userFK.userNm})
                 </div>
               </div>
-              <div style={{ display: 'flex', padding: '8px 0px', borderBottom: '1px solid rgb(229, 229, 229)' }}>
+            </div>
+
+            {postOriginData.scheduleFK === null ? null : (
+              <div style={{ display: 'flex', padding: '8px 0px', borderTop: '1px solid rgb(229, 229, 229)' }}>
+                {postOriginData.scheduleFK.scheduleNm}
+              </div>
+            )}
+            {/* <div style={{ display: 'flex', padding: '8px 0px', borderBottom: '1px solid rgb(229, 229, 229)' }}>
                 {postOriginData.scheduleFK === null ? null : postOriginData.scheduleFK.scheduleNm}
-              </div>
-              <div
-                style={{
-                  height: '140px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  padding: '8px 0px',
-                  borderBottom: '1px solid rgb(229, 229, 229)',
-                  overflowY: 'auto',
-                }}
-              >
-                <span style={{ paddingBottom: '8px' }}>
+              </div> */}
+            <div
+              style={{
+                flex: 6,
+                display: 'flex',
+                flexDirection: 'column',
+                padding: '8px 0px',
+                borderTop: '1px solid rgb(229, 229, 229)',
+                overflowY: 'auto',
+              }}
+            >
+              {postOriginData.scheduleFK === null ? null : (
+                <span style={{ paddingBottom: '8px' }}>{postOriginData.scheduleFK.scheduleEx}</span>
+              )}
+              {/* <span style={{ paddingBottom: '8px' }}>
                   {postOriginData.scheduleFK === null ? null : postOriginData.scheduleFK.scheduleEx}
-                </span>
-                <div style={{ display: 'flex', overflowX: 'auto' }}>
-                  {mediaList.length > 0
-                    ? mediaList.map((value, index) => (
-                        <div style={{ marginRight: '10px' }} key={`${index}-postAddImg`}>
-                          <img
-                            style={{
-                              boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
-                              width: '60px',
-                              height: '60px',
-                              objectFit: 'cover',
-                            }}
-                            id={`postshareImg-${index}`}
-                            alt={`postshareImg-${index}`}
-                            src={value}
-                          />
-                        </div>
-                      ))
-                    : null}
-                </div>
+                </span> */}
+              <div style={{ display: 'flex', overflowX: 'auto' }}>
+                {mediaList.length > 0
+                  ? mediaList.map((value, index) => (
+                      <div style={{ marginRight: '10px' }} key={`${index}-postAddImg`}>
+                        <img
+                          style={{
+                            boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
+                            width: '60px',
+                            height: '60px',
+                            objectFit: 'cover',
+                          }}
+                          id={`postshareImg-${index}`}
+                          alt={`postshareImg-${index}`}
+                          src={value}
+                        />
+                      </div>
+                    ))
+                  : null}
               </div>
+            </div>
+            {postOriginData.scheduleFK === null ? null : (
               <div style={{ flex: 2 }}>
                 <div
                   style={{
                     height: '50%',
                     display: 'flex',
                     justifyContent: 'space-between',
-                    borderBottom: '1px solid rgb(229, 229, 229)',
+                    borderTop: '1px solid rgb(229, 229, 229)',
                     alignItems: 'center',
                     padding: '8px 0px',
                   }}
                 >
                   <span>시작</span>
                   <span>
-                    {postOriginData.scheduleFK === null
-                      ? null
-                      : dateFns.format(Date.parse(postOriginData.scheduleFK.scheduleStr), 'yyyy.M.d EEE h:mm a')}
+                    {dateFns.format(Date.parse(postOriginData.scheduleFK.scheduleStr), 'yyyy.M.d EEE h:mm a')}
                   </span>
                 </div>
                 <div
@@ -252,36 +258,36 @@ const PostShareTimeline = (props) => {
                     height: '50%',
                     display: 'flex',
                     justifyContent: 'space-between',
-                    borderBottom: '1px solid rgb(229, 229, 229)',
+                    borderTop: '1px solid rgb(229, 229, 229)',
                     alignItems: 'center',
                     padding: '8px 0px',
                   }}
                 >
                   <span>종료</span>
                   <span>
-                    {postOriginData.scheduleFK === null
-                      ? null
-                      : dateFns.format(Date.parse(postOriginData.scheduleFK.scheduleStr), 'yyyy.M.d EEE h:mm a')}
+                    {dateFns.format(Date.parse(postOriginData.scheduleFK.scheduleStr), 'yyyy.M.d EEE h:mm a')}
                   </span>
                 </div>
               </div>
-              <div
-                style={{
-                  flex: 1,
-                  display: 'flex',
-                  justifyContent: 'flex-end',
-                }}
-              >
-                <div style={{ margin: '8px 10px', display: 'flex', alignItems: 'center' }}>
-                  <ThumbUpRoundedIcon style={{ fontSize: '20' }} />
-                  <div style={{ marginLeft: '3px' }}>{postOriginData.postLikeCount}</div>
-                </div>
-                <div style={{ margin: '8px 0px', display: 'flex', alignItems: 'center' }}>
-                  <SmsIcon style={{ fontSize: '20' }} />
-                  <div style={{ marginLeft: '3px' }}>{postOriginData.commentList.length}</div>
-                </div>
+            )}
+
+            <div
+              style={{
+                flex: 1,
+                display: 'flex',
+                justifyContent: 'flex-end',
+                borderTop: '1px solid rgb(229, 229, 229)',
+              }}
+            >
+              <div style={{ margin: '8px 10px', display: 'flex', alignItems: 'center' }}>
+                <ThumbUpRoundedIcon style={{ fontSize: '20' }} />
+                <div style={{ marginLeft: '3px' }}>{postOriginData.postLikeCount}</div>
               </div>
-            </>
+              <div style={{ margin: '8px 0px', display: 'flex', alignItems: 'center' }}>
+                <SmsIcon style={{ fontSize: '20' }} />
+                <div style={{ marginLeft: '3px' }}>{postOriginData.commentList.length}</div>
+              </div>
+            </div>
           </div>
           <div className='timeline-context'>
             <div style={{ margin: '5px' }}>{data.postEx}</div>
@@ -291,6 +297,7 @@ const PostShareTimeline = (props) => {
           <div className='comment-reply' style={{ overflowY: 'auto' }}>
             {data.commentList.length > 0 ? (
               <CommentList
+                postCd={data.postCd}
                 tData={data.commentList}
                 user={props.user}
                 onSuccess={(commentInfo) => {

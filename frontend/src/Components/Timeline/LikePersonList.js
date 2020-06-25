@@ -25,7 +25,7 @@ const LikePersonList = (props) => {
 
   return (
     <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }} onClose={() => props.onCancel()}>
-      <div className='searchField-result'>
+      <div className='searchField-result' style={{ width: '348px' }}>
         <div className='searchField-title'>
           <div className='likeTitle'>좋아요</div>
         </div>

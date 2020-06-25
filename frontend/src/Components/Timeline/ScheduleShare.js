@@ -124,8 +124,9 @@ const ScheduleShare = (props) => {
               <SelectGroup
                 options={props.groupList}
                 onSetSelectedGroup={(selectGroupCd) => setPost({ ...post, groupCd: selectGroupCd })}
+                currentGroup={null}
               />
-            )}{' '}
+            )}
           </div>
           <div className='schedule-media-button '>
             <div
