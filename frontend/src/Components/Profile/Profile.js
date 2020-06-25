@@ -11,6 +11,7 @@ import Calendar from '../Calendar/Calendar';
 import TimelineWeekSchedule from '../Timeline/TimelineWeekSchedule';
 import Timeline from '../Timeline/Timeline';
 import PostShareTimeline from '../Timeline/PostShareTimeline';
+import OnlyPostExTimeline from '../Timeline/OnlyPostExTimeline';
 
 import Loading from '../Loading/Loading';
 import NotifyPopup from '../UI/NotifyPopup';
@@ -850,7 +851,27 @@ class Profile extends React.Component {
                         />
                       </div>
                     );
-                  } else return null;
+                  } else
+                    return (
+                      <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
+                        <OnlyPostExTimeline
+                          data={value}
+                          user={this.props.user}
+                          onPostDelete={(postCd) => {
+                            var index = undefined;
+                            for (let i = 0; i < this.state.post.length; i++) {
+                              if (postCd === this.state.post[i].postCd) {
+                                index = i;
+                                break;
+                              }
+                            }
+                            const copyTimeLine = this.state.post.slice();
+                            copyTimeLine.splice(index, 1);
+                            this.setState({ post: copyTimeLine });
+                          }}
+                        />
+                      </div>
+                    );
                 })
               )
             ) : null}
@@ -976,7 +997,27 @@ class Profile extends React.Component {
                         />
                       </div>
                     );
-                  } else return null;
+                  } else
+                    return (
+                      <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
+                        <OnlyPostExTimeline
+                          data={value}
+                          user={this.props.user}
+                          onPostDelete={(postCd) => {
+                            var index = undefined;
+                            for (let i = 0; i < this.state.post.length; i++) {
+                              if (postCd === this.state.post[i].postCd) {
+                                index = i;
+                                break;
+                              }
+                            }
+                            const copyTimeLine = this.state.post.slice();
+                            copyTimeLine.splice(index, 1);
+                            this.setState({ post: copyTimeLine });
+                          }}
+                        />
+                      </div>
+                    );
                 })
               )
             ) : null}

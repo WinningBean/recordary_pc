@@ -250,11 +250,30 @@ const Timeline = (props) => {
     <div className='timeline' style={data.groupFK !== null ? { borderTop: '4px solid tomato' } : null}>
       <div className='timeline-profile'>
         <div className='profile-picture'>
-          <img alt={`${data.userFK.userId} img`} src={data.userFK.userPic} />
+          {data.groupFK === null ? (
+            <img alt={`${data.userFK.userId} img`} src={data.userFK.userPic} />
+          ) : (
+            <img alt={`${data.groupFK.groupCd} img`} src={data.groupFK.groupPic} />
+          )}
         </div>
-        <div className='profile-name'>
-          {data.userFK.userId}({data.userFK.userNm})
-        </div>
+        {data.groupFK === null ? (
+          <div className='profile-name'>
+            {data.userFK.userId}({data.userFK.userNm}){' '}
+          </div>
+        ) : (
+          <div className='profile-name'>
+            {data.groupFK.groupNm}
+            <div style={{ display: 'flex', alignItems: 'center', marginLeft: '10px' }}>
+              <div>from.</div>
+              <div className='recomment-reply-users-img'>
+                <img alt={`${data.userFK.userId}`} src={data.userFK.userPic} />
+              </div>
+              <div style={{ fontWeight: 'bold', marginLeft: '5px' }}>
+                {data.userFK.userId}({data.userFK.userNm})
+              </div>
+            </div>
+          </div>
+        )}
         {data.scheduleFK === null ? (
           <div />
         ) : (
@@ -270,11 +289,11 @@ const Timeline = (props) => {
           </div>
         </div>
         <div className='profile-moreIcon'>
-          {props.user.userCd !== data.userFK.userCd ? (
-            <LongMenu options={['나에게 공유']} returnValue={userPostMoreButtonClick} />
-          ) : (
+          {props.user.userCd === data.userFK.userCd ? (
             <LongMenu options={['나에게 공유', ' 수정 ', ' 삭제 ']} returnValue={userPostMoreButtonClick} />
-          )}
+          ) : data.postPublicState === 0 ? (
+            <LongMenu options={['나에게 공유']} returnValue={userPostMoreButtonClick} />
+          ) : null}
         </div>
       </div>
       <div className='timeline-info'>

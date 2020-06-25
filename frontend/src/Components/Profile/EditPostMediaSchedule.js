@@ -29,6 +29,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import AddIcon from '@material-ui/icons/Add';
 import * as dateFns from 'date-fns';
 import { addHours, startOfDay, endOfDay, startOfSecond } from 'date-fns';
+import { colorContrast } from '../Other/ColorTransfer';
+import Popover from '@material-ui/core/Popover';
 
 import axios from 'axios';
 import store from '../../store';
@@ -64,6 +66,7 @@ function rgbToHex(r, g, b) {
 }
 
 const EditPostMediaSchedule = (props) => {
+  console.log(props);
   const classes = useStyles();
   const [user, setUser] = useState(props.user);
   const [data, setData] = useState(props.data);
@@ -91,7 +94,7 @@ const EditPostMediaSchedule = (props) => {
   });
 
   const [scheduleInfo, setScheduleInfo] = useState({
-    tabCd: data.scheduleFK === null ? null : null,
+    tabCd: data.scheduleFK === null ? null : data.scheduleFK.tabCd,
     userCd: data.userCd,
     scheduleCol: data.scheduleFK === null ? 'rgba(20, 81, 51, 0.9)' : data.scheduleFK.scheduleCol,
     scheduleNm: data.scheduleFK === null ? null : data.scheduleFK.scheduleNm,
@@ -103,8 +106,35 @@ const EditPostMediaSchedule = (props) => {
   });
   const [subtractedSchedule, setSubtractedSchedule] = useState([]);
   const [addedSchedule, setAddedSchedule] = useState([]);
-
+  const [tabInfo, setTabInfo] = useState([]);
   const [switchInfo, setSwitchInfo] = useState(false);
+  const [clickTabState, setClickTabState] = useState(scheduleInfo.tabCd === null ? undefined : scheduleInfo.tabCd);
+  const [tabPopover, setTabPopover] = useState(null);
+
+  useEffect(() => {
+    if (props.user.userCd !== undefined) {
+      getTabList();
+    }
+  }, []);
+
+  const getTabList = async () => {
+    const data = (await axios.get(`/tab/${props.user.userCd}`)).data;
+    console.log(data);
+    if (data.length > 0) {
+      setTabInfo(data);
+    } else return;
+  };
+
+  var clickTabInfo = undefined;
+
+  if (clickTabState !== undefined) {
+    for (let i = 0; i < tabInfo.length; i++) {
+      if (tabInfo[i].scheduleTabCd === clickTabState) {
+        clickTabInfo = tabInfo[i];
+        break;
+      }
+    }
+  }
 
   const changeHandle = (e) => {
     setPost({
@@ -262,7 +292,7 @@ const EditPostMediaSchedule = (props) => {
       <div
         className='post-append-header'
         style={{
-          width: '600px',
+          width: '620px',
           transitionProperty: 'background-color',
           transitionDuration: '0.3s',
           transitionTimingFunction: 'ease-out',
@@ -284,9 +314,11 @@ const EditPostMediaSchedule = (props) => {
               <SelectGroup
                 options={props.groupList}
                 onSetSelectedGroup={(selectGroupCd) => setPost({ ...post, groupCd: selectGroupCd })}
+                currentGroup={data.groupFK}
               />
             )}
           </div>
+
           <div className='schedule-media-button '>
             {data.scheduleFK === null ? (
               <PublicRange
@@ -354,6 +386,12 @@ const EditPostMediaSchedule = (props) => {
             )}
           </div>
         </div>
+        {post.groupCd === null ? null : (
+          <div style={{ color: 'red', fontSize: '12px', marginLeft: '20px' }}>
+            * 그룹 게시물은 같은 그룹에서만 수정이 가능합니다.
+          </div>
+        )}
+
         <div className='Post-Append-text post-Append'>
           <TextField
             id='post_text'
@@ -395,6 +433,57 @@ const EditPostMediaSchedule = (props) => {
                   }}
                 />
               </div>
+            </div>
+            <div className='Post-Append-title post-Append'>
+              <TextField
+                style={{ marginRight: '20px' }}
+                id='post_title'
+                label='비고'
+                defaultValue={scheduleInfo.scheduleEx}
+                onChange={(e) => setScheduleInfo({ ...scheduleInfo, scheduleEx: e.target.value })}
+              />
+              {tabInfo === undefined ? null : (
+                <>
+                  <span style={{ fontSize: '15px', color: 'gray', marginTop: '20px' }}>선택한 탭 :</span>
+                  <div
+                    className='transition-all'
+                    onClick={(e) => {
+                      setTabPopover(e.currentTarget);
+                    }}
+                    style={{
+                      height: '30px',
+                      width: '180px',
+                      backgroundColor:
+                        clickTabState === undefined
+                          ? '#ffc500'
+                          : clickTabInfo !== undefined
+                          ? clickTabInfo.scheduleTabColor
+                          : data.scheduleFK.tabCol,
+                      marginLeft: '20px',
+                      textAlign: 'center',
+                      lineHeight: '34px',
+                      textTransform: 'uppercase',
+                      color: colorContrast(
+                        clickTabState === undefined
+                          ? '#ffc500'
+                          : clickTabInfo !== undefined
+                          ? clickTabInfo.scheduleTabColor
+                          : data.scheduleFK.tabCol
+                      ),
+                      borderRadius: '5px',
+                      cursor: 'pointer',
+                      userSelect: 'none',
+                      marginTop: '20px',
+                    }}
+                  >
+                    {clickTabState === undefined
+                      ? 'ALL'
+                      : clickTabInfo !== undefined
+                      ? clickTabInfo.scheduleTabNm
+                      : data.scheduleFK.tabNm}
+                  </div>
+                </>
+              )}
             </div>
             <div className='Post-Append-Schedule'>
               <DTP
@@ -601,6 +690,53 @@ const EditPostMediaSchedule = (props) => {
         </div>
       </div>
       {dialog}
+      {tabInfo === undefined ? null : (
+        <Popover
+          open={Boolean(tabPopover)}
+          anchorEl={tabPopover === null ? null : tabPopover}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          disableRestoreFocus
+          onClose={() => setTabPopover(null)}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', backgroundColor: 'transparent' }}>
+            <Button
+              style={{ width: '200px' }}
+              onClick={() => {
+                setClickTabState(undefined);
+                setTabPopover(null);
+              }}
+              style={{ backgroundColor: '#ffc500', color: colorContrast('#ffc500') }}
+            >
+              ALL
+            </Button>
+            {tabInfo.map((value) => {
+              return (
+                <Button
+                  key={`tabInfo-${value.scheduleTabCd}`}
+                  onClick={() => {
+                    setClickTabState(value.scheduleTabCd);
+                    setTabPopover(null);
+                  }}
+                  style={{
+                    backgroundColor: value.scheduleTabColor,
+                    color: colorContrast(value.scheduleTabColor),
+                    width: '200px',
+                  }}
+                >
+                  {value.scheduleTabNm}
+                </Button>
+              );
+            })}
+          </div>
+        </Popover>
+      )}
     </Dialog>
   );
 };

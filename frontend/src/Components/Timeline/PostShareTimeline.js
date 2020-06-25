@@ -135,11 +135,19 @@ const PostShareTimeline = (props) => {
     <div className='timeline' style={data.groupFK !== null ? { borderTop: '4px solid tomato' } : null}>
       <div className='timeline-profile'>
         <div className='profile-picture'>
-          <img alt={`${data.userFK.userId} img`} src={data.userFK.userPic} />
+          {data.groupFK === null ? (
+            <img alt={`${data.userFK.userId} img`} src={data.userFK.userPic} />
+          ) : (
+            <img alt={`${data.groupFK.groupCd} img`} src={data.groupFK.groupPic} />
+          )}
         </div>
-        <div className='profile-name'>
-          {data.userFK.userId}({data.userFK.userNm})
-        </div>
+        {data.groupFK === null ? (
+          <div className='profile-name'>
+            {data.userFK.userId}({data.userFK.userNm}){' '}
+          </div>
+        ) : (
+          <div className='profile-name'>{data.groupFK.groupNm}</div>
+        )}
         <div className='profile-time'>
           <div className='profile-time-text'>
             {Math.abs(dateFns.differenceInDays(Date.parse(data.modifiedDate), new Date())) === 0
@@ -197,9 +205,6 @@ const PostShareTimeline = (props) => {
                 {postOriginData.scheduleFK.scheduleNm}
               </div>
             )}
-            {/* <div style={{ display: 'flex', padding: '8px 0px', borderBottom: '1px solid rgb(229, 229, 229)' }}>
-                {postOriginData.scheduleFK === null ? null : postOriginData.scheduleFK.scheduleNm}
-              </div> */}
             <div
               style={{
                 flex: 6,
@@ -213,9 +218,6 @@ const PostShareTimeline = (props) => {
               {postOriginData.scheduleFK === null ? null : (
                 <span style={{ paddingBottom: '8px' }}>{postOriginData.scheduleFK.scheduleEx}</span>
               )}
-              {/* <span style={{ paddingBottom: '8px' }}>
-                  {postOriginData.scheduleFK === null ? null : postOriginData.scheduleFK.scheduleEx}
-                </span> */}
               <div style={{ display: 'flex', overflowX: 'auto' }}>
                 {mediaList.length > 0
                   ? mediaList.map((value, index) => (

@@ -72,7 +72,7 @@ const CalendarScheduleEdit = ({
       <div
         className='post-append-header'
         style={{
-          width: '600px',
+          width: '620px',
           transitionProperty: 'background-color',
           transitionDuration: '0.3s',
           transitionTimingFunction: 'ease-out',
@@ -109,31 +109,33 @@ const CalendarScheduleEdit = ({
           </div>
           <div className='Post-Append-title post-Append'>
             <TextField
-              id='post_ex'
+              id='post_title'
               label='비고'
               defaultValue={info.ex}
+              style={{ marginRight: '20px' }}
               onChange={(e) => setSchedule({ ...schedule, ex: e.target.value })}
             />
             {tabInfo === undefined ? null : (
               <>
-                <span>선택한 탭 :</span>
+                <span style={{ fontSize: '15px', color: 'gray', marginTop: '20px' }}>선택한 탭 :</span>
                 <div
                   className='transition-all'
                   onClick={(e) => {
                     setTabPopover(e.currentTarget);
                   }}
                   style={{
-                    height: '36px',
-                    width: '200px',
+                    height: '30px',
+                    width: '180px',
                     backgroundColor: clickTabState === undefined ? '#ffc500' : clickTabInfo.scheduleTabColor,
-                    marginLeft: '10px',
+                    marginLeft: '20px',
                     textAlign: 'center',
-                    lineHeight: '36px',
+                    lineHeight: '34px',
                     textTransform: 'uppercase',
                     color: colorContrast(clickTabState === undefined ? '#ffc500' : clickTabInfo.scheduleTabColor),
                     borderRadius: '5px',
                     cursor: 'pointer',
                     userSelect: 'none',
+                    marginTop: '20px',
                   }}
                 >
                   {clickTabState === undefined ? 'ALL' : clickTabInfo.scheduleTabNm}
