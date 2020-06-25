@@ -32,20 +32,20 @@ public class ToDoEntity extends BaseTime {
     private String toDoCol;
 
     @Column(name = "TODO_COMPLETE_ST", nullable = false)
-    private  Boolean ToDoCompleteState;
+    private  Boolean toDoCompleteState;
 
     @Builder
     public ToDoEntity(UserEntity user,
                       String toDoContent,
                       Date toDoEndDate,
                       String toDoCol,
-                      Boolean ToDoCompleteState) {
+                      Boolean toDoCompleteState) {
 
         this.userFK = user;
         this.toDoContent = toDoContent;
         this.toDoEndDate = toDoEndDate;
         this.toDoCol = toDoCol;
-        this.ToDoCompleteState = ToDoCompleteState;
+        this.toDoCompleteState = toDoCompleteState;
     }
 
     public void updateToDo(String toDoContent,
@@ -58,7 +58,7 @@ public class ToDoEntity extends BaseTime {
     }
 
     public  void updateToDoState(Boolean toDoCompleteState){
-        this.ToDoCompleteState = toDoCompleteState;
+        this.toDoCompleteState = toDoCompleteState;
     }
 
 }

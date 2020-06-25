@@ -49,7 +49,7 @@ public class toDoRepositoryTest {
                 .user(saveUser)
                 .toDoContent("test")
                 .toDoCol(null)
-                .ToDoCompleteState(false)
+                .toDoCompleteState(false)
                 .toDoEndDate(End)
                 .build());
 
