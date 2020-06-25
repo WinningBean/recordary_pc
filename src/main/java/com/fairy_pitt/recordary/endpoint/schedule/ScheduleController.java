@@ -29,6 +29,7 @@ public class ScheduleController {
     @PostMapping("/")
     public Long scheduleCreate(@RequestBody ScheduleSaveRequestDto requestDto)
     {
+        userService.checkSessionLogout();
         Long scheduleCd = scheduleService.save(requestDto);
         scheduleMemberService.save(requestDto.getScheduleMember(), scheduleCd);
         return  scheduleCd;
@@ -37,6 +38,7 @@ public class ScheduleController {
     @PostMapping("update/{id}")
     public Long update(@PathVariable Long id,
                        @RequestBody ScheduleUpdateRequestDto requestDto) {
+        userService.checkSessionLogout();
         if(requestDto.getCreateMember() != null)scheduleMemberService.save(requestDto.getCreateMember(), id);
         if(requestDto.getDeleteMember() != null)scheduleMemberService.save(requestDto.getDeleteMember(), id);
         return scheduleService.update(id, requestDto);
@@ -44,39 +46,46 @@ public class ScheduleController {
 
     @DeleteMapping("{id}")
     public Boolean deleteSchedule(@PathVariable Long id){
+        userService.checkSessionLogout();
         scheduleService.delete(id);
         return true;
     }
 
     @GetMapping("/{scheduleCd}")
     public ScheduleResponseDto findByScheduleCd(@PathVariable Long scheduleCd){
+        userService.checkSessionLogout();
         return new ScheduleResponseDto(scheduleService.findEntity(scheduleCd));
     }
 
     @PostMapping("showUserSchedule/{id}")
     public List<ScheduleResponseDto> showUserSchedule(@PathVariable Long id, @RequestBody ScheduleDateRequestDto responseDto){
+        userService.checkSessionLogout();
         List<ScheduleResponseDto> result = scheduleService.showUserSchedule(responseDto, id, followerService.checkPublicStateToTarget(userService.currentUserCd(), id));
         return scheduleMemberService.findUserAsMemberScheduleList(id, result, responseDto);
     }
 
     @PostMapping("showGroupSchedule/{id}")
     public List<ScheduleResponseDto> showGroupSchedule(@PathVariable Long id, @RequestBody ScheduleDateRequestDto responseDto){
-       return scheduleService.findGroupSchedule(id, responseDto);
+        userService.checkSessionLogout();
+        return scheduleService.findGroupSchedule(id, responseDto);
     }
 
     @GetMapping("search/{id}")
     public List<ScheduleResponseDto> searchUserSchedule(@PathVariable Long id, @RequestParam(value = "input") String name ){
+        userService.checkSessionLogout();
         List<ScheduleResponseDto> result = scheduleService.searchSchedule(id, followerService.checkPublicStateToTarget(userService.currentUserCd() /*currUserCd*/, id),name);
         return scheduleMemberService.searchUserAsMemberScheduleList(id, result, name);
     }
 
     @GetMapping("group/{id}/search")
     public List<ScheduleResponseDto> searchGroupSchedule(@PathVariable Long id, @RequestParam(value = "input") String name, @RequestParam(value = "istMember") Boolean isMember ){
+        userService.checkSessionLogout();
         return scheduleService.searchGroupScheduleList(id, name, isMember);
     }
 
     @GetMapping("/today")
     public List<ScheduleTodayResponseDto> todaySchedule(@RequestParam Long userCd){
+        userService.checkSessionLogout();
         return scheduleService.getTodayUserSchedule(userCd);
     }
 }

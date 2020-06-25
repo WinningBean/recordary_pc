@@ -33,17 +33,20 @@ public class GroupController {
 
     @PostMapping("create")
     public Long groupCreate(@RequestBody GroupRequestDto requestDto) {
+        userService.checkSessionLogout();
         return groupService.save(requestDto);
     }
 
     @PostMapping("update/{id}")
     public Long update(@PathVariable Long id,
                        @RequestBody GroupRequestDto requestDto) {
+        userService.checkSessionLogout();
         return groupService.updateGroupInfo(id, requestDto);
     }
 
     @PostMapping("updateProfile/{groupCd}")
     public String updateProfile(@RequestParam("data") MultipartFile multipartFile, @PathVariable Long groupCd) throws IOException {
+        userService.checkSessionLogout();
         String url = s3UploadComponent.profileUpload(multipartFile, "group", groupCd);
         groupService.updateGroupProfile(url, groupCd);
         return url;
@@ -52,48 +55,53 @@ public class GroupController {
     @PostMapping("changeMaster/{groupCd}")
     public Long updateMaster(@PathVariable Long groupCd,
                              @RequestBody Long userCd) {
+        userService.checkSessionLogout();
         return groupService.changGroupMaster(userCd, groupCd);
     }
 
     @DeleteMapping("{groupCd}")
     public Long deleteGroup(@PathVariable Long groupCd) {
+        userService.checkSessionLogout();
         groupService.delete(groupCd);
         return groupCd;
     }
 
     @GetMapping("findGroup/{groupNm}")
     public List<GroupResponseDto> findByGroupName(@PathVariable String groupNm) {
+        userService.checkSessionLogout();
         return groupService.findGroupByName(groupNm);
     }
 
     @GetMapping("/")
     public GroupPageResponseDto groupPage(@RequestParam(value = "input") Long groupCd) {
-
+        userService.checkSessionLogout();
         return groupService.groupPage(groupCd);
     }
 
     @GetMapping("readAll")
     public @ResponseBody
     List<GroupResponseDto> findAllGroup() {
+        userService.checkSessionLogout();
         return groupService.findAllGroup();
     }
 
 
     @GetMapping("group/{userCd}")
     public List<GroupResponseDto> findUserGroup(@PathVariable Long userCd) {
-
+        userService.checkSessionLogout();
         return groupService.findUserGroups(userCd);
     }
 
     @GetMapping("member/{groupCd}")
     public List<UserResponseDto> findGroupMember(@PathVariable Long groupCd)
     {
+        userService.checkSessionLogout();
         return groupService.findGroupMembers(groupCd);
     }
 
     @PostMapping("schedule/{groupCd}")
     public List<ScheduleResponseDto> groupSchedule(@PathVariable Long groupCd, ScheduleDateRequestDto date){
-
+        userService.checkSessionLogout();
         return scheduleService.findGroupSchedule(groupCd, date);
     }
 
