@@ -10,6 +10,9 @@ import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,16 +22,15 @@ public class ChatService {
 
     private final ChatRepository chatRepository;
     private final UserService userService;
-    private final GroupService groupService;
     private final ChatRoomService chatRoomService;
 
     public void create(ChatDto requestDto)
     {
+        LocalDateTime currentDate = LocalDateTime.now();
         UserEntity user = userService.findEntity(requestDto.getUserCd());
         ChatRoomEntity room = chatRoomService.findEntity(requestDto.getRoomFK());
-
+        room.setModifiedDate(currentDate);
         chatRepository.save(requestDto.toEntity(user,room));
-//        return true;
     }
 
     public List<ChatResponseDto> chatLog(Long roomCd){
