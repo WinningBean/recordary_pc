@@ -10,6 +10,8 @@ import Header from '../../Containers/Header/Header';
 import Calendar from '../Calendar/Calendar';
 import TimelineWeekSchedule from '../Timeline/TimelineWeekSchedule';
 import Timeline from '../Timeline/Timeline';
+import PostShareTimeline from '../Timeline/PostShareTimeline';
+
 import Loading from '../Loading/Loading';
 import NotifyPopup from '../UI/NotifyPopup';
 import Snackbar from '../UI/Snackbar';
@@ -26,13 +28,15 @@ import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
-import RouterLink from 'react-router-dom/Link';
+import * as Router from 'react-router-dom';
 
 import { Redirect } from 'react-router-dom';
 
 import axios from 'axios';
 
 import * as dateFns from 'date-fns';
+
+const RouterLink = Router.Link;
 
 const IconButton = styled(Button)({
   minWidth: '30px',
@@ -73,7 +77,9 @@ class Profile extends React.Component {
       isRemoveAllScheduleInTab: false,
       contextMenu: undefined,
       post: [],
+      groupPost: [],
       isOpenAddTab: false,
+      searchedSchedule: null,
     };
   }
 
@@ -121,18 +127,18 @@ class Profile extends React.Component {
       var groupApply = null;
       var type = 5;
 
+      console.log(this.props.user);
       if (this.props.isLogin && groupInfo.admin.userCd === this.props.user.userCd) {
         type = 2;
         groupApply = (await axios.get(`/groupApply/findUserApply/${this.props.match.params.groupCd}`)).data;
         console.log(groupApply, 'groupApply');
       }
-      for (let i = 0; groupInfo.memberList.length; i++) {
+      for (let i = 0; i < groupInfo.memberList.length; i++) {
         if (groupInfo.memberList[i].userCd === this.props.user.userCd) {
           type = 3;
           break;
         }
       }
-
       console.log('type = ', type);
       this.setState({
         ...this.state,
@@ -144,9 +150,16 @@ class Profile extends React.Component {
         },
         type: type,
         isLoading: false,
-        isHover: false,
         isClickMember: false,
       });
+
+      try {
+        const groupPostList = (await axios.get(`/post/group/${this.props.match.params.groupCd}`)).data;
+        this.setState({ groupPost: JSON.parse(JSON.stringify(groupPostList)) });
+        console.log(this.state.groupPost);
+      } catch (error) {
+        console.log(error);
+      }
     } catch (error) {
       console.error(error);
       this.setState({ ...this.state, redirect: true });
@@ -166,12 +179,12 @@ class Profile extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.match.params.userId !== undefined) {
       if (this.props.match.params.userId !== prevProps.match.params.userId) {
-        this.setState({ ...this.state, isLoading: true });
+        this.setState({ isLoading: true });
         this.getUserInfo();
       }
     } else if (this.props.match.params.groupCd !== undefined) {
       if (this.props.match.params.groupCd !== prevProps.match.params.groupCd) {
-        this.setState({ ...this.state, isLoading: true });
+        this.setState({ isLoading: true });
         this.getGroupInfo();
       }
     }
@@ -186,7 +199,7 @@ class Profile extends React.Component {
       if (this.state.followerNumClick) {
         return (
           <Follower
-            userId={this.state.info.userInfo.userId}
+            userCd={this.state.info.userInfo.userCd}
             isFollower={true}
             onCancel={() => this.setState({ followerNumClick: false })}
           ></Follower>
@@ -194,7 +207,7 @@ class Profile extends React.Component {
       } else if (this.state.followingNumClick) {
         return (
           <Follower
-            userId={this.state.info.userInfo.userId}
+            userCd={this.state.info.userInfo.userCd}
             isFollower={false}
             onCancel={() => this.setState({ followingNumClick: false })}
           ></Follower>
@@ -213,7 +226,10 @@ class Profile extends React.Component {
             <ScrollToTopOnMount />
             <div id='main-profile'>
               <div className='profile-search-schedule'>
-                <ScheduleSearch data={this.state.userDate}></ScheduleSearch>
+                <ScheduleSearch
+                  data={this.state.info}
+                  onSelect={(value) => this.setState({ searchedSchedule: value })}
+                />
               </div>
               <div className='main-profile-info-postIt'>
                 <div className='postIt'>
@@ -266,7 +282,9 @@ class Profile extends React.Component {
                                 }
                                 this.setState({ clickTab: index });
                               }}
-                            />
+                            >
+                              {value.scheduleTabNm}
+                            </TabButton>
                           </li>
                         ))}
                         <li
@@ -407,6 +425,14 @@ class Profile extends React.Component {
                                 groupCd: this.state.info.groupCd,
                                 userCd: this.state.info.groupApply[index].userCd,
                               });
+                              this.props.onSaveNotice({
+                                type: 'SAVE_NOTICE',
+                                notice: {
+                                  noticeType: 'GROUP_MEMBER_ALLOW', // 이벤트 타입
+                                  activeCd: this.state.info.groupCd, // 이벤트 주체
+                                  targetCd: this.state.info.groupApply[index].userCd, // 이벤트 대상
+                                },
+                              });
                               const copyList = this.state.info.groupApply.slice();
                               copyList.splice(index, 1);
                               this.setState({
@@ -443,10 +469,18 @@ class Profile extends React.Component {
                                 groupCd: this.state.info.groupCd,
                                 userCd: this.state.info.groupApply[index].userCd,
                               });
-                              // await axios.post('/groupApply/delete', {
-                              //   groupCd: this.state.info.groupCd,
-                              //   userCd: this.state.info.groupApply[index].userCd,
-                              // });
+                              await axios.post('/groupApply/delete', {
+                                groupCd: this.state.info.groupCd,
+                                userCd: this.state.info.groupApply[index].userCd,
+                              });
+                              this.props.onSaveNotice({
+                                type: 'SAVE_NOTICE',
+                                notice: {
+                                  noticeType: 'GROUP_APPLY_COME_NOT', // 이벤트 타입
+                                  activeCd: this.state.info.groupApply[index].userCd, // 이벤트 주체
+                                  targetCd: this.state.info.groupCd, // 이벤트 대상
+                                },
+                              });
                               const copyList = this.state.info.groupApply.slice();
                               copyList.splice(index, 1);
                               this.setState({
@@ -514,7 +548,15 @@ class Profile extends React.Component {
                         </div>
                         {this.state.type >= 2 ? (
                           <>
-                            <div>
+                            <div style={{ textAlign: 'center' }}>
+                              <span className='followerName'>그룹장</span>
+                              <RouterLink to={`/${this.state.info.admin.userId}`}>
+                                <Link component='button'>
+                                  <span className='followerNum'>{this.state.info.admin.userNm}</span>
+                                </Link>
+                              </RouterLink>
+                            </div>
+                            <div style={{ textAlign: 'center' }}>
                               <span className='followerName'>그룹 멤버</span>
                               <Link
                                 component='button'
@@ -556,6 +598,7 @@ class Profile extends React.Component {
                                         >
                                           <img
                                             style={{
+                                              boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)',
                                               height: '50px',
                                               width: '50px',
                                               objectFit: 'cover',
@@ -579,62 +622,10 @@ class Profile extends React.Component {
                                 </Dialog>
                               ) : null}
                             </div>
-                            <div style={{ position: 'relative' }}>
-                              <span className='followerName'>그룹장</span>
-                              <RouterLink to={`/profile/${this.state.info.admin.userCd}`}>
-                                <Link component='button'>
-                                  <span
-                                    className='followerNum'
-                                    onMouseEnter={() => this.setState({ ...this.state, isHover: true })}
-                                    onMouseOut={() => this.setState({ ...this.state, isHover: false })}
-                                  >
-                                    {this.state.info.admin.userNm}
-                                  </span>
-                                </Link>
-                              </RouterLink>
-                              <div
-                                className='transition-all'
-                                style={{
-                                  position: 'absolute',
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  bottom: '-100px',
-                                  left: 0,
-                                  // padding: '6px 8px',
-                                  height: '100px',
-                                  width: '160px',
-                                  border: '1px solid gray',
-                                  // backgroundColor: '#eee',
-                                  zIndex: this.state.isHover ? 6 : -6,
-                                  opacity: this.state.isHover ? 100 : 0,
-                                  transform: this.state.isHover ? 'translateY(18px)' : 'translateX(0px)',
-                                }}
-                              >
-                                <div style={{ height: '60px', display: 'flex' }}>
-                                  <img
-                                    style={{ height: '60px', width: '60px', objectFit: 'cover', borderRadius: '50%' }}
-                                    alt='admin img'
-                                    src='https://i.pinimg.com/originals/0d/e8/86/0de8869350e89fd300edaeef3b659674.jpg'
-                                  />
-                                  <div
-                                    style={{
-                                      flex: 1,
-                                      textAlign: 'center',
-                                      lineHeight: '60px',
-                                      fontSize: '18px',
-                                      fontWeight: 'bold',
-                                    }}
-                                  >
-                                    {this.state.info.userNm}
-                                  </div>
-                                </div>
-                                <div style={{ flex: 1, backgroundColor: 'tomato' }}>hello world</div>
-                              </div>
-                            </div>
                           </>
                         ) : (
                           <>
-                            <div>
+                            <div style={{ textAlign: 'center' }}>
                               <span className='followerName'>팔로워</span>
                               <Link
                                 component='button'
@@ -648,7 +639,7 @@ class Profile extends React.Component {
                               </Link>
                             </div>
                             {FollowerShow()}
-                            <div>
+                            <div style={{ textAlign: 'center' }}>
                               <span className='followerName'>팔로우</span>
                               <Link
                                 component='button'
@@ -665,18 +656,38 @@ class Profile extends React.Component {
                         )}
                       </div>
                       <div className='status-content'>
-                        <div>{this.state.type >= 2 ? this.state.info.groupEx : this.state.info.userInfo.userEx}</div>
+                        <div style={{ textAlign: 'center' }}>
+                          {this.state.type >= 2
+                            ? this.state.info.groupEx.split('\n').map((line) => {
+                                return (
+                                  <span>
+                                    {line}
+                                    <br />
+                                  </span>
+                                );
+                              })
+                            : this.state.info.userInfo.userEx.split('\n').map((line) => {
+                                return (
+                                  <span>
+                                    {line}
+                                    <br />
+                                  </span>
+                                );
+                              })}
+                        </div>
                       </div>
                     </div>
                   </div>
                   <div id='schedule-area'>
                     <Calendar
+                      searchedSchedule={this.state.searchedSchedule}
                       type={this.state.type}
                       info={
                         this.state.type === 2 || this.state.type === 3 || this.state.type === 5
                           ? this.state.info
                           : this.state.info.userInfo
                       }
+                      tabInfo={this.state.info.scheduleTabInfo}
                       clickTab={
                         this.state.clickTab === undefined
                           ? undefined
@@ -715,73 +726,260 @@ class Profile extends React.Component {
                 </NavButton>
               </div>
             </nav>
-            {this.state.showProfileList ? (
-              <>
-                <div className='profile-MediaTimeline'>
-                  {this.state.post.map((value, index) => {
-                    if (value.mediaFK !== null) {
-                      return (
-                        <div
-                          className='media-box-hover'
-                          style={{
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            height: '272px',
-                            width: '272px',
-                            overflow: 'hidden',
-                            margin: '10px',
-                          }}
-                          key={`${index}- img`}
-                        >
-                          <img
-                            className='media-box'
-                            alt={`${index}- img`}
-                            src={value.mediaFK.mediaFirstPath}
-                            onClick={() => {
-                              this.state.post.map(async (val, i) => {
-                                try {
-                                  if (val.postCd === value.postCd) {
-                                    this.setState({ val: (this.state.post[i] = { ...val, postImgClick: true }) });
-                                  } else return null;
-                                } catch (error) {
-                                  console.log(error);
-                                }
-                              });
+            {this.state.type >= 2 ? (
+              this.state.showProfileList ? (
+                <>
+                  <div className='profile-MediaTimeline'>
+                    {this.state.groupPost.map((value, index) => {
+                      if (value.mediaFK !== null && value.postOriginFK === null) {
+                        return (
+                          <div
+                            className='media-box-hover'
+                            style={{
+                              display: 'flex',
+                              flexWrap: 'wrap',
+                              height: '272px',
+                              width: '272px',
+                              overflow: 'hidden',
+                              margin: '10px',
                             }}
-                          />
-                        </div>
+                            key={`${index}- img`}
+                          >
+                            <img
+                              className='media-box'
+                              alt={`${index}- img`}
+                              src={value.mediaFK.mediaFirstPath}
+                              onClick={() => {
+                                this.state.groupPost.map(async (val, i) => {
+                                  try {
+                                    if (val.postCd === value.postCd) {
+                                      this.setState({
+                                        val: (this.state.groupPost[i] = { ...val, postImgClick: true }),
+                                      });
+                                    } else return null;
+                                  } catch (error) {
+                                    console.log(error);
+                                  }
+                                });
+                              }}
+                            />
+                          </div>
+                        );
+                      } else return null;
+                    })}
+                  </div>
+                  {this.state.groupPost.map((value, index) => {
+                    if (value.postImgClick === true) {
+                      return (
+                        <Dialog
+                          open
+                          key={value.postCd}
+                          onClose={() => {
+                            this.setState({ value: (this.state.groupPost[index] = { ...value, postImgClick: false }) });
+                          }}
+                        >
+                          <Timeline data={value} user={this.props.user} />
+                        </Dialog>
                       );
-                    } else return null;
+                    }
                   })}
-                </div>
-                {this.state.post.map((value, index) => {
-                  if (value.postImgClick === true) {
+                  {console.log(this.state.groupPost)}
+                </>
+              ) : (
+                this.state.groupPost.map((value, index) => {
+                  if (value.mediaFK !== null) {
                     return (
-                      <Dialog
-                        open
-                        key={value.postCd}
-                        onClose={() => {
-                          this.setState({ value: (this.state.post[index] = { ...value, postImgClick: false }) });
-                        }}
-                      >
-                        <Timeline data={value} user={this.props.user} />
-                      </Dialog>
+                      <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
+                        <Timeline
+                          data={value}
+                          user={this.props.user}
+                          onPostDelete={(postCd) => {
+                            var index = undefined;
+                            for (let i = 0; i < this.state.post.length; i++) {
+                              if (postCd === this.state.post[i].postCd) {
+                                index = i;
+                                break;
+                              }
+                            }
+                            const copyTimeLine = this.state.post.slice();
+                            copyTimeLine.splice(index, 1);
+                            this.setState({ post: copyTimeLine });
+                          }}
+                        />
+                      </div>
                     );
-                  }
-                })}
-                {console.log(this.state.post)}
-              </>
-            ) : (
-              this.state.post.map((value) => {
-                if (value.mediaFK === null) {
-                  return (
-                    <div className='profile-ScheduleTimeLine' style={{ marginBottom: '50px' }}>
-                      <TimelineWeekSchedule key={value.postCd} data={value} user={this.props.user} />
-                    </div>
-                  );
-                } else return null;
-              })
-            )}
+                  } else if (value.scheduleFK !== null || value.shareScheduleList.length > 0) {
+                    return (
+                      <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
+                        <TimelineWeekSchedule
+                          data={value}
+                          user={this.props.user}
+                          onPostDelete={(postCd) => {
+                            var index = undefined;
+                            for (let i = 0; i < this.state.post.length; i++) {
+                              if (postCd === this.state.post[i].postCd) {
+                                index = i;
+                                break;
+                              }
+                            }
+                            const copyTimeLine = this.state.post.slice();
+                            copyTimeLine.splice(index, 1);
+                            this.setState({ post: copyTimeLine });
+                          }}
+                        />
+                      </div>
+                    );
+                  } else if (value.postOriginFK !== null) {
+                    return (
+                      <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
+                        <PostShareTimeline
+                          data={value}
+                          user={this.props.user}
+                          onPostDelete={(postCd) => {
+                            var index = undefined;
+                            for (let i = 0; i < this.state.post.length; i++) {
+                              if (postCd === this.state.post[i].postCd) {
+                                index = i;
+                                break;
+                              }
+                            }
+                            const copyTimeLine = this.state.post.slice();
+                            copyTimeLine.splice(index, 1);
+                            this.setState({ post: copyTimeLine });
+                          }}
+                        />
+                      </div>
+                    );
+                  } else return null;
+                })
+              )
+            ) : null}
+            {this.state.type < 2 ? (
+              this.state.showProfileList ? (
+                <>
+                  <div className='profile-MediaTimeline'>
+                    {this.state.post.map((value, index) => {
+                      if (value.mediaFK !== null && value.postOriginFK === null) {
+                        return (
+                          <div
+                            className='media-box-hover'
+                            style={{
+                              display: 'flex',
+                              flexWrap: 'wrap',
+                              height: '272px',
+                              width: '272px',
+                              overflow: 'hidden',
+                              margin: '10px',
+                            }}
+                            key={`${index}- img`}
+                          >
+                            <img
+                              className='media-box'
+                              alt={`${index}- img`}
+                              src={value.mediaFK.mediaFirstPath}
+                              onClick={() => {
+                                this.state.post.map(async (val, i) => {
+                                  try {
+                                    if (val.postCd === value.postCd) {
+                                      this.setState({ val: (this.state.post[i] = { ...val, postImgClick: true }) });
+                                    } else return null;
+                                  } catch (error) {
+                                    console.log(error);
+                                  }
+                                });
+                              }}
+                            />
+                          </div>
+                        );
+                      } else return null;
+                    })}
+                  </div>
+                  {this.state.post.map((value, index) => {
+                    if (value.postImgClick === true) {
+                      return (
+                        <Dialog
+                          open
+                          key={value.postCd}
+                          onClose={() => {
+                            this.setState({ value: (this.state.post[index] = { ...value, postImgClick: false }) });
+                          }}
+                        >
+                          <Timeline data={value} user={this.props.user} />
+                        </Dialog>
+                      );
+                    }
+                  })}
+                  {console.log(this.state.post)}
+                </>
+              ) : (
+                this.state.post.map((value, index) => {
+                  if (value.mediaFK !== null) {
+                    return (
+                      <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
+                        <Timeline
+                          data={value}
+                          user={this.props.user}
+                          onPostDelete={(postCd) => {
+                            var index = undefined;
+                            for (let i = 0; i < this.state.post.length; i++) {
+                              if (postCd === this.state.post[i].postCd) {
+                                index = i;
+                                break;
+                              }
+                            }
+                            const copyTimeLine = this.state.post.slice();
+                            copyTimeLine.splice(index, 1);
+                            this.setState({ post: copyTimeLine });
+                          }}
+                        />
+                      </div>
+                    );
+                  } else if (value.scheduleFK !== null || value.shareScheduleList.length > 0) {
+                    return (
+                      <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
+                        <TimelineWeekSchedule
+                          data={value}
+                          user={this.props.user}
+                          onPostDelete={(postCd) => {
+                            var index = undefined;
+                            for (let i = 0; i < this.state.post.length; i++) {
+                              if (postCd === this.state.post[i].postCd) {
+                                index = i;
+                                break;
+                              }
+                            }
+                            const copyTimeLine = this.state.post.slice();
+                            copyTimeLine.splice(index, 1);
+                            this.setState({ post: copyTimeLine });
+                          }}
+                        />
+                      </div>
+                    );
+                  } else if (value.postOriginFK !== null) {
+                    return (
+                      <div className='profile-ScheduleTimeLine' key={`${value.postCd}-${index}`}>
+                        <PostShareTimeline
+                          data={value}
+                          user={this.props.user}
+                          onPostDelete={(postCd) => {
+                            var index = undefined;
+                            for (let i = 0; i < this.state.post.length; i++) {
+                              if (postCd === this.state.post[i].postCd) {
+                                index = i;
+                                break;
+                              }
+                            }
+                            const copyTimeLine = this.state.post.slice();
+                            copyTimeLine.splice(index, 1);
+                            this.setState({ post: copyTimeLine });
+                          }}
+                        />
+                      </div>
+                    );
+                  } else return null;
+                })
+              )
+            ) : null}
             {this.state.alert}
             {this.state.isOpenAddTab ? (
               <AddTab

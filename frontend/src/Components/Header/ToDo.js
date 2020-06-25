@@ -35,21 +35,8 @@ const ToDo = ({ open, userCd }) => {
       const { data } = await axios.get(`/toDo/${userCd}`);
       setToDoList(data.map((value) => ({ ...value, toDoEndDate: new Date(value.toDoEndDate) })));
     })();
-    const today = new Date().getHours();
-    if (today >= 21) {
-      setBgImage('https://cdn.pixabay.com/photo/2016/11/21/03/56/landscape-1844231_1280.png');
-    } else if (today >= 18) {
-      setBgImage('https://cdn.pixabay.com/photo/2016/11/21/03/56/landscape-1844231_1280.png');
-    } else if (today >= 8) {
-      setBgImage('https://github.com/CodeExplainedRepo/To-Do-List/blob/master/img/bg.jpg?raw=true');
-    } else {
-      setBgImage('https://cdn.pixabay.com/photo/2016/11/21/03/56/landscape-1844231_1280.png');
-    }
-
-    // const { data } = axios.get(`/toDo/15`);
   }, []);
-  const [toDoList, setToDoList] = useState([]);
-  const [bgImage, setBgImage] = useState(null);
+  const [toDoList, setToDoList] = useState(null);
   const [inputText, setInputText] = useState('');
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isClickDate, setIsClickDate] = useState(false);
@@ -142,10 +129,10 @@ const ToDo = ({ open, userCd }) => {
       style={{
         position: 'absolute',
         top: '50px',
-        right: 0,
+        right: '-26px',
         height: '550px',
         width: '300px',
-        boxShadow: '0px 0px 1px #0001',
+        boxShadow: 'rgba(161, 159, 159, 0.8) 0px 1px 3px',
         borderTopLeftRadius: '4%',
         borderTopRightRadius: '4%',
         display: 'flex',
@@ -155,11 +142,10 @@ const ToDo = ({ open, userCd }) => {
     >
       <div
         style={{
-          flex: 1.15,
+          flex: 0.3,
           paddingLeft: '10px',
           borderRadius: '15px 15px 0 0',
-          backgroundColor: 'white',
-          backgroundImage: `url(${bgImage})`,
+          backgroundColor: 'lightseagreen',
           backgroundSize: 'cover',
           position: 'relative',
         }}
@@ -211,119 +197,123 @@ const ToDo = ({ open, userCd }) => {
         </div>
       </div>
       <div style={{ flex: 3, backgroundColor: 'white', overflow: 'hidden', marginBottom: '50px', overflowY: 'auto' }}>
-        {toDoList.map((value, index) => {
-          const isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(value.toDoContent);
-          var fontSize = undefined;
-          if (isKorean) {
-            const textLength = value.toDoContent.length;
-            if (textLength > 16) fontSize = 10;
-            else if (textLength > 13) fontSize = 12;
-            else if (textLength > 10) fontSize = 14;
-            else fontSize = 16;
-          } else {
-            const textLength = value.toDoContent.length;
-            if (textLength > 20) fontSize = 12;
-            else if (textLength > 16) fontSize = 15;
-            else if (textLength > 13) fontSize = 18;
-            else if (textLength > 10) fontSize = 21;
-            else fontSize = 24;
-          }
+        {toDoList === null ? (
+          <div className='loading' style={{ height: '46px', borderBottom: '1px solid #ddd' }} />
+        ) : (
+          toDoList.map((value, index) => {
+            const isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(value.toDoContent);
+            var fontSize = undefined;
+            if (isKorean) {
+              const textLength = value.toDoContent.length;
+              if (textLength > 16) fontSize = 10;
+              else if (textLength > 13) fontSize = 12;
+              else if (textLength > 10) fontSize = 14;
+              else fontSize = 16;
+            } else {
+              const textLength = value.toDoContent.length;
+              if (textLength > 20) fontSize = 12;
+              else if (textLength > 16) fontSize = 15;
+              else if (textLength > 13) fontSize = 18;
+              else if (textLength > 10) fontSize = 21;
+              else fontSize = 24;
+            }
 
-          const diffDay = differenceInCalendarDays(value.toDoEndDate, currentDate);
-          return (
-            <div
-              key={`todo-${value.toDoCd}`}
-              id={`todo-line-${index}`}
-              style={{
-                backgroundColor: 'white',
-                borderBottom: '1px solid #eee',
-                paddingLeft: '6px',
-                display: 'flex',
-                alignItems: 'center',
-                position: 'relative',
-                transition: 'all 0.15s ease-out',
-              }}
-              onMouseEnter={() => {
-                document.getElementById(`todo-delete-${index}`).style.opacity = '100%';
-                document.getElementById(`todo-line-${index}`).style.backgroundColor = `${value.toDoCol}70`;
-              }}
-              onMouseLeave={() => {
-                document.getElementById(`todo-delete-${index}`).style.opacity = '0';
-                document.getElementById(`todo-line-${index}`).style.backgroundColor = 'white';
-              }}
-            >
+            const diffDay = differenceInCalendarDays(value.toDoEndDate, currentDate);
+            return (
               <div
+                key={`todo-${value.toDoCd}`}
+                id={`todo-line-${index}`}
                 style={{
-                  width: '46px',
-                  height: '46px',
+                  backgroundColor: 'white',
+                  borderBottom: '1px solid #eee',
+                  paddingLeft: '6px',
                   display: 'flex',
-                  justifyContent: 'center',
                   alignItems: 'center',
+                  position: 'relative',
+                  transition: 'all 0.15s ease-out',
+                }}
+                onMouseEnter={() => {
+                  document.getElementById(`todo-delete-${index}`).style.opacity = '100%';
+                  document.getElementById(`todo-line-${index}`).style.backgroundColor = `${value.toDoCol}70`;
+                }}
+                onMouseLeave={() => {
+                  document.getElementById(`todo-delete-${index}`).style.opacity = '0';
+                  document.getElementById(`todo-line-${index}`).style.backgroundColor = 'white';
                 }}
               >
                 <div
+                  style={{
+                    width: '46px',
+                    height: '46px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <div
+                    className='transition-all'
+                    style={{
+                      cursor: 'pointer',
+                      width: '26px',
+                      height: '26px',
+                      borderRadius: '50%',
+                      backgroundColor: value.toDoCompleteState ? '#eee' : '#eee3',
+                      border: value.toDoCompleteState ? `2px solid #ddd` : `2px solid ${value.toDoCol}`,
+                    }}
+                    onClick={async () => {
+                      try {
+                        setAlert(<Snackbar severity='info' content={`수정중.....`} duration={999999} />);
+                        await axios.post(`/toDo/update/${value.toDoCd}`);
+                        var array = toDoList.slice();
+                        array[index] = { ...toDoList[index], toDoCompleteState: !value.toDoCompleteState };
+                        setToDoList(array);
+                        setAlert(
+                          <Snackbar
+                            severity='success'
+                            content={`수정 완료`}
+                            duration={800}
+                            onClose={() => setAlert(null)}
+                          />
+                        );
+                      } catch (error) {
+                        setAlert(<Snackbar severity='error' content={error} onClose={() => setAlert(null)} />);
+                      }
+                    }}
+                  />
+                </div>
+                <div
                   className='transition-all'
                   style={{
-                    cursor: 'pointer',
-                    width: '26px',
-                    height: '26px',
-                    borderRadius: '50%',
-                    backgroundColor: value.toDoCompleteState ? '#eee' : '#eee3',
-                    border: value.toDoCompleteState ? `2px solid #ddd` : `2px solid ${value.toDoCol}`,
+                    flex: 1,
+                    fontWeight: 'bold',
+                    fontSize: `${fontSize}px`,
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden',
+                    textDecoration: value.toDoCompleteState ? 'line-through' : 'none',
+                    color: value.toDoCompleteState ? '#bbb' : 'black',
+                    paddingTop: '10px',
+                    paddingBottom: '10px',
                   }}
-                  onClick={async () => {
-                    try {
-                      setAlert(<Snackbar severity='info' content={`수정중.....`} duration={999999} />);
-                      await axios.post(`/toDo/update/${value.toDoCd}`);
-                      var array = toDoList.slice();
-                      array[index] = { ...toDoList[index], toDoCompleteState: !value.toDoCompleteState };
-                      setToDoList(array);
-                      setAlert(
-                        <Snackbar
-                          severity='success'
-                          content={`수정 완료`}
-                          duration={800}
-                          onClose={() => setAlert(null)}
-                        />
-                      );
-                    } catch (error) {
-                      setAlert(<Snackbar severity='error' content={error} onClose={() => setAlert(null)} />);
-                    }
+                >
+                  {value.toDoContent}
+                </div>
+                <div
+                  className='`trans`ition-all'
+                  id={`todo-delete-${index}`}
+                  style={{ opacity: 0, width: '32px', cursor: 'pointer' }}
+                  onClick={() => {
+                    deleteToDo(value, index);
                   }}
-                />
+                >
+                  <DeleteIcon fontSize='small' />
+                </div>
+                <div style={{ position: 'absolute', bottom: 0, left: '53px', color: 'green', fontSize: '10px' }}>
+                  {diffDay === 0 ? 'D-DAY' : diffDay > 0 ? `${diffDay}일 후` : `${-diffDay}일 전`}
+                </div>
               </div>
-              <div
-                className='transition-all'
-                style={{
-                  flex: 1,
-                  fontWeight: 'bold',
-                  fontSize: `${fontSize}px`,
-                  textOverflow: 'ellipsis',
-                  overflow: 'hidden',
-                  textDecoration: value.toDoCompleteState ? 'line-through' : 'none',
-                  color: value.toDoCompleteState ? '#bbb' : 'black',
-                  paddingTop: '10px',
-                  paddingBottom: '10px',
-                }}
-              >
-                {value.toDoContent}
-              </div>
-              <div
-                className='transition-all'
-                id={`todo-delete-${index}`}
-                style={{ opacity: 0, width: '32px', cursor: 'pointer' }}
-                onClick={() => {
-                  deleteToDo(value, index);
-                }}
-              >
-                <DeleteIcon fontSize='small' />
-              </div>
-              <div style={{ position: 'absolute', bottom: 0, left: '53px', color: 'green', fontSize: '10px' }}>
-                {diffDay === 0 ? 'D-DAY' : diffDay > 0 ? `${diffDay}일 후` : `${-diffDay}일 전`}
-              </div>
-            </div>
-          );
-        })}
+            );
+          })
+        )}
       </div>
       <div
         style={{

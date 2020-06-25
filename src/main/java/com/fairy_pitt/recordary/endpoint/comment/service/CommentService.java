@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -45,8 +46,9 @@ public class CommentService {
     }
 
     @Transactional
-    public void delete(Long commentCd){
+    public Boolean delete(Long commentCd){
          commentRepository.deleteById(commentCd);
+         return !Optional.ofNullable(this.findEntity(commentCd)).isPresent();
     }
 
     @Transactional
@@ -64,51 +66,8 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
-
-
-
-//    public Boolean insertComment(CommentEntity commentEntity)
-//    {
-//        commentRepository.save(commentEntity);
-//        return true;
-//    }
-//
-//    public Boolean deleteComment()
-//    {
-//
-//        return true;
-//    }
-//
-//    public Boolean updateComment(CommentEntity commentEntity,long id)
-//    {
-//        CommentEntity currCommentEntity = commentRepository.findById(id).get();
-//       // currCommentEntity.set
-//        return true;
-//    }
-//
-//    public List<CommentEntity> findChildComment()
-//    {
-//        List<CommentEntity> commentEntityList = new ArrayList<>();
-//
-//        return commentEntityList;
-//    }
-//
-//    public List<CommentEntity> findOriginComment()
-//    {
-//        List<CommentEntity> commentEntityList = new ArrayList<>();
-//
-//        return commentEntityList;
-//    }
-//
-//    public long findChildCommentCount()
-//    {
-//        return commentRepository.countByCommentOriginFKIsNotNull();
-//    }
-//    // insert
-//
-//    //delete
-//
-//    //update
-//
-//    //read
+    @Transactional(readOnly = true)
+    public CommentEntity findEntity(Long commentCd){
+        return commentRepository.findByCommentCd(commentCd);
+    }
 }

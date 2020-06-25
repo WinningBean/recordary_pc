@@ -3,17 +3,13 @@ package com.fairy_pitt.recordary.endpoint.schedule;
 import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
 import com.fairy_pitt.recordary.endpoint.media.service.MediaService;
 import com.fairy_pitt.recordary.endpoint.post.service.PostService;
+import com.fairy_pitt.recordary.endpoint.schedule.dto.*;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleMemberService;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleService;
-import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleTabService;
-import com.fairy_pitt.recordary.endpoint.schedule.dto.*;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 
@@ -52,6 +48,11 @@ public class ScheduleController {
         return true;
     }
 
+    @GetMapping("/{scheduleCd}")
+    public ScheduleResponseDto findByScheduleCd(@PathVariable Long scheduleCd){
+        return new ScheduleResponseDto(scheduleService.findEntity(scheduleCd));
+    }
+
     @PostMapping("showUserSchedule/{id}")
     public List<ScheduleResponseDto> showUserSchedule(@PathVariable Long id, @RequestBody ScheduleDateRequestDto responseDto){
         List<ScheduleResponseDto> result = scheduleService.showUserSchedule(responseDto, id, followerService.checkPublicStateToTarget(userService.currentUserCd(), id));
@@ -65,7 +66,6 @@ public class ScheduleController {
 
     @GetMapping("search/{id}")
     public List<ScheduleResponseDto> searchUserSchedule(@PathVariable Long id, @RequestParam(value = "input") String name ){
-//        Long currUserCd = Long.parseLong("2");
         List<ScheduleResponseDto> result = scheduleService.searchSchedule(id, followerService.checkPublicStateToTarget(userService.currentUserCd() /*currUserCd*/, id),name);
         return scheduleMemberService.searchUserAsMemberScheduleList(id, result, name);
     }
@@ -75,4 +75,8 @@ public class ScheduleController {
         return scheduleService.searchGroupScheduleList(id, name, isMember);
     }
 
+    @GetMapping("/today")
+    public List<ScheduleTodayResponseDto> todaySchedule(@RequestParam Long userCd){
+        return scheduleService.getTodayUserSchedule(userCd);
+    }
 }

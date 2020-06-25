@@ -1,11 +1,13 @@
 package com.fairy_pitt.recordary.endpoint.schedule;
 
-import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleTabService;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleTabRequestDto;
+import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleTabResponseDto;
+import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleTabService;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 
 @RequestMapping("tab")
@@ -27,4 +29,8 @@ public class ScheduleTabController {
         return true;
     }
 
+    @GetMapping("/{userCd}")
+    public List<ScheduleTabResponseDto> getUserScheduleTab(@PathVariable Long userCd){
+        return scheduleTabService.getUserScheduleTab(userCd);
+    }
 }

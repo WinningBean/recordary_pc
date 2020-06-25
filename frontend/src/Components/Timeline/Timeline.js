@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText } from '@material-ui/core';
 import AlertDialog from '../Other/AlertDialog';
 
+import LikePersonList from './LikePersonList';
 import './Timeline.css';
 import CommentList from './CommentList';
 import LongMenu from '../Other/MoreMenu';
@@ -23,6 +24,8 @@ import axios from 'axios';
 import Button from '@material-ui/core/Button';
 import SubdirectoryArrowLeftIcon from '@material-ui/icons/SubdirectoryArrowLeft';
 
+import store from '../../store';
+
 const useStyles = makeStyles((theme) => ({
   textFieldSize: {
     fontSize: '12px',
@@ -38,14 +41,14 @@ const Timeline = (props) => {
   const [pictureCount, setPictureCount] = useState(0);
   const [clickSchedule, setClickSchedule] = useState(false);
   const [mediaList, setMediaList] = useState([]);
-  const [timelineRender, setTimelineRender] = useState(false);
+  const [likePersonList, setLikePersonList] = useState(false);
 
   useEffect(() => {
     (async () => {
       try {
         const mediaSrc = (await axios.get(`/media/${data.mediaFK.mediaCd}`)).data;
         if (mediaSrc.length < 0) {
-          return null;
+          return;
         } else {
           setMediaList(mediaList.concat(JSON.parse(JSON.stringify(mediaSrc))));
         }
@@ -54,6 +57,10 @@ const Timeline = (props) => {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    setData(props.data);
+  }, [props.data]);
 
   const userPostMoreButtonClick = (selectedValue, value) => {
     switch (selectedValue) {
@@ -80,7 +87,7 @@ const Timeline = (props) => {
               <Button
                 onClick={async () => {
                   try {
-                    const Success = (await axios.delete(`post/${data.postCd}`)).data;
+                    const Success = (await axios.delete(`/post/${data.postCd}`)).data;
                     console.log(Success);
                     if (Success) {
                       setDialog(
@@ -88,7 +95,10 @@ const Timeline = (props) => {
                           severity='success'
                           content='게시물이 삭제되었습니다.'
                           duration={1000}
-                          onAlertClose={() => setDialog(null)}
+                          onAlertClose={() => {
+                            setMenuDialog(null);
+                            props.onPostDelete(data.postCd);
+                          }}
                         />
                       );
                     } else {
@@ -237,7 +247,7 @@ const Timeline = (props) => {
   };
 
   return (
-    <div className='timeline'>
+    <div className='timeline' style={data.groupFK !== null ? { borderTop: '4px solid tomato' } : null}>
       <div className='timeline-profile'>
         <div className='profile-picture'>
           <img alt={`${data.userFK.userId} img`} src={data.userFK.userPic} />
@@ -388,11 +398,18 @@ const Timeline = (props) => {
         <div className='comment-context'>
           <div className='comment-reply' style={{ overflowY: 'auto' }}>
             {data.commentList.length > 0 ? (
-              <CommentList tData={data.commentList} user={props.user} />
+              <CommentList
+                tData={data.commentList}
+                user={props.user}
+                onSuccess={(commentInfo) => {
+                  console.log(commentInfo);
+                  setData({ ...data, commentList: commentInfo });
+                }}
+              />
             ) : (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div className='recomment-reply-users-img'>
-                  <img alt={`${data.userFK.userId} img`} src={data.userFK.userPic} />
+                  <img alt={`${data.userFK.userId}`} src={data.userFK.userPic} />
                 </div>
                 <div style={{ fontWeight: 'bold', marginLeft: '5px' }}>
                   {data.userFK.userId}({data.userFK.userNm})
@@ -415,12 +432,34 @@ const Timeline = (props) => {
                             headers: { 'Content-Type': 'application/json' },
                           })
                         ).data;
-                        console.log(like);
+                        if (like) {
+                          store.dispatch({
+                            type: 'SAVE_NOTICE',
+                            notice: {
+                              noticeType: 'POST_LIKE_NEW', // 이벤트 타입
+                              activeCd: props.user.userCd, // 이벤트 주체
+                              targetCd: data.postCd, // 이벤트 대상
+                            },
+                          });
+                          setData({
+                            ...data,
+                            currentUserLikePost: true,
+                            postLikeCount: data.postLikeCount + 1,
+                            postLikeFirstUser: data.postLikeFirstUser === null ? props.user : data.postLikeFirstUser,
+                          });
+                        }
                       } else {
                         const unLike = (
                           await axios.delete(`/post/${data.postCd}/unLike`, { params: { userCd: props.user.userCd } })
                         ).data;
-                        console.log(unLike);
+                        setData({
+                          ...data,
+                          currentUserLikePost: false,
+                          postLikeCount: data.postLikeCount - 1,
+                          postLikeFirstUser:
+                            data.postLikeFirstUser.userCd === props.user.userCd ? null : data.postLikeForstUser,
+                          // data.postLikeFirstUser.userCd === props.user.userCd ? 다음 사람의 데이터...ㅠ : data.postLikeForstUser,
+                        });
                       }
                     } catch (e) {
                       console.log(e);
@@ -432,13 +471,16 @@ const Timeline = (props) => {
                 />
               </div>
               {data.postLikeCount < 1 ? (
-                <div className='comment-title'>첫번째 좋아요를 눌러주세욤</div>
+                <div className='.comment-title-none'>첫번째 좋아요를 눌러주세욤</div>
               ) : data.postLikeCount === 1 ? (
-                <div className='comment-title'>{`${data.postLikeFirstUser.userId}(${data.postLikeFirstUser.userNm}) 님이 좋아합니다`}</div>
+                <div
+                  className='comment-title'
+                  onClick={() => setLikePersonList(true)}
+                >{`${data.postLikeFirstUser.userId}(${data.postLikeFirstUser.userNm}) 님이 좋아합니다`}</div>
               ) : (
-                <div className='comment-title'>{`${data.postLikeFirstUser.userId}(${
-                  data.postLikeFirstUser.userNm
-                }) 님 외 ${data.postLikeCount - 1}명이 좋아합니다`}</div>
+                <div className='comment-title' onClick={() => setLikePersonList(true)}>{`${
+                  data.postLikeFirstUser.userId
+                }(${data.postLikeFirstUser.userNm}) 님 외 ${data.postLikeCount - 1}명이 좋아합니다`}</div>
               )}
             </div>
           </div>
@@ -456,6 +498,7 @@ const Timeline = (props) => {
           </div>
         </div>
       </div>
+      {likePersonList ? <LikePersonList postCd={data.postCd} onCancel={() => setLikePersonList(false)} /> : null}
       {menuDialog}
       {dialog}
     </div>

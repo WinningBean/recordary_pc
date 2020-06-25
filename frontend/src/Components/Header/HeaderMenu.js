@@ -99,6 +99,14 @@ const HeaderMenu = (props) => {
                   );
                   return;
                 } else {
+                  props.onSaveNotice({
+                    type: 'SAVE_NOTICE',
+                    notice: {
+                      noticeType: 'GROUP_MEMBER_AWAY', // 이벤트 타입
+                      activeCd: props.data.userCd, // 이벤트 주체
+                      targetCd: code, // 이벤트 대상
+                    },
+                  });
                   props.onDeleteGroupList(code);
                   setMenuDialog(
                     <AlertDialog
@@ -171,7 +179,12 @@ const HeaderMenu = (props) => {
 
   const ShowProfileEditForm = () => {
     if (profileEditForm === null) {
-      setProfileEditForm(<ProfileEditor data={data} onCancel={() => setProfileEditForm(null)} />);
+      setProfileEditForm(
+        <ProfileEditor
+          data={data}
+          onCancel={() => setProfileEditForm(null)}
+        />
+      );
       return;
     }
     setProfileEditForm(null);
@@ -207,6 +220,7 @@ const HeaderMenu = (props) => {
                             display: 'flex',
                             alignItems: 'center',
                             fontWeight: 'bold',
+                            textTransform: 'none',
                           }}
                         >
                           <img
@@ -217,6 +231,7 @@ const HeaderMenu = (props) => {
                               width: '40px',
                               height: '40px',
                               objectFit: 'cover',
+                              boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)',
                             }}
                             src={value.groupPic}
                           />
@@ -314,6 +329,7 @@ const HeaderMenu = (props) => {
                       display: 'flex',
                       alignItems: 'center',
                       fontWeight: 'bold',
+                      textTransform: 'none',
                     }}
                   >
                     {/* 우선 redux에 저장하지 않음 */}
@@ -326,6 +342,7 @@ const HeaderMenu = (props) => {
                           objectFit: 'cover',
                           marginRight: '10px',
                           borderRadius: '50%',
+                          boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)',
                         }}
                         src={'http://placehold.it/250x250'}
                       />
@@ -338,6 +355,7 @@ const HeaderMenu = (props) => {
                           objectFit: 'cover',
                           marginRight: '10px',
                           borderRadius: '50%',
+                          boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)',
                         }}
                         src={value.userPic}
                       />
@@ -403,7 +421,16 @@ const HeaderMenu = (props) => {
                   })
                 : null}
 
-              <img alt='userPic' src={data.userPic} style={{ borderRadius: '50%', width: '30px', overFit: 'cover' }} />
+              <img
+                alt='userPic'
+                src={data.userPic}
+                style={{
+                  borderRadius: '50%',
+                  width: '30px',
+                  overFit: 'cover',
+                  boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)',
+                }}
+              />
             </div>
             <span>
               {data.userId}({data.userNm})

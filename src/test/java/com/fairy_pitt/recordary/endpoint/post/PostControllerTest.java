@@ -416,11 +416,11 @@ public class PostControllerTest {
         String url = "http://localhost:" + port + "/post/timeLine/" + user1.getUserCd();
 
         //when
-//        ResponseEntity<List> responseEntity = restTemplate.getForEntity(url, List.class);
-//
-//        //then
-//        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-//        assertThat(responseEntity.getBody().size()).isEqualTo(4);
+        ResponseEntity<List> responseEntity = restTemplate.getForEntity(url, List.class);
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody().size()).isEqualTo(4);
     }
 
     @Test
@@ -525,14 +525,14 @@ public class PostControllerTest {
         String url2 = "http://localhost:" + port + "/post/pagingTimeLine/" + user1.getUserCd() + "?lastCd=" + lastPost.getPostCd();
 
         //when
-//        ResponseEntity<List> responseEntity1 = restTemplate.getForEntity(url1, List.class);
-//        ResponseEntity<List> responseEntity2 = restTemplate.getForEntity(url2, List.class);
-//
-//        //then
-//        assertThat(responseEntity1.getStatusCode()).isEqualTo(HttpStatus.OK);
-//        assertThat(responseEntity1.getBody().size()).isEqualTo(10);
-//
-//        assertThat(responseEntity2.getStatusCode()).isEqualTo(HttpStatus.OK);
-//        assertThat(responseEntity2.getBody().size()).isEqualTo(3);
+        ResponseEntity<List> responseEntity1 = restTemplate.getForEntity(url1, List.class);
+        ResponseEntity<List> responseEntity2 = restTemplate.getForEntity(url2, List.class);
+
+        //then
+        assertThat(responseEntity1.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity1.getBody().size()).isEqualTo(10);
+
+        assertThat(responseEntity2.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity2.getBody().size()).isEqualTo(3);
     }
 }

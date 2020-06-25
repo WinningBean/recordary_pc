@@ -66,25 +66,26 @@ const Calendar = (props) => {
   };
 
   useEffect(() => {
+    if (props.searchedSchedule === null) {
+      return;
+    }
+    setCurrentMonth(props.searchedSchedule.scheduleStr);
+  }, [props.searchedSchedule]);
+
+  useEffect(() => {
     (async () => {
       setAlert(
         <div
+          // className='loading'
           style={{
             position: 'absolute',
-            top: 0,
+            top: '106px',
             left: 0,
             width: '100%',
-            height: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#ddd3',
-            fontWeight: 'bold',
-            fontSize: '18px',
+            height: '444px',
+            backgroundColor: '#eee8',
           }}
-        >
-          Loading...
-        </div>
+        />
       );
       const monthStart = dateFns.startOfMonth(currentMonth);
       const monthEnd = dateFns.endOfMonth(monthStart);
@@ -142,8 +143,6 @@ const Calendar = (props) => {
 
   console.log(userDate);
 
-  const onChoice = useCallback((currDay) => props.onChoice(currDay, userDate), [props, userDate]);
-
   //#region Handler
   var id = undefined;
   var x = null;
@@ -158,7 +157,7 @@ const Calendar = (props) => {
     if (alert !== null) {
       return;
     }
-    id = e.currentTarget.className;
+    id = e.currentTarget.className.substring(25);
     console.log('start holding', id);
   };
 
@@ -184,7 +183,7 @@ const Calendar = (props) => {
         moveBlockY = -(parseInt(y / 74) - parseInt(moveY / 74));
       }
 
-      const moveObjDate = userDate.filter((value) => value.cd == id.substring(2, 4))[0];
+      const moveObjDate = userDate.filter((value) => value.cd == id.substring(3))[0];
       setAlert(
         <AlertDialog
           severity='info'
@@ -257,7 +256,7 @@ const Calendar = (props) => {
           }}
         />
       );
-      const realObj = document.querySelectorAll('.' + id.substring(0, 4));
+      const realObj = document.querySelectorAll('.' + id);
       for (let i = 0; i < realObj.length; i++) {
         realObj[i].style.opacity = 1.0;
       }
@@ -276,7 +275,7 @@ const Calendar = (props) => {
       if (moveLife-- < 0) {
         if (!isMove) {
           // 기존 옮기는 div를 투명하게 처리
-          const realObj = document.querySelectorAll('.' + id.substring(0, 4));
+          const realObj = document.querySelectorAll('.' + id);
           for (let i = 0; i < realObj.length; i++) {
             realObj[i].style.opacity = 0.5;
           }
@@ -461,7 +460,7 @@ const Calendar = (props) => {
             key={day}
             onClick={() => {
               if (type === 4) {
-                onChoice(currDay);
+                props.onChoice(currDay, userDate, publicState);
               } else if (type === 0 || type === 2 || type === 3) {
                 setClickDate(currDay);
               }
@@ -515,13 +514,14 @@ const Calendar = (props) => {
 
     setDayLocation(location);
     return rows;
-  }, [currentMonth, type, props.choiceSharedStartDate, props.choiceSharedEndDate, onChoice]);
+  }, [currentMonth, type, props.choiceSharedStartDate, props.choiceSharedEndDate, props.onChoice]);
   //#endregion
 
   //#region Schedule View
   const shortSC = (cd, x, y, nm, color) => (
     <div
-      className={`sc${cd} transition-all animation`}
+      className={`transition-all animation sc-${cd}`}
+      data-id={cd}
       key={cd}
       style={{
         position: 'absolute',
@@ -582,7 +582,7 @@ const Calendar = (props) => {
     const borderLeft = index === 0 ? `2px solid ${color}` : '';
     return (
       <div
-        className={`sc${cd} transition-all animation`}
+        className={`transition-all animation sc-${cd}`}
         key={`${cd}-${index === undefined ? '' : index}`}
         style={{
           position: 'absolute',
@@ -660,11 +660,30 @@ const Calendar = (props) => {
     //   moreList[i].style.display = 'none';
     // }
 
+    var isSelect = false;
+    if (props.searchedSchedule !== null) {
+      isSelect = true;
+    }
+
     var copyDayLocation = dayLocation.map((value) => ({ ...value }));
     copyDraft.forEach((value) => {
-      if (value.state !== publicState) {
+      if (publicState !== 0 && value.state !== publicState) {
         return;
       }
+      console.log(props.tabInfo, props.clickTabIndex);
+      var color = undefined;
+      if (props.clickTab === undefined) {
+        // 탭 색상 반영 유무 체크
+        if (value.tab === null) {
+          color = value.color;
+        } else {
+          console.log(props.clickTab);
+          color = props.tabInfo.find((_value) => _value.scheduleTabCd === value.tab).scheduleTabColor;
+        }
+      } else {
+        color = value.color;
+      }
+
       var index = null;
       var secondBlock = false;
       var beforeStartDay = false;
@@ -726,17 +745,15 @@ const Calendar = (props) => {
       if (dateFns.isSameDay(value.start, value.end)) {
         if (copyDayLocation[index].isSecondBlock) {
           if (dateFns.differenceInHours(value.end, value.start) >= 23) {
-            sc.push(
-              longSC(value.cd, 85, copyDayLocation[index].x, copyDayLocation[index].y + 25, value.nm, 0, value.color)
-            );
+            sc.push(longSC(value.cd, 85, copyDayLocation[index].x, copyDayLocation[index].y + 25, value.nm, 0, color));
           } else {
-            sc.push(shortSC(value.cd, copyDayLocation[index].x, copyDayLocation[index].y + 20, value.nm, value.color));
+            sc.push(shortSC(value.cd, copyDayLocation[index].x, copyDayLocation[index].y + 20, value.nm, color));
           }
         } else {
           if (dateFns.differenceInHours(value.end, value.start) >= 23) {
-            sc.push(longSC(value.cd, 85, copyDayLocation[index].x, copyDayLocation[index].y, value.nm, 0, value.color));
+            sc.push(longSC(value.cd, 85, copyDayLocation[index].x, copyDayLocation[index].y, value.nm, 0, color));
           } else {
-            sc.push(shortSC(value.cd, copyDayLocation[index].x, copyDayLocation[index].y, value.nm, value.color));
+            sc.push(shortSC(value.cd, copyDayLocation[index].x, copyDayLocation[index].y, value.nm, color));
           }
         }
         copyDayLocation[index].overlap = ++copyDayLocation[index].overlap;
@@ -753,7 +770,7 @@ const Calendar = (props) => {
                 copyDayLocation[index].y + 25,
                 value.nm,
                 beforeStartDay ? -1 : 0,
-                value.color
+                color
               )
             );
           } else {
@@ -766,7 +783,7 @@ const Calendar = (props) => {
                 copyDayLocation[index].y,
                 value.nm,
                 beforeStartDay ? -1 : 0,
-                value.color
+                color
               )
             );
           }
@@ -803,9 +820,9 @@ const Calendar = (props) => {
               return;
             }
             if (secondBlock) {
-              sc.push(longSC(value.cd, 595, 0, copyDayLocation[index].y + 25, '　', i + 1, value.color));
+              sc.push(longSC(value.cd, 595, 0, copyDayLocation[index].y + 25, '　', i + 1, color));
             } else {
-              sc.push(longSC(value.cd, 595, 0, copyDayLocation[index].y, '　', i + 1, value.color));
+              sc.push(longSC(value.cd, 595, 0, copyDayLocation[index].y, '　', i + 1, color));
             }
             // const currWeek = dateFns.addWeeks(value.start, i + 1);
             // const currWeekFisrtDay = dateFns.startOfWeek(currWeek);
@@ -838,9 +855,9 @@ const Calendar = (props) => {
           }
           const diffDay = dateFns.differenceInDays(value.end, copyDayLocation[index].day) + 1;
           if (secondBlock) {
-            sc.push(longSC(value.cd, 85 * diffDay, 0, copyDayLocation[index].y + 25, '　', i + 1, value.color));
+            sc.push(longSC(value.cd, 85 * diffDay, 0, copyDayLocation[index].y + 25, '　', i + 1, color));
           } else {
-            sc.push(longSC(value.cd, 85 * diffDay, 0, copyDayLocation[index].y, '　', i + 1, value.color));
+            sc.push(longSC(value.cd, 85 * diffDay, 0, copyDayLocation[index].y, '　', i + 1, color));
           }
 
           // const currWeek = dateFns.addWeeks(value.start, i + 1);
@@ -864,7 +881,7 @@ const Calendar = (props) => {
               copyDayLocation[index].y + 25,
               value.nm,
               beforeStartDay ? -1 : 0,
-              value.color
+              color
             )
           );
         } else {
@@ -876,7 +893,7 @@ const Calendar = (props) => {
               copyDayLocation[index].y,
               value.nm,
               beforeStartDay ? -1 : 0,
-              value.color
+              color
             )
           );
         }
@@ -886,6 +903,22 @@ const Calendar = (props) => {
           copyDayLocation[index].overlap = ++copyDayLocation[index].overlap;
           index++;
         }
+      }
+      if (isSelect && props.searchedSchedule.scheduleCd === value.cd) {
+        const cloneElement = React.cloneElement(
+          sc[sc.length - 1],
+          { style: sc[sc.length - 1].props.style },
+          React.Children.map(sc[sc.length - 1].props.children, (child) =>
+            React.cloneElement(child, {
+              style: {
+                ...child.props.style,
+                border: '2px solid darkslategray',
+              },
+            })
+          )
+        );
+        sc.pop();
+        sc.push(cloneElement);
       }
     });
     return sc;
@@ -1085,14 +1118,15 @@ const Calendar = (props) => {
             >
               <div style={{ display: 'flex' }}>
                 {selectedDetailedSC !== null
-                  ? selectedDetailedSC.members.map((value) => (
-                      <div>
+                  ? selectedDetailedSC.members.map((value, index) => (
+                      <div key={`${value.userCd}-${index}`}>
                         <img
                           style={{
-                            width: '50px',
-                            height: '50px',
+                            width: '40px',
+                            height: '40px',
                             marginRight: '4px',
                             objectFit: 'cover',
+                            borderRadius: '20%',
                             border: value.scheduleState ? `3px solid ${selectedDetailedSC.color}` : null,
                           }}
                           src={value.userPic}
@@ -1116,6 +1150,8 @@ const Calendar = (props) => {
                   userCd={type === 0 ? props.info.userCd : props.info.currentUserCd}
                   userInfo={type === 0 ? props.info : null}
                   info={selectedDetailedSC}
+                  clickTab={props.clickTab}
+                  tabInfo={props.tabInfo}
                   onModify={(data) => {
                     const copyUserDate = userDate.slice();
                     for (let i = 0; i < copyUserDate.length; i++) {
@@ -1182,6 +1218,7 @@ const Calendar = (props) => {
           type={props.type}
           data={props.info}
           clickTab={props.clickTab}
+          tabInfo={props.tabInfo}
           onClose={() => setClickDate(null)}
           clickDate={clickDate}
           onSuccess={(newSc) => {

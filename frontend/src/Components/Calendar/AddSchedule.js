@@ -3,12 +3,14 @@ import React, { useState } from 'react';
 import { Dialog, DialogActions } from '@material-ui/core';
 
 import DTP from '../UI/DTP';
+import { colorContrast } from '../Other/ColorTransfer';
 import PublicRange from '../UI/PublicRange';
 import { ChromePicker } from 'react-color';
 import TextField from '@material-ui/core/TextField';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
+import Popover from '@material-ui/core/Popover';
 import AddIcon from '@material-ui/icons/Add';
 import GroupMemberSearch from '../Group/GroupMemberSearch';
 import AlertDialog from '../Other/AlertDialog';
@@ -20,8 +22,10 @@ import { addHours, startOfDay, endOfDay, startOfSecond } from 'date-fns';
 
 import axios from 'axios';
 
+import store from '../../store';
+
 // 255,197,0
-export default ({ data, clickTab, clickDate, onClose, onSuccess, type }) => {
+export default ({ data, clickTab, clickDate, onClose, onSuccess, type, tabInfo }) => {
   const [color, setColor] = useState({
     r: 255,
     g: 197,
@@ -29,7 +33,7 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, type }) => {
     a: 1,
   });
   const [isColorClick, setIsColorClick] = useState(false);
-  console.log(data.userCd);
+  console.log(tabInfo);
   const [info, setInfo] = useState({
     tabCd: null,
     groupCd: data.groupCd,
@@ -42,8 +46,21 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, type }) => {
     scheduleMembers: [],
   });
   const [switchInfo, setSwitchInfo] = useState(false);
+  const [clickTabState, setClickTabState] = useState(clickTab);
   const [isShowMemberSearch, setIsShowMemberSearch] = useState(false);
   const [dialog, setDialog] = useState(null);
+  const [popover, setPopover] = useState(null);
+
+  var clickTabInfo = undefined;
+
+  if (clickTabState !== undefined) {
+    for (let i = 0; i < tabInfo.length; i++) {
+      if (tabInfo[i].scheduleTabCd === clickTabState) {
+        clickTabInfo = tabInfo[i];
+        break;
+      }
+    }
+  }
   return (
     <Dialog open onClose={() => onClose()}>
       <div style={{ padding: '8px 10px', borderTop: `rgba(${color.r},${color.g},${color.b},${color.a}) 6px solid` }}>
@@ -61,8 +78,34 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, type }) => {
             }}
           />
         </div>
-        <div className='selectColor-form'>
+        <div className='Post-Append-title post-Append'>
           <TextField id='post_title' label='비고' onChange={(e) => setInfo({ ...info, scheduleEx: e.target.value })} />
+          {tabInfo === undefined ? null : (
+            <>
+              <span>선택한 탭 :</span>
+              <div
+                className='transition-all'
+                onClick={(e) => {
+                  setPopover(e.currentTarget);
+                }}
+                style={{
+                  height: '36px',
+                  width: '200px',
+                  backgroundColor: clickTabState === undefined ? '#ffc500' : clickTabInfo.scheduleTabColor,
+                  marginLeft: '10px',
+                  textAlign: 'center',
+                  lineHeight: '36px',
+                  textTransform: 'uppercase',
+                  color: colorContrast(clickTabState === undefined ? '#ffc500' : clickTabInfo.scheduleTabColor),
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                  userSelect: 'none',
+                }}
+              >
+                {clickTabState === undefined ? 'ALL' : clickTabInfo.scheduleTabNm}
+              </div>
+            </>
+          )}
         </div>
         <div className='Post-Append-Schedule'>
           <DTP
@@ -78,7 +121,7 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, type }) => {
           <Chip
             avatar={
               // <Avatar alt={`${info.user_id} img`} src={info.user_pic} />
-              <Avatar alt={`${data.userNm} img`} src='img/RIcon.png' />
+              <Avatar alt={`${data.userNm} img`} src={data.userPic} />
             }
             label={data.userNm}
             style={{
@@ -135,7 +178,7 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, type }) => {
             selectedIndex={info.schedulePublicState}
           />
         )}
-        <Button>취소</Button>
+        <Button onClick={() => onClose()}>취소</Button>
         <Button
           onClick={async () => {
             setDialog(<Snackbar severit='info' content='데이터 요청중...' onClose={() => setDialog(null)} />);
@@ -153,7 +196,7 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, type }) => {
               return;
             }
             console.log({
-              tabCd: clickTab === undefined ? null : clickTab,
+              tabCd: clickTabState === undefined ? null : clickTabState,
               groupCd: type === 2 || type === 3 ? data.groupCd : null,
               userCd: type === 2 || type === 3 ? data.currentUserCd : data.userCd,
               scheduleNm: info.scheduleNm,
@@ -167,7 +210,7 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, type }) => {
             try {
               const scCd = (
                 await axios.post('/schedule/', {
-                  tabCd: clickTab === undefined ? null : clickTab,
+                  tabCd: clickTabState === undefined ? null : clickTabState,
                   groupCd: type === 2 || type === 3 ? data.groupCd : null,
                   userCd: type === 2 || type === 3 ? data.currentUserCd : data.userCd,
                   scheduleNm: info.scheduleNm,
@@ -179,12 +222,39 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, type }) => {
                   schedulePublicState: info.schedulePublicState,
                 })
               ).data;
+
+              const postData = (
+                await axios.post(`/post/`, {
+                  userCd: type === 2 || type === 3 ? data.currentUserCd : data.userCd,
+                  groupCd: type === 2 || type === 3 ? data.groupCd : null,
+                  postOriginCd: null,
+                  scheduleCd: scCd,
+                  mediaCd: null,
+                  postEx: info.scheduleEx,
+                  postPublicState: 0,
+                  postScheduleShareState: false,
+                })
+              ).data;
+
+              info.scheduleMembers.forEach((value) => {
+                store.dispatch({
+                  type: 'SAVE_NOTICE',
+                  notice: {
+                    noticeType: 'GROUP_APPLY_INVITE', // 이벤트 타입
+                    activeCd: scCd, // 이벤트 주체
+                    targetCd: value.userCd, // 이벤트 대상
+                  },
+                });
+              });
+
+              console.log(postData);
               console.log(scCd);
               onSuccess({
                 tab: clickTab === undefined ? null : clickTab,
                 cd: scCd,
                 nm: info.scheduleNm,
                 ex: info.scheduleEx,
+                state: info.schedulePublicState,
                 start: str,
                 end: end,
                 members: info.scheduleMembers,
@@ -214,6 +284,53 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, type }) => {
         />
       ) : null}
       {dialog}
+      {tabInfo === undefined ? null : (
+        <Popover
+          open={Boolean(popover)}
+          anchorEl={popover === null ? null : popover}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          disableRestoreFocus
+          onClose={() => setPopover(null)}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', backgroundColor: 'transparent' }}>
+            <Button
+              style={{ width: '200px' }}
+              onClick={() => {
+                setClickTabState(undefined);
+                setPopover(null);
+              }}
+              style={{ backgroundColor: '#ffc500', color: colorContrast('#ffc500') }}
+            >
+              ALL
+            </Button>
+            {tabInfo.map((value) => {
+              return (
+                <Button
+                  key={`tabInfo-${value.scheduleTabCd}`}
+                  onClick={() => {
+                    setClickTabState(value.scheduleTabCd);
+                    setPopover(null);
+                  }}
+                  style={{
+                    backgroundColor: value.scheduleTabColor,
+                    color: colorContrast(value.scheduleTabColor),
+                    width: '200px',
+                  }}
+                >
+                  {value.scheduleTabNm}
+                </Button>
+              );
+            })}
+          </div>
+        </Popover>
+      )}
     </Dialog>
   );
 };

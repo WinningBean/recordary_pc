@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,5 +101,6 @@ public class PostEntity extends BaseTime {
         this.mediaFK = mediaFK;
         this.postEx = postEx;
         this.postPublicState = postPublicState;
+        this.setModifiedDate(LocalDateTime.now());
     }
 }

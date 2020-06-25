@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,8 @@ public class PostResponseDto implements Comparable<PostResponseDto>{
     private int postPublicState;
     private Boolean postScheduleShareState;
     private List<ScheduleResponseDto> shareScheduleList;
+    private Date shareScheduleStartDate;
+    private Date shareScheduleEndDate;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     private int postLikeCount;
@@ -51,6 +54,14 @@ public class PostResponseDto implements Comparable<PostResponseDto>{
                 .map(pss -> pss.getScheduleFK())
                 .map(ScheduleResponseDto::new)
                 .collect(Collectors.toList());
+        if (shareScheduleList.size() != 0) this.shareScheduleStartDate = shareScheduleList.stream()
+                .map(ssl -> ssl.getScheduleStr())
+                .sorted()
+                .findFirst().get();
+        if (shareScheduleList.size() != 0) this.shareScheduleEndDate = shareScheduleList.stream()
+                .map(ssl -> ssl.getScheduleEnd())
+                .sorted((se1, se2) -> se2.compareTo(se1))
+                .findFirst().get();
         this.createdDate = postEntity.getCreatedDate();
         this.modifiedDate = postEntity.getModifiedDate();
         this.postLikeCount = postEntity.getPostLikeList().size();

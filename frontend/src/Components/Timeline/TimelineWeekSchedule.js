@@ -6,7 +6,7 @@ import './Timeline.css';
 import { styled } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import { Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText } from '@material-ui/core';
-
+import LikePersonList from './LikePersonList';
 import EditPostMediaSchedule from '../../Containers/Profile/EditPostMediaSchedule';
 import CommentList from './CommentList';
 import LongMenu from '../Other/MoreMenu';
@@ -20,6 +20,8 @@ import SubdirectoryArrowLeftIcon from '@material-ui/icons/SubdirectoryArrowLeft'
 import CommentTimeline from './CommentTimeline';
 import AlertDialog from '../Other/AlertDialog';
 import axios from 'axios';
+
+import store from '../../store';
 
 const useStyles = makeStyles((theme) => ({
   textFieldSize: {
@@ -35,28 +37,16 @@ const SendButton = styled(Button)({
 const TimelineWeekSchedule = (props) => {
   const classes = useStyles();
   const [data, setData] = useState(props.data);
-  const [postForm, setPostForm] = useState(0);
-  const [isClickList, setIsClickList] = useState(
-    data.commentList.map(() => ({ recommentList: [], clickIndex: false }))
-  );
-  const [writeRecommentShow, setWriteRecommentShow] = useState(data.commentList.map(() => false));
+  const [postForm, setPostForm] = useState(props.data.shareScheduleList.length < 1 ? 1 : 2);
   const [writeRecomment, setWriteRecomment] = useState('');
   const [updateComment, setUpdateComment] = useState('');
-  const [editComment, setEditComment] = useState(data.commentList.map(() => false));
   const [editRecomment, setEditRecomment] = useState([]);
   const [updateRecomment, setUpdateRecomment] = useState('');
   const [menuDialog, setMenuDialog] = useState(null);
   const [dialog, setDialog] = useState(null);
+  const [likePersonList, setLikePersonList] = useState(false);
 
   const textField = useRef();
-
-  useEffect(() => {
-    if (data.scheduleFK !== null) {
-      setPostForm(1);
-    } else {
-      return null;
-    }
-  }, []);
 
   const handleChange = (e) => {
     setWriteRecomment(e.target.value);
@@ -85,39 +75,37 @@ const TimelineWeekSchedule = (props) => {
                 취소
               </Button>
               <Button
-                onClick={
-                  (async () => {
-                    try {
-                      const Success = (await axios.delete(`post/${data.postCd}`)).data;
-                      console.log(Success);
-                      if (Success) {
-                        setDialog(
-                          <AlertDialog
-                            severity='success'
-                            content='게시물이 삭제되었습니다.'
-                            duration={1000}
-                            onAlertClose={() => setDialog(null)}
-                          />
-                        );
-                      } else {
-                        setDialog(
-                          <AlertDialog
-                            severity='success'
-                            content='게시물 삭제 실패'
-                            duration={1000}
-                            onAlertClose={() => setDialog(null)}
-                          />
-                        );
-                      }
-                    } catch (e) {
-                      console.log(e);
+                onClick={async () => {
+                  try {
+                    const Success = (await axios.delete(`/post/${data.postCd}`)).data;
+                    console.log(Success);
+                    if (Success) {
                       setDialog(
-                        <AlertDialog severity='error' content='서버에러' onAlertClose={() => setDialog(null)} />
+                        <AlertDialog
+                          severity='success'
+                          content='게시물이 삭제되었습니다.'
+                          duration={1000}
+                          onAlertClose={() => {
+                            setMenuDialog(null);
+                            props.onPostDelete(data.postCd);
+                          }}
+                        />
+                      );
+                    } else {
+                      setDialog(
+                        <AlertDialog
+                          severity='success'
+                          content='게시물 삭제 실패'
+                          duration={1000}
+                          onAlertClose={() => setDialog(null)}
+                        />
                       );
                     }
-                  },
-                  () => setMenuDialog(null))
-                }
+                  } catch (e) {
+                    console.log(e);
+                    setDialog(<AlertDialog severity='error' content='서버에러' onAlertClose={() => setDialog(null)} />);
+                  }
+                }}
                 color='primary'
               >
                 확인
@@ -143,20 +131,21 @@ const TimelineWeekSchedule = (props) => {
         );
       case 2:
         return (
-          // <TimelineMultiDay
-          //   // title={data.post_title}
-          //   // ex={data.post_ex}
-          //   sharedSchedual={data.sharedSchedual}
-          //   sharedStartDay={data.sharedStartDay}
-          //   sharedEndDay={data.sharedEndDay}
-          // />
-          <div></div>
+          <TimelineMultiDay
+            ex={data.post_ex}
+            sharedSchedule={data.shareScheduleList}
+            sharedStartDay={Date.parse(data.shareScheduleStartDate)}
+            sharedEndDay={Date.parse(data.shareScheduleEndDate)}
+          />
         );
     }
   })();
 
   return (
-    <div className='timeline' style={{ minHeight: '391px' }}>
+    <div
+      className='timeline'
+      style={data.groupFK !== null ? { borderTop: '4px solid tomato', minHeight: '391px' } : { minHeight: '391px' }}
+    >
       <div className='timeline-profile'>
         <div className='profile-picture'>
           <img alt={`${data.userFK.userCd} img`} src={data.userFK.userPic} />
@@ -194,11 +183,18 @@ const TimelineWeekSchedule = (props) => {
         <div className='comment-context'>
           <div className='comment-reply' style={{ height: '220px', overflowY: 'auto' }}>
             {data.commentList.length > 0 ? (
-              <CommentList tData={data.commentList} user={props.user} />
+              <CommentList
+                tData={data.commentList}
+                user={props.user}
+                onSuccess={(commentInfo) => {
+                  console.log(commentInfo);
+                  setData({ ...data, commentList: commentInfo });
+                }}
+              />
             ) : (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div className='recomment-reply-users-img'>
-                  <img alt={`${data.userFK.userId} img`} src={data.userFK.userPic} />
+                  <img alt={`${data.userFK.userId}`} src={data.userFK.userPic} />
                 </div>
                 <div style={{ fontWeight: 'bold', marginLeft: '5px' }}>
                   {data.userFK.userId}({data.userFK.userNm})
@@ -220,12 +216,34 @@ const TimelineWeekSchedule = (props) => {
                             headers: { 'Content-Type': 'application/json' },
                           })
                         ).data;
-                        console.log(like);
+                        if (like) {
+                          store.dispatch({
+                            type: 'SAVE_NOTICE',
+                            notice: {
+                              noticeType: 'POST_LIKE_NEW', // 이벤트 타입
+                              activeCd: props.user.userCd, // 이벤트 주체
+                              targetCd: data.postCd, // 이벤트 대상
+                            },
+                          });
+                          setData({
+                            ...data,
+                            currentUserLikePost: true,
+                            postLikeCount: data.postLikeCount + 1,
+                            postLikeFirstUser: data.postLikeFirstUser === null ? props.user : data.postLikeFirstUser,
+                          });
+                        }
                       } else {
                         const unLike = (
                           await axios.delete(`/post/${data.postCd}/unLike`, { params: { userCd: props.user.userCd } })
                         ).data;
-                        console.log(unLike);
+                        setData({
+                          ...data,
+                          currentUserLikePost: false,
+                          postLikeCount: data.postLikeCount - 1,
+                          postLikeFirstUser:
+                            data.postLikeFirstUser.userCd === props.user.userCd ? null : data.postLikeForstUser,
+                          // data.postLikeFirstUser.userCd === props.user.userCd ? 다음 사람의 데이터...ㅠ : data.postLikeForstUser,
+                        });
                       }
                     } catch (e) {
                       console.log(e);
@@ -237,13 +255,16 @@ const TimelineWeekSchedule = (props) => {
                 />
               </div>
               {data.postLikeCount < 1 ? (
-                <div className='comment-title'>첫번째 좋아요를 눌러주세욤</div>
+                <div className='comment-title-none'>첫번째 좋아요를 눌러주세욤</div>
               ) : data.postLikeCount === 1 ? (
-                <div className='comment-title'>{`${data.postLikeFirstUser.userId}(${data.postLikeFirstUser.userNm}) 님이 좋아합니다`}</div>
+                <div
+                  className='comment-title'
+                  onClick={() => setLikePersonList(true)}
+                >{`${data.postLikeFirstUser.userId}(${data.postLikeFirstUser.userNm}) 님이 좋아합니다`}</div>
               ) : (
-                <div className='comment-title'>{`${data.postLikeFirstUser.userId}(${
-                  data.postLikeFirstUser.userNm
-                }) 님 외 ${data.postLikeCount - 1}명이 좋아합니다`}</div>
+                <div className='comment-title' onClick={() => setLikePersonList(true)}>{`${
+                  data.postLikeFirstUser.userId
+                }(${data.postLikeFirstUser.userNm}) 님 외 ${data.postLikeCount - 1}명이 좋아합니다`}</div>
               )}
             </div>
           </div>
@@ -261,6 +282,8 @@ const TimelineWeekSchedule = (props) => {
           </div>
         </div>
       </div>
+      {likePersonList ? <LikePersonList postCd={data.postCd} onCancel={() => setLikePersonList(false)} /> : null}
+
       {menuDialog}
       {dialog}
     </div>

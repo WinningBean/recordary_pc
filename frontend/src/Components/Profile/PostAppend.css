@@ -6,6 +6,7 @@
   font-size: 20px;
 }
 .post-append-header {
+  width: 620px;
   display: flex;
   justify-content: space-between;
   background-color: rgba(20, 81, 51, 0.8);

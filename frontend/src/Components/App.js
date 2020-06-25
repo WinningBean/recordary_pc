@@ -5,8 +5,11 @@ import MainPage from '../Containers/Main/MainPage';
 import ProfilePage from '../Containers/Profile/Profile';
 import MainPageButton from './Main/MainPageButton';
 import Loading from './Loading/Loading';
+import WebSocket from './WebSocket';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import axios from 'axios';
+
+import { SnackbarProvider } from 'notistack';
 
 import Fab from '@material-ui/core/Fab';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
@@ -54,16 +57,26 @@ class App extends React.Component {
       return <Redirect to='/' />;
     }
 
+    console.log(`/topic/user/${this.props.user.userCd}`);
     return (
       <div id='wrapper'>
         <Switch>
-          <Route exact path='/' component={LoginPage} />
+          {!this.props.isLogin ? (
+            <Route exact path='/' component={LoginPage} />
+          ) : (
+            <Route exact path='/' component={MainPage} />
+          )}
           <Route exact path='/main' component={MainPage} />
           <Route path='/group/:groupCd' component={ProfilePage} />
           <Route path='/:userId' component={ProfilePage} />
           <Redirect path='*' to='/' />
         </Switch>
         {this.props.isLogin ? <MainPageButton data={this.props.user} groupList={this.props.groupList} /> : null}
+        {this.props.isLogin ? (
+          <SnackbarProvider maxSnack={5}>
+            <WebSocket userCd={this.props.user.userCd} notice={this.props.notice} />
+          </SnackbarProvider>
+        ) : null}
         {/* <Fab
           id='topBtn'
           class='MuiButtonBase-root MuiFab-root MuiFab-sizeSmall MuiFab-secondary animation'

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class UserEntity extends BaseTime {
     private String userPic;
 
     @Column(name = "USER_EX")
+    @Type(type = "text")
     private String userEx;
 
     @JsonIgnore

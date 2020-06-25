@@ -6,10 +6,11 @@ import { Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText } 
 import AlertDialog from '../Other/AlertDialog';
 
 import './Timeline.css';
+import LikePersonList from './LikePersonList';
 import CommentList from './CommentList';
 import LongMenu from '../Other/MoreMenu';
 import Timeline from './Timeline';
-
+import TimelineWeekSchedule from './TimelineWeekSchedule';
 import PostShare from '../../Containers/Profile/PostShare';
 import EditPostMediaSchedule from '../../Containers/Profile/EditPostMediaSchedule';
 import SmsIcon from '@material-ui/icons/Sms';
@@ -21,6 +22,8 @@ import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
 import SubdirectoryArrowLeftIcon from '@material-ui/icons/SubdirectoryArrowLeft';
+
+import store from '../../store';
 
 const useStyles = makeStyles((theme) => ({
   textFieldSize: {
@@ -34,11 +37,11 @@ const PostShareTimeline = (props) => {
   const [dialog, setDialog] = useState(null);
   const [data, setData] = useState(props.data);
   const [postOriginData, setPostOriginData] = useState(props.data.postOriginFK);
-
   const [menuDialog, setMenuDialog] = useState(null);
   const [pictureCount, setPictureCount] = useState(0);
   const [mediaList, setMediaList] = useState([]);
   const [timelineRender, setTimelineRender] = useState(false);
+  const [likePersonList, setLikePersonList] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -46,11 +49,11 @@ const PostShareTimeline = (props) => {
         if (postOriginData.mediaFK !== null) {
           const mediaSrc = (await axios.get(`/media/${postOriginData.mediaFK.mediaCd}`)).data;
           if (mediaSrc.length < 0) {
-            return null;
+            return;
           } else {
             setMediaList(mediaList.concat(JSON.parse(JSON.stringify(mediaSrc))));
           }
-        } else return null;
+        } else return;
       } catch (e) {
         console.error(e);
       }
@@ -66,10 +69,10 @@ const PostShareTimeline = (props) => {
           </Dialog>
         );
         break;
-
       case '수정':
         // 게시물 EX만 수정할 수 있도록 만들기
-        setMenuDialog(<EditPostMediaSchedule mediaList={mediaList} data={data} onCancel={() => setMenuDialog(null)} />);
+        // 따로 ex 디자인 추가하여 수정하기
+        setMenuDialog(<EditPostMediaSchedule mediaList={[]} data={data} onCancel={() => setMenuDialog(null)} />);
         break;
       case '삭제':
         setMenuDialog(
@@ -77,7 +80,7 @@ const PostShareTimeline = (props) => {
             <DialogTitle id='alert-dialog-title'>게시물 삭제</DialogTitle>
             <DialogContent>
               <DialogContentText id='alert-dialog-description'>게시물을 삭제하시겠습니까?</DialogContentText>
-              <DialogContentText style={{ fontSize: '13px', color: 'red' }}>
+              <DialogContentText style={{ fontSize: '12px', color: 'red' }}>
                 *관련된 일정과 미디어도 모두 삭제됩니다.
               </DialogContentText>
             </DialogContent>
@@ -86,39 +89,37 @@ const PostShareTimeline = (props) => {
                 취소
               </Button>
               <Button
-                onClick={
-                  (async () => {
-                    try {
-                      const Success = (await axios.delete(`post/${data.postCd}`)).data;
-                      console.log(Success);
-                      if (Success) {
-                        setDialog(
-                          <AlertDialog
-                            severity='success'
-                            content='게시물이 삭제되었습니다.'
-                            duration={1000}
-                            onAlertClose={() => setDialog(null)}
-                          />
-                        );
-                      } else {
-                        setDialog(
-                          <AlertDialog
-                            severity='success'
-                            content='게시물 삭제 실패'
-                            duration={1000}
-                            onAlertClose={() => setDialog(null)}
-                          />
-                        );
-                      }
-                    } catch (e) {
-                      console.log(e);
+                onClick={async () => {
+                  try {
+                    const Success = (await axios.delete(`/post/${data.postCd}`)).data;
+                    console.log(Success);
+                    if (Success) {
                       setDialog(
-                        <AlertDialog severity='error' content='서버에러' onAlertClose={() => setDialog(null)} />
+                        <AlertDialog
+                          severity='success'
+                          content='게시물이 삭제되었습니다.'
+                          duration={1000}
+                          onAlertClose={() => {
+                            setMenuDialog(null);
+                            props.onPostDelete(data.postCd);
+                          }}
+                        />
+                      );
+                    } else {
+                      setDialog(
+                        <AlertDialog
+                          severity='success'
+                          content='게시물 삭제 실패'
+                          duration={1000}
+                          onAlertClose={() => setDialog(null)}
+                        />
                       );
                     }
-                  },
-                  () => setMenuDialog(null))
-                }
+                  } catch (e) {
+                    console.log(e);
+                    setDialog(<AlertDialog severity='error' content='서버에러' onAlertClose={() => setDialog(null)} />);
+                  }
+                }}
                 color='primary'
               >
                 확인
@@ -131,7 +132,7 @@ const PostShareTimeline = (props) => {
   };
 
   return (
-    <div className='timeline' style={{ marginBottom: '50px' }}>
+    <div className='timeline' style={data.groupFK !== null ? { borderTop: '4px solid tomato' } : null}>
       <div className='timeline-profile'>
         <div className='profile-picture'>
           <img alt={`${data.userFK.userId} img`} src={data.userFK.userPic} />
@@ -158,13 +159,21 @@ const PostShareTimeline = (props) => {
         <div className='time-line-picture-info'>
           <div
             className='timeline-shareForm'
-            onClick={() =>
-              setMenuDialog(
-                <Dialog open onClose={() => setMenuDialog(null)}>
-                  <Timeline data={postOriginData} user={props.user} />
-                </Dialog>
-              )
-            }
+            onClick={() => {
+              if (postOriginData.mediaFK !== null) {
+                return setMenuDialog(
+                  <Dialog open onClose={() => setMenuDialog(null)}>
+                    <Timeline data={postOriginData} user={props.user} />
+                  </Dialog>
+                );
+              } else if (postOriginData.scheduleFK !== null || postOriginData.shareScheduleList.length > 0) {
+                return setMenuDialog(
+                  <Dialog open onClose={() => setMenuDialog(null)}>
+                    <TimelineWeekSchedule data={postOriginData} user={props.user} />
+                  </Dialog>
+                );
+              } else return null;
+            }}
           >
             <>
               <div
@@ -178,7 +187,7 @@ const PostShareTimeline = (props) => {
                 }}
               >
                 <div className='timeline-share-userInfo'>
-                  <img alt={`${postOriginData.userFK.userId} img`} src={postOriginData.userFK.userPic} />
+                  <img alt={`${postOriginData.userFK.userId}-img`} src={postOriginData.userFK.userPic} />
                   <div>
                     {postOriginData.userFK.userId}({postOriginData.userFK.userNm})
                   </div>
@@ -198,7 +207,6 @@ const PostShareTimeline = (props) => {
                 }}
               >
                 <span style={{ paddingBottom: '8px' }}>
-                  {' '}
                   {postOriginData.scheduleFK === null ? null : postOriginData.scheduleFK.scheduleEx}
                 </span>
                 <div style={{ display: 'flex', overflowX: 'auto' }}>
@@ -282,11 +290,23 @@ const PostShareTimeline = (props) => {
         <div className='comment-context'>
           <div className='comment-reply' style={{ overflowY: 'auto' }}>
             {data.commentList.length > 0 ? (
-              <CommentList tData={data.commentList} user={props.user} />
+              <CommentList
+                tData={data.commentList}
+                user={props.user}
+                onSuccess={(commentInfo) => {
+                  console.log(commentInfo);
+                  setData(
+                    commentInfo.map((value) => ({
+                      ...data,
+                      commentList: value,
+                    }))
+                  );
+                }}
+              />
             ) : (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div className='recomment-reply-users-img'>
-                  <img alt={`${data.userFK.userId} img`} src={data.userFK.userPic} />
+                  <img alt={`${data.userFK.userId}`} src={data.userFK.userPic} />
                 </div>
                 <div style={{ fontWeight: 'bold', marginLeft: '5px' }}>
                   {data.userFK.userId}({data.userFK.userNm})
@@ -301,7 +321,6 @@ const PostShareTimeline = (props) => {
               <div className='likeIcon'>
                 <ThumbUpRoundedIcon
                   style={data.currentUserLikePost ? { color: 'rgba(20, 81, 51, 0.9)', fontSize: 25 } : { fontSize: 25 }}
-                  style={{ fontSize: 25 }}
                   onClick={async () => {
                     try {
                       if (data.currentUserLikePost === false) {
@@ -310,12 +329,32 @@ const PostShareTimeline = (props) => {
                             headers: { 'Content-Type': 'application/json' },
                           })
                         ).data;
-                        console.log(like);
+                        store.dispatch({
+                          type: 'SAVE_NOTICE',
+                          notice: {
+                            noticeType: 'POST_LIKE_NEW', // 이벤트 타입
+                            activeCd: props.user.userCd, // 이벤트 주체
+                            targetCd: data.postCd, // 이벤트 대상
+                          },
+                        });
+                        setData({
+                          ...data,
+                          currentUserLikePost: true,
+                          postLikeCount: data.postLikeCount + 1,
+                          postLikeFirstUser: data.postLikeFirstUser === null ? props.user : data.postLikeFirstUser,
+                        });
                       } else {
                         const unLike = (
                           await axios.delete(`/post/${data.postCd}/unLike`, { params: { userCd: props.user.userCd } })
                         ).data;
-                        console.log(unLike);
+                        setData({
+                          ...data,
+                          currentUserLikePost: false,
+                          postLikeCount: data.postLikeCount - 1,
+                          postLikeFirstUser:
+                            data.postLikeFirstUser.userCd === props.user.userCd ? null : data.postLikeForstUser,
+                          // data.postLikeFirstUser.userCd === props.user.userCd ? 다음 사람의 데이터...ㅠ : data.postLikeForstUser,
+                        });
                       }
                     } catch (e) {
                       console.log(e);
@@ -327,20 +366,23 @@ const PostShareTimeline = (props) => {
                 />
               </div>
               {data.postLikeCount < 1 ? (
-                <div className='comment-title'>첫번째 좋아요를 눌러주세욤</div>
+                <div className='comment-title-none'>첫번째 좋아요를 눌러주세욤</div>
               ) : data.postLikeCount === 1 ? (
-                <div className='comment-title'>{`${data.postLikeFirstUser.userId}(${data.postLikeFirstUser.userNm}) 님이 좋아합니다`}</div>
+                <div
+                  className='comment-title'
+                  onClick={() => setLikePersonList(true)}
+                >{`${data.postLikeFirstUser.userId}(${data.postLikeFirstUser.userNm}) 님이 좋아합니다`}</div>
               ) : (
-                <div className='comment-title'>{`${data.postLikeFirstUser.userId}(${
-                  data.postLikeFirstUser.userNm
-                }) 님 외 ${data.postLikeCount - 1}명이 좋아합니다`}</div>
+                <div className='comment-title' onClick={() => setLikePersonList(true)}>{`${
+                  data.postLikeFirstUser.userId
+                }(${data.postLikeFirstUser.userNm}) 님 외 ${data.postLikeCount - 1}명이 좋아합니다`}</div>
               )}
             </div>
           </div>
           <div className='comment-write'>
             <CommentTimeline
               user={props.user}
-              // postCd={data.postCd}
+              postCd={data.postCd}
               onSuccess={(commentInfo) => {
                 setData({
                   ...data,
@@ -351,6 +393,8 @@ const PostShareTimeline = (props) => {
           </div>
         </div>
       </div>
+      {likePersonList ? <LikePersonList postCd={data.postCd} onCancel={() => setLikePersonList(false)} /> : null}
+
       {menuDialog}
       {dialog}
     </div>

@@ -54,7 +54,7 @@ const SearchFieldResult = (props) => {
       return (
         <li key={value.userInfo.userId} key={value.userInfo.userId}>
           <div className='follower_list'>
-            <Link to={`/profile/${value.userInfo.userId}`}>
+            <Link to={`/${value.userInfo.userId}`}>
               <div
                 style={{
                   display: 'flex',
@@ -100,6 +100,11 @@ const SearchFieldResult = (props) => {
                             const copyList = userList.slice();
                             copyList[index] = { ...value, userFollowTarget: true };
                             setUserList(copyList);
+                            props.onSaveNotice({
+                              noticeType: 'FOLLOW_NEW', // 이벤트 타입
+                              activeCd: props.userCd, // 이벤트 주체
+                              targetCd: value.userInfo.userCd, // 이벤트 대상
+                            });
                             // props.onSaveFriend(value);
                             return;
                           } else {
@@ -238,6 +243,11 @@ const SearchFieldResult = (props) => {
                             });
                             console.log(data);
                             if (data) {
+                              props.onSaveNotice({
+                                noticeType: 'GROUP_APPLY_COME', // 이벤트 타입
+                                activeCd: props.userCd, // 이벤트 주체
+                                targetCd: value.groupCd, // 이벤트 대상
+                              });
                               setAlertDialog(
                                 <Snackbar
                                   severity='success'
@@ -273,7 +283,7 @@ const SearchFieldResult = (props) => {
                           return;
                         }}
                       >
-                        <HowToRegIcon style={{ fontSize: '20px' }} />
+                        <AddIcon style={{ fontSize: '20px' }} />
                       </FollowButton>
                     );
                   } else {
@@ -323,7 +333,7 @@ const SearchFieldResult = (props) => {
                           }
                         }}
                       >
-                        <AddIcon style={{ fontSize: '20px' }} />
+                        <HowToRegIcon style={{ fontSize: '20px' }} />
                       </FollowButton>
                     );
                   }
@@ -338,7 +348,7 @@ const SearchFieldResult = (props) => {
 
   return (
     <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }} onClose={() => props.onCancel()}>
-      <div className='searchField-result'>
+      <div>
         <div className='searchField-title' style={{ display: 'flex', alignItems: 'center' }}>
           <SearchIcon
             style={{
@@ -351,25 +361,23 @@ const SearchFieldResult = (props) => {
           </div>
         </div>
         <hr />
-        <div className='searchField-result-list'>
-          <div className='group-follow_change'>
-            <div>
-              <Paper square style={{ marginBottom: '10px' }}>
-                <Tabs
-                  value={clickTab}
-                  indicatorColor='primary'
-                  textColor='primary'
-                  onChange={(e, newValue) => setClickTab(newValue)}
-                  aria-label='disabled tabs example'
-                >
-                  <Tab label='Follow' icon={<HowToRegIcon />} />
-                  <Tab label='Group' icon={<GroupIcon />} />
-                </Tabs>
-              </Paper>
-            </div>
-            <div className='follower_list'>
-              <ul>{clickTab === 0 ? exfollowList() : exGroupList()}</ul>
-            </div>
+        <div className='group-follow_change'>
+          <div>
+            <Paper square style={{ marginBottom: '10px' }}>
+              <Tabs
+                value={clickTab}
+                indicatorColor='primary'
+                textColor='primary'
+                onChange={(e, newValue) => setClickTab(newValue)}
+                aria-label='disabled tabs example'
+              >
+                <Tab label='Follow' icon={<HowToRegIcon />} />
+                <Tab label='Group' icon={<GroupIcon />} />
+              </Tabs>
+            </Paper>
+          </div>
+          <div className='searchField-result-list' style={{ width: '348px' }}>
+            <ul>{clickTab === 0 ? exfollowList() : exGroupList()}</ul>
           </div>
         </div>
       </div>

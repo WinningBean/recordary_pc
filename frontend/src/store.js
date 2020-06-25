@@ -1,23 +1,19 @@
 import { createStore } from 'redux';
 
+const defaultValue = {
+  isLogin: false,
+  user: {},
+  friendList: undefined,
+  groupList: undefined,
+  notice: null,
+};
 const reducer = (state, action) => {
   if (state === undefined) {
-    return {
-      isLogin: false,
-      user: {},
-      friendList: undefined,
-      groupList: undefined,
-    };
+    return defaultValue;
   }
   switch (action.type) {
     case 'INIT':
-      return {
-        isLogin: false,
-        user: {},
-        friendList: undefined,
-        groupList: undefined,
-        postList: undefined,
-      };
+      return defaultValue;
     case 'CONNECT_SESSION':
       return {
         ...state,
@@ -81,6 +77,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         friendList: state.friendList === undefined ? state.friendList : state.friendList.concat(action.friend),
+      };
+    case 'SAVE_NOTICE':
+      return {
+        ...state,
+        notice: action.notice,
       };
     // case 'SAVE_GROUP':
     //   return {

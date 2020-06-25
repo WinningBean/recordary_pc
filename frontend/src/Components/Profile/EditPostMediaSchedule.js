@@ -28,6 +28,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import AddIcon from '@material-ui/icons/Add';
 import * as dateFns from 'date-fns';
+import { addHours, startOfDay, endOfDay, startOfSecond } from 'date-fns';
 
 import axios from 'axios';
 import store from '../../store';
@@ -89,7 +90,17 @@ const EditPostMediaSchedule = (props) => {
     postPublicState: data.postPublicState === 0 ? 0 : data.postPublicState,
   });
 
-  const [scheduleInfo, setScheduleInfo] = useState(props.data.scheduleFK);
+  const [scheduleInfo, setScheduleInfo] = useState({
+    tabCd: data.scheduleFK === null ? null : null,
+    userCd: data.userCd,
+    scheduleCol: data.scheduleFK === null ? 'rgba(20, 81, 51, 0.9)' : data.scheduleFK.scheduleCol,
+    scheduleNm: data.scheduleFK === null ? null : data.scheduleFK.scheduleNm,
+    scheduleEx: data.scheduleFK === null ? null : data.scheduleFK.scheduleEx,
+    scheduleStr: data.scheduleFK === null ? new Date() : data.scheduleFK.scheduleStr,
+    scheduleEnd: data.scheduleFK === null ? addHours(new Date(), 1) : data.scheduleFK.scheduleEnd,
+    schedulePublicState: data.scheduleFK === null ? 0 : data.scheduleFK.schedulePublicState,
+    scheduleMemberList: data.scheduleFK === null ? [] : data.scheduleFK.scheduleMemberList,
+  });
   const [subtractedSchedule, setSubtractedSchedule] = useState([]);
   const [addedSchedule, setAddedSchedule] = useState([]);
 
@@ -221,15 +232,16 @@ const EditPostMediaSchedule = (props) => {
 
       console.log(postData);
 
-      if (postData) {
+      if (postData === post.postCd) {
         setAlert(
           <AlertDialog
             severity='success'
             content='게시물이 수정되었습니다.'
-            onAlertClose={(() => setAlert(null), () => props.onCancel())}
+            onAlertClose={
+              (() => setAlert(null), () => props.onCancel(), () => setTimeout(() => window.location.reload(), 1000))
+            }
           />
         );
-        console.log(store.getState());
       } else {
         setAlert(<Snackbar severity='error' content='게시물을 수정하지 못했습니다.' onClose={() => setAlert(null)} />);
       }
@@ -254,7 +266,7 @@ const EditPostMediaSchedule = (props) => {
           transitionProperty: 'background-color',
           transitionDuration: '0.3s',
           transitionTimingFunction: 'ease-out',
-          backgroundColor: scheduleInfo.scheduleCol,
+          backgroundColor: props.data.scheduleFK === null ? 'rgba(20, 81, 51, 0.9)' : scheduleInfo.scheduleCol,
         }}
       >
         <div className='Post-Append-titleName'>
@@ -266,7 +278,7 @@ const EditPostMediaSchedule = (props) => {
       <div className='Post-Media-Schedule-Append-Form '>
         <div className='Post-Append-Group' style={{ marginLeft: '12px' }}>
           <div>
-            {props.groupList === undefined ? (
+            {post.groupCd === null ? (
               <SelectGroup options={['그룹없음']} />
             ) : (
               <SelectGroup
@@ -276,7 +288,17 @@ const EditPostMediaSchedule = (props) => {
             )}
           </div>
           <div className='schedule-media-button '>
-            {data.scheduleFK.scheduleMemberList.length > 0 ? (
+            {data.scheduleFK === null ? (
+              <PublicRange
+                onSetSelectedIndex={(index) => {
+                  if (scheduleOpen) {
+                    setScheduleInfo({ ...scheduleInfo, schedulePublicState: index });
+                  }
+                  setPost({ ...post, postPublicState: index });
+                }}
+                selectedIndex={data.postPublicState}
+              />
+            ) : data.scheduleFK.scheduleMemberList.length > 0 ? (
               <PublicRange
                 options={['전체공개', '비공개']}
                 onSetSelectedIndex={(index) => {
@@ -294,38 +316,42 @@ const EditPostMediaSchedule = (props) => {
                 selectedIndex={scheduleInfo.schedulePublicState}
               />
             )}
-            <div className='plus-button-design' onClick={() => setScheduleOpen(!scheduleOpen)}>
-              {(() => {
-                if (scheduleOpen === false) {
-                  return (
-                    <div className='plus-button-design-2'>
-                      <DateRangeIcon style={{ fontSize: '30px' }} />
-                      <span style={{ fontSize: '15px', marginLeft: '5px' }}>일정추가</span>
-                    </div>
-                  );
-                } else {
-                  return (
+            {data.shareScheduleList.length > 0 ? null : (
+              <>
+                <div className='plus-button-design' onClick={() => setScheduleOpen(!scheduleOpen)}>
+                  {(() => {
+                    if (scheduleOpen === false) {
+                      return (
+                        <div className='plus-button-design-2'>
+                          <DateRangeIcon style={{ fontSize: '30px' }} />
+                          <span style={{ fontSize: '15px', marginLeft: '5px' }}>일정추가</span>
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div className='plus-button-design-2 clicked'>
+                          <DateRangeIcon style={{ fontSize: '30px' }} />
+                          <span style={{ fontSize: '15px', marginLeft: '5px' }}>일정추가</span>
+                        </div>
+                      );
+                    }
+                  })()}
+                </div>
+                <div className='plus-button-design' onClick={mediaOpenClick}>
+                  {mediaOpen === true ? (
                     <div className='plus-button-design-2 clicked'>
-                      <DateRangeIcon style={{ fontSize: '30px' }} />
-                      <span style={{ fontSize: '15px', marginLeft: '5px' }}>일정추가</span>
+                      <PhotoIcon style={{ fontSize: '30px' }} />
+                      <span style={{ fontSize: '15px', marginLeft: '10px' }}>미디어</span>
                     </div>
-                  );
-                }
-              })()}
-            </div>
-            <div className='plus-button-design' onClick={mediaOpenClick}>
-              {mediaOpen === true ? (
-                <div className='plus-button-design-2 clicked'>
-                  <PhotoIcon style={{ fontSize: '30px' }} />
-                  <span style={{ fontSize: '15px', marginLeft: '10px' }}>미디어</span>
+                  ) : (
+                    <div className='plus-button-design-2 '>
+                      <PhotoIcon style={{ fontSize: '30px' }} />
+                      <span style={{ fontSize: '15px', marginLeft: '10px' }}>미디어</span>
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <div className='plus-button-design-2 '>
-                  <PhotoIcon style={{ fontSize: '30px' }} />
-                  <span style={{ fontSize: '15px', marginLeft: '10px' }}>미디어</span>
-                </div>
-              )}
-            </div>
+              </>
+            )}
           </div>
         </div>
         <div className='Post-Append-text post-Append'>
@@ -350,7 +376,6 @@ const EditPostMediaSchedule = (props) => {
             </div>
           </Dialog>
         ) : null}
-
         {scheduleOpen === false ? null : (
           <div onClose={() => setScheduleOpen(null)}>
             <div className='Post-Append-title post-Append'>

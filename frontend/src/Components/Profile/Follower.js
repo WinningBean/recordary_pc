@@ -14,26 +14,7 @@ class Follower extends React.Component {
     super(props);
     this.state = {
       keyword: '',
-      userFollower: [
-        {
-          follower_cd: 1,
-          follower_nm: '팔로워1',
-          follower_pic: 'http://placehold.it/40x40',
-          follower_click: false,
-        },
-        {
-          follower_cd: 2,
-          follower_nm: '팔로워2',
-          follower_pic: 'http://placehold.it/40x40',
-          follower_click: false,
-        },
-        {
-          follower_cd: 3,
-          follower_nm: '팔로워3',
-          follower_pic: 'http://placehold.it/40x40',
-          follower_click: false,
-        },
-      ],
+      userFollower: null,
     };
   }
 
@@ -59,62 +40,93 @@ class Follower extends React.Component {
   };
 
   render() {
-    const followers = this.state.userFollower.map((value, index) => {
-      return (
-        <li key={value.follower_cd}>
-          <div className='follower_list'>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                marginBottom: '10px',
-              }}
-            >
-              <img
-                alt='friend-img'
+    console.log(this.state.userFollower);
+
+    var followers = undefined;
+    if (this.state.userFollower === null) {
+      var loadingList = [];
+      for (let i = 0; i < 8; i++) {
+        loadingList.push(
+          <li map={i}>
+            <div className='follower_list'>
+              <div
                 style={{
-                  marginRight: '10px',
-                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
                 }}
-                src={'http://placehold.it/40x40'}
-              />
-              {`${value.userId}(${value.userNm})`}
+              >
+                <div
+                  style={{
+                    marginRight: '10px',
+                    borderRadius: '50%',
+                    height: '40px',
+                    width: '40px',
+                    backgroundColor: 'lightgray',
+                  }}
+                />
+                <span style={{ backgroundColor: 'lightgray', color: 'transparent' }}>This is Loading</span>
+              </div>
+              <div style={{ height: '40px', width: '40px', padding: '6px 8px', backgroundColor: 'lightgray' }} />
             </div>
-            <div>
-              {(() => {
-                if (value.follower_click) {
-                  return (
-                    <FollowButton onClick={() => this.followerChange(index, !value.follower_click)}>
-                      <AddIcon style={{ fontSize: '20px;' }} />
-                    </FollowButton>
-                  );
-                } else {
-                  return (
-                    <FollowButton onClick={() => this.followerChange(index, !value.follower_click)}>
-                      <HowToRegIcon style={{ fontSize: '20px;' }} />
-                    </FollowButton>
-                  );
-                }
-              })()}
+          </li>
+        );
+      }
+      followers = loadingList;
+    } else {
+      followers = this.state.userFollower.map((value, index) => {
+        return (
+          <li key={value.follower_cd}>
+            <div className='follower_list'>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                <img
+                  alt='friend-img'
+                  style={{
+                    marginRight: '10px',
+                    borderRadius: '50%',
+                    height: '40px',
+                    width: '40px',
+                  }}
+                  src={value.userPic}
+                />
+                {`${value.userId}(${value.userNm})`}
+              </div>
+              <div>
+                {(() => {
+                  if (value.follower_click) {
+                    return (
+                      <FollowButton onClick={() => this.followerChange(index, !value.follower_click)}>
+                        <AddIcon style={{ fontSize: '20px;' }} />
+                      </FollowButton>
+                    );
+                  } else {
+                    return (
+                      <FollowButton onClick={() => this.followerChange(index, !value.follower_click)}>
+                        <HowToRegIcon style={{ fontSize: '20px;' }} />
+                      </FollowButton>
+                    );
+                  }
+                })()}
+              </div>
             </div>
-          </div>
-        </li>
-      );
-    });
+          </li>
+        );
+      });
+    }
     return (
       <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }} onClose={() => this.props.onCancel()}>
         <div className='searchField-result'>
           <div className='searchField-title'>
             {/* {this.props.value}에 대한 검색 결과 */}
-            {this.props.isFollower ? 'Follower' : 'Following'}
+            {this.props.isFollower ? 'Follower' : 'Follow'}
           </div>
           <hr />
           <div className='searchField-result-list'>
-            <div className='follower_list'>
-              <div>
-                <ul>{followers}</ul>
-              </div>
-            </div>
+            <ul>{followers}</ul>
           </div>
         </div>
       </Dialog>

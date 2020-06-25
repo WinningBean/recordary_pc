@@ -22,6 +22,7 @@
     "immer": "^6.0.3",
     "material-ui-popup-state": "^1.5.4",
     "moment": "^2.24.0",
+    "notistack": "^0.9.17",
     "react": "^16.13.1",
     "react-color": "^2.18.0",
     "react-dom": "^16.13.1",
@@ -31,6 +32,8 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.4.1",
     "redux": "^4.0.5",
+    "sockjs-client": "^1.4.0",
+    "stompjs": "^2.3.3",
     "styled-components": "^5.1.0",
     "use-immer": "^0.3.5"
   },

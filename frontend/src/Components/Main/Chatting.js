@@ -4,11 +4,15 @@ import { format, isSameDay } from 'date-fns';
 import SearchIcon from '@material-ui/icons/Search';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import SubdirectoryArrowLeftIcon from '@material-ui/icons/SubdirectoryArrowLeft';
+import AddIcon from '@material-ui/icons/Add';
+
+import Button from '@material-ui/core/Button';
 
 const Chatting = ({ isOpen }) => {
   const [searchText, setSearchText] = useState('');
   const [writedMessage, setWritedMessage] = useState('');
   const [selectedUser, setSelectedUser] = useState(undefined);
+  const [isAddChatRoom, setIsAddChatRoom] = useState(false);
   const textareaRef = React.createRef();
   const chatListRef = React.createRef();
 
@@ -215,6 +219,59 @@ const Chatting = ({ isOpen }) => {
     setWritedMessage('');
   };
 
+  const AddChatRoom = () => {
+    return (
+      <div
+        className='transition-all chatting-list'
+        style={
+          !isAddChatRoom
+            ? { transform: 'translateX(100%)', opacity: 0 }
+            : { transform: 'translateX(0)', opacity: '100%' }
+        }
+      >
+        <div
+          style={{
+            height: '20%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            fontSize: '32px',
+            fontWeight: 'bold',
+          }}
+        >
+          채팅방 생성
+        </div>
+        <div
+          style={{
+            height: '60%',
+            margin: '0px 14px',
+            border: '1px solid #eee',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <div style={{ display: 'relative', width: '50%', height: 'fit-content' }}>
+            <img
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              src='https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/group/basic.png'
+              alt='이미지'
+            />
+            <div style={{ display: 'absolute', bottom: '0', textAlign: 'center' }}>김길동</div>
+          </div>
+        </div>
+        <div className='flex-center' style={{ height: '20%', justifyContent: 'space-evenly' }}>
+          <Button color='primary' variant='contained' size='large'>
+            생성
+          </Button>
+          <Button color='secondary' variant='contained' size='large' onClick={() => setIsAddChatRoom(false)}>
+            취소
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
   const chatListView = () => {
     var value = undefined;
     for (let i = 0; i < chatList.length; i++) {
@@ -227,7 +284,11 @@ const Chatting = ({ isOpen }) => {
     return (
       <div
         className='transition-all chatting-list'
-        style={selectedUser === undefined ? { width: '0' } : { width: '100%' }}
+        style={
+          selectedUser === undefined
+            ? { transform: 'translateX(100%)', opacity: 0 }
+            : { transform: 'translateX(0)', opacity: '100%' }
+        }
       >
         {selectedUser === undefined || value === undefined ? null : (
           <>
@@ -437,17 +498,17 @@ const Chatting = ({ isOpen }) => {
       style={
         isOpen
           ? {
-              top: `-${window.innerHeight * 0.75 + 20}px`,
-              right: '-40px',
-              width: `${window.innerWidth * 0.2}px`,
-              height: `${window.innerHeight * 0.75}px`,
+              opacity: '100%',
+              transform: 'translateX(0)',
+              width: '300px',
+              height: '550px',
               boxShadow: `0px 1px 5px rgba(161, 159, 159, 0.8)`,
             }
           : {
-              top: `-${window.innerHeight * 0.75 + 20}px`,
-              right: '-40px',
-              width: '0',
-              height: `${window.innerHeight * 0.75}px`,
+              opacity: 0,
+              transform: 'translateX(300px)',
+              width: '300px',
+              height: '550px',
               overflow: 'hidden',
             }
       }
@@ -466,11 +527,29 @@ const Chatting = ({ isOpen }) => {
           borderTopLeftRadius: '5px',
           borderTopRightRadius: '5px',
           color: 'white',
+          position: 'relative',
         }}
       >
         Chatting
       </div>
-      <div style={{ height: '7%', backgroundColor: '#fff', display: 'flex' }}>
+      <div
+        style={{
+          position: 'absolute',
+          right: 0,
+          top: 0,
+          height: '64.72px',
+          width: '64.72px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          color: 'white',
+          cursor: 'pointer',
+        }}
+        onClick={() => setIsAddChatRoom(true)}
+      >
+        <AddIcon fontSize='large' />
+      </div>
+      <div style={{ height: '7%', backgroundColor: '#fff', display: 'flex', borderBottom: '1px solid #eee' }}>
         <div style={{ display: 'flex', alignItems: 'center', margin: '0px 3px' }}>
           <SearchIcon />
         </div>
@@ -482,6 +561,7 @@ const Chatting = ({ isOpen }) => {
       </div>
       <div style={{ display: 'flex', height: '85%', flexDirection: 'column' }}>{listView()}</div>
       {chatListView()}
+      {AddChatRoom()}
     </div>
   );
 };

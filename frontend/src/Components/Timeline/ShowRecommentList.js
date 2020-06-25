@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import produce from 'immer';
 
@@ -26,16 +26,26 @@ const SendButton = styled(Button)({
   height: '20px',
 });
 
-export default ({ list, user }) => {
+export default ({ list, user, onSuccess }) => {
+  useEffect(() => {
+    console.log(list);
+    setData(
+      list.map((value) => ({
+        ...value,
+        updateClick: false,
+      }))
+    );
+  }, [list]);
+
   const [dialog, setDialog] = useState(null);
   const [writeRecomment, setWriteRecomment] = useState('');
   const [updateRecomment, setUpdateRecomment] = useState('');
+  const [deleteClick, setDeleteClick] = useState(false);
 
   const [data, setData] = useState(
     list.map((value) => ({
       ...value,
       updateClick: false,
-      deleteClick: false,
     }))
   );
 
@@ -45,7 +55,7 @@ export default ({ list, user }) => {
     <div key={`${val.commentCd}-${i}`}>
       <div className='comment-reply-users more-recomment-reply-users'>
         <div className='recomment-reply-users-img'>
-          <img alt={`${val.userFK.userCd} img`} src={val.userFK.userPic} />
+          <img alt={`${val.userFK.userCd}`} src={val.userFK.userPic} />
         </div>
         <div className='comment-reply-users-name'>
           <span style={{ fontWeight: 'bold', fontSize: '12px', marginRight: '5px' }}>
@@ -131,21 +141,7 @@ export default ({ list, user }) => {
                     }}
                   />
                   <ClearIcon
-                    onClick={() => {
-                      setData(
-                        data.map((val, listIndex) => {
-                          if (i === listIndex) {
-                            return produce(val, (draft) => {
-                              draft.deleteClick = !draft.deleteClick;
-                            });
-                          } else {
-                            return produce(val, (draft) => {
-                              draft.deleteClick = draft.deleteClick;
-                            });
-                          }
-                        })
-                      );
-                    }}
+                    onClick={() => setDeleteClick(true)}
                     style={{
                       color: 'gray',
                       fontSize: '20',
@@ -160,62 +156,40 @@ export default ({ list, user }) => {
         </div>
       </div>
       <Dialog
-        open={val.deleteClick}
-        onClose={() =>
-          setData(
-            data.map((val, listIndex) => {
-              if (i === listIndex) {
-                return produce(val, (draft) => {
-                  draft.deleteClick = !draft.deleteClick;
-                });
-              } else {
-                return produce(val, (draft) => {
-                  draft.deleteClick = draft.deleteClick;
-                });
-              }
-            })
-          )
-        }
+        open={deleteClick}
+        onClose={() => setDeleteClick(false)}
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
       >
         <DialogTitle id='alert-dialog-title'>댓글 삭제</DialogTitle>
         <DialogContent>
           <DialogContentText id='alert-dialog-description'>댓글을 삭제하시겠습니까?</DialogContentText>
+          <DialogContentText style={{ color: 'red', fontSize: '12px' }}>
+            *관련된 댓글도 모두 삭제됩니다.
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={() =>
-              setData(
-                data.map((val, listIndex) => {
-                  if (i === listIndex) {
-                    return produce(val, (draft) => {
-                      draft.deleteClick = !draft.deleteClick;
-                    });
-                  } else {
-                    return produce(val, (draft) => {
-                      draft.deleteClick = draft.deleteClick;
-                    });
-                  }
-                })
-              )
-            }
-            color='primary'
-          >
+          <Button onClick={() => setDeleteClick(false)} color='primary'>
             취소
           </Button>
           <Button
             onClick={async () => {
               try {
-                const recommentDeletedCd = (await axios.delete(`/comment/${val.commentCd}`)).data;
-                console.log(recommentDeletedCd);
-                setDialog(
-                  <AlertDialog
-                    severity='success'
-                    content='댓글을 삭제하였습니다.'
-                    onAlertClose={() => setDialog(null)}
-                  />
-                );
+                const recommentDeleted = (await axios.delete(`/comment/${val.commentCd}`)).data;
+                console.log(recommentDeleted);
+                if (recommentDeleted) {
+                  const copyList = data.slice();
+                  copyList.splice(i, 1);
+                  setData(copyList);
+                  onSuccess(copyList);
+                  setDialog(
+                    <AlertDialog
+                      severity='success'
+                      content='댓글을 삭제하였습니다.'
+                      onAlertClose={() => setDialog(null)}
+                    />
+                  );
+                }
               } catch (e) {
                 console.log(e);
                 setDialog(
@@ -226,19 +200,7 @@ export default ({ list, user }) => {
                   />
                 );
               }
-              setData(
-                data.map((val, listIndex) => {
-                  if (i === listIndex) {
-                    return produce(val, (draft) => {
-                      draft.deleteClick = !draft.deleteClick;
-                    });
-                  } else {
-                    return produce(val, (draft) => {
-                      draft.deleteClick = draft.deleteClick;
-                    });
-                  }
-                })
-              );
+              setDeleteClick(false);
             }}
             color='primary'
             autoFocus

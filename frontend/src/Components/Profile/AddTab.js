@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import AlertDialog from '../Other/AlertDialog';
 import Snackbar from '../UI/Snackbar';
+import { rgbToHex } from '../Other/ColorTransfer';
 
 import { Dialog, DialogActions, Button, TextField } from '@material-ui/core';
 import { styled } from '@material-ui/core/styles';
@@ -66,12 +67,12 @@ const AddTab = ({ onClose, userCd, onSuccess }) => {
             try {
               const { data } = await axios.post('/tab/create', {
                 userCd: userCd,
-                tabCol: `rgb(${color.r},${color.g},${color.b})`,
+                tabCol: rgbToHex(color.r, color.g, color.b),
                 tabNm: tabNm,
               });
               onSuccess({
                 scheduleTabCd: data,
-                scheduleTabColor: `rgb(${color.r},${color.g},${color.b})`,
+                scheduleTabColor: rgbToHex(color.r, color.g, color.b),
                 scheduleTabNm: tabNm,
               });
             } catch (error) {

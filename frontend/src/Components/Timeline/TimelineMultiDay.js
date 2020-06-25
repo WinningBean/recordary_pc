@@ -7,14 +7,14 @@ import CloseIcon from '@material-ui/icons/Close';
 import Dialog from '@material-ui/core/Dialog';
 import * as dateFns from 'date-fns';
 
-const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEndDay }) => {
+const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) => {
   const [currentMonth, setCurrentMonth] = useState(dateFns.startOfMonth(sharedStartDay));
   const [dayLocation, setDayLocation] = useState(null);
   const [clickSc, setClickSc] = useState(undefined);
   const [clickPic, setClickPic] = useState(undefined);
 
   const CalendarHeader = useMemo(() => {
-    console.log('render header');
+    // console.log('render header');
     return (
       <div className='calendar-header' style={{ height: '25px' }}>
         <div className='calendar-header-side'>
@@ -26,7 +26,7 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
                 alignItems: 'center',
                 minWidth: '40px',
                 height: '25px',
-                color: '#4444'
+                color: '#4444',
               }}
             >
               <LeftIcon />
@@ -38,7 +38,7 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
                 justifyContent: 'center',
                 alignItems: 'center',
                 minWidth: '40px',
-                height: '25px'
+                height: '25px',
               }}
               onClick={() => setCurrentMonth(dateFns.subMonths(currentMonth, 1))}
             >
@@ -58,7 +58,7 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
                 alignItems: 'center',
                 minWidth: '40px',
                 height: '25px',
-                color: '#4444'
+                color: '#4444',
               }}
             >
               <RightIcon />
@@ -70,7 +70,7 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
                 justifyContent: 'center',
                 alignItems: 'center',
                 minWidth: '40px',
-                height: '25px'
+                height: '25px',
               }}
               onClick={() => setCurrentMonth(dateFns.addMonths(currentMonth, 1))}
             >
@@ -83,7 +83,7 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
   }, [currentMonth, sharedStartDay, sharedEndDay]);
 
   const CalendarDays = useMemo(() => {
-    console.log('render day');
+    // console.log('render day');
     const days = [];
 
     let startDate = dateFns.startOfWeek(new Date());
@@ -108,7 +108,7 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
   }, []);
 
   const Cells = useMemo(() => {
-    console.log('render cells');
+    // console.log('render cells');
     const today = new Date();
     const monthStart = currentMonth;
     const monthEnd = dateFns.endOfMonth(monthStart);
@@ -123,7 +123,7 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
 
     const location = [];
     var x = 0;
-    var y = 20;
+    var y = 2;
     // var x = 68.43;
     // var y = 56;
 
@@ -144,7 +144,7 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
             style={
               dateFns.isWithinInterval(day, {
                 start: dateFns.startOfDay(sharedStartDay),
-                end: dateFns.endOfDay(sharedEndDay)
+                end: dateFns.endOfDay(sharedEndDay),
               })
                 ? { borderRight: 'none', width: '68.43px', height: '56px' }
                 : { width: '68.43px', height: '56px' }
@@ -156,36 +156,30 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
             {/* <span className='bg'>{formattedDate}</span> */}
             {dateFns.isWithinInterval(day, {
               start: dateFns.startOfDay(sharedStartDay),
-              end: dateFns.endOfDay(sharedEndDay)
+              end: dateFns.endOfDay(sharedEndDay),
             }) ? (
               <>
                 <div
                   style={{
-                    height: '15px',
+                    height: '100%',
+                    width: '100%',
                     textAlign: 'center',
-                    fontSize: '9px',
-                    fontWeight: 'bold',
-                    backgroundColor: 'rgba(20, 81, 51, 0.6)',
-                    lineHeight: '1.7',
-                    color: 'white'
+                    fontSize: '38px',
+                    lineHeight: '160%',
+                    color: '#ddd',
                   }}
                 >
                   {formattedDate}
                 </div>
-                <div style={{ height: '100%', borderRight: '1px solid lightgray' }} />
               </>
             ) : (
               <div
                 style={{
-                  height: '15px',
-                  textAlign: 'center',
-                  fontSize: '9px',
-                  fontWeight: 'bold',
-                  lineHeight: '1.7'
+                  height: '100%',
+                  width: '100%',
+                  backgroundColor: 'white',
                 }}
-              >
-                {formattedDate}
-              </div>
+              ></div>
             )}
 
             <div className='more' />
@@ -196,9 +190,9 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
         location.push({
           x,
           y,
-          day
+          day,
         });
-        x += 68.43;
+        x += 67.14;
         day = dateFns.addDays(day, 1);
       }
       y += 56;
@@ -214,7 +208,7 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
     return rows;
   }, [currentMonth, sharedEndDay, sharedStartDay]);
 
-  const Schedual = () => {
+  const Schedule = () => {
     if (dayLocation === null) return null;
     if (!dateFns.isSameMonth(dayLocation[parseInt(dayLocation.length / 2)].day, currentMonth)) return null;
 
@@ -234,15 +228,16 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
       overlap.push(0);
     }
 
-    sharedSchedual.forEach((schedualValue, schedualIndex) => {
+    sharedSchedule.forEach((scheduleValue, scheduleIndex) => {
       var isBeforeStartDay = false;
-      if (!dateFns.isWithinInterval(schedualValue.start, { start: startDate, end: endDate })) {
-        if (!dateFns.isWithinInterval(schedualValue.end, { start: startDate, end: endDate })) return;
+      if (!dateFns.isWithinInterval(Date.parse(scheduleValue.scheduleStr), { start: startDate, end: endDate })) {
+        if (!dateFns.isWithinInterval(Date.parse(scheduleValue.scheduleEnd), { start: startDate, end: endDate }))
+          return;
         index = 0;
         isBeforeStartDay = true;
       } else {
         for (let i = 0; i < dayLocation.length; i++) {
-          if (dateFns.isSameDay(dayLocation[i].day, schedualValue.start)) {
+          if (dateFns.isSameDay(dayLocation[i].day, Date.parse(scheduleValue.scheduleStr))) {
             index = i;
             break;
           }
@@ -251,12 +246,12 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
 
       if (index === undefined) return;
 
-      const color = schedualValue.color;
+      const color = scheduleValue.scheduleCol;
 
-      var diffCount = dateFns.differenceInCalendarWeeks(schedualValue.end, dayLocation[index].day);
+      var diffCount = dateFns.differenceInCalendarWeeks(Date.parse(scheduleValue.scheduleEnd), dayLocation[index].day);
 
       if (diffCount > 0) {
-        console.log(`${dayLocation[index].day}-${overlap[index]}`);
+        // console.log(`${dayLocation[index].day}-${overlap[index]}`);
         sc.push(
           <div
             key={`${dayLocation[index].day}-${overlap[index]}`}
@@ -268,11 +263,10 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
               height: `${size}px`,
               backgroundColor: `${color}80`,
               borderRadius: '4px',
-              marginLeft: '5px',
               borderLeft: isBeforeStartDay === false ? `3px solid ${color}` : null,
-              cursor: 'pointer'
+              cursor: 'pointer',
             }}
-            onClick={() => setClickSc(schedualIndex)}
+            onClick={() => setClickSc(scheduleIndex)}
           />
         );
         const endOfWeek = dateFns.endOfWeek(dayLocation[index].day);
@@ -283,10 +277,10 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
         }
 
         for (var i = 1; i < diffCount; i++) {
-          if (dateFns.addWeeks(schedualValue.start, i) > endDate) {
+          if (dateFns.addWeeks(Date.parse(scheduleValue.scheduleStr), i) > endDate) {
             return;
           }
-          console.log(`${dayLocation[index].day}-${overlap[index]}`);
+          // console.log(`${dayLocation[index].day}-${overlap[index]}`);
           sc.push(
             <div
               key={`${dayLocation[index].day}-${overlap[index]}`}
@@ -297,11 +291,10 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
                 width: `470px`,
                 height: `${size}px`,
                 backgroundColor: `${color}80`,
-                marginLeft: '5px',
                 borderRadius: '4px',
-                cursor: 'pointer'
+                cursor: 'pointer',
               }}
-              onClick={() => setClickSc(schedualIndex)}
+              onClick={() => setClickSc(scheduleIndex)}
             />
           );
 
@@ -310,11 +303,13 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
             ++index;
           }
         }
-        if (dateFns.addWeeks(schedualValue.start, i) > endDate) {
+        if (dateFns.addWeeks(Date.parse(scheduleValue.scheduleStr), i) > endDate) {
           return;
         }
-        const endDayLocation = dayLocation.filter(value => dateFns.isSameDay(value.day, schedualValue.end))[0];
-        console.log(`${dayLocation[index].day}-${overlap[index]}`);
+        const endDayLocation = dayLocation.filter((value) =>
+          dateFns.isSameDay(value.day, Date.parse(scheduleValue.scheduleEnd))
+        )[0];
+        // console.log(`${dayLocation[index].day}-${overlap[index]}`);
         sc.push(
           <div
             key={`${dayLocation[index].day}-${overlap[index]}`}
@@ -326,11 +321,10 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
               height: `${size}px`,
               backgroundColor: `${color}80`,
               borderRadius: '4px',
-              marginLeft: '5px',
               borderRight: `3px solid ${color}`,
-              cursor: 'pointer'
+              cursor: 'pointer',
             }}
-            onClick={() => setClickSc(schedualIndex)}
+            onClick={() => setClickSc(scheduleIndex)}
           />
         );
 
@@ -342,8 +336,9 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
 
         return;
       } else {
-        if (dateFns.isSameDay(schedualValue.start, schedualValue.end)) {
-          console.log(`${dayLocation[index].day}-${overlap[index]}`);
+        console.log(overlap);
+        if (dateFns.isSameDay(Date.parse(scheduleValue.scheduleStr), Date.parse(scheduleValue.scheduleEnd))) {
+          // console.log(`${dayLocation[index].day}-${overlap[index]}`);
           sc.push(
             <div
               key={`${dayLocation[index].day}-${overlap[index]}`}
@@ -355,17 +350,20 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
                 height: `${size}px`,
                 backgroundColor: `${color}80`,
                 borderRadius: '4px',
-                marginLeft: '5px',
                 borderLeft: isBeforeStartDay === false ? `3px solid ${color}` : null,
-                cursor: 'pointer'
+                cursor: 'pointer',
               }}
-              onClick={() => setClickSc(schedualIndex)}
+              onClick={() => setClickSc(scheduleIndex)}
             />
           );
           ++overlap[index];
           return;
         } else {
-          console.log(`${dayLocation[index].day}-${overlap[index]}`);
+          const diffDays =
+            dateFns.differenceInCalendarDays(
+              Date.parse(scheduleValue.scheduleEnd),
+              Date.parse(scheduleValue.scheduleStr)
+            ) + 1;
           sc.push(
             <div
               key={`${dayLocation[index].day}-${overlap[index]}`}
@@ -373,21 +371,20 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
                 position: 'absolute',
                 left: `${dayLocation[index].x}px`,
                 top: `${dayLocation[index].y + (size + 2) * overlap[index]}px`,
-                width: `${480 - dayLocation[index].x - 10}px`,
+                width: `${68.43 * diffDays - 5}px`,
                 height: `${size}px`,
                 backgroundColor: `${color}80`,
                 borderRadius: '4px',
-                marginLeft: '5px',
                 borderLeft: isBeforeStartDay === false ? `3px solid ${color}` : null,
                 borderRight: `3px solid ${color}`,
-                cursor: 'pointer'
+                cursor: 'pointer',
               }}
-              onClick={() => setClickSc(schedualIndex)}
+              onClick={() => setClickSc(scheduleIndex)}
             />
           );
-          const endOfWeek = schedualValue.end;
+          const endOfWeek = Date.parse(scheduleValue.scheduleEnd);
           const startOfWeek = dayLocation[index].day;
-          for (let k = 0; k < dateFns.differenceInDays(endOfWeek, startOfWeek) + 1; k++) {
+          for (let k = 0; k <= diffDays; k++) {
             ++overlap[index];
             ++index;
           }
@@ -396,18 +393,18 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
         }
       }
     });
-    console.log(sc);
+    // console.log(sc);
     return sc;
   };
 
   return (
     <>
-      <div style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
         {CalendarHeader}
         {CalendarDays}
         <div style={{ position: 'relative' }}>
           {Cells}
-          {Schedual()}
+          {Schedule()}
         </div>
         <div
           className='transition-all'
@@ -417,12 +414,15 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
                   position: 'absolute',
                   bottom: '0',
                   height: 0,
+                  transform: 'translateY(400px)',
                   width: '100%',
-                  backgroundColor: 'rgb(253,253,253)'
+                  height: '100%',
+                  backgroundColor: 'rgb(253,253,253)',
                 }
               : {
                   position: 'absolute',
                   bottom: '0',
+                  transform: 'translateY(0)',
                   width: '100%',
                   height: '100%',
                   zIndex: '1',
@@ -430,7 +430,7 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
                   display: 'flex',
                   flexDirection: 'column',
                   padding: '5px 5px',
-                  borderTop: `3px solid ${sharedSchedual[clickSc].color}`
+                  borderTop: `3px solid ${sharedSchedule[clickSc].scheduleCol}`,
                 }
           }
         >
@@ -445,7 +445,7 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
                   fontWeight: 'bold',
                   borderBottom: '1px solid rgb(229, 229, 229)',
                   display: 'flex',
-                  justifyContent: 'space-between'
+                  justifyContent: 'space-between',
                 }}
               >
                 <div style={{ paddingLeft: '8px' }}>
@@ -456,7 +456,7 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
                 </div>
               </div>
               <div style={{ flex: 3, height: '150px', display: 'flex', paddingTop: '8px' }}>
-                {sharedSchedual[clickSc].ex}
+                {sharedSchedule[clickSc].scheduleNm}
               </div>
               <div style={{ flex: 2 }}>
                 <div
@@ -466,12 +466,12 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
                     fontSize: '15px',
                     justifyContent: 'space-between',
                     borderBottom: '1px solid rgb(229, 229, 229)',
-                    alignItems: 'center'
+                    alignItems: 'center',
                   }}
                 >
                   <span style={{ fontWeight: 'bold' }}>시작</span>
                   <span style={{ fontWeight: 'bold' }}>
-                    {dateFns.format(sharedSchedual[clickSc].start, 'yyyy.M.d EEE h:mm a')}
+                    {dateFns.format(Date.parse(sharedSchedule[clickSc].scheduleStr), 'yyyy.M.d EEE h:mm a')}
                   </span>
                 </div>
                 <div
@@ -481,31 +481,23 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
                     fontSize: '15px',
                     justifyContent: 'space-between',
                     borderBottom: '1px solid rgb(229, 229, 229)',
-                    alignItems: 'center'
+                    alignItems: 'center',
                   }}
                 >
                   <span style={{ fontWeight: 'bold' }}>종료</span>
                   <span style={{ fontWeight: 'bold' }}>
-                    {dateFns.format(sharedSchedual[clickSc].end, 'yyyy.M.d EEE h:mm a')}
+                    {dateFns.format(Date.parse(sharedSchedule[clickSc].scheduleEnd), 'yyyy.M.d EEE h:mm a')}
                   </span>
                 </div>
               </div>
-              <div
-                style={{
-                  flex: 1,
-                  marginTop: '6px',
-                  marginLeft: '6px',
-                  display: 'flex',
-                  justifyContent: 'space-between'
-                }}
-              >
-                <div>
-                  <ul style={{ display: 'flex', alignItems: 'center' }}>
-                    {sharedSchedual[clickSc].pic.length > 0
-                      ? sharedSchedual[clickSc].pic.map((value, index) => {
+              <div style={{ flex: 1, marginTop: '6px', display: 'flex', justifyContent: 'space-between' }}>
+                {/* <div> */}
+                {/* <ul style={{ display: 'flex', alignItems: 'center' }}>
+                    {sharedSchedule[clickSc].pic.length > 0
+                      ? sharedSchedule[clickSc].pic.map((value, index) => {
                           return (
                             <li
-                              key={`sharedSchedule-picture-${sharedSchedual[clickSc].cd}-${index}`}
+                              key={`sharedSchedule-picture-${sharedSchedule[clickSc].cd}-${index}`}
                               style={{ marginRight: '4px' }}
                               onClick={() => setClickPic(value)}
                             >
@@ -518,16 +510,22 @@ const TimelineMultiDay = ({ title, ex, sharedSchedual, sharedStartDay, sharedEnd
                           );
                         })
                       : null}
-                  </ul>
+                  </ul> */}
+                {/* </div> */}
+                <div style={{ marginTop: '10px', fontWeight: 'bold' }}>
+                  <span>함께하는 친구</span>
                 </div>
-                <div>
+                {sharedSchedule[clickSc].scheduleMemberList.length < 1 ? (
+                  <div style={{ marginTop: '10px', fontWeight: 'bold' }}>
+                    <span>함께하는 친구가 없습니다.</span>
+                  </div>
+                ) : (
                   <AvatarGroup>
-                    <Avatar alt='Remy Sharp' src='http://placehold.it/40x40' />
-                    <Avatar alt='Travis Howard' src='http://placehold.it/40x40' />
-                    <Avatar alt='Cindy Baker' src='http://placehold.it/40x40' />
-                    <Avatar>+3</Avatar>
+                    {sharedSchedule[clickSc].scheduleMemberList.map((value, index) => (
+                      <Avatar key={`${value.userCd}-${index}`} alt={`${value.userCd}-${index}`} src={value.userPic} />
+                    ))}
                   </AvatarGroup>
-                </div>
+                )}
               </div>
             </>
           )}

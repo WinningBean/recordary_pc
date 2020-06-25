@@ -14,19 +14,37 @@ const Main = (props) => {
           if (value.mediaFK !== null) {
             return (
               <div className='timeline-Margin' key={`${value.postCd}-${index}`}>
-                <Timeline data={value} user={props.data} />
+                <Timeline
+                  data={value}
+                  user={props.data}
+                  onPostDelete={(postCd) => {
+                    props.onPostDelete(postCd);
+                  }}
+                />
               </div>
             );
-          } else if (value.scheduleFK !== null) {
+          } else if (value.scheduleFK !== null || value.shareScheduleList.length > 0) {
             return (
               <div className='timeline-Margin' key={`${value.postCd}-${index}`}>
-                <TimelineWeekSchedule data={value} user={props.data} />
+                <TimelineWeekSchedule
+                  data={value}
+                  user={props.data}
+                  onPostDelete={(postCd) => {
+                    props.onPostDelete(postCd);
+                  }}
+                />
               </div>
             );
-          } else if (value.originFK !== null) {
+          } else if (value.postOriginFK !== null) {
             return (
               <div className='timeline-Margin' key={`${value.postCd}-${index}`}>
-                <PostShareTimeline data={value} user={props.data} />
+                <PostShareTimeline
+                  data={value}
+                  user={props.data}
+                  onPostDelete={(postCd) => {
+                    props.onPostDelete(postCd);
+                  }}
+                />
               </div>
             );
           } else return null;

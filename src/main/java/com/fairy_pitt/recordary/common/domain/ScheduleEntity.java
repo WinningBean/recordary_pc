@@ -98,8 +98,4 @@ public class ScheduleEntity extends BaseTime {
       this.scheduleCol = scheduleCol;
       this.schedulePublicState = schedulePublicState;
    }
-   //private String scheduleLocation;
-
-//   @OneToOne(fetch = FetchType.LAZY, mappedBy = "scheduleFK")
-//   private List<PostEntity> postList;
 }
