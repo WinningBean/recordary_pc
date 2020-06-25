@@ -23,6 +23,7 @@ public class ScheduleResponseDto {
     private Date scheduleEnd;
     private String scheduleCol;
     private String tabCol;
+    private String tabNM;
     private int schedulePublicState;
     private List<ScheduleMemberResponseDto> scheduleMemberList;
 
@@ -36,6 +37,7 @@ public class ScheduleResponseDto {
         this.scheduleEnd = entity.getScheduleEnd();
         this.scheduleCol = entity.getScheduleCol();
         if (entity.getTabFK() != null) this.tabCol = entity.getTabFK().getTabCol();
+        if (entity.getTabFK() != null) this.tabNM = entity.getTabFK().getTabNm();
         this.schedulePublicState = entity.getSchedulePublicState();
         this.scheduleMemberList = entity.getScheduleMembers().stream()
                 .map(ScheduleMemberResponseDto :: new)
