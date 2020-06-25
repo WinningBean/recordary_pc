@@ -6,6 +6,8 @@ import axios from 'axios';
 
 import { useSnackbar } from 'notistack';
 
+import { Link } from 'react-router-dom';
+
 const WebSocket = ({ userCd, notice }) => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [client, setClient] = useState(null);
@@ -15,6 +17,7 @@ const WebSocket = ({ userCd, notice }) => {
     console.log(sock, client);
     client.connect({}, function () {
       setClient(client);
+
       client.subscribe(`/topic/user/${userCd}`, function (response) {
         // 로그인 사용자의 알람 해당 토픽을 구독한다 -- 모든 페이지에서 구독 -> 로그인 시 구독
         console.log('event : ' + response, JSON.parse(response.body));
@@ -22,15 +25,21 @@ const WebSocket = ({ userCd, notice }) => {
       });
     });
     setClient(client);
+
+    return () => {
+      if (client.connected) client.disconnect();
+    };
   }, []);
 
   useEffect(() => {
-    if (notice === null) {
+    if (client === null || notice === null) {
       return;
     }
+    if (!client.connected) return;
+
     console.log(notice);
     client.send('/pub/notice', {}, JSON.stringify(notice));
-  }, [notice]);
+  }, [notice, client]);
 
   const checkNoticeType = async (data) => {
     // NoticeType 체크 후 사용자입장에서 알람 디자인 구성
@@ -96,7 +105,7 @@ const WebSocket = ({ userCd, notice }) => {
         break;
       case 'GROUP_MEMBER_ALLOW':
         try {
-          activeGroup = (await axios.get(`/group/${data.activeCd}`)).data;
+          activeGroup = (await axios.get(`/group/?input=${data.activeCd}`)).data;
           message = {
             text: `${activeUser.userId}(${activeUser.userNm})님이 ${targetGroup.groupNm} 의 그룹초대를 수락하였습니다.`,
             type: 'info',
@@ -108,7 +117,7 @@ const WebSocket = ({ userCd, notice }) => {
       case 'GROUP_MEMBER_NEW':
         try {
           activeUser = (await axios.get(`/user/${data.activeCd}`)).data;
-          targetGroup = (await axios.get(`/group/${data.targetCd}`)).data;
+          targetGroup = (await axios.get(`/group/?input=${data.targetCd}`)).data;
           message = {
             text: `${activeUser.userId}(${activeUser.userNm})님이 ${targetGroup.groupNm} 의 그룹초대를 수락하였습니다.`,
             type: 'info',
@@ -120,7 +129,7 @@ const WebSocket = ({ userCd, notice }) => {
       case 'GROUP_MEMBER_AWAY':
         try {
           activeUser = (await axios.get(`/user/${data.activeCd}`)).data;
-          targetGroup = (await axios.get(`/group/${data.targetCd}`)).data;
+          targetGroup = (await axios.get(`/group/?input=${data.targetCd}`)).data;
           message = {
             text: `${activeUser.userId}(${activeUser.userNm}님이 '${targetGroup.groupNm}' 그룹을 탈퇴하였습니다.`,
             type: 'warning',
@@ -143,7 +152,7 @@ const WebSocket = ({ userCd, notice }) => {
         break;
       case 'POST_GROUP_NEW':
         try {
-          activeGroup = (await axios.get(`/group/${data.activeCd}`)).data;
+          activeGroup = (await axios.get(`/group/?input=${data.activeCd}`)).data;
           // targetPost = (await axios.get(`/post/${data.targetCd}`)).data;
           message = { text: `'${activeGroup.groupNm}' 그룹에 게시물이 등록되었습니다.`, type: 'info' };
           console.log(activeUser, targetPost);
@@ -212,7 +221,7 @@ const WebSocket = ({ userCd, notice }) => {
         console.error(`${data.noticeType} is not setting`);
         break;
     }
-    enqueueSnackbar(message.text, { variant: message.type });
+    enqueueSnackbar(message.text, { variant: message.type, action: <div>이동</div> });
   };
 
   return null;
