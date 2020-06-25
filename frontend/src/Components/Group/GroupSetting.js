@@ -120,7 +120,7 @@ const GroupSetting = (props) => {
               <ListItemIcon>
                 <DescriptionIcon />
               </ListItemIcon>
-              <ListItemText primary='프로필 수정' />
+              <ListItemText primary='그룹 수정' />
             </ListItem>
             <ListItem
               button

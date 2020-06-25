@@ -16,6 +16,7 @@ import Loading from '../Loading/Loading';
 import NotifyPopup from '../UI/NotifyPopup';
 import Snackbar from '../UI/Snackbar';
 import GroupSetting from '../Group/GroupSetting';
+import ProfileEditor from './ProfileEditor';
 
 import { Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -227,6 +228,7 @@ class Profile extends React.Component {
               <div className='profile-search-schedule'>
                 <ScheduleSearch
                   data={this.state.info}
+                  type={this.state.type}
                   onSelect={(value) => this.setState({ searchedSchedule: value })}
                 />
               </div>
@@ -540,7 +542,25 @@ class Profile extends React.Component {
                               )}
                             </>
                           ) : (
-                            `${this.state.info.userInfo.userId}(${this.state.info.userInfo.userNm})`
+                            <>
+                              {`${this.state.info.userInfo.userId}(${this.state.info.userInfo.userNm})`}
+                              {this.state.type !== 0 ? null : (
+                                <IconButton
+                                  onClick={() =>
+                                    this.setState({
+                                      alert: (
+                                        <ProfileEditor
+                                          onCancel={() => this.setState({ alert: null })}
+                                          data={this.state.info.userInfo}
+                                        />
+                                      ),
+                                    })
+                                  }
+                                >
+                                  <SettingsIcon fontSize='small' />
+                                </IconButton>
+                              )}
+                            </>
                           )}
                         </div>
                         {this.state.type >= 2 ? (
@@ -654,15 +674,19 @@ class Profile extends React.Component {
                       </div>
                       <div className='status-content'>
                         <div style={{ textAlign: 'center' }}>
-                          {this.state.type >= 2
-                            ? this.state.info.groupEx.split('\n').map((line) => {
-                                return (
-                                  <span>
-                                    {line}
-                                    <br />
-                                  </span>
-                                );
-                              })
+                          {this.state.type === 2 || this.state.type === 3 || this.state.type === 5
+                            ? this.state.info.groupEx === null
+                              ? null
+                              : this.state.info.groupEx.split('\n').map((line) => {
+                                  return (
+                                    <span>
+                                      {line}
+                                      <br />
+                                    </span>
+                                  );
+                                })
+                            : this.state.info.userInfo.userEx === null
+                            ? null
                             : this.state.info.userInfo.userEx.split('\n').map((line) => {
                                 return (
                                   <span>
@@ -708,13 +732,23 @@ class Profile extends React.Component {
               </div>
             </div>
             <nav>
-              <div style={this.state.showProfileList ? null : { backgroundColor: 'rgba(161, 159, 159, .2)' }}>
-                <NavButton onClick={() => this.setState({ showProfileList: !this.state.showProfileList })}>
+              <div>
+                <NavButton
+                  style={{
+                    backgroundColor: this.state.showProfileList ? '#eee' : '#444',
+                    color: this.state.showProfileList ? 'black' : 'white',
+                  }}
+                  onClick={() => this.setState({ showProfileList: !this.state.showProfileList })}
+                >
                   <span>일정</span>
                 </NavButton>
               </div>
-              <div style={this.state.showProfileList ? { backgroundColor: 'rgba(161, 159, 159, .2)' } : null}>
+              <div>
                 <NavButton
+                  style={{
+                    backgroundColor: this.state.showProfileList ? '#444' : '#eee',
+                    color: this.state.showProfileList ? 'white' : 'black',
+                  }}
                   onClick={async () => {
                     this.setState({ showProfileList: !this.state.showProfileList });
                   }}

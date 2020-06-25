@@ -118,24 +118,10 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, type, tabInfo }
           />
         </div>
         <div className='Post-Append-Tag-User post-Append'>
-          <Chip
-            avatar={
-              // <Avatar alt={`${info.user_id} img`} src={info.user_pic} />
-              <Avatar alt={`${data.userNm} img`} src='img/RIcon.png' />
-            }
-            label={data.userNm}
-            style={{
-              backgroundColor: 'rgba(20, 81, 51, 0.8)',
-              color: '#ffffff',
-              marginLeft: '5px',
-              marginBottom: '5px',
-            }}
-            clickable
-          />
           {info.scheduleMembers.map((value, index) => (
             <Chip
               key={`scheduleMembers-${index}`}
-              avatar={<Avatar alt={`${data.userNm} img`} src='img/RIcon.png' />}
+              avatar={<Avatar alt={`${info.userNm} img`} src={value.userPic} />}
               label={value.userNm}
               style={{
                 marginLeft: '5px',

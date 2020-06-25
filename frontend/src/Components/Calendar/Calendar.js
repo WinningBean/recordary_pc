@@ -26,8 +26,9 @@ const Calendar = (props) => {
   // 1 : 남의 프로필
   // 2 : 마스터 그룹 프로필
   // 3 : 그룹원 프로필
-  // 4 : 일정 공유
+  // 4 : 개인 일정 공유
   // 5 : 남의 그룹 프로필
+  // 6 : 개인 일정 공유
   const [userDate, setUserDate] = useState([]);
 
   const [publicState, SetPublicState] = useState(0);
@@ -333,7 +334,7 @@ const Calendar = (props) => {
         </div>
         <div className='calendar-header-center'>
           <div>{dateFns.format(currentMonth, 'MMM yyyy')}</div>
-          {type === 0 || type === 2 || type === 3 || type === 4 ? (
+          {type === 0 || type === 2 || type === 3 || type === 4 || type === 6 ? (
             <div
               style={{
                 fontSize: '11px',
@@ -344,6 +345,7 @@ const Calendar = (props) => {
                 overflow: 'hidden',
               }}
             >
+              {/* {type === 2 || type === 3 || type === 6} */}
               {`${
                 publicState === 0
                   ? '전체'
@@ -672,13 +674,17 @@ const Calendar = (props) => {
       }
       console.log(props.tabInfo, props.clickTabIndex);
       var color = undefined;
-      if (props.clickTab === undefined) {
-        // 탭 색상 반영 유무 체크
-        if (value.tab === null) {
-          color = value.color;
+      if (props.type === 0 || props.type === 1) {
+        if (props.clickTab === undefined) {
+          // 탭 색상 반영 유무 체크
+          if (value.tab === null) {
+            color = value.color;
+          } else {
+            console.log(props.clickTab);
+            color = props.tabInfo.find((_value) => _value.scheduleTabCd === value.tab).scheduleTabColor;
+          }
         } else {
-          console.log(props.clickTab);
-          color = props.tabInfo.find((_value) => _value.scheduleTabCd === value.tab).scheduleTabColor;
+          color = value.color;
         }
       } else {
         color = value.color;

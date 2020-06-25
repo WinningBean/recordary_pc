@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
   marginBottom: {
     marginBottom: '10px',
+    borderBottom: '1px solid #eee',
   },
   chip: {
     marginBottom: '4px',
@@ -36,16 +37,20 @@ const GroupApply = (props) => {
     <div className='dialog-wrap'>
       <DialogContent className={classes.content}>
         <div className={classes.marginBottom}>
-          <span style={{ fontWeight: 'bold' }}>그룹장</span>
           <div style={{ display: 'flex' }}>
             <img
-              style={{ width: '120px', height: '120px', objectFit: 'cover' }}
+              style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '8px' }}
               alt='group-master-img'
-              src={info.userPic}
+              src={info.admin.userPic}
             />
             <div style={{ display: 'flex', flexDirection: 'column', flex: 1, paddingLeft: '20px' }}>
-              <div style={{ flex: 1, fontSize: '22px', fontWeight: 'bold' }}>{info.userNm}</div>
+              <div style={{ flex: 1, fontSize: '22px' }}>
+                <span style={{ fontWeight: 'bold' }}>그룹장</span>
+                <br />
+                <span>{info.admin.userNm}</span>
+              </div>
               <Button
+                style={{ backgroundColor: '#eee' }}
                 onClick={() =>
                   setDialog(
                     <Dialog open onClose={() => setDialog(null)}>
@@ -57,58 +62,62 @@ const GroupApply = (props) => {
                           maxHeight: '600px',
                         }}
                       >
-                        {info.member.map((value, index) => {
-                          return (
-                            <Button
-                              key={`member-${index}`}
-                              onClick={async () => {
-                                if (!window.confirm('그룹장을 정말 바꾸시겠습니까?')) {
-                                  return;
-                                }
-                                console.log(info.groupCd, value.userCd);
-                                try {
-                                  await axios.post(`/group/changeMaster/${info.groupCd}`, {
-                                    userCd: value.userCd,
-                                  });
-                                  setDialog(<Redirect to='/' />);
-                                } catch (error) {
-                                  console.error(error);
-                                  setDialog(
-                                    <Snackbar onClose={() => setDialog(null)} severity='error' content={`${error}`} />
-                                  );
-                                }
-                              }}
-                            >
-                              <div
-                                style={{
-                                  height: '60px',
-                                  padding: '5px 2px',
-                                  display: 'flex',
-                                  borderBottom: '1px solid #eee',
+                        {info.member.length > 0 ? (
+                          info.member.map((value, index) => {
+                            return (
+                              <Button
+                                key={`member-${index}`}
+                                onClick={async () => {
+                                  if (!window.confirm('그룹장을 정말 바꾸시겠습니까?')) {
+                                    return;
+                                  }
+                                  console.log(info, value, info.groupCd, value.userCd);
+                                  try {
+                                    await axios.post(`/group/changeMaster/${info.groupCd}`, {
+                                      userCd: value.userCd,
+                                    });
+                                    window.location.href = '/main';
+                                  } catch (error) {
+                                    console.error(error);
+                                    setDialog(
+                                      <Snackbar onClose={() => setDialog(null)} severity='error' content={`${error}`} />
+                                    );
+                                  }
                                 }}
                               >
-                                <img
-                                  style={{
-                                    height: '50px',
-                                    width: '50px',
-                                    objectFit: 'cover',
-                                    borderRadius: '50%',
-                                  }}
-                                  src={value.userPic}
-                                  alt='user img'
-                                />
                                 <div
                                   style={{
-                                    flex: 1,
-                                    paddingLeft: '18px',
-                                    lineHeight: '50px',
-                                    fontWeight: 'bold',
+                                    height: '60px',
+                                    padding: '5px 2px',
+                                    display: 'flex',
+                                    borderBottom: '1px solid #eee',
                                   }}
-                                >{`${value.userId}(${value.userNm})`}</div>
-                              </div>
-                            </Button>
-                          );
-                        })}
+                                >
+                                  <img
+                                    style={{
+                                      height: '50px',
+                                      width: '50px',
+                                      objectFit: 'cover',
+                                      borderRadius: '50%',
+                                    }}
+                                    src={value.userPic}
+                                    alt='user img'
+                                  />
+                                  <div
+                                    style={{
+                                      flex: 1,
+                                      paddingLeft: '18px',
+                                      lineHeight: '50px',
+                                      fontWeight: 'bold',
+                                    }}
+                                  >{`${value.userId}(${value.userNm})`}</div>
+                                </div>
+                              </Button>
+                            );
+                          })
+                        ) : (
+                          <span style={{ color: '#999' }}>그룹장을 양도할 그룹멤버가 없습니다.</span>
+                        )}
                       </div>
                     </Dialog>
                   )
@@ -120,8 +129,8 @@ const GroupApply = (props) => {
           </div>
         </div>
         <div>
-          <span style={{ fontWeight: 'bold' }}>그룹멤버</span>
-          &nbsp;&nbsp;
+          <span style={{ fontWeight: 'bold', fontSize: '16px' }}>그룹멤버</span>
+          <br />
           <div>
             {(() => {
               return info.member.map((value, index) => {
@@ -197,7 +206,13 @@ const GroupApply = (props) => {
                     onCancel={() => setDialog(false)}
                     info={info}
                     onAdd={() => {
-                      setDialog(false);
+                      setDialog(
+                        <Snackbar
+                          severity='success'
+                          content='그룹 초대를 보냈습니다.'
+                          onClose={() => setDialog(null)}
+                        />
+                      );
                     }}
                   />
                 );

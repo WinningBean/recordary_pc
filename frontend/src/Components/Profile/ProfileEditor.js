@@ -68,6 +68,7 @@ class ProfileEditor extends React.Component {
   // }
 
   render() {
+    console.log(this.props.data);
     const dataURLToBlob = (dataURL) => {
       const BASE64_MARKER = ';base64,';
 
@@ -100,7 +101,7 @@ class ProfileEditor extends React.Component {
     };
 
     return (
-      <Dialog open style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
+      <Dialog open onClose={() => this.props.onCancel()} style={{ backgroundColor: 'rgba(241, 242, 246,0.1)' }}>
         <div className='dialog-wrap'>
           <div className='dialog-header'>
             <div className='dialog-header-icon'>
