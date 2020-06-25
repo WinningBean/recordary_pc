@@ -57,15 +57,19 @@ const WebSocket = ({ userCd, notice }) => {
         break;
       case 'GROUP_APPLY_COME':
         try {
-          targetGroup = (await axios.get(`/group/${data.targetCd}`)).data;
-          message = { text: `'${targetGroup.groupNm}' 그룹이 그룹원 신청을 보냈습니다.`, type: 'info' };
+          activeUser = (await axios.get(`/user/${data.activeCd}`)).data;
+          targetGroup = (await axios.get(`/group/?input=${data.targetCd}`)).data;
+          message = {
+            text: `${activeUser.userNm})님이 '${targetGroup.groupNm}' 그룹에게 그룹원 신청을 보냈습니다.`,
+            type: 'info',
+          };
         } catch (error) {
           console.error(error);
         }
         break;
       case 'GROUP_APPLY_INVITE':
         try {
-          activeGroup = (await axios.get(`/group/${data.activeCd}`)).data;
+          activeGroup = (await axios.get(`/group/?input=${data.activeCd}`)).data;
           message = { text: `'${activeGroup.groupNm}' 그룹이 회원님에게 그룹초대를 보냈습니다.`, type: 'info' };
         } catch (error) {
           console.error(error);
