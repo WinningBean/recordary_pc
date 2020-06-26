@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
   textStyle: {
-    width: '340px',
+    width: '480px',
     marginLeft: '10px',
   },
 }));
@@ -27,7 +27,7 @@ const SendButton = styled(Button)({
   height: '40px',
 });
 
-const CommentTimeline = ({ user, postCd, onSuccess }) => {
+const OnlyPostExComment = ({ user, postCd, onSuccess }) => {
   const classes = useStyles();
   const [writeComment, setWriteComment] = useState('');
   const textField = useRef();
@@ -37,7 +37,7 @@ const CommentTimeline = ({ user, postCd, onSuccess }) => {
   };
 
   return (
-    <FormControl className={classes.margin}>
+    <FormControl>
       <TextField
         inputRef={textField}
         className={(classes.margin, classes.textStyle)}
@@ -110,4 +110,4 @@ const CommentTimeline = ({ user, postCd, onSuccess }) => {
   );
 };
 
-export default CommentTimeline;
+export default OnlyPostExComment;
