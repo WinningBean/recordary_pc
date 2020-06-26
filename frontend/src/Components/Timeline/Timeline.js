@@ -263,9 +263,9 @@ const Timeline = (props) => {
         ) : (
           <div className='profile-name'>
             {data.groupFK.groupNm}
-            <div style={{ display: 'flex', alignItems: 'center', marginLeft: '10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', marginLeft: '10px', color: 'gray', fontSize: '12px' }}>
               <div>from.</div>
-              <div className='recomment-reply-users-img'>
+              <div className='group-post-user' style={{ marginLeft: '10px' }}>
                 <img alt={`${data.userFK.userId}`} src={data.userFK.userPic} />
               </div>
               <div style={{ fontWeight: 'bold', marginLeft: '5px' }}>

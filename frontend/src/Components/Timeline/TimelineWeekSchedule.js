@@ -159,7 +159,18 @@ const TimelineWeekSchedule = (props) => {
             {data.userFK.userId}({data.userFK.userNm}){' '}
           </div>
         ) : (
-          <div className='profile-name'>{data.groupFK.groupNm}</div>
+          <div className='profile-name'>
+            {data.groupFK.groupNm}
+            <div style={{ display: 'flex', alignItems: 'center', marginLeft: '10px', color: 'gray', fontSize: '12px' }}>
+              <div>from.</div>
+              <div className='group-post-user' style={{ marginLeft: '10px' }}>
+                <img alt={`${data.userFK.userId}`} src={data.userFK.userPic} />
+              </div>
+              <div style={{ fontWeight: 'bold', marginLeft: '5px' }}>
+                {data.userFK.userId}({data.userFK.userNm})
+              </div>
+            </div>
+          </div>
         )}
         <div className='profile-time'>
           <div className='profile-time-text'>
