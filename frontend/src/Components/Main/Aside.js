@@ -71,8 +71,9 @@ const Aside = (props) => {
               <span style={{ paddingLeft: '5px' }}>참여 일정</span>
             </div>
             <ul style={{ maxHeight: '100px', overflowY: 'scroll' }}>
-              {todaySchedule !== null
-                ? todaySchedule.map((value, index) => {
+              {todaySchedule !== null ? (
+                todaySchedule.length > 0 ? (
+                  todaySchedule.map((value, index) => {
                     return (
                       <li
                         className='hover'
@@ -102,7 +103,12 @@ const Aside = (props) => {
                       </li>
                     );
                   })
-                : null}
+                ) : (
+                  <li className='flex-center'>
+                    <span style={{ color: '#999' }}>오늘 일정이 없습니다.</span>
+                  </li>
+                )
+              ) : null}
             </ul>
           </div>
         </div>

@@ -181,12 +181,7 @@ const HeaderMenu = (props) => {
 
   const ShowProfileEditForm = () => {
     if (profileEditForm === null) {
-      setProfileEditForm(
-        <ProfileEditor
-          data={data}
-          onCancel={() => setProfileEditForm(null)}
-        />
-      );
+      setProfileEditForm(<ProfileEditor data={data} onCancel={() => setProfileEditForm(null)} />);
       return;
     }
     setProfileEditForm(null);
@@ -512,7 +507,9 @@ const HeaderMenu = (props) => {
           <CustomIconButton
             onClick={async () => {
               try {
-                const isSuccess = await axios.get('/user/logout');
+                const isSuccess = await axios.post('/user/logout', props.data.userCd, {
+                  headers: { 'Content-Type': 'application/json' },
+                });
                 if (isSuccess) {
                   setIsLogout(true);
                   props.onLogout();

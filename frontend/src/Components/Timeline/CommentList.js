@@ -117,7 +117,7 @@ export default ({ postCd, tData, user, onSuccess }) => {
               </span>
             </div>
             <div className='commentIcon-hover' style={{ height: ' 15px' }}>
-              {user.userCd !== value.userFK.userCd ? null : (
+              {user === undefined ? null : user.userCd !== value.userFK.userCd ? null : (
                 <div>
                   {value.updateClick === true ? (
                     <CheckIcon
@@ -204,7 +204,9 @@ export default ({ postCd, tData, user, onSuccess }) => {
           <div className='commentIconFlex'>
             <div
               className='show-more-comment'
-              onClick={() => getRecommentList(value, index, value.showRecommentClick.click)}
+              onClick={() =>
+                user === undefined ? null : getRecommentList(value, index, value.showRecommentClick.click)
+              }
             >
               <CommentIcon
                 style={

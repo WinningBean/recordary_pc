@@ -289,10 +289,12 @@ const Timeline = (props) => {
           </div>
         </div>
         <div className='profile-moreIcon'>
-          {props.user.userCd === data.userFK.userCd ? (
-            <LongMenu options={['나에게 공유', ' 수정 ', ' 삭제 ']} returnValue={userPostMoreButtonClick} />
-          ) : data.postPublicState === 0 ? (
-            <LongMenu options={['나에게 공유']} returnValue={userPostMoreButtonClick} />
+          {props.user !== undefined ? (
+            props.user.userCd === data.userFK.userCd ? (
+              <LongMenu options={['나에게 공유', ' 수정 ', ' 삭제 ']} returnValue={userPostMoreButtonClick} />
+            ) : data.postPublicState === 0 ? (
+              <LongMenu options={['나에게 공유']} returnValue={userPostMoreButtonClick} />
+            ) : null
           ) : null}
         </div>
       </div>
@@ -445,6 +447,7 @@ const Timeline = (props) => {
                 <ThumbUpRoundedIcon
                   style={data.currentUserLikePost ? { color: 'rgba(20, 81, 51, 0.9)', fontSize: 25 } : { fontSize: 25 }}
                   onClick={async () => {
+                    if (props.user === undefined) return;
                     try {
                       if (data.currentUserLikePost === false) {
                         const like = (

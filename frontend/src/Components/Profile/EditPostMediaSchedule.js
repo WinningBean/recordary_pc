@@ -610,7 +610,7 @@ const EditPostMediaSchedule = (props) => {
             </div>
             <input
               type='file'
-              accept='image/*,video/*'
+              accept='image/*|audio/*|video/*'
               required
               multiple
               style={{ display: 'none' }}

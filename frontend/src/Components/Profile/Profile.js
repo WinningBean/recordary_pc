@@ -6,6 +6,7 @@ import '../Main/mainPage.css';
 import ScrollToTopOnMount from '../Other/ScrollToTopOnMount';
 import Follower from './Follower';
 import AddTab from './AddTab';
+import ProfileTimeline from './ProfileTimeline';
 import Header from '../../Containers/Header/Header';
 import Calendar from '../Calendar/Calendar';
 import TimelineWeekSchedule from '../Timeline/TimelineWeekSchedule';
@@ -29,16 +30,10 @@ import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/core/styles';
-import Link from '@material-ui/core/Link';
-import * as Router from 'react-router-dom';
-
-import { Redirect } from 'react-router-dom';
+import LinkElement from '@material-ui/core/Link';
+import { Redirect, Link, Route } from 'react-router-dom';
 
 import axios from 'axios';
-
-import * as dateFns from 'date-fns';
-
-const RouterLink = Router.Link;
 
 const IconButton = styled(Button)({
   minWidth: '30px',
@@ -241,7 +236,7 @@ class Profile extends React.Component {
                       <>
                         <li
                           style={{
-                            transform: this.state.clickTab === undefined ? 'translateX(15px)' : 'translateX(30px)',
+                            transform: this.state.clickTab === undefined ? 'translateX(-23px)' : 'translateX(10px)',
                           }}
                           className='transition-all'
                         >
@@ -265,7 +260,7 @@ class Profile extends React.Component {
                           <li
                             key={`tab-${index}`}
                             style={{
-                              transform: this.state.clickTab === index ? 'translateX(15px)' : 'translateX(30px)',
+                              transform: this.state.clickTab === index ? 'translateX(-23px)' : 'translateX(10px)',
                             }}
                             className='transition-all'
                           >
@@ -292,7 +287,7 @@ class Profile extends React.Component {
                         ))}
                         <li
                           style={{
-                            transform: 'translateX(30px)',
+                            transform: 'translateX(0px)',
                           }}
                         >
                           <TabButton
@@ -571,15 +566,15 @@ class Profile extends React.Component {
                           <>
                             <div style={{ textAlign: 'center' }}>
                               <span className='followerName'>그룹장</span>
-                              <RouterLink to={`/${this.state.info.admin.userId}`}>
-                                <Link component='button'>
+                              <Link to={`/${this.state.info.admin.userId}`}>
+                                <LinkElement component='button'>
                                   <span className='followerNum'>{this.state.info.admin.userNm}</span>
-                                </Link>
-                              </RouterLink>
+                                </LinkElement>
+                              </Link>
                             </div>
                             <div style={{ textAlign: 'center' }}>
                               <span className='followerName'>그룹 멤버</span>
-                              <Link
+                              <LinkElement
                                 component='button'
                                 onClick={() =>
                                   this.setState({
@@ -588,7 +583,7 @@ class Profile extends React.Component {
                                 }
                               >
                                 <span className='followerNum'>{this.state.info.member.length}</span>
-                              </Link>
+                              </LinkElement>
                               {this.state.isClickMember ? (
                                 <Dialog
                                   open
@@ -648,7 +643,7 @@ class Profile extends React.Component {
                           <>
                             <div style={{ textAlign: 'center' }}>
                               <span className='followerName'>팔로워</span>
-                              <Link
+                              <LinkElement
                                 component='button'
                                 onClick={() =>
                                   this.setState({
@@ -657,12 +652,12 @@ class Profile extends React.Component {
                                 }
                               >
                                 <span className='followerNum'>{this.state.info.followerCount}</span>
-                              </Link>
+                              </LinkElement>
                             </div>
                             {FollowerShow()}
                             <div style={{ textAlign: 'center' }}>
                               <span className='followerName'>팔로우</span>
-                              <Link
+                              <LinkElement
                                 component='button'
                                 onClick={() =>
                                   this.setState({
@@ -671,7 +666,7 @@ class Profile extends React.Component {
                                 }
                               >
                                 <span className='followNum'>{this.state.info.followingCount}</span>
-                              </Link>
+                              </LinkElement>
                             </div>
                           </>
                         )}
@@ -768,57 +763,26 @@ class Profile extends React.Component {
                     {this.state.groupPost.map((value, index) => {
                       if (value.mediaFK !== null && value.postOriginFK === null) {
                         return (
-                          <div
-                            className='media-box-hover'
-                            style={{
-                              display: 'flex',
-                              flexWrap: 'wrap',
-                              height: '272px',
-                              width: '272px',
-                              overflow: 'hidden',
-                              margin: '10px',
-                            }}
-                            key={`${index}- img`}
-                          >
-                            <img
-                              className='media-box'
-                              alt={`${index}- img`}
-                              src={value.mediaFK.mediaFirstPath}
-                              onClick={() => {
-                                this.state.groupPost.map(async (val, i) => {
-                                  try {
-                                    if (val.postCd === value.postCd) {
-                                      this.setState({
-                                        val: (this.state.groupPost[i] = { ...val, postImgClick: true }),
-                                      });
-                                    } else return null;
-                                  } catch (error) {
-                                    console.log(error);
-                                  }
-                                });
+                          <Link to={`/group/${this.state.info.groupCd}/${value.postCd}`}>
+                            <div
+                              className='media-box-hover'
+                              style={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                height: '272px',
+                                width: '272px',
+                                overflow: 'hidden',
+                                margin: '10px',
                               }}
-                            />
-                          </div>
+                              key={`${index}- img`}
+                            >
+                              <img className='media-box' alt={`${index}- img`} src={value.mediaFK.mediaFirstPath} />
+                            </div>
+                          </Link>
                         );
                       } else return null;
                     })}
                   </div>
-                  {this.state.groupPost.map((value, index) => {
-                    if (value.postImgClick === true) {
-                      return (
-                        <Dialog
-                          open
-                          key={value.postCd}
-                          onClose={() => {
-                            this.setState({ value: (this.state.groupPost[index] = { ...value, postImgClick: false }) });
-                          }}
-                        >
-                          <Timeline data={value} user={this.props.user} />
-                        </Dialog>
-                      );
-                    }
-                  })}
-                  {console.log(this.state.groupPost)}
                 </>
               ) : (
                 this.state.groupPost.map((value, index) => {
@@ -928,42 +892,14 @@ class Profile extends React.Component {
                             }}
                             key={`${index}- img`}
                           >
-                            <img
-                              className='media-box'
-                              alt={`${index}- img`}
-                              src={value.mediaFK.mediaFirstPath}
-                              onClick={() => {
-                                this.state.post.map(async (val, i) => {
-                                  try {
-                                    if (val.postCd === value.postCd) {
-                                      this.setState({ val: (this.state.post[i] = { ...val, postImgClick: true }) });
-                                    } else return null;
-                                  } catch (error) {
-                                    console.log(error);
-                                  }
-                                });
-                              }}
-                            />
+                            <Link to={`/${this.state.info.userInfo.userId}/${value.postCd}`}>
+                              <img className='media-box' alt={`${index}- img`} src={value.mediaFK.mediaFirstPath} />
+                            </Link>
                           </div>
                         );
                       } else return null;
                     })}
                   </div>
-                  {this.state.post.map((value, index) => {
-                    if (value.postImgClick === true) {
-                      return (
-                        <Dialog
-                          open
-                          key={value.postCd}
-                          onClose={() => {
-                            this.setState({ value: (this.state.post[index] = { ...value, postImgClick: false }) });
-                          }}
-                        >
-                          <Timeline data={value} user={this.props.user} />
-                        </Dialog>
-                      );
-                    }
-                  })}
                   {console.log(this.state.post)}
                 </>
               ) : (
@@ -1071,6 +1007,11 @@ class Profile extends React.Component {
             ) : null}
           </main>
         ) : null}
+        {this.props.match.params.userId !== undefined ? (
+          <Route exact path='/*/:userPostCd' component={ProfileTimeline} />
+        ) : (
+          <Route exact path='/group/*/:groupPostCd' component={ProfileTimeline} />
+        )}
       </>
     );
   }
