@@ -132,7 +132,6 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
         formattedDate = dateFns.format(day, 'd');
         var isBorderLeft = false;
         if (i === 0) isBorderLeft = true;
-
         days.push(
           <div
             id={`cell-index-${dateFns.format(day, 'MMdd')}`}
@@ -146,7 +145,11 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
                 start: dateFns.startOfDay(sharedStartDay),
                 end: dateFns.endOfDay(sharedEndDay),
               })
-                ? { borderRight: 'none', width: '68.43px', height: '56px' }
+                ? {
+                    borderRight: dateFns.isSameDay(day, dateFns.endOfDay(sharedEndDay)) ? '1px solid #ddd' : 'none',
+                    width: '68.43px',
+                    height: '56px',
+                  }
                 : { width: '68.43px', height: '56px' }
             }
           >

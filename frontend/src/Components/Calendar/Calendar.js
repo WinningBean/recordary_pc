@@ -28,6 +28,7 @@ const Calendar = (props) => {
   // 3 : 그룹원 프로필
   // 4 : 일정 공유
   // 5 : 남의 그룹 프로필
+  // 6 : 그룹 일정 공유
   const [userDate, setUserDate] = useState([]);
 
   const [publicState, SetPublicState] = useState(0);
@@ -95,7 +96,7 @@ const Calendar = (props) => {
       var data = undefined;
 
       console.log(props.info, props.type);
-      props.type === 2 || props.type === 3 || props.type === 5
+      props.type === 2 || props.type === 3 || props.type === 5 || props.type === 6
         ? (data = (
             await axios.post(`/schedule/showGroupSchedule/${props.info.groupCd}`, {
               groupCd: props.info.groupCd,
@@ -333,7 +334,40 @@ const Calendar = (props) => {
         </div>
         <div className='calendar-header-center'>
           <div>{dateFns.format(currentMonth, 'MMM yyyy')}</div>
-          {type === 0 || type === 2 || type === 3 || type === 4 ? (
+          {type === 2 || type === 3 || type === 6 ? (
+            <div
+              style={{
+                fontSize: '11px',
+                color: '#666',
+                cursor: 'pointer',
+                userSelect: 'none',
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
+              {`${publicState === 0 ? '전체' : publicState === 3 ? '비공개' : null} ▼`}
+              <LongMenu
+                hide={true}
+                options={['전체공개', '비공개']}
+                returnValue={(selectedValue) => {
+                  console.log(selectedValue);
+                  switch (selectedValue) {
+                    case '전체공개':
+                      if (publicState !== 0) {
+                        SetPublicState(0);
+                      }
+                      break;
+                    case '비공개':
+                      if (publicState !== 3) {
+                        SetPublicState(3);
+                      }
+                      break;
+                  }
+                }}
+              />
+            </div>
+          ) : null}
+          {type === 0 || type === 4 ? (
             <div
               style={{
                 fontSize: '11px',
@@ -459,7 +493,7 @@ const Calendar = (props) => {
             }`}
             key={day}
             onClick={() => {
-              if (type === 4) {
+              if (type === 4 || type === 6) {
                 props.onChoice(currDay, userDate, publicState);
               } else if (type === 0 || type === 2 || type === 3) {
                 setClickDate(currDay);
@@ -674,7 +708,7 @@ const Calendar = (props) => {
       var color = undefined;
       if (props.clickTab === undefined) {
         // 탭 색상 반영 유무 체크
-        if (value.tab === null) {
+        if (value.tab === null || type === 4 || type === 6) {
           color = value.color;
         } else {
           console.log(props.clickTab);

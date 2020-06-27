@@ -196,8 +196,15 @@ const GroupApply = (props) => {
                   <GroupMemberSearch
                     onCancel={() => setDialog(false)}
                     info={info}
-                    onAdd={() => {
+                    onAdd={(addUser) => {
                       setDialog(false);
+                      setDialog(
+                        <AlertDialog
+                          onAlertClose={() => setDialog(null)}
+                          severity='success'
+                          content={`${addUser.userId}(${addUser.userNm})에게 초대 요청을 보냈습니다.`}
+                        />
+                      );
                     }}
                   />
                 );

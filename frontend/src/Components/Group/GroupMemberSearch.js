@@ -110,7 +110,7 @@ const GroupMemberSearch = (props) => {
                                 applyState: 1,
                               });
                               if (data) {
-                                props.onAdd();
+                                props.onAdd(value.userInfo);
                                 store.dispatch({
                                   type: 'SAVE_NOTICE',
                                   notice: {
@@ -124,7 +124,7 @@ const GroupMemberSearch = (props) => {
                                   <Snackbar
                                     onClose={() => setAlert(null)}
                                     severity='success'
-                                    content='이미 초대를 보내거나 받았습니다.'
+                                    content='이미 초대를 보냈거나 신청을 받았습니다.'
                                   />
                                 );
                               }
