@@ -17,7 +17,7 @@ public class UserResponseDto {
         this.userCd = userEntity.getUserCd();
         this.userId = userEntity.getUserId();
         this.userNm = userEntity.getUserNm();
-        this.userPic = userEntity.getUserPic();
+        this.userPic = userEntity.getProfilePath();
         this.userEx = userEntity.getUserEx();
     }
 }

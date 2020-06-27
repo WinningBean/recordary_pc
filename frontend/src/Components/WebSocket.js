@@ -8,7 +8,7 @@ import { useSnackbar } from 'notistack';
 
 import { Link } from 'react-router-dom';
 
-const WebSocket = ({ userCd, notice }) => {
+const WebSocket = ({ userCd, userId, notice }) => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [client, setClient] = useState(null);
   useEffect(() => {
@@ -20,7 +20,15 @@ const WebSocket = ({ userCd, notice }) => {
 
       client.subscribe(`/topic/user/${userCd}`, function (response) {
         // 로그인 사용자의 알람 해당 토픽을 구독한다 -- 모든 페이지에서 구독 -> 로그인 시 구독
-        console.log('event : ' + response, JSON.parse(response.body));
+        console.log(response.body, '');
+        if (response.body === 'TRY_SOMEONE_LOGIN') {
+          disconnectSession();
+        }
+        if (response.body === 'AUTO_LOGOUT') {
+          window.alert('세션을 잃어 자동 로그아웃되었습니다.');
+          window.location.replace('/');
+        }
+
         checkNoticeType(JSON.parse(response.body));
       });
     });
@@ -41,6 +49,18 @@ const WebSocket = ({ userCd, notice }) => {
     client.send('/pub/notice', {}, JSON.stringify(notice));
   }, [notice, client]);
 
+  const disconnectSession = async () => {
+    try {
+      window.alert('다른 컴퓨터로 로그인되었습니다.');
+      await axios.post('/user/logout', userCd, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      window.location.replace('/');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const checkNoticeType = async (data) => {
     // NoticeType 체크 후 사용자입장에서 알람 디자인 구성
     var activeUser = undefined;
@@ -59,6 +79,7 @@ const WebSocket = ({ userCd, notice }) => {
           message = {
             text: `${activeUser.userId}(${activeUser.userNm})님이 회원님을 팔로우 하였습니다.`,
             type: 'info',
+            action: `/${activeUser.userId}`,
           };
         } catch (error) {
           console.error(error);
@@ -66,9 +87,13 @@ const WebSocket = ({ userCd, notice }) => {
         break;
       case 'GROUP_APPLY_COME':
         try {
+          activeUser = (await axios.get(`/user/${data.activeCd}`)).data;
           targetGroup = (await axios.get(`/group/?input=${data.targetCd}`)).data;
-          console.log(targetGroup);
-          message = { text: `'${targetGroup.groupNm}' 그룹이 그룹원 신청을 받았습니다.`, type: 'info' };
+          message = {
+            text: `${activeUser.userNm})님이 '${targetGroup.groupNm}' 그룹에게 그룹원 신청을 보냈습니다.`,
+            type: 'info',
+            action: `/${activeUser.userNm}`,
+          };
         } catch (error) {
           console.error(error);
         }
@@ -76,7 +101,11 @@ const WebSocket = ({ userCd, notice }) => {
       case 'GROUP_APPLY_INVITE':
         try {
           activeGroup = (await axios.get(`/group/?input=${data.activeCd}`)).data;
-          message = { text: `'${activeGroup.groupNm}' 그룹이 회원님에게 그룹초대를 보냈습니다.`, type: 'info' };
+          message = {
+            text: `'${activeGroup.groupNm}' 그룹이 회원님에게 그룹초대를 보냈습니다.`,
+            type: 'info',
+            action: `/group/${activeGroup.groupCd}`,
+          };
         } catch (error) {
           console.error(error);
         }
@@ -84,7 +113,11 @@ const WebSocket = ({ userCd, notice }) => {
       case 'GROUP_APPLY_COME_NOT':
         try {
           activeUser = (await axios.get(`/user/${data.activeCd}`)).data;
-          message = { text: `'${targetGroup.groupNm}' 그룹이 그룹신청을 거절하였습니다.`, type: 'warning' };
+          message = {
+            text: `'${targetGroup.groupNm}' 그룹이 그룹신청을 거절하였습니다.`,
+            type: 'warning',
+            action: `/group/${targetGroup.groupCd}`,
+          };
         } catch (error) {
           console.error(error);
         }
@@ -95,6 +128,7 @@ const WebSocket = ({ userCd, notice }) => {
           message = {
             text: `${activeUser.userId}(${activeUser.userNm})님이 '${targetGroup.groupNm}' 그룹 초대를 거절하였습니다`,
             type: 'warning',
+            action: `/${activeUser.userId}`,
           };
         } catch (error) {
           console.error(error);
@@ -106,6 +140,7 @@ const WebSocket = ({ userCd, notice }) => {
           message = {
             text: `${activeUser.userId}(${activeUser.userNm})님이 ${targetGroup.groupNm} 의 그룹초대를 수락하였습니다.`,
             type: 'info',
+            action: `/group/${targetGroup.groupCd}`,
           };
         } catch (error) {
           console.error(error);
@@ -118,6 +153,7 @@ const WebSocket = ({ userCd, notice }) => {
           message = {
             text: `${activeUser.userId}(${activeUser.userNm})님이 ${targetGroup.groupNm} 의 그룹초대를 수락하였습니다.`,
             type: 'info',
+            action: `/group/${targetGroup.groupCd}`,
           };
         } catch (error) {
           console.error(error);
@@ -130,6 +166,7 @@ const WebSocket = ({ userCd, notice }) => {
           message = {
             text: `${activeUser.userId}(${activeUser.userNm}님이 '${targetGroup.groupNm}' 그룹을 탈퇴하였습니다.`,
             type: 'warning',
+            action: `/group/${targetGroup.groupCd}`,
           };
         } catch (error) {
           console.error(error);
@@ -142,6 +179,7 @@ const WebSocket = ({ userCd, notice }) => {
           message = {
             text: `${activeUser.userId}(${activeUser.userNm})님이 회원님의 게시물을 좋아합니다.`,
             type: 'success',
+            action: `/${userId}/${data.targetCd}`,
           };
         } catch (error) {
           console.error(error);
@@ -151,7 +189,11 @@ const WebSocket = ({ userCd, notice }) => {
         try {
           activeGroup = (await axios.get(`/group/?input=${data.activeCd}`)).data;
           // targetPost = (await axios.get(`/post/${data.targetCd}`)).data;
-          message = { text: `'${activeGroup.groupNm}' 그룹에 게시물이 등록되었습니다.`, type: 'info' };
+          message = {
+            text: `'${activeGroup.groupNm}' 그룹에 게시물이 등록되었습니다.`,
+            type: 'info',
+            action: `group/${data.activeCd}/${data.targetCd}`,
+          };
           console.log(activeUser, targetPost);
         } catch (error) {
           console.error(error);
@@ -197,6 +239,7 @@ const WebSocket = ({ userCd, notice }) => {
           message = {
             text: `${activeComment.userFK.userId}(${activeComment.userFK.userNm})님이 회원님의 게시물에 댓글을 남겼습니다.`,
             type: 'info',
+            action: `/userId/${data.targetCd}`,
           };
         } catch (error) {
           console.error(error);
@@ -209,6 +252,7 @@ const WebSocket = ({ userCd, notice }) => {
           message = {
             text: `${activeComment.userFK.userId}(${activeComment.userFK.userNm})님이 회원님의 댓글에 답글을 남겼습니다.`,
             type: 'info',
+            action: `/userId/${data.targetCd}`,
           };
         } catch (error) {
           console.error(error);
@@ -218,7 +262,21 @@ const WebSocket = ({ userCd, notice }) => {
         console.error(`${data.noticeType} is not setting`);
         break;
     }
-    enqueueSnackbar(message.text, { variant: message.type, action: <div>이동</div> });
+    enqueueSnackbar(message.text, {
+      variant: message.type,
+      autoHideDuration: message.action === undefined ? 6000 : 12000,
+      action:
+        message.action === undefined ? null : (
+          <div
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              window.location.href = window.location.origin + message.action;
+            }}
+          >
+            이동
+          </div>
+        ),
+    });
   };
 
   return null;

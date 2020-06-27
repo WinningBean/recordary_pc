@@ -1,7 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.group.dto;
 
 import com.fairy_pitt.recordary.common.domain.GroupEntity;
-import com.fairy_pitt.recordary.endpoint.post.dto.GroupPostResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import lombok.Getter;
 
@@ -13,8 +12,7 @@ public class GroupPageResponseDto {
 
     private Long groupCd;
     private UserResponseDto admin;
-    private List<GroupPostResponseDto> postList;
-    private List<GroupMemberResponseDto> memberList;
+    private List<UserResponseDto> memberList;
     private String groupEx;
     private String groupNm;
     private String groupPic;
@@ -24,14 +22,14 @@ public class GroupPageResponseDto {
     {
         this.groupCd = entity.getGroupCd();
         if (entity.getGMstUserFK() != null) this.admin = new UserResponseDto(entity.getGMstUserFK());
-        this.postList = entity.getPostEntityList().stream().map(GroupPostResponseDto::new).collect(Collectors.toList());
         this.memberList = entity.getMembers().stream()
-                .map(GroupMemberResponseDto :: new)
+                .map(gm -> gm.getUserFK())
+                .map(UserResponseDto :: new)
                 .collect(Collectors.toList());
         this.groupNm = entity.getGroupNm();
         this.groupState = entity.getGroupState();
         this.groupEx = entity.getGroupEx();
-        this.groupPic = entity.getGroupPic();
+        this.groupPic = entity.getProfilePath();
     }
 
 

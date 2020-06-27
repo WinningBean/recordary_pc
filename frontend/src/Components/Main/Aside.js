@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './mainPage.css';
 import * as dateFns from 'date-fns';
 import Popover from '@material-ui/core/Popover';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import axios from 'axios';
 
@@ -35,14 +36,15 @@ const Aside = (props) => {
             {user.userId}({user.userNm})
           </div>
           <div className='aside-profile-statusMsg'>
-            {user.userEx.split('\n').map((line) => {
+            {user.userEx}
+            {/* {user.userEx.split('\n').map((line) => {
               return (
                 <span>
                   {line}
                   <br />
                 </span>
               );
-            })}
+            })} */}
           </div>
           <div className='aside-profile-TodaySchedule'>
             <hr />
@@ -79,8 +81,9 @@ const Aside = (props) => {
               <span style={{ paddingLeft: '5px' }}>참여 일정</span>
             </div>
             <ul style={{ maxHeight: '100px', overflowY: 'scroll' }}>
-              {todaySchedule !== null
-                ? todaySchedule.map((value, index) => {
+              {todaySchedule !== null ? (
+                todaySchedule.length > 0 ? (
+                  todaySchedule.map((value, index) => {
                     return (
                       <li
                         className='hover'
@@ -110,7 +113,12 @@ const Aside = (props) => {
                       </li>
                     );
                   })
-                : null}
+                ) : (
+                  <li className='flex-center'>
+                    <span style={{ color: '#999' }}>오늘 일정이 없습니다.</span>
+                  </li>
+                )
+              ) : null}
             </ul>
           </div>
         </div>

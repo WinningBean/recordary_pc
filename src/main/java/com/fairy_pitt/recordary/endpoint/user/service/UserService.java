@@ -9,6 +9,7 @@ import com.fairy_pitt.recordary.common.repository.ScheduleRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
 import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
 import com.fairy_pitt.recordary.endpoint.user.dto.*;
+import com.fairy_pitt.recordary.handler.WebSocketHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,8 @@ public class UserService {
     private final MediaRepository mediaRepository;
     private final ScheduleRepository scheduleRepository;
 
+    private final WebSocketHandler webSocketHandler;
+
     @Transactional
     public Boolean save(UserSaveRequestDto requestDto){
         UserSaveRequestDto userSaveRequestDto = UserSaveRequestDto.builder()
@@ -61,18 +64,24 @@ public class UserService {
 
     @Transactional
     public String profileUpload(Long userCd, MultipartFile userPic) throws IOException {
+        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserCd(userCd))
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. cd = " + userCd));
         String imgPath;
 
         if (userPic.isEmpty()) imgPath = null;
-        else imgPath = s3UploadComponent.profileUpload(userPic, "user", userCd);
+        else {
+            if (userEntity.getUserPic() != "user/basic.png") {
+                s3UploadComponent.delete(userEntity.getUserPic());
+            }
+            imgPath = s3UploadComponent.profileUpload(userPic, "user", userCd);
+        }
 
-        log.info(imgPath);
-
+        userEntity.updateProfile(imgPath);
         return imgPath;
     }
 
     private void deleteOnlyUserPossession(UserEntity user){
-        s3UploadComponent.profileDelete("user", user.getUserCd().toString()); // 사용자 프로필
+        s3UploadComponent.profileDelete("user", user.getUserPic()); // 사용자 프로필
 
         List<PostEntity> onlyUserPostList = user.getPostList().stream()
                 .filter(p -> p.getGroupFK() == null)
@@ -126,8 +135,14 @@ public class UserService {
         UserEntity userEntity = Optional.ofNullable(userRepository.findByUserId(requestDto.getUserId()))
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id = " + requestDto.getUserId()));
 
-        Boolean userState = checkPw(requestDto);
-        if (userState){
+        if (checkPw(requestDto)){
+            if (!webSocketHandler.checkLoginUser(userEntity.getUserCd())) {
+                webSocketHandler.addLoginUser(userEntity.getUserCd(), httpSession.getId());
+            }
+            else {
+                webSocketHandler.replaceLoginUser(userEntity.getUserCd(), httpSession.getId());
+                webSocketHandler.notice_TRY_SOMEONE_LOGIN(userEntity.getUserCd());
+            }
             httpSession.setAttribute("loginUser", userEntity.getUserCd());
             log.info("set userCd = {}", httpSession.getAttribute("loginUser"));
             return new UserResponseDto(userEntity);
@@ -135,9 +150,10 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Boolean logout(){
+    public Boolean logout(Long userCd){
         httpSession.removeAttribute("loginUser");
         httpSession.invalidate();
+        webSocketHandler.removeLoginUser(userCd);
         return (httpSession.getAttribute("loginUser") == null);
     }
 
@@ -157,6 +173,17 @@ public class UserService {
         UserEntity userEntity = currentUser();
         if (userEntity != null) return new UserResponseDto(userEntity);
         return null;
+    }
+
+    @Transactional(readOnly = true)
+    public Boolean checkSessionLogout(){
+        if (currentUserCd() == null) {
+            if (webSocketHandler.checkLoginUser(httpSession.getId())){
+                webSocketHandler.notice_AUTO_LOGOUT(webSocketHandler.checkSessionId(httpSession.getId()));
+                return false;
+            }
+        }
+        return true;
     }
 
     @Transactional(readOnly = true)

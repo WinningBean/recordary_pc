@@ -20,7 +20,6 @@
 .postIt > ul {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
 }
 .postIt > ul > li {
   /* height: 40px; */
@@ -181,7 +180,7 @@ nav > div {
 }
 .media-box {
   width: 272px;
-  height: auto;
+  height: 100%;
   object-fit: cover;
 }
 

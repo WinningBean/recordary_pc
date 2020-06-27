@@ -21,7 +21,7 @@ public class ScheduleMemberResponseDto {
         this.userCd = entity.getUserFK().getUserCd();
         this.scheduleState = entity.getScheduleState();
         this.userCd = entity.getUserFK().getUserCd();
-        this.userPic = entity.getUserFK().getUserPic();
+        this.userPic = entity.getUserFK().getProfilePath();
         this.userId = entity.getUserFK().getUserId();
         this.userNm = entity.getUserFK().getUserNm();
 

@@ -119,16 +119,28 @@ const GroupAdd = (props) => {
           })
         ).data;
       }
+      console.log({
+        userCd: group.group_admin,
+        userPic: props.data.userPic,
+        groupCd: groupCd,
+        groupNm: group.group_nm,
+        groupState: openSwitch.open,
+        groupPic: url,
+        groupEx: group.group_ex,
+        isMaster: true,
+        admin: props.data,
+      });
 
       if (Number.isInteger(groupCd)) {
         props.onAdd({
           userCd: group.group_admin,
-          userId: props.data.userId,
+          userPic: props.data.userPic,
           groupCd: groupCd,
           groupNm: group.group_nm,
           groupState: openSwitch.open,
-          groupPic: group.group_pic,
+          groupPic: url,
           groupEx: group.group_ex,
+          isMaster: true,
         });
         setAlert(
           <AlertDialog severity='success' content='그룹을 생성하였습니다.' onAlertClose={() => setAlert(null)} />

@@ -38,15 +38,14 @@ public enum NoticeType {
     @JsonProperty("GROUP_MEMBER_AWAY")
     GROUP_MEMBER_AWAY, // 사용자가 mst인 그룹의 멤버가 탈퇴할 경우
 
+    // activeCd = 그룹 코드 / targetCd = 탈퇴당한 사용자 코드
+    @JsonProperty("GROUP_MEMBER_OUT")
+    GROUP_MEMBER_OUT, // 그룹의 멤버가 mst에 의해 탈퇴 당할 경우
+
 
     // activeCd = 좋아요한 사용자 코드 / targetCd = 좋아요된 게시물 코드
     @JsonProperty("POST_LIKE_NEW")
     POST_LIKE_NEW, // 사용자의 게시물에 누군가 좋아요 할 경우
-
-
-    // activeCd = 그룹코드 / targetCd = 게시물 코드
-    @JsonProperty("POST_GROUP_NEW")
-    POST_GROUP_NEW, // 사용자가 속한 그룹에 게시물이 등록될 경우
 
 
     // activeCd = 스케줄 코드 / targetCd = 신청된 사용자 코드

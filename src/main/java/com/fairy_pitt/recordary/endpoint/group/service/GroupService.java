@@ -15,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,11 +51,20 @@ public class GroupService {
     }
 
     @Transactional
-    public void updateGroupProfile(String url,Long id)
-    {
+    public String updateGroupProfile(Long id, MultipartFile groupPic) throws IOException {
         GroupEntity groupEntity = groupRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
-        groupEntity.updateGroupProfile(url);
+        String imgPath;
+
+        if (groupPic.isEmpty()) imgPath = null;
+        else {
+            if (groupEntity.getGroupPic() != "group/basic.png"){
+                s3UploadComponent.delete(groupEntity.getGroupPic());
+            }
+            imgPath = s3UploadComponent.profileUpload(groupPic, "group", id);
+        }
+        groupEntity.updateGroupProfile(imgPath);
+        return imgPath;
     }
 
     @Transactional
@@ -72,7 +83,7 @@ public class GroupService {
         GroupEntity groupEntity = groupRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
 
-        s3UploadComponent.profileDelete("group", id.toString());
+        s3UploadComponent.profileDelete("group", groupEntity.getGroupPic());
         groupRepository.delete(groupEntity);
     }
 

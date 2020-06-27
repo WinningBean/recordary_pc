@@ -1,5 +1,8 @@
 package com.fairy_pitt.recordary.common.domain;
 
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
@@ -113,5 +116,17 @@ public class UserEntity extends BaseTime {
         this.userNm = userNm;
         this.userPic = userPic;
         this.userEx = userEx;
+    }
+
+    public void updateProfile(String userPic){
+        this.userPic = userPic;
+    }
+
+    public String getProfilePath(){
+        AmazonS3 amazonS3Client = AmazonS3ClientBuilder.standard()
+                .withRegion(Regions.AP_NORTHEAST_2)
+                .build();
+        String bucketName = "recordary-springboot-upload";
+        return amazonS3Client.getUrl(bucketName, userPic).toString();
     }
 }

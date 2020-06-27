@@ -26,7 +26,7 @@ const Calendar = (props) => {
   // 1 : 남의 프로필
   // 2 : 마스터 그룹 프로필
   // 3 : 그룹원 프로필
-  // 4 : 일정 공유
+  // 4 : 개인 일정 공유
   // 5 : 남의 그룹 프로필
   // 6 : 그룹 일정 공유
   const [userDate, setUserDate] = useState([]);
@@ -96,49 +96,55 @@ const Calendar = (props) => {
       var data = undefined;
 
       console.log(props.info, props.type);
-      props.type === 2 || props.type === 3 || props.type === 5 || props.type === 6
-        ? (data = (
+      try {
+        if (props.type === 2 || props.type === 3 || props.type === 5 || props.type === 6) {
+          data = (
             await axios.post(`/schedule/showGroupSchedule/${props.info.groupCd}`, {
               groupCd: props.info.groupCd,
               frommDate: startDate.getTime(),
               toDate: endDate.getTime(),
             })
-          ).data)
-        : (data = (
+          ).data;
+        } else {
+          data = (
             await axios.post(`/schedule/showUserSchedule/${props.info.userCd}`, {
               userCd: props.info.userCd,
               frommDate: startDate.getTime(),
               toDate: endDate.getTime(),
             })
-          ).data);
+          ).data;
+        }
 
-      console.log(data);
+        console.log(data);
 
-      const abcd = data.map((value) => ({
-        tab: value.tabCd,
-        cd: value.scheduleCd,
-        nm: value.scheduleNm,
-        ex: value.scheduleEx,
-        start: new Date(value.scheduleStr),
-        end: new Date(value.scheduleEnd),
-        color: value.scheduleCol,
-        state: value.schedulePublicState,
-        members: value.scheduleMemberList,
-      }));
+        const abcd = data.map((value) => ({
+          tab: value.tabCd,
+          cd: value.scheduleCd,
+          nm: value.scheduleNm,
+          ex: value.scheduleEx,
+          start: new Date(value.scheduleStr),
+          end: new Date(value.scheduleEnd),
+          color: value.scheduleCol,
+          state: value.schedulePublicState,
+          members: value.scheduleMemberList,
+        }));
 
-      const copyDraft = produce(abcd, (draft) => {
-        draft.sort((a, b) => {
-          if (dateFns.isSameDay(a.start, b.start)) {
-            if (dateFns.isSameDay(a.end, b.end)) {
-              return 0;
+        const copyDraft = produce(abcd, (draft) => {
+          draft.sort((a, b) => {
+            if (dateFns.isSameDay(a.start, b.start)) {
+              if (dateFns.isSameDay(a.end, b.end)) {
+                return 0;
+              }
+              return dateFns.differenceInDays(b.end, a.end);
             }
-            return dateFns.differenceInDays(b.end, a.end);
-          }
-          return dateFns.differenceInDays(a.start, b.start);
+            return dateFns.differenceInDays(a.start, b.start);
+          });
         });
-      });
-      setUserDate(copyDraft);
-      setAlert(null);
+        setUserDate(copyDraft);
+        setAlert(null);
+      } catch (error) {
+        console.error(error);
+      }
     })();
   }, [currentMonth]);
 
@@ -378,6 +384,7 @@ const Calendar = (props) => {
                 overflow: 'hidden',
               }}
             >
+              {/* {type === 2 || type === 3 || type === 6} */}
               {`${
                 publicState === 0
                   ? '전체'
@@ -706,13 +713,17 @@ const Calendar = (props) => {
       }
       console.log(props.tabInfo, props.clickTabIndex);
       var color = undefined;
-      if (props.clickTab === undefined) {
-        // 탭 색상 반영 유무 체크
-        if (value.tab === null || type === 4 || type === 6) {
-          color = value.color;
+      if (props.type === 0 || props.type === 1) {
+        if (props.clickTab === undefined) {
+          // 탭 색상 반영 유무 체크
+          if (value.tab === null || type === 4 || type === 6) {
+            color = value.color;
+          } else {
+            console.log(props.clickTab);
+            color = props.tabInfo.find((_value) => _value.scheduleTabCd === value.tab).scheduleTabColor;
+          }
         } else {
-          console.log(props.clickTab);
-          color = props.tabInfo.find((_value) => _value.scheduleTabCd === value.tab).scheduleTabColor;
+          color = value.color;
         }
       } else {
         color = value.color;

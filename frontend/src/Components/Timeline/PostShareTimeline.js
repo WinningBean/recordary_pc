@@ -167,11 +167,13 @@ const PostShareTimeline = (props) => {
           </div>
         </div>
         <div className='profile-moreIcon'>
-          {props.user.userCd !== data.userFK.userCd ? (
-            <LongMenu options={['공유 게시물']} returnValue={userPostMoreButtonClick} />
-          ) : (
-            <LongMenu options={['공유 게시물', ' 수정 ', ' 삭제 ']} returnValue={userPostMoreButtonClick} />
-          )}
+          {props.user !== undefined ? (
+            props.user.userCd !== data.userFK.userCd ? (
+              <LongMenu options={['공유 게시물']} returnValue={userPostMoreButtonClick} />
+            ) : (
+              <LongMenu options={['공유 게시물', ' 수정 ', ' 삭제 ']} returnValue={userPostMoreButtonClick} />
+            )
+          ) : null}
         </div>
       </div>
       <div className='timeline-info'>
@@ -342,6 +344,7 @@ const PostShareTimeline = (props) => {
                 <ThumbUpRoundedIcon
                   style={data.currentUserLikePost ? { color: 'rgba(20, 81, 51, 0.9)', fontSize: 25 } : { fontSize: 25 }}
                   onClick={async () => {
+                    if (props.user === undefined) return;
                     try {
                       if (data.currentUserLikePost === false) {
                         const like = (

@@ -21,8 +21,6 @@ public class NoticeService {
     private final PostRepository postRepository;
     private final ScheduleRepository scheduleRepository;
     private final CommentRepository commentRepository;
-    private final ChatRoomRepository chatRoomRepository;
-    private final ChatRepository chatRepository;
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
@@ -63,21 +61,13 @@ public class NoticeService {
             ownerCd = groupRepository.findByGroupCd(noticeDto.getTargetCd()).getGMstUserFK().getUserCd();
             return getNoticeDestination(ownerCd);
         }
+        else if (noticeType == NoticeType.GROUP_MEMBER_OUT){
+            return getNoticeDestination(noticeDto.getTargetCd());
+        }
         else if (noticeType == NoticeType.POST_LIKE_NEW){
             ownerCd = postRepository.findByPostCd(noticeDto.getTargetCd()).getUserFK().getUserCd();
+            if (ownerCd == noticeDto.getActiveCd()) return null;
             return getNoticeDestination(ownerCd);
-        }
-        else if (noticeType == NoticeType.POST_GROUP_NEW){
-            GroupEntity groupEntity = groupRepository.findByGroupCd(noticeDto.getActiveCd());
-            UserEntity userEntity = postRepository.findByPostCd(noticeDto.getTargetCd()).getUserFK();
-
-            for (GroupMemberEntity groupMemberEntity : groupEntity.getMembers()){
-                ownerCd = groupMemberEntity.getUserFK().getUserCd();
-                if (userEntity.getUserCd() != ownerCd) {
-                    messagingTemplate.convertAndSend(getNoticeDestination(ownerCd));
-                }
-            }
-            return null;
         }
         else if (noticeType == NoticeType.SCHEDULE_MEMBER_INVITE){
             return getNoticeDestination(noticeDto.getTargetCd());
@@ -92,10 +82,12 @@ public class NoticeService {
         }
         else if (noticeType == NoticeType.COMMENT_NEW){
             ownerCd = postRepository.findByPostCd(noticeDto.getTargetCd()).getUserFK().getUserCd();
+            if (ownerCd == commentRepository.findByCommentCd(noticeDto.getActiveCd()).getCommentUserFK().getUserCd()) return null;
             return getNoticeDestination(ownerCd);
         }
         else if (noticeType == NoticeType.COMMENT_SUB_NEW){
             ownerCd = commentRepository.findByCommentCd(noticeDto.getTargetCd()).getCommentUserFK().getUserCd();
+            if (ownerCd == commentRepository.findByCommentCd(noticeDto.getActiveCd()).getCommentUserFK().getUserCd()) return null;
             return getNoticeDestination(ownerCd);
         }
 
@@ -116,6 +108,8 @@ public class NoticeService {
         Long ownerCd;
 
         if (groupEntity != null){
+            ownerCd = groupEntity.getGMstUserFK().getUserCd();
+            messagingTemplate.convertAndSend(getTimeLineDestination(ownerCd), postResponseDto);
             for (GroupMemberEntity groupMemberEntity : groupMemberRepository.findAllByGroupFK(groupEntity)){
                 ownerCd = groupMemberEntity.getUserFK().getUserCd();
                 messagingTemplate.convertAndSend(getTimeLineDestination(ownerCd),postResponseDto);
