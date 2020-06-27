@@ -35,14 +35,15 @@ const Aside = (props) => {
             {user.userId}({user.userNm})
           </div>
           <div className='aside-profile-statusMsg'>
-            {user.userEx.split('\n').map((line) => {
+            {user.userEx}
+            {/* {user.userEx.split('\n').map((line) => {
               return (
                 <span>
                   {line}
                   <br />
                 </span>
               );
-            })}
+            })} */}
           </div>
           <div className='aside-profile-TodaySchedule'>
             <hr />
