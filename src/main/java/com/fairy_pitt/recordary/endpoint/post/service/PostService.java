@@ -102,10 +102,9 @@ public class PostService {
     }
 
     private List<PostResponseDto> checkCurrentUserForPost(List<PostEntity> postEntityList){
-        UserEntity currentUser = userService.currentUser();
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();
         for (PostEntity postEntity : postEntityList){
-            int publicState = followerService.checkPublicStateToTarget(currentUser.getUserCd(), postEntity.getUserFK().getUserCd());
+            int publicState = followerService.checkPublicStateToTarget(userService.currentUserCd(), postEntity.getUserFK().getUserCd());
             if (postEntity.getPostPublicState() <= publicState){
                 postResponseDtoList.add(checkCurrentUserLikePost(new PostResponseDto(postEntity)));
             }

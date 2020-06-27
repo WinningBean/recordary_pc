@@ -44,7 +44,8 @@ public class S3UploadComponent {
         int fileNum = 1;
         createFolder(dirName);
         for (MultipartFile multipartFile : multipartFiles) {
-            String fileName = dirName + "/" + fileNum;
+            String contentType = multipartFile.getContentType().split("/")[1];
+            String fileName = dirName + "/" + fileNum + "." + contentType;
             upload(multipartFile, fileName);
             fileNum++;
         }
@@ -56,9 +57,10 @@ public class S3UploadComponent {
                 .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
         //S3에 MultipartFile 타입은 전송이 안됨
 
-        String fileName = dirName + "/" + id.toString();
-        return upload(uploadFile, fileName);
-        //업로드된 파일의 S3 URL 주소를 반환
+        String contentType = multipartFile.getContentType().split("/")[1];
+        String fileName = dirName + "/" + id + "." + contentType;
+        upload(uploadFile, fileName);
+        return fileName;
     }
 
     public String upload(MultipartFile multipartFile, String fileName) throws IOException {//MultipartFile 을 전달 받고
@@ -90,10 +92,14 @@ public class S3UploadComponent {
         ObjectListing objectListing = amazonS3Client.listObjects(bucket, preFix);
         int folderCount = 0;
         for (S3ObjectSummary os : objectListing.getObjectSummaries()){
-            if (folderCount != 0) resultList.add(amazonS3Client.getUrl(bucket, os.getKey()).toString());
-            folderCount++;
+            String objectKey = os.getKey();
+            if (!objectKey.endsWith("/")) resultList.add(amazonS3Client.getUrl(bucket, objectKey).toString());
         }
         return resultList;
+    }
+
+    public String getUrl(String objectName) throws AmazonClientException{
+        return amazonS3Client.getUrl(bucket, objectName).toString();
     }
 
     private Boolean isValidObject(String objectName) throws AmazonClientException{
@@ -131,25 +137,6 @@ public class S3UploadComponent {
         }
         delete(preFix);
     }
-
-//    public String update(String currentFilePath, MultipartFile multipartFile) throws IOException {
-//        // 고유한 key 값을 갖기위해 현재 시간을 postfix 로 붙여줌
-//        SimpleDateFormat date = new SimpleDateFormat("yyyymmddHHmmss");
-//        String fileName = multipartFile.getOriginalFilename() + "-" + date.format(new Date());
-//
-//        // key 가 존재하면 기존 파일은 삭제
-//        if ("".equals(currentFilePath) == false && currentFilePath != null) {
-//            boolean isExistObject = amazonS3Client.doesObjectExist(bucket, currentFilePath); //버킷에 해당 key 를 가진 객체가 존재하는지 확dls
-//
-//            if (isExistObject == true) {
-//                amazonS3Client.deleteObject(bucket, currentFilePath);
-//            }
-//        }
-//        // 파일 업로드
-//         upload(uploadFile, dirName);
-
-    //fileName
-//    }
 
     private Optional<File> convert(MultipartFile file) throws IOException { //MultiPartFile 을 File 로 전환
         File convertFile = new File(Objects.requireNonNull(file.getOriginalFilename()));

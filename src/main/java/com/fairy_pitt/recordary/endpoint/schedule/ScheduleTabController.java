@@ -20,17 +20,20 @@ public class ScheduleTabController {
 
     @PostMapping("create")
     public @ResponseBody Long save(@RequestBody ScheduleTabRequestDto requestDto){
+        userService.checkSessionLogout();
         return scheduleTabService.save(requestDto);
     }
 
     @DeleteMapping("{id}")
     public Boolean delete(@PathVariable Long id){
+        userService.checkSessionLogout();
         scheduleTabService.delete(id);
         return true;
     }
 
     @GetMapping("/{userCd}")
     public List<ScheduleTabResponseDto> getUserScheduleTab(@PathVariable Long userCd){
+        userService.checkSessionLogout();
         return scheduleTabService.getUserScheduleTab(userCd);
     }
 }
