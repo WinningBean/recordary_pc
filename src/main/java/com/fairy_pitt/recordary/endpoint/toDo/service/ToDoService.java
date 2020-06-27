@@ -57,7 +57,7 @@ public class ToDoService {
 
     public List<ToDoResponseDto> getPreTodoList(Long userCd){
         Date today = new Date();
-        return toDoRepository.findByUserFKAndToDoEndDateBeforeOrderByToDoEndDate(userService.findEntity(userCd), today)
+        return toDoRepository.findByUserFKAndToDoCompleteStateAndToDoEndDateBeforeOrderByToDoEndDate(userService.findEntity(userCd), false, today)
                 .stream()
                 .map(ToDoResponseDto :: new)
                 .collect(Collectors.toList());

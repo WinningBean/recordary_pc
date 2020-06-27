@@ -56,11 +56,10 @@ public class ScheduleMemberService {
 
     @Transactional(readOnly = true)
     public List<ScheduleResponseDto> findUserAsMemberScheduleList(Long targetUserCd, List<ScheduleResponseDto> responseDto, ScheduleDateRequestDto date) {
+        Long currUserCd = userService.currentUserCd();
+        if(currUserCd == null){return scheduleService.scheduleSort(responseDto);};
         if (date.getTabCd() == null) {
             UserEntity targetUser = userService.findEntity(targetUserCd);
-            Long currUserCd = userService.currentUserCd();
-            //Long currUserCd = Long.parseLong("2");
-
             List<ScheduleResponseDto> schedule = scheduleMemberRepository.findByUserFKAndAndScheduleState(targetUser, true)
                     .stream()
                     .map(ScheduleResponseDto::new)

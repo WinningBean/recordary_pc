@@ -237,6 +237,7 @@ class ProfileEditor extends React.Component {
                                   alert: () => {},
                                 });
                                 this.props.onCancel();
+                                window.location.reload(true);
                               }}
                             />
                           );

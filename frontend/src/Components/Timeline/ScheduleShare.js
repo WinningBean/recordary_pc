@@ -24,6 +24,7 @@ import * as dateFns from 'date-fns';
 
 const ScheduleShare = (props) => {
   const [user, setUser] = useState(props.data);
+  const [group, setGroup] = useState(undefined);
   const [open, setOpen] = React.useState(false);
   const [alert, setAlert] = useState(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
@@ -32,7 +33,6 @@ const ScheduleShare = (props) => {
     start: null,
     end: null,
   });
-  const [selectedSchedule, setSelectedSchedule] = useState(false);
   const [scheduleList, setScheduleList] = useState([]);
   const [publicState, setPublicState] = useState(null);
   const [shareScheduleList, setShareScheduleList] = useState([]);
@@ -123,9 +123,17 @@ const ScheduleShare = (props) => {
             ) : (
               <SelectGroup
                 options={props.groupList}
-                onSetSelectedGroup={(selectGroupCd) => setPost({ ...post, groupCd: selectGroupCd })}
+                onSetSelectedGroup={(selectGroupCd) => {
+                  setPost({ ...post, groupCd: selectGroupCd });
+                  props.groupList.map((value) => {
+                    if (value.groupCd === selectGroupCd) {
+                      setGroup(value);
+                    }
+                  });
+                }}
+                currentGroup={null}
               />
-            )}{' '}
+            )}
           </div>
           <div className='schedule-media-button '>
             <div
@@ -133,11 +141,10 @@ const ScheduleShare = (props) => {
               onClick={() => {
                 setIsCalendarOpen(!isCalendarOpen);
                 setChoiceDate({ start: null, end: null });
-                setSelectedSchedule(true);
                 setUserDate([]);
               }}
             >
-              {selectedSchedule ? (
+              {isCalendarOpen ? (
                 <div className='plus-button-design-2 clicked'>
                   <EventAvailableIcon style={{ fontSize: '30px' }} />
                   <span style={{ fontSize: '15px', marginLeft: '5px' }}>일정찾기</span>
@@ -203,8 +210,9 @@ const ScheduleShare = (props) => {
             )}
             <div style={{ margin: '20px' }}>
               <Calendar
-                type={4}
-                info={user}
+                type={group === undefined ? 4 : 6}
+                info={group === undefined ? user : group}
+                clickTab={undefined}
                 searchedSchedule={null}
                 choiceSharedStartDate={choiceDate.start}
                 choiceSharedEndDate={choiceDate.end}
@@ -242,7 +250,6 @@ const ScheduleShare = (props) => {
                 onClick={() => {
                   setIsCalendarOpen(false);
                   saveScheduleList(userDate, choiceDate);
-                  setSelectedSchedule(true);
                 }}
                 disabled={choiceDate.end !== null ? false : true}
               >

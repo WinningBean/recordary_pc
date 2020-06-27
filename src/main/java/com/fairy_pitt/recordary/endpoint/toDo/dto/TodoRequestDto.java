@@ -36,7 +36,7 @@ public class TodoRequestDto {
                 .user(user)
                 .toDoEndDate(toDoEndDate)
                 .toDoCol(toDoCol)
-                .ToDoCompleteState(false)
+                .toDoCompleteState(false)
                 .toDoContent(toDoContent)
                 .build();
     }

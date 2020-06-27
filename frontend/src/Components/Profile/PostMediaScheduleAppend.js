@@ -282,7 +282,7 @@ const PostMediaScheduleAppend = (props) => {
       <div
         className='post-append-header'
         style={{
-          width: '600px',
+          width: '620px',
           transitionProperty: 'background-color',
           transitionDuration: '0.3s',
           transitionTimingFunction: 'ease-out',
@@ -304,6 +304,7 @@ const PostMediaScheduleAppend = (props) => {
               <SelectGroup
                 options={props.groupList}
                 onSetSelectedGroup={(selectGroupCd) => setPost({ ...post, groupCd: selectGroupCd })}
+                currentGroup={null}
               />
             )}
           </div>
