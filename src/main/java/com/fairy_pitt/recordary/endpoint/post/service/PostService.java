@@ -101,6 +101,12 @@ public class PostService {
         return postResponseDto;
     }
 
+    private PostResponseDto checkCurrentUserShowPost(PostResponseDto postResponseDto){
+        int publicState = followerService.checkPublicStateToTarget(userService.currentUserCd(), postResponseDto.getUserFK().getUserCd());
+        if (postResponseDto.getPostPublicState() > publicState) postResponseDto.setFalseCurrentUserShowPost();
+        return postResponseDto;
+    }
+
     private List<PostResponseDto> checkCurrentUserForPost(List<PostEntity> postEntityList){
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();
         for (PostEntity postEntity : postEntityList){
@@ -190,7 +196,7 @@ public class PostService {
         PostEntity postEntity = Optional.ofNullable(postRepository.findByPostCd(postCd))
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. code = " + postCd));
 
-        return checkCurrentUserLikePost(new PostResponseDto(postEntity));
+        return checkCurrentUserShowPost(checkCurrentUserLikePost(new PostResponseDto(postEntity)));
     }
 
     @Transactional(readOnly = true)
