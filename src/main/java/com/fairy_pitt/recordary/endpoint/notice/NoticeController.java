@@ -35,7 +35,7 @@ public class NoticeController {
     }
 
     @ResponseBody
-    @GetMapping("/notice/accept/{userCd}")
+    @GetMapping("notice/accept/{userCd}")
     public List<NoticePageDto> userNoticePage(@PathVariable Long userCd)
     {
         List<NoticePageDto> result = new ArrayList<>();
