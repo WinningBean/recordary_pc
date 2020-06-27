@@ -49,6 +49,8 @@ const HeaderMenu = (props) => {
     return <Redirect to='/' />;
   }
 
+  console.log(props.groupList);
+
   const onGroupMenuSelect = (selectedValue, code) => {
     const value = props.groupList.filter((value) => value.groupCd === code)[0];
     // 그룹목록에서 현재 선택된 그룹 객체를 찾음
@@ -179,12 +181,7 @@ const HeaderMenu = (props) => {
 
   const ShowProfileEditForm = () => {
     if (profileEditForm === null) {
-      setProfileEditForm(
-        <ProfileEditor
-          data={data}
-          onCancel={() => setProfileEditForm(null)}
-        />
-      );
+      setProfileEditForm(<ProfileEditor data={data} onCancel={() => setProfileEditForm(null)} />);
       return;
     }
     setProfileEditForm(null);
@@ -510,7 +507,9 @@ const HeaderMenu = (props) => {
           <CustomIconButton
             onClick={async () => {
               try {
-                const isSuccess = await axios.get('/user/logout');
+                const isSuccess = await axios.post('/user/logout', props.data.userCd, {
+                  headers: { 'Content-Type': 'application/json' },
+                });
                 if (isSuccess) {
                   setIsLogout(true);
                   props.onLogout();

@@ -508,7 +508,7 @@ const PostMediaScheduleAppend = (props) => {
             </div>
             <input
               type='file'
-              accept='image/jpeg'
+              accept='image/*,audio/*,video/*'
               required
               multiple
               style={{ display: 'none' }}

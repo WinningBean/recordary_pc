@@ -72,7 +72,7 @@ export default ({ list, user, onSuccess }) => {
           </span>
         </div>
         <div className='commentIcon-hover' style={{ height: ' 15px' }}>
-          {user.userCd !== val.userFK.userCd ? null : (
+          {user === undefined ? null : user.userCd !== val.userFK.userCd ? null : (
             <div>
               {val.updateClick === true ? (
                 <CheckIcon

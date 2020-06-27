@@ -36,6 +36,23 @@ const CommentTimeline = ({ user, postCd, onSuccess }) => {
     setWriteComment(e.target.value);
   };
 
+  if (user === undefined) {
+    return (
+      <FormControl className={classes.margin}>
+        <TextField
+          inputRef={textField}
+          className={(classes.margin, classes.textStyle)}
+          disabled={true}
+          variant='outlined'
+          multiline
+          rowsMax='2'
+          rows='2'
+          defaultValue='로그인이 되어있지않습니다.'
+        />
+      </FormControl>
+    );
+  }
+
   return (
     <FormControl className={classes.margin}>
       <TextField

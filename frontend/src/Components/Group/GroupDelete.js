@@ -31,8 +31,16 @@ const GroupDelete = ({ info, onDeleteGroupList, onClose }) => {
   const onDelete = async () => {
     try {
       const { data } = await axios.delete(`/group/${info.groupCd}`);
-      onDeleteGroupList(info.groupCd);
-      onClose();
+      setAlert(
+        <Snackbar
+          onClose={() => {
+            onDeleteGroupList(info.groupCd);
+            onClose();
+          }}
+          severity='success'
+          content={`정상적으로 그룹이 삭제되었습니다.`}
+        />
+      );
     } catch (error) {
       console.error(error);
       setAlert(

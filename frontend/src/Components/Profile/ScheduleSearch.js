@@ -145,19 +145,37 @@ export default function ScheduleSearch(props) {
   const handleKeyPress = async (e) => {
     console.log(props.data, scheduleSearch);
     if (e.key === 'Enter') {
-      const userData = (
-        await axios.get(`/schedule/search/${props.data.userInfo.userCd}`, { params: { input: scheduleSearch } })
-      ).data;
-      // const groupData = (await axios.get("http://172.30.1.47:8080/group/search", {params : { groupSearch : userSearch}})).data;
-      console.log(userData);
+      if (props.type === 0 || props.type === 1) {
+        const userData = (
+          await axios.get(`/schedule/search/${props.data.userInfo.userCd}`, { params: { input: scheduleSearch } })
+        ).data;
+        // const groupData = (await axios.get("http://172.30.1.47:8080/group/search", {params : { groupSearch : userSearch}})).data;
+        console.log(userData);
 
-      setSearchedList(
-        userData.map((value) => ({
-          ...value,
-          scheduleStr: new Date(value.scheduleStr),
-          scheduleEnd: new Date(value.scheduleEnd),
-        }))
-      );
+        setSearchedList(
+          userData.map((value) => ({
+            ...value,
+            scheduleStr: new Date(value.scheduleStr),
+            scheduleEnd: new Date(value.scheduleEnd),
+          }))
+        );
+      } else {
+        const groupData = (
+          await axios.post(`/schedule/showGroupSchedule/${props.data.groupCd}`, {
+            groupCd: props.data.groupCd,
+            frommDate: new Date('2019-01-01').getTime(),
+            toDate: new Date('2022-01-01').getTime(),
+          })
+        ).data;
+        console.log(groupData);
+        setSearchedList(
+          groupData.map((value) => ({
+            ...value,
+            scheduleStr: new Date(value.scheduleStr),
+            scheduleEnd: new Date(value.scheduleEnd),
+          }))
+        );
+      }
     }
   };
 

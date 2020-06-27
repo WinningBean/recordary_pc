@@ -36,6 +36,26 @@ const OnlyPostExComment = ({ user, postCd, onSuccess }) => {
     setWriteComment(e.target.value);
   };
 
+  if (user === undefined) {
+    return (
+      <FormControl>
+        <TextField
+          inputRef={textField}
+          className={(classes.margin, classes.textStyle)}
+          id='input-with-icon-textfield'
+          label='Comment'
+          disabled={true}
+          defaultValue='로그인이 되어있지않습니다.'
+          size='small'
+          variant='outlined'
+          multiline
+          rowsMax='2'
+          rows='2'
+        ></TextField>
+      </FormControl>
+    );
+  }
+
   return (
     <FormControl>
       <TextField

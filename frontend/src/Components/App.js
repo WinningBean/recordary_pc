@@ -74,7 +74,7 @@ class App extends React.Component {
         {this.props.isLogin ? <MainPageButton data={this.props.user} groupList={this.props.groupList} /> : null}
         {this.props.isLogin ? (
           <SnackbarProvider maxSnack={5}>
-            <WebSocket userCd={this.props.user.userCd} notice={this.props.notice} />
+            <WebSocket userCd={this.props.user.userCd} userId={this.props.user.userId} notice={this.props.notice} />
           </SnackbarProvider>
         ) : null}
         {/* <Fab
