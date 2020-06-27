@@ -1,9 +1,10 @@
 package com.fairy_pitt.recordary.endpoint.group;
 
-import com.fairy_pitt.recordary.endpoint.group.dto.*;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupPageResponseDto;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupRequestDto;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupMemberService;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
-import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
 import com.fairy_pitt.recordary.endpoint.post.service.PostService;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleDateRequestDto;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleResponseDto;
@@ -28,7 +29,6 @@ public class GroupController {
     private final PostService postService;
     private  final ScheduleService scheduleService;
     private final GroupMemberService groupMemberService;
-    private final S3UploadComponent s3UploadComponent;
     private final UserService userService;
 
     @PostMapping("create")
@@ -47,9 +47,7 @@ public class GroupController {
     @PostMapping("updateProfile/{groupCd}")
     public String updateProfile(@RequestParam("data") MultipartFile multipartFile, @PathVariable Long groupCd) throws IOException {
         userService.checkSessionLogout();
-        String url = s3UploadComponent.profileUpload(multipartFile, "group", groupCd);
-        groupService.updateGroupProfile(url, groupCd);
-        return url;
+        return groupService.updateGroupProfile(groupCd, multipartFile);
     }
 
     @PostMapping("changeMaster/{groupCd}")

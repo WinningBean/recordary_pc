@@ -29,7 +29,7 @@ public class GroupPageResponseDto {
         this.groupNm = entity.getGroupNm();
         this.groupState = entity.getGroupState();
         this.groupEx = entity.getGroupEx();
-        this.groupPic = entity.getGroupPic();
+        this.groupPic = entity.getProfilePath();
     }
 
 

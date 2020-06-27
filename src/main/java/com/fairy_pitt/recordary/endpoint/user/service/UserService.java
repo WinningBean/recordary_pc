@@ -64,18 +64,24 @@ public class UserService {
 
     @Transactional
     public String profileUpload(Long userCd, MultipartFile userPic) throws IOException {
+        UserEntity userEntity = Optional.ofNullable(userRepository.findByUserCd(userCd))
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. cd = " + userCd));
         String imgPath;
 
         if (userPic.isEmpty()) imgPath = null;
-        else imgPath = s3UploadComponent.profileUpload(userPic, "user", userCd);
+        else {
+            if (userEntity.getUserPic() != "user/basic.png") {
+                s3UploadComponent.delete(userEntity.getUserPic());
+            }
+            imgPath = s3UploadComponent.profileUpload(userPic, "user", userCd);
+        }
 
-        log.info(imgPath);
-
+        userEntity.updateProfile(imgPath);
         return imgPath;
     }
 
     private void deleteOnlyUserPossession(UserEntity user){
-        s3UploadComponent.profileDelete("user", user.getUserCd().toString()); // 사용자 프로필
+        s3UploadComponent.profileDelete("user", user.getUserPic()); // 사용자 프로필
 
         List<PostEntity> onlyUserPostList = user.getPostList().stream()
                 .filter(p -> p.getGroupFK() == null)

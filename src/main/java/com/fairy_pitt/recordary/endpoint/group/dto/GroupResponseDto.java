@@ -21,7 +21,7 @@ public class GroupResponseDto { // 응답(요청에대한 답)
         this.groupNm = entity.getGroupNm();
         this.groupState = entity.getGroupState();
         this.groupEx = entity.getGroupEx();
-        this.groupPic = entity.getGroupPic();
+        this.groupPic = entity.getProfilePath();
     }
 
     public GroupResponseDto(GroupEntity entity, Boolean isMaster)
@@ -31,7 +31,7 @@ public class GroupResponseDto { // 응답(요청에대한 답)
         this.groupNm = entity.getGroupNm();
         this.groupState = entity.getGroupState();
         this.groupEx = entity.getGroupEx();
-        this.groupPic = entity.getGroupPic();
+        this.groupPic = entity.getProfilePath();
         this.isMaster = isMaster;
     }
 
