@@ -107,6 +107,9 @@ public class ScheduleService implements Comparator< ScheduleResponseDto > {
 
         UserEntity targetUser = userService.findEntity(targetUserCd);
         Long currUserCd = userService.currentUserCd();
+        if(currUserCd == null) {
+            return null;
+        }
         //Long currUserCd = Long.parseLong("2");
 
         List<ScheduleResponseDto> schedule = scheduleRepository.findByUserFkAndGroupFKIsNullAndSchedulePublicStateAndScheduleStrBetween(targetUser,
