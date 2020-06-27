@@ -34,6 +34,7 @@ public class ScheduleMemberController {
         return true;
     }
 
+
 //    @PostMapping("delete")
 //    public Boolean delete(@RequestBody ScheduleMemberEntityPK id){
 //        userService.checkSessionLogout();
