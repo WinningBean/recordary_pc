@@ -239,7 +239,7 @@ class Profile extends React.Component {
                       <>
                         <li
                           style={{
-                            transform: this.state.clickTab === undefined ? 'translateX(15px)' : 'translateX(30px)',
+                            transform: this.state.clickTab === undefined ? 'translateX(5px)' : 'translateX(30px)',
                           }}
                           className='transition-all'
                         >
@@ -263,7 +263,7 @@ class Profile extends React.Component {
                           <li
                             key={`tab-${index}`}
                             style={{
-                              transform: this.state.clickTab === index ? 'translateX(15px)' : 'translateX(30px)',
+                              transform: this.state.clickTab === index ? 'translateX(5px)' : 'translateX(30px)',
                             }}
                             className='transition-all'
                           >
