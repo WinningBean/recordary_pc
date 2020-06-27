@@ -34,6 +34,6 @@ public class MediaEntity extends BaseTime {
                 .build();
         String bucketName = "recordary-springboot-upload";
         ObjectListing objectListing = amazonS3Client.listObjects(bucketName, mediaPath);
-        return amazonS3Client.getUrl(bucketName, objectListing.getObjectSummaries().get(0).getKey()).toString();
+        return amazonS3Client.getUrl(bucketName, objectListing.getObjectSummaries().get(1).getKey()).toString();
     }
 }
