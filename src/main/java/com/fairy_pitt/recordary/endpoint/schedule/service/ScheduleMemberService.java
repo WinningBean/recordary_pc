@@ -59,6 +59,7 @@ public class ScheduleMemberService {
         if (date.getTabCd() == null) {
             UserEntity targetUser = userService.findEntity(targetUserCd);
             Long currUserCd = userService.currentUserCd();
+            if(currUserCd == null){return null;};
             //Long currUserCd = Long.parseLong("2");
 
             List<ScheduleResponseDto> schedule = scheduleMemberRepository.findByUserFKAndAndScheduleState(targetUser, true)
