@@ -5,6 +5,7 @@ import com.fairy_pitt.recordary.common.domain.ScheduleMemberEntity;
 import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.common.pk.ScheduleMemberEntityPK;
 import com.fairy_pitt.recordary.common.repository.ScheduleMemberRepository;
+import com.fairy_pitt.recordary.endpoint.notice.dto.NoticePageDto;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.*;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -49,15 +50,25 @@ public class ScheduleMemberService {
     public Boolean update(ScheduleMemberEntityPK id, Boolean scheduleState) {
         ScheduleMemberEntity scheduleMemberEntity = scheduleMemberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
-
         scheduleMemberEntity.scheduleMemberUpdate(scheduleState);
         return true;
     }
 
     @Transactional(readOnly = true)
+    public List<NoticePageDto> findInvite(Long userCd)
+    {
+        UserEntity user = userService.findEntity(userCd);
+        return  scheduleMemberRepository.findByUserFKAndAndScheduleState(user, false)
+                .stream()
+                .map(NoticePageDto::new)
+                .collect(Collectors.toList());
+    }
+
+
+    @Transactional(readOnly = true)
     public List<ScheduleResponseDto> findUserAsMemberScheduleList(Long targetUserCd, List<ScheduleResponseDto> responseDto, ScheduleDateRequestDto date) {
         Long currUserCd = userService.currentUserCd();
-        if(currUserCd == null){return scheduleService.scheduleSort(responseDto);};
+        if(currUserCd == null){return scheduleService.scheduleSort(responseDto);}
         if (date.getTabCd() == null) {
             UserEntity targetUser = userService.findEntity(targetUserCd);
             List<ScheduleResponseDto> schedule = scheduleMemberRepository.findByUserFKAndAndScheduleState(targetUser, true)

@@ -7,6 +7,7 @@ import com.fairy_pitt.recordary.common.pk.GroupMemberPK;
 import com.fairy_pitt.recordary.common.repository.GroupApplyRepository;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.endpoint.group.dto.*;
+import com.fairy_pitt.recordary.endpoint.notice.dto.NoticePageDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -45,10 +46,10 @@ public class GroupApplyService {
     }
 
     @Transactional(readOnly = true)
-    public List<GroupApplyResponseDto> findGroupAppliesToUser(Long userId){
+    public List<NoticePageDto> findGroupAppliesToUser(Long userId){
         UserEntity user = userService.findEntity(userId);
      return groupApplyRepository.findAllByUserFKAndAndApplyState(user,1).stream()
-                .map(GroupApplyResponseDto :: new)
+                .map(NoticePageDto:: new)
                 .collect(Collectors.toList());
 
     }

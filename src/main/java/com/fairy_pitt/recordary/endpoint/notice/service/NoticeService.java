@@ -4,19 +4,28 @@ import com.fairy_pitt.recordary.common.domain.*;
 import com.fairy_pitt.recordary.common.repository.*;
 import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
 import com.fairy_pitt.recordary.endpoint.notice.dto.NoticeDto;
+import com.fairy_pitt.recordary.endpoint.notice.dto.NoticePageDto;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
+import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class NoticeService {
 
     private final FollowerService followerService;
+    private final UserService userService;
 
     private final GroupRepository groupRepository;
+    private final GroupApplyRepository groupApplyRepository;
     private final GroupMemberRepository groupMemberRepository;
     private final PostRepository postRepository;
     private final ScheduleRepository scheduleRepository;
@@ -133,5 +142,11 @@ public class NoticeService {
 
     private String getTimeLineDestination(Long userCd) {
         return "/queue/timeLine/" + userCd;
+    }
+
+    public List<NoticePageDto> noticeSort(List<NoticePageDto> responseDto)
+    {
+        responseDto.sort(Comparator.comparing(NoticePageDto::getCreateTime).reversed());
+        return  responseDto;
     }
 }

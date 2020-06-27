@@ -4,6 +4,7 @@ import com.fairy_pitt.recordary.endpoint.group.dto.GroupApplyRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupApplyResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupMemberRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupApplyService;
+import com.fairy_pitt.recordary.endpoint.notice.dto.NoticePageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ public class GroupApplyController {
     }
 
     @GetMapping("findGroupApply/{userCd}")
-    public List<GroupApplyResponseDto> findGroupAppliesToUser(@PathVariable Long userCd){
+    public List<NoticePageDto> findGroupAppliesToUser(@PathVariable Long userCd){
 
         return groupApplyService.findGroupAppliesToUser(userCd);
     }
