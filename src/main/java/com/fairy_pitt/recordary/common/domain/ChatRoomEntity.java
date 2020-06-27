@@ -35,7 +35,7 @@ public class ChatRoomEntity extends BaseTime {
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "roomFK", cascade = CascadeType.REMOVE)
-    private List<ChatEntity> groupChaList = new ArrayList<>();
+    private List<ChatEntity> chatList = new ArrayList<>();
 
     @Builder
     public ChatRoomEntity(UserEntity userFK,

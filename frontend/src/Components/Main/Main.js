@@ -5,6 +5,7 @@ import axios from 'axios';
 import Timeline from '../Timeline/Timeline';
 import TimelineWeekSchedule from '../Timeline/TimelineWeekSchedule';
 import PostShareTimeline from '../Timeline/PostShareTimeline';
+import OnlyPostExTimeline from '../Timeline/OnlyPostExTimeline';
 
 const Main = (props) => {
   return (
@@ -13,11 +14,7 @@ const Main = (props) => {
         {props.timeline.map((value, index) => {
           if (value.mediaFK !== null) {
             return (
-              <div
-                className='timeline-Margin'
-                key={`${value.postCd}-${index}`}
-                style={{ borderTop: value.groupFK !== null ? '4px solid tomato' : null }}
-              >
+              <div className='timeline-Margin' key={`${value.postCd}-${index}`}>
                 <Timeline
                   data={value}
                   user={props.data}
@@ -29,11 +26,7 @@ const Main = (props) => {
             );
           } else if (value.scheduleFK !== null || value.shareScheduleList.length > 0) {
             return (
-              <div
-                className='timeline-Margin'
-                key={`${value.postCd}-${index}`}
-                style={{ borderTop: value.groupFK !== null ? '4px solid tomato' : null }}
-              >
+              <div className='timeline-Margin' key={`${value.postCd}-${index}`}>
                 <TimelineWeekSchedule
                   data={value}
                   user={props.data}
@@ -45,11 +38,7 @@ const Main = (props) => {
             );
           } else if (value.postOriginFK !== null) {
             return (
-              <div
-                className='timeline-Margin'
-                key={`${value.postCd}-${index}`}
-                style={{ borderTop: value.groupFK !== null ? '4px solid tomato' : null }}
-              >
+              <div className='timeline-Margin' key={`${value.postCd}-${index}`}>
                 <PostShareTimeline
                   data={value}
                   user={props.data}
@@ -59,7 +48,18 @@ const Main = (props) => {
                 />
               </div>
             );
-          } else return null;
+          } else
+            return (
+              <div className='timeline-Margin' key={`${value.postCd}-${index}`}>
+                <OnlyPostExTimeline
+                  data={value}
+                  user={props.data}
+                  onPostDelete={(postCd) => {
+                    props.onPostDelete(postCd);
+                  }}
+                />
+              </div>
+            );
         })}
       </div>
     </main>

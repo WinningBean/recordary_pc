@@ -12,6 +12,6 @@ import java.util.List;
 public interface ToDoRepository extends JpaRepository<ToDoEntity, Long> {
     ToDoEntity findByToDoCd(Long cd);
     List<ToDoEntity> findByUserFKAndToDoEndDateAfterOrderByToDoEndDate(UserEntity user, Date curr);
-    List<ToDoEntity> findByUserFKAndToDoEndDateBeforeOrderByToDoEndDate(UserEntity user, Date toDoEndDate);
+    List<ToDoEntity> findByUserFKAndToDoCompleteStateAndToDoEndDateBeforeOrderByToDoEndDate(UserEntity user, Boolean state, Date toDoEndDate);
 
 }

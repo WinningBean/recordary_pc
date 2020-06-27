@@ -4,10 +4,14 @@ import com.fairy_pitt.recordary.common.domain.ScheduleTabEntity;
 import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.common.repository.ScheduleTabRepository;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleTabRequestDto;
+import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleTabResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -36,6 +40,14 @@ public class ScheduleTabService {
     public void update()
     {
 
+    }
+
+    @Transactional(readOnly = true)
+    public List<ScheduleTabResponseDto> getUserScheduleTab(Long userCd){
+        UserEntity userEntity = userService.findEntity(userCd);
+        return userEntity.getScheduleTab().stream()
+                .map(ScheduleTabResponseDto::new)
+                .collect(Collectors.toList());
     }
 
 

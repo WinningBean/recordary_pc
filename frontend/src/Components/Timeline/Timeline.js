@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText } from '@material-ui/core';
 import AlertDialog from '../Other/AlertDialog';
 
+import LikePersonList from './LikePersonList';
 import './Timeline.css';
 import CommentList from './CommentList';
 import LongMenu from '../Other/MoreMenu';
@@ -40,13 +41,14 @@ const Timeline = (props) => {
   const [pictureCount, setPictureCount] = useState(0);
   const [clickSchedule, setClickSchedule] = useState(false);
   const [mediaList, setMediaList] = useState([]);
+  const [likePersonList, setLikePersonList] = useState(false);
 
   useEffect(() => {
     (async () => {
       try {
         const mediaSrc = (await axios.get(`/media/${data.mediaFK.mediaCd}`)).data;
         if (mediaSrc.length < 0) {
-          return null;
+          return;
         } else {
           setMediaList(mediaList.concat(JSON.parse(JSON.stringify(mediaSrc))));
         }
@@ -245,14 +247,33 @@ const Timeline = (props) => {
   };
 
   return (
-    <div className='timeline'>
+    <div className='timeline' style={data.groupFK !== null ? { borderTop: '4px solid tomato' } : null}>
       <div className='timeline-profile'>
         <div className='profile-picture'>
-          <img alt={`${data.userFK.userId} img`} src={data.userFK.userPic} />
+          {data.groupFK === null ? (
+            <img alt={`${data.userFK.userId} img`} src={data.userFK.userPic} />
+          ) : (
+            <img alt={`${data.groupFK.groupCd} img`} src={data.groupFK.groupPic} />
+          )}
         </div>
-        <div className='profile-name'>
-          {data.userFK.userId}({data.userFK.userNm})
-        </div>
+        {data.groupFK === null ? (
+          <div className='profile-name'>
+            {data.userFK.userId}({data.userFK.userNm}){' '}
+          </div>
+        ) : (
+          <div className='profile-name'>
+            {data.groupFK.groupNm}
+            <div style={{ display: 'flex', alignItems: 'center', marginLeft: '10px', color: 'gray', fontSize: '12px' }}>
+              <div>from.</div>
+              <div className='group-post-user' style={{ marginLeft: '10px' }}>
+                <img alt={`${data.userFK.userId}`} src={data.userFK.userPic} />
+              </div>
+              <div style={{ fontWeight: 'bold', marginLeft: '5px' }}>
+                {data.userFK.userId}({data.userFK.userNm})
+              </div>
+            </div>
+          </div>
+        )}
         {data.scheduleFK === null ? (
           <div />
         ) : (
@@ -268,11 +289,11 @@ const Timeline = (props) => {
           </div>
         </div>
         <div className='profile-moreIcon'>
-          {props.user.userCd !== data.userFK.userCd ? (
-            <LongMenu options={['나에게 공유']} returnValue={userPostMoreButtonClick} />
-          ) : (
+          {props.user.userCd === data.userFK.userCd ? (
             <LongMenu options={['나에게 공유', ' 수정 ', ' 삭제 ']} returnValue={userPostMoreButtonClick} />
-          )}
+          ) : data.postPublicState === 0 ? (
+            <LongMenu options={['나에게 공유']} returnValue={userPostMoreButtonClick} />
+          ) : null}
         </div>
       </div>
       <div className='timeline-info'>
@@ -397,6 +418,7 @@ const Timeline = (props) => {
           <div className='comment-reply' style={{ overflowY: 'auto' }}>
             {data.commentList.length > 0 ? (
               <CommentList
+                postCd={data.postCd}
                 tData={data.commentList}
                 user={props.user}
                 onSuccess={(commentInfo) => {
@@ -407,7 +429,7 @@ const Timeline = (props) => {
             ) : (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div className='recomment-reply-users-img'>
-                  <img alt={`${data.userFK.userId} img`} src={data.userFK.userPic} />
+                  <img alt={`${data.userFK.userId}`} src={data.userFK.userPic} />
                 </div>
                 <div style={{ fontWeight: 'bold', marginLeft: '5px' }}>
                   {data.userFK.userId}({data.userFK.userNm})
@@ -439,15 +461,25 @@ const Timeline = (props) => {
                               targetCd: data.postCd, // 이벤트 대상
                             },
                           });
-                          setData({ ...data, currentUserLikePost: true });
+                          setData({
+                            ...data,
+                            currentUserLikePost: true,
+                            postLikeCount: data.postLikeCount + 1,
+                            postLikeFirstUser: data.postLikeFirstUser === null ? props.user : data.postLikeFirstUser,
+                          });
                         }
                       } else {
                         const unLike = (
                           await axios.delete(`/post/${data.postCd}/unLike`, { params: { userCd: props.user.userCd } })
                         ).data;
-                        if (unLike) {
-                          setData({ ...data, currentUserLikePost: false });
-                        }
+                        setData({
+                          ...data,
+                          currentUserLikePost: false,
+                          postLikeCount: data.postLikeCount - 1,
+                          postLikeFirstUser:
+                            data.postLikeFirstUser.userCd === props.user.userCd ? null : data.postLikeForstUser,
+                          // data.postLikeFirstUser.userCd === props.user.userCd ? 다음 사람의 데이터...ㅠ : data.postLikeForstUser,
+                        });
                       }
                     } catch (e) {
                       console.log(e);
@@ -459,13 +491,16 @@ const Timeline = (props) => {
                 />
               </div>
               {data.postLikeCount < 1 ? (
-                <div className='comment-title'>첫번째 좋아요를 눌러주세욤</div>
+                <div className='.comment-title-none'>첫번째 좋아요를 눌러주세욤</div>
               ) : data.postLikeCount === 1 ? (
-                <div className='comment-title'>{`${data.postLikeFirstUser.userId}(${data.postLikeFirstUser.userNm}) 님이 좋아합니다`}</div>
+                <div
+                  className='comment-title'
+                  onClick={() => setLikePersonList(true)}
+                >{`${data.postLikeFirstUser.userId}(${data.postLikeFirstUser.userNm}) 님이 좋아합니다`}</div>
               ) : (
-                <div className='comment-title'>{`${data.postLikeFirstUser.userId}(${
-                  data.postLikeFirstUser.userNm
-                }) 님 외 ${data.postLikeCount - 1}명이 좋아합니다`}</div>
+                <div className='comment-title' onClick={() => setLikePersonList(true)}>{`${
+                  data.postLikeFirstUser.userId
+                }(${data.postLikeFirstUser.userNm}) 님 외 ${data.postLikeCount - 1}명이 좋아합니다`}</div>
               )}
             </div>
           </div>
@@ -483,6 +518,7 @@ const Timeline = (props) => {
           </div>
         </div>
       </div>
+      {likePersonList ? <LikePersonList postCd={data.postCd} onCancel={() => setLikePersonList(false)} /> : null}
       {menuDialog}
       {dialog}
     </div>

@@ -48,7 +48,6 @@ aside {
 }
 
 aside > .aside-profile {
-  height: 440px;
   width: 220px;
   padding-left: 10px;
   padding-top: 10px;
@@ -89,7 +88,6 @@ aside > .aside-profile {
 }
 .aside-profile-TodaySchedule {
   width: 200px;
-  height: 100px;
 }
 .aside-profile-TodaySchedule > div {
   text-align: center;

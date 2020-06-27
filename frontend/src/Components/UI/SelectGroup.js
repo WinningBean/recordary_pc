@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SelectGroup({ options, onSetSelectedGroup }) {
+export default function SelectGroup({ options, onSetSelectedGroup, selectedIndex, currentGroup }) {
   const classes = useStyles();
   const [group, setGroup] = React.useState('');
 
@@ -29,7 +29,7 @@ export default function SelectGroup({ options, onSetSelectedGroup }) {
     options.map((option) => {
       if (event.target.value === option.groupNm) {
         onSetSelectedGroup(option.groupCd);
-      } else return null;
+      } else return;
     });
   };
 
@@ -37,12 +37,25 @@ export default function SelectGroup({ options, onSetSelectedGroup }) {
     <div style={{ width: '120px' }}>
       <FormControl className={classes.formControl}>
         <InputLabel id='demo-simple-select-label'>그룹 선택</InputLabel>
-        <Select labelId='demo-simple-select-label' id='demo-simple-select' value={group} onChange={handleChange}>
-          {options.map((option, index) => (
-            <MenuItem key={`${option.groupCd}-${index}`} value={option.groupNm}>
-              {option.groupNm}
+        <Select
+          labelId='demo-simple-select-label'
+          id='demo-simple-select'
+          value={currentGroup !== null ? currentGroup.groupNm : group}
+          onChange={handleChange}
+        >
+          {currentGroup !== null ? (
+            <MenuItem value={currentGroup.groupNm} selected={true} disabled={false}>
+              {currentGroup.groupNm}
             </MenuItem>
-          ))}
+          ) : (
+            options.map((option, index) => {
+              return (
+                <MenuItem key={`${option.groupCd}-${index}`} value={option.groupNm} selected={index === selectedIndex}>
+                  {option.groupNm}
+                </MenuItem>
+              );
+            })
+          )}
         </Select>
       </FormControl>
     </div>

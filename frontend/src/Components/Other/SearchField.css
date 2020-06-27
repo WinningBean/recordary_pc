@@ -14,6 +14,11 @@
   height: 444px;
   overflow-y: scroll;
 }
+.likeTitle {
+  font-size: 20px;
+  color: white;
+  margin-top: 5px;
+}
 .group-follow_change {
   display: flex;
   flex-direction: column;
@@ -24,6 +29,11 @@
   width: 320px;
   border-bottom: 1px solid #eee;
   padding: 6px 0px;
+}
+.like_list {
+  display: flex;
+  justify-content: space-between;
+  width: 320px;
 }
 .MuiTabs-flexContainer {
   justify-content: center;

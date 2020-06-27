@@ -32,7 +32,7 @@ const GroupApply = (props) => {
   const classes = useStyles();
   const [dialog, setDialog] = useState(null);
   const [info, setInfo] = useState(props.info);
-
+  console.log(props);
   return (
     <div className='dialog-wrap'>
       <DialogContent className={classes.content}>
