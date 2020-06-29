@@ -1,6 +1,7 @@
 package com.fairy_pitt.recordary.endpoint.schedule;
 
 import com.fairy_pitt.recordary.common.pk.ScheduleMemberEntityPK;
+import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleMemberSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleMemberService;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleService;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
