@@ -14,7 +14,6 @@ import java.util.Date;
 public class ChatResponseDto {
 
     private UserResponseDto sendUser;
-    private Long room;
     private String content;
     private LocalDateTime crateChat;
 

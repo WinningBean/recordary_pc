@@ -59,9 +59,9 @@ public class ChatRoomService {
         return null;
     }
 
-    public ChatRoomResponseDto enter(Long roomCd)
+    public List<ChatResponseDto> enter(Long roomCd)
     {
-        return new ChatRoomResponseDto(chatRoomRepository.findByRoomCd(roomCd));
+        return new ChatRoomResponseDto(chatRoomRepository.findByRoomCd(roomCd)).getChatList();
     }
 
     private int check(UserEntity user, UserEntity target)

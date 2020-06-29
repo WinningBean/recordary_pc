@@ -19,7 +19,6 @@ public class ChatRoomController {
     private final ChatRoomService chatRoomService;
     private final ChatService chatService;
 
-
     @PostMapping("create")
     public Long create(ChatRoomDto chatRoomDto)
     {
@@ -35,7 +34,7 @@ public class ChatRoomController {
     }
 
     @PostMapping("enter/{roomCd}")
-    public ChatRoomResponseDto enter(@PathVariable Long roomCd)
+    public List<ChatResponseDto> enter(@PathVariable Long roomCd)
     {
         return chatRoomService.enter(roomCd);
     }
