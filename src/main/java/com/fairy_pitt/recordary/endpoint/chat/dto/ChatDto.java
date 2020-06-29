@@ -3,6 +3,7 @@ package com.fairy_pitt.recordary.endpoint.chat.dto;
 import com.fairy_pitt.recordary.common.domain.ChatEntity;
 import com.fairy_pitt.recordary.common.domain.ChatRoomEntity;
 import com.fairy_pitt.recordary.common.domain.UserEntity;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,6 +30,7 @@ public class ChatDto {
         this.userCd = userCd;
     }
 
+    @Builder
     public ChatEntity toEntity( UserEntity user, ChatRoomEntity room)
     {
         return ChatEntity.builder()
