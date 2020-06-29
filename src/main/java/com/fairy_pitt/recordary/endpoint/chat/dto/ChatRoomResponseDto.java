@@ -2,8 +2,6 @@ package com.fairy_pitt.recordary.endpoint.chat.dto;
 
 import com.fairy_pitt.recordary.common.domain.ChatRoomEntity;
 import com.fairy_pitt.recordary.common.domain.UserEntity;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupRequestDto;
-import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +15,7 @@ public class ChatRoomResponseDto {
     private Long roomCd;
     private Long targetCd;
     private String targetNm;
-    private  String targetPic;
+    private String targetPic;
     private String lastChat;
     private Boolean isGroup;
     private List<ChatResponseDto> chatList;
@@ -35,12 +33,12 @@ public class ChatRoomResponseDto {
         if (entity.getGroupFK() != null){
             this.targetCd = entity.getGroupFK().getGroupCd();
             this.targetNm = entity.getGroupFK().getGroupNm();
-            this.targetPic = entity.getGroupFK().getGroupPic();
+            this.targetPic = entity.getGroupFK().getProfilePath();
             this.isGroup = true;
         }else {
             this.targetCd = target.getUserCd();
             this.targetNm = target.getUserNm();
-            this.targetPic = target.getUserPic();
+            this.targetPic = target.getProfilePath();
             this.isGroup = false;
         }
         this.lastChat = last;
