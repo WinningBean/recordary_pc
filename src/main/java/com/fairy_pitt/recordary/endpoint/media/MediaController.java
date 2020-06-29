@@ -22,15 +22,15 @@ public class MediaController {
     private final UserService userService;
 
     @PostMapping("/{userCd}")
-    public Long upload(@PathVariable Long userCd, @RequestParam MultipartFile[] mediaFiles) throws IOException {
+    public Long upload(@PathVariable Long userCd, @RequestParam MultipartFile[] mediaFiles, @RequestParam String[] extension) throws IOException {
         userService.checkSessionLogout();
-        return  mediaService.save(mediaFiles, userCd);
+        return  mediaService.save(mediaFiles, userCd, extension);
     }
 
     @PostMapping("/{userCd}/upload/{scheduleCd}")
-    public Boolean addMedia(@PathVariable Long scheduleCd, @PathVariable Long userCd, @RequestParam MultipartFile[] mediaFiles) throws IOException {
+    public Boolean addMedia(@PathVariable Long scheduleCd, @PathVariable Long userCd, @RequestParam MultipartFile[] mediaFiles, @RequestParam String[] extension) throws IOException {
         userService.checkSessionLogout();
-        Long mediaCd  = mediaService.save(mediaFiles, userCd);
+        Long mediaCd  = mediaService.save(mediaFiles, userCd, extension);
         return postService.addMedia(scheduleCd,mediaCd);
     }
 
