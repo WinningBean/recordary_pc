@@ -50,7 +50,7 @@ const Timeline = (props) => {
         if (mediaSrc.length < 0) {
           return;
         } else {
-          setMediaList(mediaList.concat(JSON.parse(JSON.stringify(mediaSrc))));
+          setMediaList(mediaSrc);
         }
       } catch (e) {
         console.error(e);
