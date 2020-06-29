@@ -12,16 +12,21 @@ import java.util.Date;
 @Getter
 public class ChatDto {
 
-    private Long roomFK;
+    private Long roomCd;
     private Long userCd;
     private String userNM;
     private String content;
     private Date createChat;
 
-    public ChatDto(String userNM, Long roomFK, String content){
+    public ChatDto(String userNM,
+                   Long roomCd,
+                   String content,
+                   Long userCd){
+
         this.content = content;
-        this.roomFK = roomFK;
+        this.roomCd = roomCd;
         this.userNM = userNM;
+        this.userCd = userCd;
     }
 
     public ChatEntity toEntity( UserEntity user, ChatRoomEntity room)

@@ -28,20 +28,20 @@ public class ChatRoomService {
 
     public Long create(ChatRoomDto chatRoomDto)
     {
-        UserEntity user = userService.findEntity(chatRoomDto.getUserFk());
-       if(chatRoomDto.getGroupFk() == null) {
-           UserEntity target = userService.findEntity(chatRoomDto.getTargetFk());
-           return chatRoomDto.toEntity(user, target, null).getRoomCd();
+        UserEntity user = userService.findEntity(chatRoomDto.getUserCd());
+       if(chatRoomDto.getGroupCd() == null) {
+           UserEntity target = userService.findEntity(chatRoomDto.getTargetCd());
+           return chatRoomRepository.save( chatRoomDto.toEntity(user, target, null)).getRoomCd();
        }else {
-          GroupEntity group = groupService.findEntity(chatRoomDto.getGroupFk());
-           return chatRoomDto.toEntity(user, null, group).getRoomCd();
+          GroupEntity group = groupService.findEntity(chatRoomDto.getGroupCd());
+           return chatRoomRepository.save(chatRoomDto.toEntity(user, null, group)).getRoomCd();
        }
     }
 
-    public Long joinChat(ChatRoomDto chatRoomDto)
+    public Long enterChat(ChatRoomDto chatRoomDto)
     {
-        UserEntity user = userService.findEntity(chatRoomDto.getUserFk());
-        UserEntity target = userService.findEntity(chatRoomDto.getTargetFk());
+        UserEntity user = userService.findEntity(chatRoomDto.getUserCd());
+        UserEntity target = userService.findEntity(chatRoomDto.getTargetCd());
 
         switch (check(user, target)){
             case 0:{
@@ -59,7 +59,7 @@ public class ChatRoomService {
         return null;
     }
 
-    public ChatRoomResponseDto join(Long roomCd)
+    public ChatRoomResponseDto enter(Long roomCd)
     {
         return new ChatRoomResponseDto(chatRoomRepository.findByRoomCd(roomCd));
     }
