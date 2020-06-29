@@ -19,13 +19,13 @@ public class ChatRoomResponseDto {
     private String targetNm;
     private  String targetPic;
     private String lastChat;
-    private List<ChatResponseDto> chatList;
+    private Boolean isGroup;
 
     public ChatRoomResponseDto(ChatRoomEntity entity)
     {
         this.roomCd = entity.getRoomCd();
        // this.groupCd = entity.getGroupFK().getGroupCd();
-        this.chatList = entity.getChatList().stream().map(ChatResponseDto::new).collect(Collectors.toList());
+       // this.chatList = entity.getChatList().stream().map(ChatResponseDto::new).collect(Collectors.toList());
     }
 
     public ChatRoomResponseDto(ChatRoomEntity entity, String last, UserEntity target)
@@ -35,10 +35,12 @@ public class ChatRoomResponseDto {
             this.targetCd = entity.getGroupFK().getGroupCd();
             this.targetNm = entity.getGroupFK().getGroupNm();
             this.targetPic = entity.getGroupFK().getGroupPic();
+            this.isGroup = true;
         }else {
             this.targetCd = target.getUserCd();
             this.targetNm = target.getUserNm();
             this.targetPic = target.getUserPic();
+            this.isGroup = false;
         }
         this.lastChat = last;
     }
