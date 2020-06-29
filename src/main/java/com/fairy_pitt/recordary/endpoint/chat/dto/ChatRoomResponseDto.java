@@ -20,12 +20,13 @@ public class ChatRoomResponseDto {
     private  String targetPic;
     private String lastChat;
     private Boolean isGroup;
+    private List<ChatResponseDto> chatList;
 
     public ChatRoomResponseDto(ChatRoomEntity entity)
     {
         this.roomCd = entity.getRoomCd();
        // this.groupCd = entity.getGroupFK().getGroupCd();
-       // this.chatList = entity.getChatList().stream().map(ChatResponseDto::new).collect(Collectors.toList());
+        this.chatList = entity.getChatList().stream().map(ChatResponseDto::new).collect(Collectors.toList());
     }
 
     public ChatRoomResponseDto(ChatRoomEntity entity, String last, UserEntity target)
