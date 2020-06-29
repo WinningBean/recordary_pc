@@ -33,7 +33,7 @@ public class NoticeController {
         noticeService.sendTimeLine(postCd);
     }
 
-    @GetMapping("/notice/{userCd}")
+    @GetMapping("notice/accept/{userCd}")
     public List<NoticePageDto> userNoticePage(@PathVariable Long userCd)
     {
         List<NoticePageDto> result = new ArrayList<>();

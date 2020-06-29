@@ -25,7 +25,7 @@ public class ScheduleMemberService {
     private final UserService userService;
 
     @Transactional
-    public void delete(List<Long> userCd, Long ScheduleCd) {
+    public void deleteAll(List<Long> userCd, Long ScheduleCd) {
         ScheduleEntity schedule = scheduleService.findEntity(ScheduleCd);
 
         for (Long temp : userCd) {
@@ -33,6 +33,16 @@ public class ScheduleMemberService {
             ScheduleMemberEntity scheduleMemberEntity = scheduleMemberRepository.findByUserFKAndScheduleFK(user, schedule);
             scheduleMemberRepository.delete(scheduleMemberEntity);
         }
+    }
+
+    @Transactional
+    public Boolean delete(ScheduleMemberSaveRequestDto requestDto)
+    {
+        ScheduleEntity schedule = scheduleService.findEntity(requestDto.getScheduleCd());
+        UserEntity user = userService.findEntity(requestDto.getUserCd());
+        ScheduleMemberEntity scheduleMemberEntity = scheduleMemberRepository.findByUserFKAndScheduleFK(user, schedule);
+        scheduleMemberRepository.delete(scheduleMemberEntity);
+        return true;
     }
 
     @Transactional
@@ -47,10 +57,17 @@ public class ScheduleMemberService {
     }
 
     @Transactional
-    public Boolean update(ScheduleMemberEntityPK id, Boolean scheduleState) {
-        ScheduleMemberEntity scheduleMemberEntity = scheduleMemberRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
-        scheduleMemberEntity.scheduleMemberUpdate(scheduleState);
+    public Boolean update(ScheduleMemberSaveRequestDto requestDto) {
+        UserEntity user = userService.findEntity(requestDto.getUserCd());
+        ScheduleEntity schedule = scheduleService.findEntity(requestDto.getScheduleCd());
+        ScheduleMemberEntity scheduleMemberEntity = scheduleMemberRepository.findByUserFKAndScheduleFK(user,schedule);
+        if(scheduleMemberEntity.getScheduleState())
+        {
+            scheduleMemberEntity.scheduleMemberUpdate(false);
+        }else{
+            scheduleMemberEntity.scheduleMemberUpdate(true);
+        }
+
         return true;
     }
 
