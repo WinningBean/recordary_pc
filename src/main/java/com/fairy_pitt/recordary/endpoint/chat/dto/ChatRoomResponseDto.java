@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class ChatRoomResponseDto {
 
     private Long roomCd;
-    private Long groupFk;;
+    private Long groupCd;
     private UserResponseDto target;
     private String lastChat;
     private List<ChatResponseDto> chatList;
@@ -22,14 +22,14 @@ public class ChatRoomResponseDto {
     public ChatRoomResponseDto(ChatRoomEntity entity)
     {
         this.roomCd = entity.getRoomCd();
-        this.groupFk = entity.getGroupFK().getGroupCd();
+        this.groupCd = entity.getGroupFK().getGroupCd();
         this.chatList = entity.getChatList().stream().map(ChatResponseDto::new).collect(Collectors.toList());
     }
 
     public ChatRoomResponseDto(ChatRoomEntity entity, String last, UserEntity target)
     {
         this.roomCd = entity.getRoomCd();
-        this.groupFk = entity.getGroupFK().getGroupCd();
+        this.groupCd = entity.getGroupFK().getGroupCd();
         this.target = new UserResponseDto(target);
         this.lastChat = last;
     }

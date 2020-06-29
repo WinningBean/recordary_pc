@@ -8,6 +8,7 @@ import com.fairy_pitt.recordary.endpoint.chat.dto.ChatResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,6 +21,8 @@ import java.util.stream.Collectors;
 @Service
 public class ChatService {
 
+    private final SimpMessagingTemplate simpMessagingTemplate;
+
     private final ChatRepository chatRepository;
     private final UserService userService;
     private final ChatRoomService chatRoomService;
@@ -28,7 +31,7 @@ public class ChatService {
     {
         LocalDateTime currentDate = LocalDateTime.now();
         UserEntity user = userService.findEntity(requestDto.getUserCd());
-        ChatRoomEntity room = chatRoomService.findEntity(requestDto.getRoomFK());
+        ChatRoomEntity room = chatRoomService.findEntity(requestDto.getRoomCd());
         room.setModifiedDate(currentDate);
         chatRepository.save(requestDto.toEntity(user,room));
     }
@@ -38,6 +41,16 @@ public class ChatService {
         return chatRepository.findAllByRoomFK(room).stream()
                 .map(ChatResponseDto :: new)
                 .collect(Collectors.toList());
+    }
+
+    public  void stomp(ChatDto requestDto, Long roomCd)
+    {
+        if(requestDto.getUserCd() != null)
+        {
+            simpMessagingTemplate.convertAndSend("/topic/chat/" + roomCd, requestDto);
+        }else {
+            simpMessagingTemplate.convertAndSend("/queue/chat/" + roomCd, requestDto);
+        }
     }
 
 }
