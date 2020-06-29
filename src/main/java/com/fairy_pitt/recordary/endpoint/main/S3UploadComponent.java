@@ -39,13 +39,12 @@ public class S3UploadComponent {
         amazonS3Client.putObject(bucket, folderName + "/", new ByteArrayInputStream(new byte[0]), new ObjectMetadata());
     }
 
-    public String mediaEntityUpload(MultipartFile[] multipartFiles, Long id) throws IOException {
+    public String mediaEntityUpload(MultipartFile[] multipartFiles, Long id, String[] extension) throws IOException {
         String dirName = "media/" + id + "_" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
         int fileNum = 1;
         createFolder(dirName);
         for (MultipartFile multipartFile : multipartFiles) {
-            String contentType = multipartFile.getContentType().split("/")[1];
-            String fileName = dirName + "/" + fileNum + "." + contentType;
+            String fileName = dirName + "/" + fileNum + "." + extension[fileNum - 1];
             upload(multipartFile, fileName);
             fileNum++;
         }
