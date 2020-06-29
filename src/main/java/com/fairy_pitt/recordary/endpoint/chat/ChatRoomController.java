@@ -5,10 +5,12 @@ import com.fairy_pitt.recordary.endpoint.chat.dto.ChatRoomDto;
 import com.fairy_pitt.recordary.endpoint.chat.dto.ChatRoomResponseDto;
 import com.fairy_pitt.recordary.endpoint.chat.service.ChatRoomService;
 import com.fairy_pitt.recordary.endpoint.chat.service.ChatService;
+import com.fairy_pitt.recordary.endpoint.notice.dto.NoticePageDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping("room")
@@ -46,9 +48,11 @@ public class ChatRoomController {
         return chatRoomService.delete(id);
     }
 
-    @GetMapping("list/{roomCd}")
-    public List<ChatRoomResponseDto> roomList(@PathVariable Long roomCd )
-    {
-        return chatRoomService.chatRoomList(roomCd);
+    @GetMapping("list/{userCd}")
+    public List<ChatRoomResponseDto> roomList(@PathVariable Long userCd ) {
+        List<ChatRoomResponseDto> result = new ArrayList<>();
+        result.addAll(chatRoomService.chatRoomList(userCd));
+        result.addAll(chatRoomService.groupChatList(userCd));
+        return  chatRoomService.chatSort(result);
     }
 }
