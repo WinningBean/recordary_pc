@@ -118,7 +118,7 @@ public class ChatRoomControllerTest {
                 .build());
 
         GroupEntity groupEntity = groupRepository.save(GroupEntity.builder()
-                .gMstUserFK(saveUser)
+                .gMstUserFK(userFK)
                 .groupNm("테스트")
                 .groupState(true)
                 .groupPic(null)
@@ -135,7 +135,7 @@ public class ChatRoomControllerTest {
         ChatRoomEntity chatRoomEntity2 =  chatRoomRepository.save(ChatRoomEntity.builder()
                 .groupFK(groupEntity)
                 .targetFK(null)
-                .userFK(userFK)
+                .userFK(null)
                 .build());
 
         chatRepository.save(ChatEntity.builder()
@@ -155,7 +155,8 @@ public class ChatRoomControllerTest {
                 .userFK(saveUser)
                 .roomFK(chatRoomEntity2)
                 .build());
-    chatRepository.save(ChatEntity.builder()
+
+         chatRepository.save(ChatEntity.builder()
                 .content("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                 .userFK(saveUser)
                 .roomFK(chatRoomEntity2)

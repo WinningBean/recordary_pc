@@ -1,9 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.chat.service;
 
-import com.fairy_pitt.recordary.common.domain.ChatEntity;
-import com.fairy_pitt.recordary.common.domain.ChatRoomEntity;
-import com.fairy_pitt.recordary.common.domain.GroupEntity;
-import com.fairy_pitt.recordary.common.domain.UserEntity;
+import com.fairy_pitt.recordary.common.domain.*;
 import com.fairy_pitt.recordary.common.repository.ChatRoomRepository;
 import com.fairy_pitt.recordary.endpoint.chat.dto.ChatResponseDto;
 import com.fairy_pitt.recordary.endpoint.chat.dto.ChatRoomDto;
@@ -14,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -83,18 +81,39 @@ public class ChatRoomService {
         List<ChatRoomEntity> chatRoomList =  chatRoomRepository.findAllByUserFKOrTargetFKOrderByModifiedDate(user, user);
         List<ChatRoomResponseDto> response = new ArrayList<>();
         for (ChatRoomEntity temp : chatRoomList) {
-            String lastChat = temp.getChatList().get(temp.getChatList().size() - 1).getContent();
+            ChatEntity chatEntity = temp.getChatList().get(temp.getChatList().size() - 1);
             if(user.getUserCd().equals(temp.getUserFK().getUserCd()))
             {
-                ChatRoomResponseDto chatRoom = new ChatRoomResponseDto(temp, lastChat, temp.getTargetFK());
+                ChatRoomResponseDto chatRoom = new ChatRoomResponseDto(temp, chatEntity.getContent(), temp.getTargetFK(), chatEntity.getCreatedDate());
                 response.add(chatRoom);
             }else{
-                ChatRoomResponseDto chatRoom = new ChatRoomResponseDto(temp, lastChat, temp.getUserFK());
+                ChatRoomResponseDto chatRoom = new ChatRoomResponseDto(temp,chatEntity.getContent() , temp.getUserFK(), chatEntity.getCreatedDate());
                 response.add(chatRoom);
             }
         }
         return response;
-
+    }
+    public List<ChatRoomResponseDto> groupChatList(Long userCd)
+    {
+        UserEntity user = userService.findEntity(userCd);
+        List<ChatRoomResponseDto> result = new ArrayList<>();
+        List<GroupEntity> groups = user.getMasters();
+        List<GroupMemberEntity> member = user.getGroups();
+        for(GroupMemberEntity temp : member)
+        {
+            groups.add(temp.getGroupFK());
+        }
+        for(GroupEntity group : groups)
+        {
+            if(chatRoomRepository.existsByGroupFK(group))
+            {
+                ChatRoomEntity entity = chatRoomRepository.findByGroupFK(group);
+                ChatEntity chatEntity = entity.getChatList().get(entity.getChatList().size() - 1);
+                ChatRoomResponseDto  chatRoomResponseDto = new ChatRoomResponseDto(entity, group, chatEntity.getContent(), chatEntity.getCreatedDate());
+                result.add( chatRoomResponseDto);
+            }
+        }
+        return result;
     }
 
     public Boolean delete(Long roomCd)
@@ -108,20 +127,10 @@ public class ChatRoomService {
     public ChatRoomEntity findEntity(Long roomCd){
         return chatRoomRepository.findByRoomCd(roomCd);
     }
-//    public List<ChatRoomResponseDto> userChatList(Long userCd)
-//    {
-//        UserEntity user = userService.findEntity(userCd);
-//        return chatRoomRepository.findAllByUserFKOrTargetFKOrderByModifiedDate(user, user)
-//                .stream()
-//                .map(ChatRoomResponseDto :: new)
-//                .collect(Collectors.toList());
-//    }
-//    public ChatRoomResponseDto groupChat(Long groupCd)
-//    {
-//        GroupEntity group = groupService.findEntity(groupCd);
-//        return new ChatRoomResponseDto(chatRoomRepository.findByGroupFK(group))
-//    }
 
-
-
+    public List<ChatRoomResponseDto> chatSort(List<ChatRoomResponseDto> responseDto)
+    {
+        responseDto.sort(Comparator.comparing(ChatRoomResponseDto:: getLastTime).reversed());
+        return  responseDto;
+    }
 }
