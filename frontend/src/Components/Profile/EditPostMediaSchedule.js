@@ -4,7 +4,7 @@ import { styled } from '@material-ui/styles';
 
 import './PostAppend.css';
 import DTP from '../UI/DTP';
-import SelectGroup from '../UI/SelectGroup';
+import SelectGroup from '../../Containers/UI/SelectGroup';
 import PublicRange from '../UI/PublicRange';
 import Backdrop from '../UI/Backdrop';
 import AlertDialog from '../Other/AlertDialog';
@@ -309,7 +309,7 @@ const EditPostMediaSchedule = (props) => {
         <div className='Post-Append-Group' style={{ marginLeft: '12px' }}>
           <div>
             {post.groupCd === null ? (
-              <SelectGroup options={['그룹없음']} />
+              <SelectGroup options={['그룹없음']} currentGroup={null} />
             ) : (
               <SelectGroup
                 options={props.groupList}

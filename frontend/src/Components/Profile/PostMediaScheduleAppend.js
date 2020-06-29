@@ -4,7 +4,7 @@ import { styled } from '@material-ui/styles';
 
 import './PostAppend.css';
 import DTP from '../UI/DTP';
-import SelectGroup from '../UI/SelectGroup';
+import SelectGroup from '../../Containers/UI/SelectGroup';
 import PublicRange from '../UI/PublicRange';
 import Backdrop from '../UI/Backdrop';
 import AlertDialog from '../Other/AlertDialog';

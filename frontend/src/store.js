@@ -7,6 +7,7 @@ const defaultValue = {
   groupList: undefined,
   notice: null,
 };
+
 const reducer = (state, action) => {
   if (state === undefined) {
     return defaultValue;
