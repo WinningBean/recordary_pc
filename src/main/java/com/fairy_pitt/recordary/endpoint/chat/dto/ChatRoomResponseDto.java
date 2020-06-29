@@ -29,8 +29,8 @@ public class ChatRoomResponseDto {
     public ChatRoomResponseDto(ChatRoomEntity entity, String last, UserEntity target)
     {
         this.roomCd = entity.getRoomCd();
-        this.groupCd = entity.getGroupFK().getGroupCd();
-        this.target = new UserResponseDto(target);
+        if (entity.getGroupFK() != null)this.groupCd = entity.getGroupFK().getGroupCd();
+        if(target != null)this.target = new UserResponseDto(target);
         this.lastChat = last;
     }
 }

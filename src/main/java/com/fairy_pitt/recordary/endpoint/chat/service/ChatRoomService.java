@@ -83,7 +83,7 @@ public class ChatRoomService {
         List<ChatRoomEntity> chatRoomList =  chatRoomRepository.findAllByUserFKOrTargetFKOrderByModifiedDate(user, user);
         List<ChatRoomResponseDto> response = new ArrayList<>();
         for (ChatRoomEntity temp : chatRoomList) {
-            String lastChat = temp.getChatList().get(temp.getChatList().size()- 1).getContent();
+            String lastChat = temp.getChatList().get(temp.getChatList().size() - 1).getContent();
             if(user.getUserCd().equals(temp.getUserFK().getUserCd()))
             {
                 ChatRoomResponseDto chatRoom = new ChatRoomResponseDto(temp, lastChat, temp.getTargetFK());
