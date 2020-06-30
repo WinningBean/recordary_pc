@@ -21,8 +21,8 @@ public class ChatController {
 
     private final ChatService chatService;
 
-    @PostMapping("chat/sendMassage")
-    public Long sendMassage(@RequestBody ChatDto incoming)
+    @PostMapping("chat/sendMessage")
+    public Long sendMessage(@RequestBody ChatDto incoming)
     {
         Long chatCd =  chatService.create(incoming);
         chatService.stomp(chatCd, incoming.getRoomCd());
