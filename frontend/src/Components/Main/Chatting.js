@@ -9,6 +9,9 @@ import AddIcon from '@material-ui/icons/Add';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 
+import Stomp from 'stompjs';
+import SockJs from 'sockjs-client';
+
 import axios from 'axios';
 
 const Chatting = ({ isOpen, user }) => {
@@ -27,6 +30,22 @@ const Chatting = ({ isOpen, user }) => {
     const { data } = await axios.get(`/room/list/${user.userCd}`);
     console.log(data, 'real data');
     setInfo((draft) => (draft = data));
+
+    // var sock = new SockJs('/ws-stomp');
+    // var client = Stomp.over(sock);
+    // client.connect({}, function () {
+    //   data.forEach((value) => {
+    //     if (value.isGroup) {
+    //       client.subscribe(`/queue/chat/${value.roomCd}`, function (response) {
+    //         console.log(JSON.parse(response.body));
+    //       });
+    //     } else {
+    //       client.subscribe(`/topic/chat/${value.roomCd}`, function (response) {
+    //         console.log(JSON.parse(response.body));
+    //       });
+    //     }
+    //   });
+    // });
   };
 
   const getChatList = async (roomCd, index) => {
@@ -47,10 +66,6 @@ const Chatting = ({ isOpen, user }) => {
       chatListRef.current.scrollTop = chatListRef.current.scrollHeight - chatListRef.current.clientHeight;
     }
   }, [chatListRef]);
-
-  if (info === undefined) {
-    return <></>;
-  }
 
   const listView = () => {
     const copyChatList =
@@ -101,19 +116,40 @@ const Chatting = ({ isOpen, user }) => {
     });
   };
 
-  const sendMessage = (e) => {
+  const sendMessage = async (e) => {
     if (writedMessage === '') return null;
-    setInfo((draft) => {
-      // var copyMessage = writedMessage.replace(/(?:\r\n|\r|\n)/g, '<br />');
-      draft[selectedRoomIndex].chatList.push({
-        sendUser: user,
-        content: writedMessage,
-        crateChat: new Date(),
-      });
+    textareaRef.current.disabled = true;
+    console.log({
+      roomCd: info[selectedRoomIndex].roomCd,
+      userCd: user.userCd,
+      userNm: user.userNm,
+      content: writedMessage,
     });
-    textareaRef.current.focus();
-    textareaRef.current.value = '';
-    setWritedMessage('');
+    try {
+      const data = await axios.post('/chat/sendMessage', {
+        roomCd: info[selectedRoomIndex].roomCd,
+        userCd: user.userCd,
+        userNm: user.userNm,
+        content: writedMessage,
+      });
+      console.log(data);
+      textareaRef.current.disabled = false;
+      textareaRef.current.focus();
+      textareaRef.current.value = '';
+      setInfo((draft) => {
+        // var copyMessage = writedMessage.replace(/(?:\r\n|\r|\n)/g, '<br />');
+        draft[selectedRoomIndex].chatList.push({
+          sendUser: user,
+          content: writedMessage,
+          crateChat: new Date(),
+        });
+      });
+      setWritedMessage('');
+    } catch (error) {
+      textareaRef.current.disabled = false;
+      textareaRef.current.focus();
+      console.error(error);
+    }
   };
 
   const AddChatRoom = () => {
@@ -246,7 +282,7 @@ const Chatting = ({ isOpen, user }) => {
                       var isMyMessage = val.sendUser.userCd === user.userCd ? true : false;
                       return isMyMessage ? (
                         <div
-                          key={`${info[selectedRoomIndex].roomCd}-${index}`}
+                          key={`chatList-${info[selectedRoomIndex].roomCd}-${index}`}
                           style={{
                             margin: '5px 10px',
                             display: 'flex',
@@ -282,9 +318,9 @@ const Chatting = ({ isOpen, user }) => {
                               overflowWrap: 'break-word',
                             }}
                           >
-                            {val.content.split('\n').map((line) => {
+                            {val.content.split('\n').map((line, index) => {
                               return (
-                                <span>
+                                <span key={`content ${info[selectedRoomIndex].roomCd}-${line}-${index}`}>
                                   {line}
                                   <br />
                                 </span>
@@ -312,7 +348,7 @@ const Chatting = ({ isOpen, user }) => {
                           >
                             {val.content.split('\n').map((line) => {
                               return (
-                                <span>
+                                <span key={`content ${info[selectedRoomIndex].roomCd}-${line}-${index}`}>
                                   {line}
                                   <br />
                                 </span>
@@ -456,7 +492,7 @@ const Chatting = ({ isOpen, user }) => {
         />
       </div>
       <div style={{ display: 'flex', height: '85%', flexDirection: 'column' }}>{listView()}</div>
-      {chatListView()}
+      {info === undefined ? <div>채팅 리스트가 없습니다</div> : chatListView()}
       {AddChatRoom()}
     </div>
   );
