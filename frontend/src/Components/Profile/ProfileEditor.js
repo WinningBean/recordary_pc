@@ -130,7 +130,7 @@ class ProfileEditor extends React.Component {
               <input
                 name='userPic'
                 type='file'
-                accept='image/*'
+                accept='.gif, .jpeg, .jpg, .png'
                 style={{ display: 'none' }}
                 ref={(fileUpload) => {
                   this.fileUpload = fileUpload;
@@ -138,6 +138,23 @@ class ProfileEditor extends React.Component {
                 onChange={(e) => {
                   // console.log(e.target.files);
                   if (e.target.files && e.target.files.length > 0) {
+                    if (e.target.files[0].size > (5 * 1024 * 1024)) {
+                      this.setState({
+                        alertDialog: () => {
+                          return (
+                            <AlertDialog
+                              severity='error'
+                              content='파일 용량이 너무 큽니다.'
+                              onAlertClose={() => {
+                                this.setState({ alert: () => {}, });
+                              }}
+                            />
+                          );
+                        },
+                      }); // 안 돼요 ㅠㅠ
+                      alert("파일 용량이 너무 큽니다.");
+                      return;
+                    }
                     const reader = new FileReader();
                     reader.addEventListener('load', () =>
                       this.setState({

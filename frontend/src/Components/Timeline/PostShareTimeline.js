@@ -32,6 +32,68 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const extensionImage = ['bmp', 'gif', 'jpeg', 'jpg', 'png'];
+const extensionVideo = ['mp4', 'webm', 'ogg'];
+const extensionAudio = ['m4a', 'mp3', 'ogg', 'wav'];
+
+const filterTagType = (value) => {
+    const len = value.length;
+    const lastDot = value.lastIndexOf('.');
+    const extension = value.substr(lastDot + 1, len).toLowerCase();
+    let filterType = null;
+
+    console.log(extension);
+
+    extensionImage.map((value) => {
+        if (extension === value) filterType = 'image';
+    });
+    extensionVideo.map((value) =>{
+        if (extension === value) filterType = 'video';
+    });
+    extensionAudio.map((value) => {
+        if (extension === value) filterType = 'audio';
+    });
+    return filterType;
+};
+
+const timelineMediaType = (value, index) => {
+  if (filterTagType(value) === 'image') {
+    return (
+      <img
+        id={`postshareMedia-${index}`}
+        alt={`postshareMedia-${index}`}
+        src={value}
+        style={{
+          boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
+          width: '60px',
+          height: '60px',
+          objectFit: 'cover',
+        }}
+      />
+    )
+  } else if (filterTagType(value) === 'video') {
+    return (
+      <video controls title={`postshareMedia-${index}`}
+        src={value}
+        style={{boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)', height: '60px', objectFit: 'cover'}}>
+        지원되지 않는 형식입니다.
+      </video>
+    )
+  } else if (filterTagType(value) === 'audio') {
+    return (
+        <audio controls src={value} style={{width: '60px'}}>
+        지원되지 않는 형식입니다.
+        </audio>
+    )
+  } else {
+    return (
+      <span style={{display: 'block', height: '100%', textAlign: 'center'}}>
+        지원되지 않는 형식입니다.
+      </span>
+    )
+  }
+}
+
 const PostShareTimeline = (props) => {
   const classes = useStyles();
   const [dialog, setDialog] = useState(null);
@@ -234,18 +296,8 @@ const PostShareTimeline = (props) => {
               <div style={{ display: 'flex', overflowX: 'auto' }}>
                 {mediaList.length > 0
                   ? mediaList.map((value, index) => (
-                      <div style={{ marginRight: '10px' }} key={`${index}-postAddImg`}>
-                        <img
-                          style={{
-                            boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
-                            width: '60px',
-                            height: '60px',
-                            objectFit: 'cover',
-                          }}
-                          id={`postshareImg-${index}`}
-                          alt={`postshareImg-${index}`}
-                          src={value}
-                        />
+                      <div style={{ marginRight: '10px' }} key={`${index}-postAddMedia`}>
+                        {timelineMediaType(value, index)}
                       </div>
                     ))
                   : null}

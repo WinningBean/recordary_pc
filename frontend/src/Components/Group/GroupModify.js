@@ -143,13 +143,17 @@ const GroupModify = (props) => {
         </div>
         <input
           type='file'
-          accept='image/*'
+          accept='.gif, .jpeg, .jpg, .png'
           style={{ display: 'none' }}
           ref={(file) => {
             fileUpload = file;
           }}
           onChange={(e) => {
             if (e.target.files && e.target.files.length > 0) {
+              if (e.target.files[0].size > (5 * 1024 * 1024)) {
+                alert("파일 용량이 너무 큽니다.");
+                return;
+              }
               const reader = new FileReader();
               reader.addEventListener('load', () => setImageSrc(reader.result));
               reader.readAsDataURL(e.target.files[0]);

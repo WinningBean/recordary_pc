@@ -73,6 +73,7 @@ const EditPostMediaSchedule = (props) => {
   const [change, setChange] = useState(false);
   const [updatePostAddMediaListSrc, setUpdatePostAddMediaListSrc] = useState([]);
   const [postAddMediaListSrc, setPostAddMediaListSrc] = useState(props.mediaList.length < 0 ? [] : props.mediaList);
+  const [postAddMediaExtensionList, setPostAddMediaExtensionList] = useState([]);
   const [mediaOpen, setMediaOpen] = useState(props.data.mediaFK !== null ? true : false);
   const [scheduleOpen, setScheduleOpen] = useState(props.data.scheduleFK !== null ? true : false);
   const [open, setOpen] = React.useState(false);
@@ -191,6 +192,68 @@ const EditPostMediaSchedule = (props) => {
     setOpen(false);
   };
 
+  const extensionImage = ['bmp', 'gif', 'jpeg', 'jpg', 'png'];
+const extensionVideo = ['mp4', 'webm', 'ogg'];
+const extensionAudio = ['m4a', 'mp3', 'ogg', 'wav'];
+
+const filterTagType = (value) => {
+    const len = value.length;
+    const lastDot = value.lastIndexOf('.');
+    const extension = value.substr(lastDot + 1, len).toLowerCase();
+    let filterType = null;
+
+    console.log(extension);
+
+    extensionImage.map((value) => {
+        if (extension === value) filterType = 'image';
+    });
+    extensionVideo.map((value) =>{
+        if (extension === value) filterType = 'video';
+    });
+    extensionAudio.map((value) => {
+        if (extension === value) filterType = 'audio';
+    });
+    return filterType;
+};
+
+const timelineMediaType = (value) => {
+  if (filterTagType(value) === 'image') {
+    return (
+      <img
+        id='postAddMedia'
+        alt='postAddMedia'
+        src={value}
+        style={{
+          boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
+          width: '60px',
+          height: '60px',
+          objectFit: 'cover',
+        }}
+      />
+    )
+  } else if (filterTagType(value) === 'video') {
+    return (
+      <video controls title='postAddMedia'
+        src={value}
+        style={{boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)', height: '60px', objectFit: 'cover'}}>
+        지원되지 않는 형식입니다.
+      </video>
+    )
+  } else if (filterTagType(value) === 'audio') {
+    return (
+        <audio controls src={value} style={{width: '60px'}}>
+        지원되지 않는 형식입니다.
+        </audio>
+    )
+  } else {
+    return (
+      <span style={{display: 'block', height: '100%', textAlign: 'center'}}>
+        지원되지 않는 형식입니다.
+      </span>
+    )
+  }
+}
+
   const onSubmit = async () => {
     try {
       if (props.data.mediaFK !== null) {
@@ -238,9 +301,11 @@ const EditPostMediaSchedule = (props) => {
       if (updatePostAddMediaListSrc.length > 0) {
         const formData = new FormData();
 
-        console.log(updatePostAddMediaListSrc);
         updatePostAddMediaListSrc.map((value, index) => {
           formData.append('mediaFiles', dataURLToBlob(value));
+        });
+        postAddMediaExtensionList.map((value, index) => {
+          formData.append('extension', value);
         });
         getMediaCd = (
           await axios.post(`/media/${post.userCd}`, formData, {
@@ -610,15 +675,36 @@ const EditPostMediaSchedule = (props) => {
             </div>
             <input
               type='file'
-              accept='image/*, video/*, audio/*'
+              accept='.bmp, .gif, .jpeg, .jpg, .png, .mp4, .webm, .ogg, .m4a, .mp3, .ogg, .wav'
               required
               multiple
               style={{ display: 'none' }}
               ref={fileUpload}
               onChange={(e) => {
                 setChange(true);
+                if (e.target.files.length > 5) {
+                  setDialog(
+                    <AlertDialog
+                      severity='error'
+                      content='5개 이상 업로드할 수 없습니다.'
+                      onAlertClose={() => setDialog(null)}
+                    />
+                  );
+                  return;
+                }
                 for (let i = 0; i < e.target.files.length; i++) {
+                  if (e.target.files[i].size > (100 * 1024 * 1024)) {
+                    setDialog(
+                      <AlertDialog
+                        severity='error'
+                        content='파일 용량이 너무 큽니다.'
+                        onAlertClose={() => setDialog(null)}
+                      />
+                    );
+                    return;
+                  }
                   const reader = new FileReader();
+                  postAddMediaExtensionList.push(e.target.files[i].name.split('.').pop().toLowerCase());
                   reader.addEventListener('load', (e) => {
                     updatePostAddMediaListSrc.push(e.target.result);
                   });
@@ -629,34 +715,14 @@ const EditPostMediaSchedule = (props) => {
             {(postAddMediaListSrc.length > 0 && updatePostAddMediaListSrc.length > 0) ||
             (postAddMediaListSrc.length < 1 && updatePostAddMediaListSrc.length > 0)
               ? updatePostAddMediaListSrc.map((value, index) => (
-                  <div style={{ marginLeft: '10px' }} key={`${index}-postAddImg`}>
-                    <img
-                      style={{
-                        boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
-                        width: '60px',
-                        height: '60px',
-                        objectFit: 'cover',
-                      }}
-                      id='postAddImg'
-                      alt='postAddImg'
-                      src={value}
-                    />
+                  <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
+                    {timelineMediaType(value)}
                   </div>
                 ))
               : postAddMediaListSrc.length > 0 && updatePostAddMediaListSrc.length < 1
               ? postAddMediaListSrc.map((value, index) => (
-                  <div style={{ marginLeft: '10px' }} key={`${index}-postAddImg`}>
-                    <img
-                      style={{
-                        boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
-                        width: '60px',
-                        height: '60px',
-                        objectFit: 'cover',
-                      }}
-                      id='postAddImg'
-                      alt='postAddImg'
-                      src={value}
-                    />
+                  <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
+                    {timelineMediaType(value)}
                   </div>
                 ))
               : null}
