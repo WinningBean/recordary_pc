@@ -33,6 +33,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const extensionImage = ['bmp', 'gif', 'jpeg', 'jpg', 'png'];
+const extensionVideo = ['mp4', 'webm', 'ogg'];
+const extensionAudio = ['m4a', 'mp3', 'ogg', 'wav'];
+
+const filterTagType = (value) => {
+    const len = value.length;
+    const lastDot = value.lastIndexOf('.');
+    const extension = value.substr(lastDot + 1, len).toLowerCase();
+    let filterType = null;
+
+    console.log(extension);
+
+    extensionImage.map((value) => {
+        if (extension === value) filterType = 'image';
+    });
+    extensionVideo.map((value) =>{
+        if (extension === value) filterType = 'video';
+    });
+    extensionAudio.map((value) => {
+        if (extension === value) filterType = 'audio';
+    });
+    return filterType;
+};
+
 const Timeline = (props) => {
   const classes = useStyles();
   const [dialog, setDialog] = useState(null);
@@ -50,7 +74,7 @@ const Timeline = (props) => {
         if (mediaSrc.length < 0) {
           return;
         } else {
-          setMediaList(mediaList.concat(JSON.parse(JSON.stringify(mediaSrc))));
+          setMediaList(mediaSrc);
         }
       } catch (e) {
         console.error(e);
@@ -127,10 +151,46 @@ const Timeline = (props) => {
     }
   };
 
-  const pictureList = () => {
+  const timelineMediaType = (value) => {
+    if (filterTagType(value) === 'image') {
+      return (
+        <img
+          alt='timeline-img'
+          src={value}
+          style={{ width: '490px', height: '330px', objectFit: 'cover' }}
+        />
+      )
+    } else if (filterTagType(value) === 'video') {
+      return (
+        <div style={{lineHeight: '340px'}}>
+          <video controls title='timeline-video' 
+            src={value}
+            style={{width: '480px', verticalAlign: 'middle'}}>
+            지원되지 않는 형식입니다.
+          </video>
+        </div>
+      )
+    } else if (filterTagType(value) === 'audio') {
+      return (
+        <div style={{padding: '0px 40px', lineHeight: '340px'}}>
+          <audio controls src={value} style={{width: '400px', verticalAlign: 'middle'}}>
+          지원되지 않는 형식입니다.
+          </audio>
+        </div>
+      )
+    } else {
+      return (
+        <span style={{lineHeight: '340px', display: 'block', height: '100%', textAlign: 'center'}}>
+          지원되지 않는 형식입니다.
+        </span>
+      )
+    }
+  }
+
+  const timelineMediaList = () => {
     try {
       if (mediaList.length < 2) {
-        return <img alt='timeline-img' src={data.mediaFK.mediaFirstPath} />;
+        return timelineMediaType(data.mediaFK.mediaFirstPath);
       } else {
         return (
           <>
@@ -146,13 +206,9 @@ const Timeline = (props) => {
                   return (
                     <li
                       key={`${data.postCd}-${index}`}
-                      style={{ position: 'absolute', transform: `translateX(${500 * index}px)` }}
+                      style={{ position: 'absolute', transform: `translateX(${500 * index}px)`, width: '100%', lineHeight: '340px' }}
                     >
-                      <img
-                        alt='timeline-img'
-                        src={value}
-                        style={{ width: '490px', height: '330px', objectFit: 'cover' }}
-                      />
+                    {timelineMediaType(value)}
                     </li>
                   );
                 })}
@@ -161,8 +217,8 @@ const Timeline = (props) => {
             <div
               style={{
                 position: 'absolute',
-                top: '150px',
-                height: '30px',
+                top: '157.5px',
+                height: '25px',
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -219,7 +275,7 @@ const Timeline = (props) => {
                   return (
                     <div
                       key={`post-bottom-${data.postCd}-${index}`}
-                      className='timeline-picture-bottom'
+                      className='timeline-media-bottom'
                       style={{
                         opacity: '1',
                       }}
@@ -229,7 +285,7 @@ const Timeline = (props) => {
                 return (
                   <div
                     key={`post-bottom-${data.postCd}-${index}`}
-                    className='timeline-picture-bottom'
+                    className='timeline-media-bottom'
                     style={{
                       opacity: '.4',
                     }}
@@ -300,8 +356,8 @@ const Timeline = (props) => {
       </div>
       <div className='timeline-info'>
         <div className='time-line-picture-info'>
-          <div className='timeline-picture'>
-            {pictureList()}
+          <div className='timeline-media'>
+            {timelineMediaList()}
             <div
               className='transition-all'
               style={

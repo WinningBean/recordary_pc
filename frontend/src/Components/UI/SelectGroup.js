@@ -15,9 +15,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SelectGroup({ options, onSetSelectedGroup, selectedIndex, currentGroup }) {
+export default function SelectGroup({ options, onSetSelectedGroup, selectedIndex, currentGroup, groupList }) {
   const classes = useStyles();
-  const [group, setGroup] = React.useState('');
+  const [group, setGroup] = React.useState(groupList);
 
   // useEffect(() => {
   //   console.log(options);

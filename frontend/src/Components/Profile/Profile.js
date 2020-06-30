@@ -50,6 +50,62 @@ const TabButton = styled(Button)({
   marginBottm: '4px',
 });
 
+const extensionImage = ['bmp', 'gif', 'jpeg', 'jpg', 'png'];
+const extensionVideo = ['mp4', 'webm', 'ogg'];
+const extensionAudio = ['m4a', 'mp3', 'ogg', 'wav'];
+
+const filterTagType = (value) => {
+    const len = value.length;
+    const lastDot = value.lastIndexOf('.');
+    const extension = value.substr(lastDot + 1, len).toLowerCase();
+    let filterType = null;
+
+    console.log(extension);
+
+    extensionImage.map((value) => {
+        if (extension === value) filterType = 'image';
+    });
+    extensionVideo.map((value) =>{
+        if (extension === value) filterType = 'video';
+    });
+    extensionAudio.map((value) => {
+        if (extension === value) filterType = 'audio';
+    });
+    return filterType;
+};
+
+const timelineMediaType = (value, index) => {
+  if (filterTagType(value) === 'image') {
+    return (
+      <img
+        alt={`${index}-media`}
+        src={value}
+        className='media-box'
+        style={{height: '100%'}}
+      />
+    )
+  } else if (filterTagType(value) === 'video') {
+    return (
+      <video controls title={`${index}-media`} 
+        src={value}
+        className='media-box'
+        style={{height: '100%'}}>
+        지원되지 않는 형식입니다.
+      </video>
+    )
+  } else if (filterTagType(value) === 'audio') {
+    return (
+      <audio controls src={value} className='media-box'>
+      지원되지 않는 형식입니다.
+      </audio>
+    )
+  } else {
+    return (
+      <span className='media-box' style={{height: '100%'}}>지원되지 않는 형식입니다.</span>
+    )
+  }
+}
+
 class Profile extends React.Component {
   // this.state.type
   // 0 : 내 프로필
@@ -753,7 +809,7 @@ class Profile extends React.Component {
                     this.setState({ showProfileList: !this.state.showProfileList });
                   }}
                 >
-                  <span>사진</span>
+                  <span>미디어</span>
                 </NavButton>
               </div>
             </nav>
@@ -774,10 +830,12 @@ class Profile extends React.Component {
                                 width: '272px',
                                 overflow: 'hidden',
                                 margin: '10px',
+                                lineHeight: '272px'
                               }}
                               key={`${index}- img`}
                             >
-                              <img className='media-box' alt={`${index}- img`} src={value.mediaFK.mediaFirstPath} />
+                              {timelineMediaType(value.mediaFK.mediaFirstPath)}
+                              {/* <img className='media-box' alt={`${index}- img`} src={value.mediaFK.mediaFirstPath} /> */}
                             </div>
                           </Link>
                         );
@@ -890,11 +948,13 @@ class Profile extends React.Component {
                               width: '272px',
                               overflow: 'hidden',
                               margin: '10px',
+                              lineHeight: '272px'
                             }}
                             key={`${index}- img`}
                           >
                             <Link to={`/${this.state.info.userInfo.userId}/${value.postCd}`}>
-                              <img className='media-box' alt={`${index}- img`} src={value.mediaFK.mediaFirstPath} />
+                              {timelineMediaType(value.mediaFK.mediaFirstPath)}
+                              {/* <img className='media-box' alt={`${index}- img`} src={value.mediaFK.mediaFirstPath} /> */}
                             </Link>
                           </div>
                         );

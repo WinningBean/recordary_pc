@@ -10,6 +10,9 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -17,19 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChatController {
 
     private final ChatService chatService;
-    private final SimpMessagingTemplate simpMessagingTemplate;
 
-    @MessageMapping("user/{roomCd}")
-    public void sendToUser(@DestinationVariable Long roomCd,  @Payload ChatDto incoming)
+    @PostMapping("chat/sendMassage")
+    public Long sendMassage(@RequestBody ChatDto incoming)
     {
-        chatService.create(incoming);
-        simpMessagingTemplate.convertAndSend("/topic/chat/" + roomCd, incoming);
-    }
-
-    @MessageMapping("group/{roomCd}")
-    public void sendToGroup(@DestinationVariable Long roomCd,  @Payload ChatDto incoming)
-    {
-        chatService.create(incoming);
-         simpMessagingTemplate.convertAndSend("/queue/chat/" + roomCd, incoming);
+        Long chatCd =  chatService.create(incoming);
+        chatService.stomp(chatCd, incoming.getRoomCd());
+        return chatCd;
     }
 }

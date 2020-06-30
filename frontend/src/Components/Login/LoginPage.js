@@ -8,6 +8,8 @@ import AlertDialog from '../Other/AlertDialog';
 import Loading from '../Loading/Loading';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Input from '@material-ui/core/Input';
+import SearchAppBar from '../Other/SearchField';
 
 class Login extends React.Component {
   state = {
@@ -94,8 +96,7 @@ class Login extends React.Component {
             return (
               <AlertDialog
                 severity='error'
-                content={`로그인에 실패하였습니다.
-아이디/비밀번호를 확인해주세요.`}
+                content={`로그인에 실패하였습니다.아이디/비밀번호를 확인해주세요.`}
                 onAlertClose={() => {
                   this.setState({ failedLogin: () => {} });
                 }}
@@ -128,9 +129,10 @@ class Login extends React.Component {
 
   render() {
     const MyButton = styled(Button)({
-      backgroundColor: '#bdc3c7',
-      marginRight: '10px',
-      color: 'black',
+      width: '200px',
+      backgroundColor: 'rgba(20, 81, 51, 0.8)',
+      marginBottom: '10px',
+      color: 'white',
     });
     const registerPage = (() => {
       if (this.state.isRegister === true) {
@@ -168,32 +170,42 @@ class Login extends React.Component {
     return (
       <div id='index-page'>
         {registerPage}
-        <form action='go_to_main' onSubmit={this.loginHandel}>
-          <div className='icon'>
+        <div className='page_info'>
+          <div>
             <Link to='/main'>
-              {/* <img className="title-image" alt="Recordary icon" src="http://localhost:8080/Recodary.png"/> */}
+              {/* <video
+                  className='title-image'
+                  alt='Recordary icon'
+                  src='https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.mp4'
+                /> */}
               <img
                 className='title-image'
                 alt='Recordary icon'
                 src='https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.png'
               />
             </Link>
-          </div>
-          {this.state.successRegister()}
-          {this.state.failedLogin()}
-          <div className='login-form'>
-            <div className='login-text'>
-              <TextField name='user_id' autoFocus label='아이디' onChange={this.changeHandel} />
-              <br />
-              <TextField name='user_pw' type='password' label='비밀번호' onChange={this.changeHandel} />
-              <br />
-            </div>
-            <div className='login-button'>
-              <MyButton onClick={() => this.setState({ isRegister: true })}>회원가입</MyButton>
-              <MyButton type='submit'>로그인</MyButton>
+            <div className='Recordary-infoMsg'>Record + Diary = 일정을 기록하며 일기처럼 기억하다.</div>
+            <div className='search-user'>
+              <SearchAppBar userCd={this.props.userCd}></SearchAppBar>
             </div>
           </div>
-        </form>
+          <form action='go_to_main' onSubmit={this.loginHandel}>
+            {this.state.successRegister()}
+            {this.state.failedLogin()}
+            <div className='login-form'>
+              <div className='login-text'>
+                <TextField name='user_id' label='아이디' onChange={this.changeHandel} />
+                <br />
+                <TextField name='user_pw' type='password' label='비밀번호' onChange={this.changeHandel} />
+                <br />
+              </div>
+              <div className='login-button'>
+                <MyButton type='submit'>로그인</MyButton>
+                <div onClick={() => this.setState({ isRegister: true })}>회원가입하시겠습니까?</div>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     );
   }

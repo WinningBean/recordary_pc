@@ -16,6 +16,8 @@ import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleService;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +40,9 @@ public class PostService {
     private final PostLikeRepository postLikeRepository;
     private final PostScheduleShareRepository postScheduleShareRepository;
 
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
     @Transactional
     public Long save(PostSaveRequestDto requestDto) {
         PostEntity postEntity = PostEntity.builder()
@@ -51,7 +56,10 @@ public class PostService {
                 .postScheduleShareState(requestDto.getPostScheduleShareState())
                 .build();
 
-        return postRepository.save(postEntity).getPostCd();
+        Long postCd = postRepository.save(postEntity).getPostCd();
+        sendTimeLine(postCd);
+
+        return postCd;
     }
 
     @Transactional
@@ -98,6 +106,12 @@ public class PostService {
         if (postLikeRepository.findByPostFKAndUserFK(this.findEntity(postResponseDto.getPostCd()), userService.currentUser()) != null) {
             postResponseDto.setTrueCurrentUserLikePost();
         }
+        return postResponseDto;
+    }
+
+    private PostResponseDto checkCurrentUserShowPost(PostResponseDto postResponseDto){
+        int publicState = followerService.checkPublicStateToTarget(userService.currentUserCd(), postResponseDto.getUserFK().getUserCd());
+        if (postResponseDto.getPostPublicState() > publicState) postResponseDto.setFalseCurrentUserShowPost();
         return postResponseDto;
     }
 
@@ -190,7 +204,7 @@ public class PostService {
         PostEntity postEntity = Optional.ofNullable(postRepository.findByPostCd(postCd))
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. code = " + postCd));
 
-        return checkCurrentUserLikePost(new PostResponseDto(postEntity));
+        return checkCurrentUserShowPost(checkCurrentUserLikePost(new PostResponseDto(postEntity)));
     }
 
     @Transactional(readOnly = true)
@@ -256,5 +270,36 @@ public class PostService {
         }
 
         return postPagingList;
+    }
+
+    public void sendTimeLine(Long postCd){
+        PostEntity postEntity = postRepository.findByPostCd(postCd);
+        PostResponseDto postResponseDto = new PostResponseDto(postEntity);
+
+        GroupEntity groupEntity = postEntity.getGroupFK();
+        UserEntity userEntity = postEntity.getUserFK();
+
+        Long ownerCd;
+
+        if (groupEntity != null){
+            ownerCd = groupEntity.getGMstUserFK().getUserCd();
+            messagingTemplate.convertAndSend(getTimeLineDestination(ownerCd), postResponseDto);
+            for (UserResponseDto groupMember : groupService.findGroupMembers(groupEntity.getGroupCd())){
+                ownerCd = groupMember.getUserCd();
+                messagingTemplate.convertAndSend(getTimeLineDestination(ownerCd),postResponseDto);
+            }
+        } else {
+            for (FollowerEntity followerEntity : userEntity.getFollowTarget()) {
+                ownerCd = followerEntity.getUserFK().getUserCd();
+                int publicState = followerService.checkPublicStateToTarget(ownerCd, userEntity.getUserCd());
+                if (postEntity.getPostPublicState() <= publicState) {
+                    messagingTemplate.convertAndSend(getTimeLineDestination(ownerCd), postResponseDto);
+                }
+            }
+        }
+    }
+
+    private String getTimeLineDestination(Long userCd) {
+        return "/queue/timeLine/" + userCd;
     }
 }

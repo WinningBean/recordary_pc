@@ -1,6 +1,7 @@
 package com.fairy_pitt.recordary.endpoint.schedule;
 
 import com.fairy_pitt.recordary.common.pk.ScheduleMemberEntityPK;
+import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleMemberSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleMemberService;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleService;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
@@ -27,18 +28,16 @@ public class ScheduleMemberController {
     }
 
     @PostMapping("update")
-    public  Boolean update(@RequestBody ScheduleMemberEntityPK id,
-                           @RequestBody Boolean scheduleState){
-        userService.checkSessionLogout();
-        scheduleMemberService.update(id,scheduleState);
+    public  Boolean update(@RequestBody ScheduleMemberSaveRequestDto requestDto){
+
+        scheduleMemberService.update(requestDto);
         return true;
     }
-
-//    @PostMapping("delete")
-//    public Boolean delete(@RequestBody ScheduleMemberEntityPK id){
-//        userService.checkSessionLogout();
-//        scheduleMemberService.delete(id);
-//        return true;
-//    }
+    
+    @PostMapping("delete")
+    public Boolean delete(@RequestBody ScheduleMemberSaveRequestDto requestDto){
+        scheduleMemberService.delete(requestDto);
+        return true;
+    }
 
 }

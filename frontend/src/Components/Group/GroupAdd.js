@@ -181,7 +181,7 @@ const GroupAdd = (props) => {
                 src={
                   group.group_pic !== null
                     ? group.group_pic
-                    : 'https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/user/basic.png'
+                    : 'https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/group/basic.png'
                 }
               />
             </div>
@@ -204,13 +204,17 @@ const GroupAdd = (props) => {
           </div>
           <input
             type='file'
-            accept='image/*'
+            accept='.gif, .jpeg, .jpg, .png'
             style={{ display: 'none' }}
             ref={(file) => {
               fileUpload = file;
             }}
             onChange={(e) => {
               if (e.target.files && e.target.files.length > 0) {
+                if (e.target.files[0].size > (5 * 1024 * 1024)) {
+                  setAlert(<Snackbar severity='error' content="파일 용량이 너무 큽니다." onClose={() => setAlert(null)} />);
+                  return;
+                }
                 const reader = new FileReader();
                 reader.addEventListener('load', () => setImageSrc(reader.result));
                 reader.readAsDataURL(e.target.files[0]);

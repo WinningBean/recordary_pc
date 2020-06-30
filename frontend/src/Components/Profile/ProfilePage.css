@@ -180,8 +180,8 @@ nav > div {
 }
 .media-box {
   width: 272px;
-  height: 100%;
   object-fit: cover;
+  vertical-align: middle;
 }
 
 .timeline-profile-schedule:hover,

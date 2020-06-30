@@ -25,6 +25,7 @@ public class ScheduleResponseDto {
     private String tabCol;
     private String tabNM;
     private int schedulePublicState;
+    private int scheduleInWhere;
     private List<ScheduleMemberResponseDto> scheduleMemberList;
 
     public ScheduleResponseDto(ScheduleEntity entity) {
@@ -53,5 +54,15 @@ public class ScheduleResponseDto {
         this.scheduleEnd = entity.getScheduleFK().getScheduleEnd();
         this.scheduleCol = entity.getScheduleFK().getScheduleCol();
         this.schedulePublicState = entity.getScheduleFK().getSchedulePublicState();
+    }
+
+    public ScheduleResponseDto(ScheduleEntity scheduleEntity, int scheduleInWhere){
+        this.scheduleCd = scheduleEntity.getScheduleCd();
+        this.scheduleNm = scheduleEntity.getScheduleNm();
+        this.scheduleEx = scheduleEntity.getScheduleEx();
+        this.scheduleCol = scheduleEntity.getScheduleCol();
+        this.scheduleStr = scheduleEntity.getScheduleStr();
+        this.scheduleEnd = scheduleEntity.getScheduleEnd();
+        this.scheduleInWhere = scheduleInWhere;
     }
 }

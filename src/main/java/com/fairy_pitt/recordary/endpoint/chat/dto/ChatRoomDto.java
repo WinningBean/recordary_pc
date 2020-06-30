@@ -10,17 +10,17 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ChatRoomDto {
 
-    private Long userFk;
-    private Long targetFk;
-    private Long groupFk;
+    private Long userCd;
+    private Long targetCd;
+    private Long groupCd;
 
-    public ChatRoomDto(Long userFk,
-                       Long targetFk,
-                       Long groupFk)
+    public ChatRoomDto(Long userCd,
+                       Long targetCd,
+                       Long groupCd)
     {
-        this.userFk = userFk;
-        this.targetFk = targetFk;
-        this.groupFk = groupFk;
+        this.userCd = userCd;
+        this.targetCd = targetCd;
+        this.groupCd = groupCd;
     }
 
     public ChatRoomEntity toEntity(UserEntity user,

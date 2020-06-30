@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './PostAppend.css';
-import SelectGroup from '../UI/SelectGroup';
+import SelectGroup from '../../Containers/UI/SelectGroup';
 import PublicRange from '../UI/PublicRange';
 import Backdrop from '../UI/Backdrop';
 import AlertDialog from '../Other/AlertDialog';

@@ -8,6 +8,7 @@ const defaultValue = {
   notice: null,
   noticeList: [],
 };
+
 const reducer = (state, action) => {
   if (state === undefined) {
     return defaultValue;

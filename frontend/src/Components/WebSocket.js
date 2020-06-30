@@ -11,6 +11,7 @@ const WebSocket = ({ userCd, userId, notice, onSaveNoticeList }) => {
   const history = useHistory();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [client, setClient] = useState(null);
+
   useEffect(() => {
     var sock = new SockJs('/ws-stomp');
     var client = Stomp.over(sock);
@@ -28,7 +29,6 @@ const WebSocket = ({ userCd, userId, notice, onSaveNoticeList }) => {
           window.alert('세션을 잃어 자동 로그아웃되었습니다.');
           window.location.replace('/');
         }
-
         checkNoticeType(JSON.parse(response.body));
       });
     });
@@ -72,6 +72,7 @@ const WebSocket = ({ userCd, userId, notice, onSaveNoticeList }) => {
     var targetSchedule = undefined;
 
     var message = null;
+
     switch (data.noticeType) {
       case 'FOLLOW_NEW':
         try {

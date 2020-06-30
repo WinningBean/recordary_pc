@@ -4,13 +4,13 @@ import AlertDialog from './AlertDialog';
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 
-const ImageEditor = props => {
+const ImageEditor = (props) => {
   const [src, setSrc] = useState(props.src);
   const [imageData, setImageData] = useState(null);
   const [crop, setCrop] = useState({
     unit: '%',
     width: 30,
-    aspect: 1 / 1
+    aspect: 1 / 1,
   });
   const [alert, setAlert] = useState(null);
   const [completeCrop, setComplateCrop] = useState(null);
@@ -42,7 +42,7 @@ const ImageEditor = props => {
     );
 
     // As Base64 string
-    const base64Image = canvas.toDataURL('image/jpeg');
+    const base64Image = canvas.toDataURL('image/*');
 
     props.onComplete(base64Image);
     // this.setState({user_pic : base64Image, imageSrc : null, completeCrop : null});
@@ -60,7 +60,7 @@ const ImageEditor = props => {
           src={src}
           crop={crop}
           ruleOfThirds
-          onImageLoaded={image => {
+          onImageLoaded={(image) => {
             if (image.width < 50 || image.height < 50) {
               setAlert(
                 <AlertDialog
@@ -77,8 +77,8 @@ const ImageEditor = props => {
             }
             setImageData(image);
           }}
-          onChange={currCrop => setCrop(currCrop)}
-          onComplete={complateCrop => setComplateCrop(complateCrop)}
+          onChange={(currCrop) => setCrop(currCrop)}
+          onComplete={(complateCrop) => setComplateCrop(complateCrop)}
         />
       </div>
       <div style={{ display: 'flex', justifyContent: 'center' }}>

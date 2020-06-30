@@ -99,12 +99,12 @@
   display: flex;
 }
 
-.timeline-picture-info {
+.timeline-media-info {
   display: flex;
   flex-direction: column;
 }
 
-.timeline-picture {
+.timeline-media {
   position: relative;
   width: 490px;
   height: 340px;
@@ -146,7 +146,7 @@
   font-weight: bold;
 }
 
-.timeline-picture > img {
+.timeline-media > img {
   width: 480px;
   height: 330px;
   object-fit: cover;
@@ -178,7 +178,7 @@
   padding: 10px;
 }
 
-.timeline-picture-bottom {
+.timeline-media-bottom {
   border-radius: 50%;
   height: 6px;
   transition: all 0.2s ease-in-out;

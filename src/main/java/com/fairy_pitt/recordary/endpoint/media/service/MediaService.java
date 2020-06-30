@@ -19,14 +19,14 @@ public class MediaService {
     private final S3UploadComponent s3UploadComponent;
     private final MediaRepository mediaRepository;
 
-    public Long save(MultipartFile[] multipartFile, Long userCd) throws IOException {
-        String mediaPath = this.mediaUpload(multipartFile, userCd);
+    public Long save(MultipartFile[] multipartFile, Long userCd, String[] extension) throws IOException {
+        String mediaPath = this.mediaUpload(multipartFile, userCd, extension);
         MediaRequestDto mediaRequestDto = new MediaRequestDto(mediaPath);
         return mediaRepository.save(mediaRequestDto.toEntity()).getMediaCd();
     }
 
-    private String mediaUpload(MultipartFile[] multipartFile, Long userCd) throws IOException{
-        return s3UploadComponent.mediaEntityUpload(multipartFile, userCd);
+    private String mediaUpload(MultipartFile[] multipartFile, Long userCd, String[] extension) throws IOException{
+        return s3UploadComponent.mediaEntityUpload(multipartFile, userCd, extension);
     }
 
     public List<String> getMediaPath(Long mediaCd){

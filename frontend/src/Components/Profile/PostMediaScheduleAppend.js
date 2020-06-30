@@ -4,7 +4,7 @@ import { styled } from '@material-ui/styles';
 
 import './PostAppend.css';
 import DTP from '../UI/DTP';
-import SelectGroup from '../UI/SelectGroup';
+import SelectGroup from '../../Containers/UI/SelectGroup';
 import PublicRange from '../UI/PublicRange';
 import Backdrop from '../UI/Backdrop';
 import AlertDialog from '../Other/AlertDialog';
@@ -68,6 +68,7 @@ const PostMediaScheduleAppend = (props) => {
   const classes = useStyles();
   const [data, setData] = useState(props.user);
   const [postAddMediaListSrc, setPostAddMediaListSrc] = useState([]);
+  const [postAddMediaExtensionList, setPostAddMediaExtensionList] = useState([]);
   const [mediaOpen, setMediaOpen] = useState(false);
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const [open, setOpen] = React.useState(false);
@@ -183,6 +184,21 @@ const PostMediaScheduleAppend = (props) => {
     });
   };
 
+  const tagTypeChange = (value) => {
+    if (value.indexOf(';base64,') === -1) {
+      const parts = value.split(',');
+      const contentType = parts[0].split(':')[1];
+      const tagType = contentType.split('/')[0];
+      return tagType;
+    } else {
+      // base64로 인코딩 된 이진데이터일 경우
+      const parts = value.split(';base64,');
+      const contentType = parts[0].split(':')[1];
+      const tagType = contentType.split('/')[0];
+      return tagType;
+    }
+  };
+
   const handleClickOpen = async () => {
     setOpen(true);
   };
@@ -207,7 +223,7 @@ const PostMediaScheduleAppend = (props) => {
       }
 
       var getScheduleCd = null;
-      if (scheduleInfo.scheduleNm !== '') {
+      if (scheduleOpen === true) {
         getScheduleCd = (
           await axios.post('/schedule/', {
             tabCd: clickTabState === undefined ? null : clickTabState,
@@ -232,6 +248,10 @@ const PostMediaScheduleAppend = (props) => {
         console.log(postAddMediaListSrc);
         postAddMediaListSrc.map((value, index) => {
           formData.append('mediaFiles', dataURLToBlob(value));
+        });
+        console.log(postAddMediaExtensionList);
+        postAddMediaExtensionList.map((value, index) => {
+          formData.append('extension', value);
         });
         getMediaCd = (
           await axios.post(`/media/${post.userCd}`, formData, {
@@ -508,39 +528,96 @@ const PostMediaScheduleAppend = (props) => {
             </div>
             <input
               type='file'
-              accept='image/*,audio/*,video/*'
+              accept='.bmp, .gif, .jpeg, .jpg, .png, .mp4, .webm, .ogg, .m4a, .mp3, .ogg, .wav'
               required
               multiple
               style={{ display: 'none' }}
               ref={fileUpload}
               onChange={(e) => {
+                if (e.target.files.length > 5) {
+                  setDialog(
+                    <AlertDialog
+                      severity='error'
+                      content='5개 이상 업로드할 수 없습니다.'
+                      onAlertClose={() => setDialog(null)}
+                    />
+                  );
+                  return;
+                }
                 for (let i = 0; i < e.target.files.length; i++) {
+                  if (e.target.files[i].size > 100 * 1024 * 1024) {
+                    setDialog(
+                      <AlertDialog
+                        severity='error'
+                        content='파일 용량이 너무 큽니다.'
+                        onAlertClose={() => setDialog(null)}
+                      />
+                    );
+                    return;
+                  }
                   const reader = new FileReader();
+                  postAddMediaExtensionList.push(e.target.files[i].name.split('.').pop().toLowerCase());
                   reader.addEventListener('load', (e) => {
                     postAddMediaListSrc.push(e.target.result);
                     console.log(postAddMediaListSrc);
                   });
                   reader.readAsDataURL(e.target.files[i]);
                 }
-                // e.target.value = null;
               }}
             />
             {postAddMediaListSrc === null
               ? null
-              : postAddMediaListSrc.map((value, index) => (
-                  <div style={{ marginLeft: '10px' }} key={`${index}-postAddImg`}>
-                    <img
-                      style={{
-                        boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
-                        width: '60px',
-                        height: '60px',
-                        objectFit: 'cover',
-                      }}
-                      id='postAddImg'
-                      src={value}
-                    />
-                  </div>
-                ))}
+              : postAddMediaListSrc.map((value, index) => {
+                  if (tagTypeChange(value) === 'image') {
+                    return (
+                      <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
+                        <img
+                          style={{
+                            boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
+                            width: '60px',
+                            height: '60px',
+                            objectFit: 'cover',
+                          }}
+                          id='postAddMedia'
+                          src={value}
+                        />
+                      </div>
+                    );
+                  } else if (tagTypeChange(value) === 'video') {
+                    return (
+                      <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
+                        <video
+                          style={{
+                            boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
+                            height: '60px',
+                            objectFit: 'cover',
+                          }}
+                          id='postAddMedia'
+                          controls
+                          src={value}
+                        >
+                          지원되지 않는 형식입니다.
+                        </video>
+                      </div>
+                    );
+                  } else if (tagTypeChange(value) === 'audio') {
+                    return (
+                      <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
+                        <audio
+                          style={{
+                            width: '60px',
+                            height: '60px',
+                            objectFit: 'cover',
+                          }}
+                          id='postAddMedia'
+                          src={value}
+                          controls
+                          autoplay
+                        />
+                      </div>
+                    );
+                  }
+                })}
           </div>
         ) : null}
         {alert}

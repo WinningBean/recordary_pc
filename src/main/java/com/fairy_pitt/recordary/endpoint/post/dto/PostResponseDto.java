@@ -35,6 +35,7 @@ public class PostResponseDto implements Comparable<PostResponseDto>{
     private int postLikeCount;
     private UserResponseDto postLikeFirstUser = null;
     private Boolean currentUserLikePost = false;
+    private Boolean currentUserShowPost = true;
 
     public PostResponseDto(PostEntity postEntity){
         this.postCd = postEntity.getPostCd();
@@ -70,6 +71,9 @@ public class PostResponseDto implements Comparable<PostResponseDto>{
 
     public void setTrueCurrentUserLikePost(){
         this.currentUserLikePost = true;
+    }
+    public void setFalseCurrentUserShowPost(){
+        this.currentUserShowPost = false;
     }
 
     @Override
