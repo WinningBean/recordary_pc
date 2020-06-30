@@ -68,6 +68,7 @@ const PostMediaScheduleAppend = (props) => {
   const classes = useStyles();
   const [data, setData] = useState(props.user);
   const [postAddMediaListSrc, setPostAddMediaListSrc] = useState([]);
+  const [postAddMediaExtensionList, setPostAddMediaExtensionList] = useState([]);
   const [mediaOpen, setMediaOpen] = useState(false);
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const [open, setOpen] = React.useState(false);
@@ -247,6 +248,10 @@ const PostMediaScheduleAppend = (props) => {
         console.log(postAddMediaListSrc);
         postAddMediaListSrc.map((value, index) => {
           formData.append('mediaFiles', dataURLToBlob(value));
+        });
+        console.log(postAddMediaExtensionList);
+        postAddMediaExtensionList.map((value, index) => {
+          formData.append('extension', value);
         });
         getMediaCd = (
           await axios.post(`/media/${post.userCd}`, formData, {
@@ -523,21 +528,41 @@ const PostMediaScheduleAppend = (props) => {
             </div>
             <input
               type='file'
-              accept='image/*, video/*, audio/*'
+              accept= '.bmp, .gif, .jpeg, .jpg, .png, .mp4, .webm, .ogg, .m4a, .mp3, .ogg, .wav'
               required
               multiple
               style={{ display: 'none' }}
               ref={fileUpload}
               onChange={(e) => {
+                if (e.target.files.length > 5) {
+                  setDialog(
+                    <AlertDialog
+                      severity='error'
+                      content='5개 이상 업로드할 수 없습니다.'
+                      onAlertClose={() => setDialog(null)}
+                    />
+                  );
+                  return;
+                }
                 for (let i = 0; i < e.target.files.length; i++) {
+                  if (e.target.files[i].size > (100 * 1024 * 1024)) {
+                    setDialog(
+                      <AlertDialog
+                        severity='error'
+                        content='파일 용량이 너무 큽니다.'
+                        onAlertClose={() => setDialog(null)}
+                      />
+                    );
+                    return;
+                  }
                   const reader = new FileReader();
+                  postAddMediaExtensionList.push(e.target.files[i].name.split('.').pop().toLowerCase());
                   reader.addEventListener('load', (e) => {
                     postAddMediaListSrc.push(e.target.result);
                     console.log(postAddMediaListSrc);
                   });
                   reader.readAsDataURL(e.target.files[i]);
                 }
-                // e.target.value = null;
               }}
             />
             {postAddMediaListSrc === null
@@ -564,14 +589,14 @@ const PostMediaScheduleAppend = (props) => {
                         <video
                           style={{
                             boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
-                            width: '60px',
                             height: '60px',
                             objectFit: 'cover',
                           }}
                           id='postAddMedia'
                           controls
+                          src={value}
                         >
-                          <source src={value} type='video/mp4' />
+                          지원되지 않는 형식입니다.
                         </video>
                       </div>
                     );
@@ -580,7 +605,6 @@ const PostMediaScheduleAppend = (props) => {
                       <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
                         <audio
                           style={{
-                            boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
                             width: '60px',
                             height: '60px',
                             objectFit: 'cover',
