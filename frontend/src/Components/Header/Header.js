@@ -36,19 +36,14 @@ class Header extends React.Component {
                 onClose={() => this.setState({ openMenu: false })}
               />
             </div>
-            {/* <div className="title-icon">
-                        <a href="profile.html"><img alt="icon" src="RIcon.png" /></a>
-                    </div> */}
-            <div className='title-name'>
-              <a href='http://localhost:3000/main'>
-                <img
-                  className='title-image'
-                  alt='Recordary icon'
-                  src='https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.png'
-                  style={{ height: '40px' }}
-                />
-              </a>
-            </div>
+            <a href='http://localhost:3000/main'>
+              <img
+                className='title-image'
+                alt='Recordary icon'
+                src='https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.png'
+                style={{ height: '30px', marginTop: '8px' }}
+              />
+            </a>
           </div>
           <div id='header-right'>
             <div className='search-user'>
@@ -70,16 +65,14 @@ class Header extends React.Component {
             </IconButton>
             <HeaderMenu open={this.state.openMenu} onClose={() => this.setState({ openMenu: false })} />
           </div>
-          <div className='title-name'>
-            <Link to='/main'>
-              <img
-                className='title-image'
-                alt='Recordary icon'
-                src='https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.png'
-                style={{ height: '40px' }}
-              />
-            </Link>
-          </div>
+          <Link to='/main'>
+            <img
+              className='title-image'
+              alt='Recordary icon'
+              src='https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.png'
+              style={{ height: '30px', marginTop: '8px' }}
+            />
+          </Link>
         </div>
         <div id='header-right'>
           <div className='search-user' style={{ marginRight: '10px' }}>

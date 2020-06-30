@@ -1,18 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Song+Myung&display=swap');
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  height: 280px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+}
+
 #index-page {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   min-width: 100%;
   min-height: 100%;
-  /* background: no-repeat fixed linear-gradient(-225deg, RGB(255, 223, 75, 0.5), RGB(0, 168, 255, 0.5)); */
-  /* background-color: rgba(64,115,159,0.9); */
   background-color: rgba(20, 81, 51, 0.8);
   position: fixed;
 }
+.Recordary-infoMsg {
+  color: white;
+  font-size: 20px;
+  font-family: 'Song Myung', serif !important;
+}
 
-.icon {
+.page_info {
   display: flex;
-  justify-content: center;
   padding-bottom: 50px;
 }
 
@@ -20,25 +34,24 @@
   width: auto;
   height: 200px;
 }
-
 .login-form {
-  display: flex;
-  flex-direction: column;
-  width: 600px;
-  height: 200px;
-  background-color: azure;
-  box-shadow: 2px 5px 10px 3px rgb(149, 165, 166);
-  border-radius: 10px;
+  margin-left: 100px;
 }
 
+.login-text > div {
+  width: 200px;
+  margin-bottom: 10px;
+}
 .login-text {
-  align-self: flex-start;
-  padding-top: 20px;
-  padding-left: 80px;
+  text-align: center;
+  margin-top: 40px;
 }
 
 .login-button {
-  align-self: flex-end;
-  padding-top: 20px;
-  padding-right: 20px;
+  /* display: flex; */
+  margin-top: 20px;
+  text-align: center;
+}
+.login-button > div:hover {
+  cursor: pointer;
 }
