@@ -12,6 +12,8 @@ import NotifyPopup from '../UI/NotifyPopup';
 import ToDo from './ToDo';
 import { Link } from 'react-router-dom';
 
+import axios from 'axios';
+
 class Header extends React.Component {
   constructor(props) {
     super(props);
@@ -19,6 +21,15 @@ class Header extends React.Component {
       openMenu: false,
       isOpenToDo: false,
     };
+  }
+
+  getNotifyInfo = async () => {
+    const { data } = await axios.get(`/notice/accept/${this.props.userCd}`);
+    this.props.onSaveNoticeList(data);
+  };
+
+  componentDidMount() {
+    this.getNotifyInfo();
   }
 
   render() {
@@ -79,7 +90,53 @@ class Header extends React.Component {
             <SearchAppBar userCd={this.props.userCd} />
           </div>
           <div>
-            <NotifyPopup style={{ fontSize: 40, color: 'white' }}></NotifyPopup>
+            <NotifyPopup
+              type={1}
+              data={this.props.noticeList}
+              onAccept={async (index, isGroupApply) => {
+                //type 0 : 그룹초대, 1 : 스케줄 멤버초대
+                try {
+                  if (isGroupApply) {
+                    const { data } = await axios.post('/groupApply/create', {
+                      groupCd: this.state.nofity[index].groupCd,
+                      userCd: this.props.userCd,
+                    });
+                    this.props.onSaveNotice({
+                      type: 'SAVE_NOTICE',
+                      notice: {
+                        noticeType: 'GROUP_MEMBER_NEW', // 이벤트 타입
+                        activeCd: this.props.userCd, // 이벤트 주체
+                        targetCd: this.state.nofity[index].groupCd, // 이벤트 대상
+                      },
+                    });
+                  } else {
+                  }
+
+                  const copyList = this.props.noticeList.slice();
+                  copyList.splice(index, 1);
+                  this.props.onSaveNoticeList(copyList);
+                } catch (error) {
+                  console.error(error);
+                }
+              }}
+              onDenial={async (index, isGroupApply) => {
+                try {
+                  if (isGroupApply) {
+                    const { data } = await axios.post('/groupApply/delete', {
+                      groupCd: this.state.nofity[index].groupCd,
+                      userCd: this.props.userCd,
+                    });
+                  } else {
+                  }
+
+                  const copyList = this.props.noticeList.slice();
+                  copyList.splice(index, 1);
+                  this.props.onSaveNoticeList(copyList);
+                } catch (error) {
+                  console.error(error);
+                }
+              }}
+            />
           </div>
           <div style={{ position: 'relative' }}>
             <IconButton onClick={() => this.setState({ isOpenToDo: !this.state.isOpenToDo })}>

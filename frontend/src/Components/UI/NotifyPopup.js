@@ -9,12 +9,16 @@ import Badge from '@material-ui/core/Badge';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { usePopupState, bindTrigger, bindMenu } from 'material-ui-popup-state/hooks';
 
-const NotifyPopup = ({ data, onAccept, onDenial }) => {
+import { format, differenceInCalendarDays } from 'date-fns';
+
+// type === 0 : 그룹
+// type === 1 : 일반
+const NotifyPopup = ({ data, onAccept, onDenial, type }) => {
   const popupState = usePopupState({
     variant: 'popover',
     popupId: 'demoMenu',
   });
-  if (data !== undefined) {
+  if (type === 0) {
     return (
       <div>
         <IconButton {...bindTrigger(popupState)}>
@@ -52,7 +56,7 @@ const NotifyPopup = ({ data, onAccept, onDenial }) => {
                 <MenuItem>
                   <div className='notify-list'>
                     <div className='notify-list-time' style={{ fontSize: '14px' }}>
-                      시간도 보내줘야돼
+                      {`${differenceInCalendarDays(new Date(), Date.parse(value.date))}일전`}
                     </div>
                     <div
                       style={{ fontSize: '14px' }}
@@ -78,6 +82,110 @@ const NotifyPopup = ({ data, onAccept, onDenial }) => {
                     <div style={{ height: '100%', width: '100%', textAlign: 'center' }}>거절</div>
                   </MenuItem>
                 </div>
+              </div>
+            ))
+          )}
+        </Menu>
+      </div>
+    );
+  } else if (type === 1) {
+    return (
+      <div>
+        <IconButton {...bindTrigger(popupState)}>
+          <StyledBadge badgeContent={data.length} color='secondary'>
+            <NotificationsIcon style={{ fontSize: 30, color: 'lightsteelblue' }} />
+          </StyledBadge>
+        </IconButton>
+        <Menu
+          {...bindMenu(popupState)}
+          getContentAnchorEl={null}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+          {data.length <= 0 ? (
+            <MenuItem
+              onClick={() => {
+                popupState.close();
+              }}
+            >
+              <div style={{ height: '100%', width: '100%', textAlign: 'center', color: 'lightgray' }}>
+                알림이 없습니다.
+              </div>
+            </MenuItem>
+          ) : (
+            data.map((value, index) => (
+              <div
+                key={index}
+                style={{
+                  margin: '5px 10px',
+                  paddingBottom: '5px',
+                  borderBottom: '1px solid lightgray',
+                  width: '280px',
+                }}
+              >
+                {value.scheduleCd === null ? (
+                  <>
+                    <MenuItem>
+                      <div className='notify-list'>
+                        <div className='notify-list-time' style={{ fontSize: '14px' }}>
+                          {value.createTime}
+                        </div>
+                        <div style={{ fontSize: '14px' }}>{`'${value.groupNm}'그룹이 그룹초대하였습니다.`}</div>
+                      </div>
+                    </MenuItem>
+                    <div style={{ display: 'flex' }}>
+                      <MenuItem
+                        style={{ flex: 1 }}
+                        onClick={() => {
+                          onAccept(index, true);
+                          // popupState.close();
+                        }}
+                      >
+                        <div style={{ height: '100%', width: '100%', textAlign: 'center' }}>수락</div>
+                      </MenuItem>
+                      <MenuItem
+                        style={{ flex: 1 }}
+                        onClick={() => {
+                          onDenial(index, true);
+                        }}
+                      >
+                        <div style={{ height: '100%', width: '100%', textAlign: 'center' }}>거절</div>
+                      </MenuItem>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <MenuItem>
+                      <div className='notify-list'>
+                        <div className='notify-list-time' style={{ fontSize: '14px' }}>
+                          {value.createTime}
+                        </div>
+                        <div
+                          style={{ fontSize: '14px' }}
+                        >{`${value.userNm}님이 ${value.scheduleNm}스케줄에 함께하는 멤버로 초대하였습니다.`}</div>
+                      </div>
+                    </MenuItem>
+                    <div style={{ display: 'flex' }}>
+                      <MenuItem
+                        style={{ flex: 1 }}
+                        onClick={() => {
+                          onAccept(index, false);
+                          // popupState.close();
+                        }}
+                      >
+                        <div style={{ height: '100%', width: '100%', textAlign: 'center' }}>수락</div>
+                      </MenuItem>
+                      <MenuItem
+                        style={{ flex: 1 }}
+                        onClick={() => {
+                          onDenial(index, false);
+                        }}
+                      >
+                        <div style={{ height: '100%', width: '100%', textAlign: 'center' }}>거절</div>
+                      </MenuItem>
+                    </div>
+                  </>
+                )}
               </div>
             ))
           )}

@@ -19,6 +19,10 @@ const ProfileTimeline = (props) => {
     try {
       const postCd = window.location.pathname.split('/')[2];
       const { data } = await axios.get(`/post/${postCd}`);
+      if (!data.currentUserShowPost) {
+        setIsClose(true);
+      }
+
       console.log(data);
       setPostData(data);
     } catch (error) {
@@ -32,6 +36,9 @@ const ProfileTimeline = (props) => {
       const groupCd = window.location.pathname.split('/')[2];
       const postCd = window.location.pathname.split('/')[3];
       const { data } = await axios.get(`/post/${postCd}`);
+      if (!data.currentUserShowPost) {
+        setIsClose(true);
+      }
       console.log(data);
       setPostData(data);
     } catch (error) {
@@ -61,30 +68,30 @@ const ProfileTimeline = (props) => {
 
   const element = () => {
     if (postData === null) {
-      return <div></div>;
+      return <div className='loading' style={{ width: '866px', height: '543px' }} />;
     }
     if (postData.mediaFK !== null) {
       return (
         <div className='profile-ScheduleTimeLine' style={{ margin: '0px 0px' }}>
-          <Timeline data={postData} user={undefined} onPostDelete={undefined} />
+          <Timeline data={postData} user={props.user} onPostDelete={undefined} />
         </div>
       );
     } else if (postData.scheduleFK !== null || postData.shareScheduleList.length > 0) {
       return (
         <div className='profile-ScheduleTimeLine' style={{ margin: '0px 0px' }}>
-          <TimelineWeekSchedule data={postData} user={undefined} onPostDelete={undefined} />
+          <TimelineWeekSchedule data={postData} user={props.user} onPostDelete={undefined} />
         </div>
       );
     } else if (postData.postOriginFK !== null) {
       return (
         <div className='profile-ScheduleTimeLine' style={{ margin: '0px 0px' }}>
-          <PostShareTimeline data={postData} user={undefined} onPostDelete={undefined} />
+          <PostShareTimeline data={postData} user={props.user} onPostDelete={undefined} />
         </div>
       );
     } else
       return (
         <div className='profile-ScheduleTimeLine' style={{ margin: '0px 0px' }}>
-          <OnlyPostExTimeline data={postData} user={undefined} onPostDelete={undefined} />
+          <OnlyPostExTimeline data={postData} user={props.user} onPostDelete={undefined} />
         </div>
       );
   };
