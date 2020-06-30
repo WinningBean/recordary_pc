@@ -22,9 +22,10 @@ public class ChatController {
     private final ChatService chatService;
 
     @PostMapping("chat/sendMassage")
-    public void sendMassage(@PathVariable Long roomCd, @RequestBody ChatDto incoming)
+    public Long sendMassage(@RequestBody ChatDto incoming)
     {
-        chatService.create(incoming);
-        chatService.stomp(incoming, roomCd);
+        Long chatCd =  chatService.create(incoming);
+        chatService.stomp(chatCd, incoming.getRoomCd());
+        return chatCd;
     }
 }

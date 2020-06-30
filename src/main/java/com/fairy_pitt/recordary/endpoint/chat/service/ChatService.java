@@ -1,5 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.chat.service;
 
+import com.fairy_pitt.recordary.common.domain.ChatEntity;
 import com.fairy_pitt.recordary.common.domain.ChatRoomEntity;
 import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.common.repository.ChatRepository;
@@ -27,13 +28,14 @@ public class ChatService {
     private final UserService userService;
     private final ChatRoomService chatRoomService;
 
-    public void create(ChatDto requestDto)
+    public Long create(ChatDto requestDto)
     {
         LocalDateTime currentDate = LocalDateTime.now();
         UserEntity user = userService.findEntity(requestDto.getUserCd());
         ChatRoomEntity room = chatRoomService.findEntity(requestDto.getRoomCd());
         room.setModifiedDate(currentDate);
-        chatRepository.save(requestDto.toEntity(user,room));
+        return chatRepository.save(requestDto.toEntity(user,room)).getChatCd();
+
     }
 
     public List<ChatResponseDto> chatLog(Long roomCd){
@@ -43,14 +45,16 @@ public class ChatService {
                 .collect(Collectors.toList());
     }
 
-    public  void stomp(ChatDto requestDto, Long roomCd)
+    public  void stomp(Long chatCd, Long roomCd)
     {
-        if(requestDto.getUserCd() != null)
+        ChatEntity chatEntity = chatRepository.findAllByChatCd(chatCd);
+        ChatRoomEntity room = chatRoomService.findEntity(roomCd);
+        ChatResponseDto chat = new ChatResponseDto(chatEntity);
+        if(room.getGroupFK() == null)
         {
-            simpMessagingTemplate.convertAndSend("/topic/chat/" + roomCd, requestDto);
+            simpMessagingTemplate.convertAndSend("/topic/chat/" + roomCd, chat);
         }else {
-            simpMessagingTemplate.convertAndSend("/queue/chat/" + roomCd, requestDto);
+            simpMessagingTemplate.convertAndSend("/queue/chat/" + roomCd, chat);
         }
     }
-
 }
