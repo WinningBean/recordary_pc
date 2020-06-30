@@ -140,7 +140,7 @@ class ProfileEditor extends React.Component {
                   if (e.target.files && e.target.files.length > 0) {
                     if (e.target.files[0].size > (5 * 1024 * 1024)) {
                       this.setState({
-                        alertDialog: () => {
+                        alert: () => {
                           return (
                             <AlertDialog
                               severity='error'
@@ -151,8 +151,7 @@ class ProfileEditor extends React.Component {
                             />
                           );
                         },
-                      }); // 안 돼요 ㅠㅠ
-                      alert("파일 용량이 너무 큽니다.");
+                      });
                       return;
                     }
                     const reader = new FileReader();

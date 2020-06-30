@@ -151,7 +151,9 @@ const GroupModify = (props) => {
           onChange={(e) => {
             if (e.target.files && e.target.files.length > 0) {
               if (e.target.files[0].size > (5 * 1024 * 1024)) {
-                alert("파일 용량이 너무 큽니다.");
+                setAlert(
+                  <Snackbar severity='error' content="파일 용량이 너무 큽니다." onClose={() => setAlert(null)} />
+                );
                 return;
               }
               const reader = new FileReader();
