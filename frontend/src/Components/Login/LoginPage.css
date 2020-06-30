@@ -23,11 +23,11 @@
   color: white;
   font-size: 20px;
   font-family: 'Song Myung', serif !important;
+  margin: 10px 0;
 }
 
 .page_info {
   display: flex;
-  padding-bottom: 50px;
 }
 
 .title-image {
@@ -35,7 +35,7 @@
   height: 200px;
 }
 .login-form {
-  margin-left: 100px;
+  margin-left: 80px;
 }
 
 .login-text > div {
@@ -52,6 +52,19 @@
   margin-top: 20px;
   text-align: center;
 }
+.login-button > div {
+  margin-top: 5px;
+}
 .login-button > div:hover {
   cursor: pointer;
+}
+.page_info > div > .search-user {
+  /* margin-top: 30px; */
+}
+.search-user > .makeStyles-search-155 > .makeStyles-searchIcon-156 > .MuiSvgIcon-root {
+  color: white;
+}
+
+.search-user > .makeStyles-search-155 > div > .makeStyles-inputInput-158 {
+  color: white !important;
 }

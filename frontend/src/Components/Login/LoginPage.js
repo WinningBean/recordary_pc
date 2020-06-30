@@ -9,6 +9,7 @@ import Loading from '../Loading/Loading';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Input from '@material-ui/core/Input';
+import SearchAppBar from '../Other/SearchField';
 
 class Login extends React.Component {
   state = {
@@ -169,23 +170,26 @@ class Login extends React.Component {
     return (
       <div id='index-page'>
         {registerPage}
-        <form action='go_to_main' onSubmit={this.loginHandel}>
-          <div className='page_info'>
-            <div>
-              <Link to='/main'>
-                {/* <video
+        <div className='page_info'>
+          <div>
+            <Link to='/main'>
+              {/* <video
                   className='title-image'
                   alt='Recordary icon'
                   src='https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.mp4'
                 /> */}
-                <img
-                  className='title-image'
-                  alt='Recordary icon'
-                  src='https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.png'
-                />
-              </Link>
-              <div className='Recordary-infoMsg'>Record + Diary = 일정을 기록하며 일기처럼 기억하다.</div>
+              <img
+                className='title-image'
+                alt='Recordary icon'
+                src='https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.png'
+              />
+            </Link>
+            <div className='Recordary-infoMsg'>Record + Diary = 일정을 기록하며 일기처럼 기억하다.</div>
+            <div className='search-user'>
+              <SearchAppBar userCd={this.props.userCd}></SearchAppBar>
             </div>
+          </div>
+          <form action='go_to_main' onSubmit={this.loginHandel}>
             {this.state.successRegister()}
             {this.state.failedLogin()}
             <div className='login-form'>
@@ -200,8 +204,8 @@ class Login extends React.Component {
                 <div onClick={() => this.setState({ isRegister: true })}>회원가입하시겠습니까?</div>
               </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     );
   }
