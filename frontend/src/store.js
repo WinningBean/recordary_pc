@@ -2,10 +2,11 @@ import { createStore } from 'redux';
 
 const defaultValue = {
   isLogin: false,
-  user: {},
+  user: undefined,
   friendList: undefined,
   groupList: undefined,
   notice: null,
+  noticeList: [],
 };
 const reducer = (state, action) => {
   if (state === undefined) {
@@ -82,6 +83,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         notice: action.notice,
+      };
+    case 'SAVE_NOTICELIST':
+      return {
+        ...state,
+        noticeList: action.noticeList,
       };
     // case 'SAVE_GROUP':
     //   return {

@@ -3,8 +3,16 @@ import Header from '../../Components/Header/Header';
 
 const mapStateToProps = (state) => {
   return state.isLogin
-    ? { userId: state.user.userId, userCd: state.user.userCd, isLogin: true }
+    ? { userId: state.user.userId, userCd: state.user.userCd, isLogin: true, noticeList: state.noticeList }
     : { userCd: null, isLogin: false };
 };
 
-export default connect(mapStateToProps)(Header);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onSaveNoticeList: (data) => {
+      dispatch({ type: 'SAVE_NOTICELIST', noticeList: data });
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './mainPage.css';
 import ChattingButton from '../Other/ChattingButton';
 import SpeedDials from '../UI/SimpleSpeedDial';
-import Chatting from './Chatting';
+import Chatting from '../../Containers/Main/Chatting';
 
 const MainPageButton = (props) => {
   const [isChatClick, setIsChatClick] = useState(false);

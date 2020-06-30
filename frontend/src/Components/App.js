@@ -57,7 +57,6 @@ class App extends React.Component {
       return <Redirect to='/' />;
     }
 
-    console.log(`/topic/user/${this.props.user.userCd}`);
     return (
       <div id='wrapper'>
         <Switch>
@@ -74,7 +73,12 @@ class App extends React.Component {
         {this.props.isLogin ? <MainPageButton data={this.props.user} groupList={this.props.groupList} /> : null}
         {this.props.isLogin ? (
           <SnackbarProvider maxSnack={5}>
-            <WebSocket userCd={this.props.user.userCd} userId={this.props.user.userId} notice={this.props.notice} />
+            <WebSocket
+              userCd={this.props.user.userCd}
+              userId={this.props.user.userId}
+              notice={this.props.notice}
+              onSaveNoticeList={(data) => this.props.onSaveNoticeList(data)}
+            />
           </SnackbarProvider>
         ) : null}
         {/* <Fab

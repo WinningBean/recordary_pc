@@ -5,10 +5,10 @@ import SockJs from 'sockjs-client';
 import axios from 'axios';
 
 import { useSnackbar } from 'notistack';
+import { useHistory } from 'react-router-dom';
 
-import { Link } from 'react-router-dom';
-
-const WebSocket = ({ userCd, userId, notice }) => {
+const WebSocket = ({ userCd, userId, notice, onSaveNoticeList }) => {
+  const history = useHistory();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [client, setClient] = useState(null);
   useEffect(() => {
@@ -106,6 +106,8 @@ const WebSocket = ({ userCd, userId, notice }) => {
             type: 'info',
             action: `/group/${activeGroup.groupCd}`,
           };
+          const { data } = await axios.get(`/notice/accept/${userCd}`);
+          onSaveNoticeList(data);
         } catch (error) {
           console.error(error);
         }
@@ -204,6 +206,8 @@ const WebSocket = ({ userCd, userId, notice }) => {
           activeSchedule = (await axios.get(`/schedule/${data.activeCd}`)).data;
           message = { text: `${activeSchedule.scheduleNm} 일정에 회원님이 일정멤버로 초대되었습니다.`, type: 'info' };
           console.log(activeSchedule);
+          const { data } = await axios.get(`/notice/accept/${userCd}`);
+          onSaveNoticeList(data);
         } catch (error) {
           console.error(error);
         }
@@ -270,7 +274,7 @@ const WebSocket = ({ userCd, userId, notice }) => {
           <div
             style={{ cursor: 'pointer' }}
             onClick={() => {
-              window.location.href = window.location.origin + message.action;
+              history.push(message.action);
             }}
           >
             이동

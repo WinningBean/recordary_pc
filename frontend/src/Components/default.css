@@ -150,7 +150,7 @@ input:focus {
 
 .loading {
   color: transparent;
-  background: linear-gradient(100deg, #eceff1 30%, #f6f7f8 50%, #eceff1 70%);
+  background: linear-gradient(100deg, #e1e5e7 30%, #f6f7f8 50%, #e1e5e7 70%);
   background-size: 400%;
   animation: loading 1.2s ease-in-out infinite;
 }

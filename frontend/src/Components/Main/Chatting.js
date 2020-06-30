@@ -6,17 +6,40 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import SubdirectoryArrowLeftIcon from '@material-ui/icons/SubdirectoryArrowLeft';
 import AddIcon from '@material-ui/icons/Add';
 
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 
-const Chatting = ({ isOpen }) => {
+import axios from 'axios';
+
+const Chatting = ({ isOpen, user }) => {
   const [searchText, setSearchText] = useState('');
   const [writedMessage, setWritedMessage] = useState('');
-  const [selectedUser, setSelectedUser] = useState(undefined);
+  const [selectedRoomIndex, setSelectedRoomIndex] = useState(undefined);
   const [isAddChatRoom, setIsAddChatRoom] = useState(false);
   const textareaRef = React.createRef();
   const chatListRef = React.createRef();
 
+  const [info, setInfo] = useImmer(undefined);
+
   console.log(writedMessage);
+
+  const getInfo = async () => {
+    const { data } = await axios.get(`/room/list/${user.userCd}`);
+    console.log(data, 'real data');
+    setInfo((draft) => (draft = data));
+  };
+
+  const getChatList = async (roomCd, index) => {
+    const { data } = await axios.post(`/room/enter/${roomCd}`);
+    console.log(data, 'is list data');
+    setInfo((draft) => {
+      draft[index].chatList = data;
+    });
+  };
+
+  useEffect(() => {
+    getInfo();
+  }, []);
 
   useEffect(() => {
     if (chatListRef.current !== null) {
@@ -25,154 +48,35 @@ const Chatting = ({ isOpen }) => {
     }
   }, [chatListRef]);
 
-  const [chatList, setChatList] = useImmer([
-    {
-      id: 'abcd1234',
-      nm: '홍길동',
-      content: 'ABCDEFGHIJKLMNOPQRX ABCDE',
-      date: new Date('2020-03-25'),
-      pic: 'https://i.pinimg.com/originals/0d/e8/86/0de8869350e89fd300edaeef3b659674.jpg',
-      message: [
-        {
-          ex: 'hello world',
-          date: new Date('2020-03-28'),
-          isMyMessage: false,
-        },
-        {
-          ex: 'hello world',
-          date: new Date('2020-03-28'),
-          isMyMessage: true,
-        },
-        {
-          ex: 'hello world',
-          date: new Date('2020-03-28'),
-          isMyMessage: true,
-        },
-        {
-          ex: 'hello world',
-          date: new Date('2020-03-28'),
-          isMyMessage: false,
-        },
-        {
-          ex: 'hello world',
-          date: new Date('2020-03-28'),
-          isMyMessage: true,
-        },
-        {
-          ex: 'hello world',
-          date: new Date('2020-04-01'),
-          isMyMessage: true,
-        },
-        {
-          ex: 'hello world',
-          date: new Date('2020-04-01'),
-          isMyMessage: false,
-        },
-        {
-          ex: 'hello world',
-          date: new Date('2020-04-01'),
-          isMyMessage: true,
-        },
-        {
-          ex: 'hello world',
-          date: new Date('2020-04-01'),
-          isMyMessage: true,
-        },
-        {
-          ex: 'hello world',
-          date: new Date('2020-04-01'),
-          isMyMessage: false,
-        },
-        {
-          ex: 'hello world',
-          date: new Date('2020-04-01'),
-          isMyMessage: true,
-        },
-        {
-          ex: 'hello world',
-          date: new Date(),
-          isMyMessage: true,
-        },
-        {
-          ex: 'hello world',
-          date: new Date(),
-          isMyMessage: false,
-        },
-        {
-          ex: 'hello world',
-          date: new Date(),
-          isMyMessage: true,
-        },
-        {
-          ex: 'hello world',
-          date: new Date(),
-          isMyMessage: true,
-        },
-      ],
-      isLogin: true,
-    },
-    {
-      id: '142213',
-      nm: '김길동',
-      content: 'Hello World',
-      date: new Date('2020-03-26'),
-      pic: 'https://i.pinimg.com/originals/0d/e8/86/0de8869350e89fd300edaeef3b659674.jpg',
-      message: [
-        {
-          ex: 'hello world',
-          date: new Date(),
-        },
-      ],
-      isLogin: false,
-    },
-    {
-      id: '64315',
-      nm: '위길동',
-      content: 'ABCDEFG',
-      date: new Date('2020-03-27'),
-      pic: 'https://i.pinimg.com/originals/0d/e8/86/0de8869350e89fd300edaeef3b659674.jpg',
-      message: [
-        {
-          ex: 'hello world',
-          date: new Date(),
-        },
-      ],
-      isLogin: true,
-    },
-    {
-      id: '73453',
-      nm: 'Pablo Fornals',
-      content: 'OK see you later',
-      date: new Date(),
-      pic: 'https://i.pinimg.com/originals/0d/e8/86/0de8869350e89fd300edaeef3b659674.jpg',
-      message: [
-        {
-          ex: 'hello world',
-          date: new Date(),
-        },
-      ],
-      isLogin: true,
-    },
-  ]);
+  if (info === undefined) {
+    return <></>;
+  }
 
   const listView = () => {
     const copyChatList =
-      searchText === '' ? [...chatList] : chatList.filter((value) => new RegExp(searchText, 'i').exec(value.nm));
-    return copyChatList.map((value) => {
+      searchText === '' ? [...info] : info.filter((value) => new RegExp(searchText, 'i').exec(value.targetNm));
+    return copyChatList.map((value, index) => {
       return (
         <div
-          key={value.nm}
+          key={value.roomCd}
           className='chatting-cell'
           style={{
             height: '60px',
             display: 'flex',
-            borderLeft: value.isLogin ? '5px solid #40739e' : 'none',
-            paddingLeft: value.isLogin ? '5px' : '10px',
+            paddingLeft: '10px',
           }}
-          onClick={() => setSelectedUser(value.id)}
+          onClick={() => {
+            if (info[index].chatList === null) {
+              getChatList(value.roomCd, index);
+            }
+            setSelectedRoomIndex(index);
+          }}
         >
           <div style={{ flex: '1', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <img src={value.pic} style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover' }} />
+            <img
+              src={'https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/user/15'}
+              style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover' }}
+            />
           </div>
           <div
             style={{
@@ -180,7 +84,7 @@ const Chatting = ({ isOpen }) => {
               paddingLeft: '5px',
             }}
           >
-            <div style={{ paddingTop: '10px', fontWeight: 'bold' }}>{value.nm}</div>
+            <div style={{ paddingTop: '10px', fontWeight: 'bold' }}>{value.targetNm}</div>
             <div
               style={{
                 paddingTop: '5px',
@@ -189,7 +93,7 @@ const Chatting = ({ isOpen }) => {
                 whiteSpace: 'nowrap',
               }}
             >
-              {value.content}
+              {value.lastChat}
             </div>
           </div>
         </div>
@@ -199,19 +103,12 @@ const Chatting = ({ isOpen }) => {
 
   const sendMessage = (e) => {
     if (writedMessage === '') return null;
-    setChatList((draft) => {
-      var value = undefined;
-      for (let i = 0; i < draft.length; i++) {
-        if (draft[i].id === selectedUser) {
-          value = draft[i];
-          break;
-        }
-      }
+    setInfo((draft) => {
       // var copyMessage = writedMessage.replace(/(?:\r\n|\r|\n)/g, '<br />');
-      value.message.push({
-        ex: writedMessage,
-        date: new Date(),
-        isMyMessage: true,
+      draft[selectedRoomIndex].chatList.push({
+        sendUser: user,
+        content: writedMessage,
+        crateChat: new Date(),
       });
     });
     textareaRef.current.focus();
@@ -273,24 +170,16 @@ const Chatting = ({ isOpen }) => {
   };
 
   const chatListView = () => {
-    var value = undefined;
-    for (let i = 0; i < chatList.length; i++) {
-      if (chatList[i].id === selectedUser) {
-        value = chatList[i];
-        break;
-      }
-    }
-
     return (
       <div
         className='transition-all chatting-list'
         style={
-          selectedUser === undefined
+          selectedRoomIndex === undefined
             ? { transform: 'translateX(100%)', opacity: 0 }
             : { transform: 'translateX(0)', opacity: '100%' }
         }
       >
-        {selectedUser === undefined || value === undefined ? null : (
+        {selectedRoomIndex === undefined ? null : (
           <>
             <div
               style={{
@@ -303,7 +192,7 @@ const Chatting = ({ isOpen }) => {
             >
               <div
                 style={{ flex: '1', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'white' }}
-                onClick={() => setSelectedUser(undefined)}
+                onClick={() => setSelectedRoomIndex(undefined)}
               >
                 <ArrowBackIcon fontSize='large' style={{ marginLeft: '10px' }} />
               </div>
@@ -316,11 +205,11 @@ const Chatting = ({ isOpen }) => {
                 }}
               >
                 <img
-                  src={value.pic}
+                  src={'https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/group/basic.png'}
                   style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover', padding: '5px' }}
                 />
                 <span style={{ color: 'white', fontWeight: 'bold', fontSize: '16px', paddingLeft: '6px' }}>
-                  {value.nm}
+                  {info[selectedRoomIndex].targetNm}
                 </span>
               </div>
             </div>
@@ -343,106 +232,113 @@ const Chatting = ({ isOpen }) => {
                         <div style={{ backgroundColor: 'rgba(64, 115, 158,0.6)', color: 'white' }}>
                           {format(chatList.date, 'yyyy-MM-dd')}
                         </div>
-                      </div>                      
+                      </div>
                       )
                       }
                     }
                   }} */}
-                  {value.message.map((val, index) => {
-                    return val.isMyMessage ? (
-                      <div
-                        key={`${value.id}-${index}`}
-                        style={{
-                          margin: '5px 10px',
-                          display: 'flex',
-                          justifyContent: 'flex-end',
-                        }}
-                      >
+                  {info[selectedRoomIndex].chatList === null ? (
+                    <div>
+                      <CircularProgress />
+                    </div>
+                  ) : (
+                    info[selectedRoomIndex].chatList.map((val, index) => {
+                      var isMyMessage = val.sendUser.userCd === user.userCd ? true : false;
+                      return isMyMessage ? (
                         <div
+                          key={`${info[selectedRoomIndex].roomCd}-${index}`}
                           style={{
+                            margin: '5px 10px',
                             display: 'flex',
-                            alignItems: 'flex-end',
-                            paddingTop: '13px',
-                            paddingRight: '2px',
-                            color: '#40739e',
+                            justifyContent: 'flex-end',
                           }}
                         >
-                          {isSameDay(new Date(), val.date)
+                          <div
+                            style={{
+                              display: 'flex',
+                              alignItems: 'flex-end',
+                              paddingTop: '13px',
+                              paddingRight: '2px',
+                              color: '#40739e',
+                            }}
+                          >
+                            {/* {isSameDay(new Date(), val.date)
                             ? format(val.date, 'a') === 'AM'
                               ? '오전'
                               : '오후' + format(val.date, 'h:mm')
                             : `${format(val.date, 'yyyy-MM-dd')} ${
                                 format(val.date, 'a') === 'AM' ? '오전' : '오후'
-                              } ${format(val.date, 'h:mm')}`}
+                              } ${format(val.date, 'h:mm')}`} */}
+                          </div>
+                          <div
+                            style={{
+                              padding: '7px 15px',
+                              maxWidth: '70%',
+                              backgroundColor: 'rgba(64, 115, 158,0.2)',
+                              borderRight: '4px solid rgba(64, 115, 158,1.0)',
+                              // borderRadius: '5px',
+                              fontWeight: 'bold',
+                              fontSize: '14px',
+                              overflowWrap: 'break-word',
+                            }}
+                          >
+                            {val.content.split('\n').map((line) => {
+                              return (
+                                <span>
+                                  {line}
+                                  <br />
+                                </span>
+                              );
+                            })}
+                          </div>
                         </div>
+                      ) : (
                         <div
-                          style={{
-                            padding: '7px 15px',
-                            maxWidth: '70%',
-                            backgroundColor: 'rgba(64, 115, 158,0.2)',
-                            borderRight: '4px solid rgba(64, 115, 158,1.0)',
-                            // borderRadius: '5px',
-                            fontWeight: 'bold',
-                            fontSize: '14px',
-                            overflowWrap: 'break-word',
-                          }}
+                          key={`${info[selectedRoomIndex].roomCd}-${index}`}
+                          style={{ margin: '5px 10px', display: 'flex', justifyContent: 'flex-start' }}
                         >
-                          {val.ex.split('\n').map((line) => {
-                            return (
-                              <span>
-                                {line}
-                                <br />
-                              </span>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    ) : (
-                      <div
-                        key={`${value.id}-${index}`}
-                        style={{ margin: '5px 10px', display: 'flex', justifyContent: 'flex-start' }}
-                      >
-                        <div
-                          style={{
-                            display: 'flex',
-                            padding: '7px 15px',
-                            maxWidth: '70%',
-                            backgroundColor: '#eee',
-                            borderLeft: '4px solid #aaa',
-                            // borderRadius: '5px',
-                            fontWeight: 'bold',
-                            fontSize: '14px',
-                            overflowWrap: 'break-word',
-                          }}
-                        >
-                          {val.ex.split('\n').map((line) => {
-                            return (
-                              <span>
-                                {line}
-                                <br />
-                              </span>
-                            );
-                          })}
-                        </div>
-                        <div
-                          style={{
-                            alignItems: 'flex-end',
-                            paddingTop: '13px',
-                            paddingLeft: '2px',
-                            color: '#938a8a',
-                          }}
-                        >
-                          {isSameDay(new Date(), val.date)
+                          <div
+                            style={{
+                              display: 'flex',
+                              padding: '7px 15px',
+                              maxWidth: '70%',
+                              backgroundColor: '#eee',
+                              borderLeft: '4px solid #aaa',
+                              // borderRadius: '5px',
+                              fontWeight: 'bold',
+                              fontSize: '14px',
+                              overflowWrap: 'break-word',
+                            }}
+                          >
+                            {val.content.split('\n').map((line) => {
+                              return (
+                                <span>
+                                  {line}
+                                  <br />
+                                </span>
+                              );
+                            })}
+                          </div>
+                          <div
+                            style={{
+                              alignItems: 'flex-end',
+                              paddingTop: '13px',
+                              paddingLeft: '2px',
+                              color: '#938a8a',
+                            }}
+                          >
+                            {/* {isSameDay(new Date(), val.date)
                             ? format(val.date, 'a') === 'AM'
                               ? '오전'
                               : '오후' + format(val.date, 'h:mm')
                             : `${format(val.date, 'yyyy-MM-dd')} ${
                                 format(val.date, 'a') === 'AM' ? '오전' : '오후'
-                              } ${format(val.date, 'h:mm')}`}
+                              } ${format(val.date, 'h:mm')}`} */}
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })
+                  )}
                 </div>
               </div>
               <div

@@ -6,7 +6,7 @@ import '../Main/mainPage.css';
 import ScrollToTopOnMount from '../Other/ScrollToTopOnMount';
 import Follower from './Follower';
 import AddTab from './AddTab';
-import ProfileTimeline from './ProfileTimeline';
+import ProfileTimeline from '../../Containers/Profile/ProfileTimeline';
 import Header from '../../Containers/Header/Header';
 import Calendar from '../Calendar/Calendar';
 import TimelineWeekSchedule from '../Timeline/TimelineWeekSchedule';
@@ -416,6 +416,7 @@ class Profile extends React.Component {
                     {this.state.type !== 2 ? null : (
                       <div style={{ position: 'absolute', top: 0, left: 0 }}>
                         <NotifyPopup
+                          type={0}
                           data={this.state.info.groupApply}
                           onAccept={async (index) => {
                             try {
