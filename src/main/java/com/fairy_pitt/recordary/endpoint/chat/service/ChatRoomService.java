@@ -32,7 +32,7 @@ public class ChatRoomService {
            return chatRoomRepository.save( chatRoomDto.toEntity(user, target, null)).getRoomCd();
        }else {
           GroupEntity group = groupService.findEntity(chatRoomDto.getGroupCd());
-           return chatRoomRepository.save(chatRoomDto.toEntity(user, null, group)).getRoomCd();
+           return chatRoomRepository.save(chatRoomDto.toEntity(null, null, group)).getRoomCd();
        }
     }
 
