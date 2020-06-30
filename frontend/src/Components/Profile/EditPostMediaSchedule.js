@@ -193,10 +193,10 @@ const EditPostMediaSchedule = (props) => {
   };
 
   const extensionImage = ['bmp', 'gif', 'jpeg', 'jpg', 'png'];
-const extensionVideo = ['mp4', 'webm', 'ogg'];
-const extensionAudio = ['m4a', 'mp3', 'ogg', 'wav'];
+  const extensionVideo = ['mp4', 'webm', 'ogg'];
+  const extensionAudio = ['m4a', 'mp3', 'ogg', 'wav'];
 
-const filterTagType = (value) => {
+  const filterTagType = (value) => {
     const len = value.length;
     const lastDot = value.lastIndexOf('.');
     const extension = value.substr(lastDot + 1, len).toLowerCase();
@@ -205,54 +205,53 @@ const filterTagType = (value) => {
     console.log(extension);
 
     extensionImage.map((value) => {
-        if (extension === value) filterType = 'image';
+      if (extension === value) filterType = 'image';
     });
-    extensionVideo.map((value) =>{
-        if (extension === value) filterType = 'video';
+    extensionVideo.map((value) => {
+      if (extension === value) filterType = 'video';
     });
     extensionAudio.map((value) => {
-        if (extension === value) filterType = 'audio';
+      if (extension === value) filterType = 'audio';
     });
     return filterType;
-};
+  };
 
-const timelineMediaType = (value) => {
-  if (filterTagType(value) === 'image') {
-    return (
-      <img
-        id='postAddMedia'
-        alt='postAddMedia'
-        src={value}
-        style={{
-          boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
-          width: '60px',
-          height: '60px',
-          objectFit: 'cover',
-        }}
-      />
-    )
-  } else if (filterTagType(value) === 'video') {
-    return (
-      <video controls title='postAddMedia'
-        src={value}
-        style={{boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)', height: '60px', objectFit: 'cover'}}>
-        지원되지 않는 형식입니다.
-      </video>
-    )
-  } else if (filterTagType(value) === 'audio') {
-    return (
-        <audio controls src={value} style={{width: '60px'}}>
-        지원되지 않는 형식입니다.
+  const timelineMediaType = (value) => {
+    if (filterTagType(value) === 'image') {
+      return (
+        <img
+          id='postAddMedia'
+          alt='postAddMedia'
+          src={value}
+          style={{
+            boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
+            width: '60px',
+            height: '60px',
+            objectFit: 'cover',
+          }}
+        />
+      );
+    } else if (filterTagType(value) === 'video') {
+      return (
+        <video
+          controls
+          title='postAddMedia'
+          src={value}
+          style={{ boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)', height: '60px', objectFit: 'cover' }}
+        >
+          지원되지 않는 형식입니다.
+        </video>
+      );
+    } else if (filterTagType(value) === 'audio') {
+      return (
+        <audio controls src={value} style={{ width: '60px' }}>
+          지원되지 않는 형식입니다.
         </audio>
-    )
-  } else {
-    return (
-      <span style={{display: 'block', height: '100%', textAlign: 'center'}}>
-        지원되지 않는 형식입니다.
-      </span>
-    )
-  }
-}
+      );
+    } else {
+      return <span style={{ display: 'block', height: '100%', textAlign: 'center' }}>지원되지 않는 형식입니다.</span>;
+    }
+  };
 
   const onSubmit = async () => {
     try {
@@ -276,13 +275,11 @@ const timelineMediaType = (value) => {
         );
         return;
       }
-
       var getScheduleCd = null;
       if (scheduleInfo.scheduleNm !== '') {
         getScheduleCd = (
-          await axios.post(`/schedule/update/${scheduleInfo.scheduleCd}`, {
-            // tabCd: clickTab === undefined ? null : clickTab,
-            tabCd: null,
+          await axios.post(`/schedule/update/${post.scheduleCd}`, {
+            tabCd: clickTabState === undefined ? null : clickTabState,
             userCd: user.userCd,
             scheduleNm: scheduleInfo.scheduleNm,
             scheduleEx: scheduleInfo.scheduleEx,
@@ -296,6 +293,7 @@ const timelineMediaType = (value) => {
         ).data;
         console.log(getScheduleCd);
       }
+      console.log('33333');
 
       var getMediaCd = null;
       if (updatePostAddMediaListSrc.length > 0) {
@@ -314,6 +312,7 @@ const timelineMediaType = (value) => {
         ).data;
         console.log(getMediaCd);
       }
+      console.log('4444');
 
       const postData = (
         await axios.put(`/post/${post.postCd}`, {
@@ -693,7 +692,7 @@ const timelineMediaType = (value) => {
                   return;
                 }
                 for (let i = 0; i < e.target.files.length; i++) {
-                  if (e.target.files[i].size > (100 * 1024 * 1024)) {
+                  if (e.target.files[i].size > 100 * 1024 * 1024) {
                     setDialog(
                       <AlertDialog
                         severity='error'

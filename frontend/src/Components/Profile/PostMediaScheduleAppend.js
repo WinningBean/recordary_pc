@@ -223,7 +223,7 @@ const PostMediaScheduleAppend = (props) => {
       }
 
       var getScheduleCd = null;
-      if (scheduleInfo.scheduleNm !== '') {
+      if (scheduleOpen === true) {
         getScheduleCd = (
           await axios.post('/schedule/', {
             tabCd: clickTabState === undefined ? null : clickTabState,
@@ -528,7 +528,7 @@ const PostMediaScheduleAppend = (props) => {
             </div>
             <input
               type='file'
-              accept= '.bmp, .gif, .jpeg, .jpg, .png, .mp4, .webm, .ogg, .m4a, .mp3, .ogg, .wav'
+              accept='.bmp, .gif, .jpeg, .jpg, .png, .mp4, .webm, .ogg, .m4a, .mp3, .ogg, .wav'
               required
               multiple
               style={{ display: 'none' }}
@@ -545,7 +545,7 @@ const PostMediaScheduleAppend = (props) => {
                   return;
                 }
                 for (let i = 0; i < e.target.files.length; i++) {
-                  if (e.target.files[i].size > (100 * 1024 * 1024)) {
+                  if (e.target.files[i].size > 100 * 1024 * 1024) {
                     setDialog(
                       <AlertDialog
                         severity='error'
