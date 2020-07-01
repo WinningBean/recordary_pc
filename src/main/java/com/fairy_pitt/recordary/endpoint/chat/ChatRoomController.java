@@ -22,7 +22,7 @@ public class ChatRoomController {
     private final ChatService chatService;
 
     @PostMapping("create")
-    public Long create(ChatRoomDto chatRoomDto)
+    public Long create(@RequestBody ChatRoomDto chatRoomDto)
     {
        return chatRoomService.create(chatRoomDto);
     }
