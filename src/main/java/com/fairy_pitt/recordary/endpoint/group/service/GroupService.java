@@ -36,7 +36,7 @@ public class GroupService {
     public Long save(@RequestBody GroupRequestDto requestDto) {
         UserEntity user = userService.findEntity(requestDto.getUserCd());
             return  groupRepository.save(
-                    requestDto.toEntity(user,"https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/group/basic.png"))
+                    requestDto.toEntity(user,"group/basic.png"))
                     .getGroupCd();
     }
 

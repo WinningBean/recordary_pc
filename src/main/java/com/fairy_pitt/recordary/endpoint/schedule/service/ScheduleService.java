@@ -3,6 +3,7 @@ package com.fairy_pitt.recordary.endpoint.schedule.service;
 import com.fairy_pitt.recordary.common.domain.*;
 import com.fairy_pitt.recordary.common.repository.ScheduleRepository;
 import com.fairy_pitt.recordary.common.repository.ScheduleTabRepository;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.*;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
@@ -208,11 +209,11 @@ public class ScheduleService implements Comparator< ScheduleResponseDto > {
         UserEntity userEntity = userService.findEntity(userCd);
 
         List<ScheduleTodayResponseDto> todayScheduleList = new ArrayList<>();
-        for (ScheduleEntity scheduleEntity : scheduleRepository.findAllByUserFkAndScheduleStrLessThanEqualAndScheduleEndGreaterThanEqual(userEntity, new Date(), new Date())){
+        for (ScheduleEntity scheduleEntity : scheduleRepository.findAllByUserFkAndGroupFKIsNullScheduleStrLessThanEqualAndScheduleEndGreaterThanEqual(userEntity, new Date(), new Date())){
             todayScheduleList.add(new ScheduleTodayResponseDto(scheduleEntity, 0));
         }
-        for (GroupMemberEntity groupMemberEntity : userEntity.getGroups()){
-            GroupEntity groupEntity = groupMemberEntity.getGroupFK();
+        for (GroupResponseDto groupResponseDto : groupService.findUserGroups(userCd)){
+            GroupEntity groupEntity = groupService.findEntity(groupResponseDto.getGroupCd());
             List<ScheduleEntity> scheduleEntityList = scheduleRepository.findAllByGroupFK(groupEntity);
             for (ScheduleEntity scheduleEntity : scheduleEntityList){
                 ScheduleEntity schedule = scheduleRepository.findByScheduleCdAndScheduleStrLessThanEqualAndScheduleEndGreaterThanEqual(scheduleEntity.getScheduleCd(), new Date(), new Date());
