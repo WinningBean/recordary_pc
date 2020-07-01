@@ -55,8 +55,10 @@ dependencies {
     implementation('joda-time:joda-time:2.2')
     implementation('org.springframework.cloud:spring-cloud-starter-aws:2.2.1.RELEASE')
     implementation('org.springframework.cloud:spring-cloud-aws:2.2.1.RELEASE')
+    implementation('com.amazonaws:aws-java-sdk:1.2.1')
     implementation('com.amazonaws:aws-java-sdk-s3')
     implementation('commons-fileupload:commons-fileupload:1.4')
+    implementation('org.apache.commons:commons-io')
 
     annotationProcessor ('org.projectlombok:lombok')
     annotationProcessor ('org.springframework.boot:spring-boot-configuration-processor')
