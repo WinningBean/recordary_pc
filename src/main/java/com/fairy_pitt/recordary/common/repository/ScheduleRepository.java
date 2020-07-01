@@ -17,7 +17,7 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity,Long> {
     List<ScheduleEntity> findAllByScheduleStrLessThanEqualAndScheduleEndGreaterThanEqual(Date strDate, Date endDate);
     ScheduleEntity findByScheduleCdAndScheduleStrLessThanEqualAndScheduleEndGreaterThanEqual(Long scheduleCd, Date strDate, Date endDate);
     List<ScheduleEntity> findAllByUserFkAndScheduleStrLessThanEqualAndScheduleEndGreaterThanEqual(UserEntity userEntity, Date strDate, Date endDate);
-    List<ScheduleEntity> findAllByUserFkAndGroupFKIsNullScheduleStrLessThanEqualAndScheduleEndGreaterThanEqual(UserEntity userEntity, Date strDate, Date endDate);
+    List<ScheduleEntity> findAllByUserFkAndGroupFKIsNullAndScheduleStrLessThanEqualAndScheduleEndGreaterThanEqual(UserEntity userEntity, Date strDate, Date endDate);
     List<ScheduleEntity> findByScheduleStrBetween(Date fromDate, Date toDate);
     List<ScheduleEntity> findByUserFkAndGroupFKIsNullAndSchedulePublicStateLessThanEqualAndScheduleStrBetween(UserEntity user, int state, Date fromDate, Date toDate);
     List<ScheduleEntity> findByUserFkAndGroupFKIsNullAndTabFKAndSchedulePublicStateLessThanEqualAndScheduleStrBetween(UserEntity user, ScheduleTabEntity tab, int state, Date fromDate, Date toDate);

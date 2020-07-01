@@ -209,7 +209,7 @@ public class ScheduleService implements Comparator< ScheduleResponseDto > {
         UserEntity userEntity = userService.findEntity(userCd);
 
         List<ScheduleTodayResponseDto> todayScheduleList = new ArrayList<>();
-        for (ScheduleEntity scheduleEntity : scheduleRepository.findAllByUserFkAndGroupFKIsNullScheduleStrLessThanEqualAndScheduleEndGreaterThanEqual(userEntity, new Date(), new Date())){
+        for (ScheduleEntity scheduleEntity : scheduleRepository.findAllByUserFkAndGroupFKIsNullAndScheduleStrLessThanEqualAndScheduleEndGreaterThanEqual(userEntity, new Date(), new Date())){
             todayScheduleList.add(new ScheduleTodayResponseDto(scheduleEntity, 0));
         }
         for (GroupResponseDto groupResponseDto : groupService.findUserGroups(userCd)){
