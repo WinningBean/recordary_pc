@@ -109,7 +109,7 @@ public class ChatRoomService {
                 }
             }else {
                 if (user.getUserCd().equals(temp.getUserFK().getUserCd())) {
-                    ChatRoomResponseDto chatRoom = new ChatRoomResponseDto(temp, "", temp.getUserFK(),temp.getCreatedDate() );
+                    ChatRoomResponseDto chatRoom = new ChatRoomResponseDto(temp, "", temp.getTargetFK(),temp.getCreatedDate() );
                     response.add(chatRoom);
                 } else {
                     ChatRoomResponseDto chatRoom = new ChatRoomResponseDto(temp, "", temp.getUserFK(),temp.getCreatedDate() );
