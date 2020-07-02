@@ -35,8 +35,6 @@ const Chatting = ({ isOpen, user }) => {
   const [info, setInfo] = useImmer(undefined);
   const [client, setClient] = useState(null);
 
-  console.log(info);
-
   const setWebSock = (data) => {
     var sock = new SockJs('/ws-stomp');
     var client = Stomp.over(sock);
@@ -338,6 +336,7 @@ const Chatting = ({ isOpen, user }) => {
                   ) : (
                     info[selectedRoomIndex].chatList.map((val, index) => {
                       var isMyMessage = val.sendUser.userCd === user.userCd ? true : false;
+                      var createTime = Date.parse(val.crateChat);
                       return isMyMessage ? (
                         <div
                           key={`chatList-${info[selectedRoomIndex].roomCd}-${index}`}
@@ -356,13 +355,13 @@ const Chatting = ({ isOpen, user }) => {
                               color: '#40739e',
                             }}
                           >
-                            {/* {isSameDay(new Date(), val.date)
-                            ? format(val.date, 'a') === 'AM'
-                              ? '오전'
-                              : '오후' + format(val.date, 'h:mm')
-                            : `${format(val.date, 'yyyy-MM-dd')} ${
-                                format(val.date, 'a') === 'AM' ? '오전' : '오후'
-                              } ${format(val.date, 'h:mm')}`} */}
+                            {isSameDay(new Date(), createTime)
+                              ? format(createTime, 'a') === 'AM'
+                                ? '오전'
+                                : '오후' + format(createTime, 'h:mm')
+                              : `${format(createTime, 'yyyy-MM-dd')} ${
+                                  format(createTime, 'a') === 'AM' ? '오전' : '오후'
+                                } ${format(createTime, 'h:mm')}`}
                           </div>
                           <div
                             style={{
@@ -382,8 +381,26 @@ const Chatting = ({ isOpen, user }) => {
                       ) : (
                         <div
                           key={`${info[selectedRoomIndex].roomCd}-${index}`}
-                          style={{ margin: '5px 10px', display: 'flex', justifyContent: 'flex-start' }}
+                          style={{
+                            margin: '5px 10px',
+                            display: 'flex',
+                            justifyContent: 'flex-start',
+                            position: 'relative',
+                          }}
                         >
+                          {info[selectedRoomIndex].isGroup ? (
+                            <span
+                              style={{
+                                position: 'absolute',
+                                left: '4px',
+                                top: '-10px',
+                                left: '0px',
+                                fontSize: '10px',
+                              }}
+                            >
+                              {val.sendUser.userNm}
+                            </span>
+                          ) : null}
                           <div
                             style={{
                               display: 'flex',
@@ -407,13 +424,13 @@ const Chatting = ({ isOpen, user }) => {
                               color: '#938a8a',
                             }}
                           >
-                            {/* {isSameDay(new Date(), val.date)
-                            ? format(val.date, 'a') === 'AM'
-                              ? '오전'
-                              : '오후' + format(val.date, 'h:mm')
-                            : `${format(val.date, 'yyyy-MM-dd')} ${
-                                format(val.date, 'a') === 'AM' ? '오전' : '오후'
-                              } ${format(val.date, 'h:mm')}`} */}
+                            {isSameDay(new Date(), createTime)
+                              ? format(createTime, 'a') === 'AM'
+                                ? '오전'
+                                : '오후' + format(createTime, 'h:mm')
+                              : `${format(createTime, 'yyyy-MM-dd')} ${
+                                  format(createTime, 'a') === 'AM' ? '오전' : '오후'
+                                } ${format(createTime, 'h:mm')}`}
                           </div>
                         </div>
                       );

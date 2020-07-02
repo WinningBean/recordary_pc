@@ -12,6 +12,9 @@ const mapDispatchToProps = (dispatch) => {
     onSaveNoticeList: (data) => {
       dispatch({ type: 'SAVE_NOTICELIST', noticeList: data });
     },
+    onSaveNotice: (notice) => {
+      dispatch({ type: 'SAVE_NOTICE', notice: notice });
+    },
   };
 };
 
