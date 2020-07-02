@@ -2,11 +2,15 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useImmer } from 'use-immer';
 import { format, isSameDay } from 'date-fns';
 
+import SnackBar from '../UI/Snackbar';
+import AlertDialog from '../Other/AlertDialog';
+
 import AddChattingRoom from './AddChattingRoom';
 import SearchIcon from '@material-ui/icons/Search';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import SubdirectoryArrowLeftIcon from '@material-ui/icons/SubdirectoryArrowLeft';
 import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -26,11 +30,12 @@ const Chatting = ({ isOpen, user }) => {
   const [isAddChatRoom, setIsAddChatRoom] = useState(false);
   const chatListRef = React.createRef();
   const [reload, setReload] = useState(false);
+  const [alert, setAlert] = useState(null);
 
   const [info, setInfo] = useImmer(undefined);
   const [client, setClient] = useState(null);
 
-  console.log(writedMessage);
+  console.log(info);
 
   const setWebSock = (data) => {
     var sock = new SockJs('/ws-stomp');
@@ -39,7 +44,17 @@ const Chatting = ({ isOpen, user }) => {
       data.forEach((value) => {
         if (value.isGroup) {
           client.subscribe(`/queue/chat/${value.roomCd}`, function (response) {
-            console.log(JSON.parse(response.body));
+            setInfo((draft) => {
+              const json = JSON.parse(response.body);
+              const index = draft.findIndex((object) => object.roomCd === value.roomCd);
+              if (draft[index].chatList === null) {
+                console.log('draft');
+              } else {
+                draft[index].chatList.push(json);
+              }
+              ++draft[index].noticeCount;
+              draft[index].lastChat = json.content;
+            });
           });
         } else {
           client.subscribe(`/topic/chat/${value.roomCd}`, function (response) {
@@ -78,11 +93,37 @@ const Chatting = ({ isOpen, user }) => {
     });
   };
 
+  const deleteRoom = (roomCd) => {
+    setAlert(
+      <AlertDialog
+        severity='info'
+        content='정말 채팅을 삭제하시겠습니까?'
+        onAlertClose={() => setAlert(null)}
+        onAlertSubmit={() => {
+          axios.delete(`/room/${roomCd}`).then(() => {
+            setInfo((draft) => {
+              const index = draft.findIndex((value) => value.roomCd === roomCd);
+              draft.splice(index, 1);
+              setAlert(
+                <SnackBar
+                  severity='info'
+                  content='삭제완료'
+                  duration={3000}
+                  onClose={() => {
+                    setAlert(null);
+                  }}
+                />
+              );
+              setSelectedRoomIndex(undefined);
+            });
+          });
+        }}
+      />
+    );
+  };
+
   useEffect(() => {
     getInfo();
-    setTimeout(() => {
-      setReload(!reload);
-    }, 20000);
   }, []);
 
   useEffect(() => {
@@ -95,7 +136,7 @@ const Chatting = ({ isOpen, user }) => {
   const listView = () => {
     const copyChatList =
       searchText === '' ? [...info] : info.filter((value) => new RegExp(searchText, 'i').exec(value.targetNm));
-    return info.map((value, index) => {
+    return copyChatList.map((value, index) => {
       return (
         <div
           key={value.roomCd}
@@ -207,28 +248,18 @@ const Chatting = ({ isOpen, user }) => {
 
   // ), []);
 
-  const chatListView = () => {
-    if (client === null) {
-      return (
-        <div className='chating-list flex-center'>
-          <span>{'소켓 생성중입니다...'}</span>
-        </div>
-      );
-    } else {
-      if (!client.connect || isEmptyObject(client.subscriptions)) {
-        if (reload) {
-          return (
-            <div className='chating-list flex-center'>
-              <span>{'채팅 연결이 지연되고있습니다. 새로고침하시길 바랍니다.'}</span>
-            </div>
-          );
-        }
-        return (
-          <div className='chating-list flex-center'>
-            <span>{'채팅 연결 중입니다..'}</span>
-          </div>
-        );
+  const ffffffff = () => {
+    setTimeout(() => {
+      if (client === null || client.connected === false) {
+        ffffffff();
       }
+      setReload(!reload);
+    }, 5000);
+  };
+
+  const chatListView = () => {
+    if (client === null || client.connected === false) {
+      ffffffff();
     }
     return (
       <div
@@ -239,6 +270,11 @@ const Chatting = ({ isOpen, user }) => {
             : { transform: 'translateX(0)', opacity: '100%' }
         }
       >
+        {client === null || client.connected === false ? (
+          <div className='flex-center loading' style={{ width: '100%', height: '100%', position: 'absolute' }}>
+            <span style={{ fontSize: '34px', fontWeight: 'bold', color: 'black' }}>연결중입니다...</span>
+          </div>
+        ) : null}
         {selectedRoomIndex === undefined ? null : (
           <>
             <div
@@ -264,7 +300,7 @@ const Chatting = ({ isOpen, user }) => {
               </div>
               <div
                 style={{
-                  flex: '7',
+                  flex: '6',
                   display: 'flex',
                   alignItems: 'center',
                   paddingLeft: '10px',
@@ -277,6 +313,15 @@ const Chatting = ({ isOpen, user }) => {
                 <span style={{ color: 'white', fontWeight: 'bold', fontSize: '16px', paddingLeft: '6px' }}>
                   {info[selectedRoomIndex].targetNm}
                 </span>
+              </div>
+              <div
+                className='flex-center'
+                style={{ flex: '1', color: 'white', cursor: 'pointer' }}
+                onClick={() => {
+                  deleteRoom(info[selectedRoomIndex].roomCd);
+                }}
+              >
+                <DeleteIcon fontSize='default' />
               </div>
             </div>
             <div style={{ height: '90%', display: 'flex', flexDirection: 'column' }}>
@@ -516,8 +561,39 @@ const Chatting = ({ isOpen, user }) => {
       ) : (
         <div style={{ display: 'flex', height: '85%', flexDirection: 'column' }}>{listView()}</div>
       )}
-      {chatListView()}
-      {isAddChatRoom ? <AddChattingRoom userCd={user.userCd} /> : null}
+      {selectedRoomIndex === undefined ? null : chatListView()}
+      {isAddChatRoom ? (
+        <AddChattingRoom
+          info={info}
+          userCd={user.userCd}
+          onClose={() => setIsAddChatRoom(false)}
+          onCreate={() => {
+            if (client.connected) {
+              client.disconnect(() => {
+                getInfo();
+                setIsAddChatRoom(false);
+              });
+            } else {
+              getInfo();
+              setIsAddChatRoom(false);
+            }
+          }}
+          onFull={() => {
+            setIsAddChatRoom(false);
+            setAlert(
+              <SnackBar
+                severity='info'
+                content='이미 존재하는 채팅방입니다.'
+                duration={6000}
+                onClose={() => {
+                  setAlert(null);
+                }}
+              />
+            );
+          }}
+        />
+      ) : null}
+      {alert}
     </div>
   );
 };
