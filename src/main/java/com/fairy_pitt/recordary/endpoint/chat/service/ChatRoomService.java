@@ -5,10 +5,12 @@ import com.fairy_pitt.recordary.common.repository.ChatRoomRepository;
 import com.fairy_pitt.recordary.endpoint.chat.dto.ChatResponseDto;
 import com.fairy_pitt.recordary.endpoint.chat.dto.ChatRoomDto;
 import com.fairy_pitt.recordary.endpoint.chat.dto.ChatRoomResponseDto;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -36,6 +38,15 @@ public class ChatRoomService {
        }
     }
 
+    public Boolean delete(Long roomCd)
+    {
+        ChatRoomEntity room = chatRoomRepository.findById(roomCd)
+                .orElseThrow(() -> new IllegalArgumentException("해당 채팅방이 없습니다. id=" + roomCd));
+        chatRoomRepository.delete(room);
+        return true;
+    }
+
+    @Transactional(readOnly = true)
     public Long enterChat(ChatRoomDto chatRoomDto)
     {
         UserEntity user = userService.findEntity(chatRoomDto.getUserCd());
@@ -57,42 +68,59 @@ public class ChatRoomService {
         return null;
     }
 
+    @Transactional(readOnly = true)
     public List<ChatResponseDto> enter(Long roomCd)
     {
         return new ChatRoomResponseDto(chatRoomRepository.findByRoomCd(roomCd)).getChatList();
     }
 
-    private int check(UserEntity user, UserEntity target)
+    @Transactional(readOnly = true)
+    public List<GroupResponseDto> findCreateGroupChat(Long userCd)
     {
-        if(chatRoomRepository.existsByUserFKAndTargetFK(user,target))
+        List<GroupResponseDto> result = new ArrayList<>();
+        UserEntity user = userService.findEntity(userCd);
+        List<GroupEntity> groups = user.getMasters();
+        for(GroupEntity group : groups)
         {
-            return 2;
-        }else if(chatRoomRepository.existsByUserFKAndTargetFK(target, user))
-        {
-            return 1;
+            if(!chatRoomRepository.existsByGroupFK(group))
+            {
+                GroupResponseDto groupDto = new GroupResponseDto(group);
+                result.add(groupDto);
+            }
         }
-        else return 0;
+        return result;
     }
 
-
+    @Transactional(readOnly = true)
     public List<ChatRoomResponseDto> chatRoomList(Long userCd)
     {
         UserEntity user = userService.findEntity(userCd);
         List<ChatRoomEntity> chatRoomList =  chatRoomRepository.findAllByUserFKOrTargetFKOrderByModifiedDate(user, user);
         List<ChatRoomResponseDto> response = new ArrayList<>();
         for (ChatRoomEntity temp : chatRoomList) {
-            ChatEntity chatEntity = temp.getChatList().get(temp.getChatList().size() - 1);
-            if(user.getUserCd().equals(temp.getUserFK().getUserCd()))
-            {
-                ChatRoomResponseDto chatRoom = new ChatRoomResponseDto(temp, chatEntity.getContent(), temp.getTargetFK(), chatEntity.getCreatedDate());
-                response.add(chatRoom);
-            }else{
-                ChatRoomResponseDto chatRoom = new ChatRoomResponseDto(temp,chatEntity.getContent() , temp.getUserFK(), chatEntity.getCreatedDate());
-                response.add(chatRoom);
+            if(temp.getChatList().size() != 0) {
+                ChatEntity chatEntity = temp.getChatList().get(temp.getChatList().size() - 1);
+                if (user.getUserCd().equals(temp.getUserFK().getUserCd())) {
+                    ChatRoomResponseDto chatRoom = new ChatRoomResponseDto(temp, chatEntity.getContent(), temp.getTargetFK(), chatEntity.getCreatedDate());
+                    response.add(chatRoom);
+                } else {
+                    ChatRoomResponseDto chatRoom = new ChatRoomResponseDto(temp, chatEntity.getContent(), temp.getUserFK(), chatEntity.getCreatedDate());
+                    response.add(chatRoom);
+                }
+            }else {
+                if (user.getUserCd().equals(temp.getUserFK().getUserCd())) {
+                    ChatRoomResponseDto chatRoom = new ChatRoomResponseDto(temp, "", temp.getTargetFK(),temp.getCreatedDate() );
+                    response.add(chatRoom);
+                } else {
+                    ChatRoomResponseDto chatRoom = new ChatRoomResponseDto(temp, "", temp.getUserFK(),temp.getCreatedDate() );
+                    response.add(chatRoom);
+                }
             }
         }
         return response;
     }
+
+    @Transactional(readOnly = true)
     public List<ChatRoomResponseDto> groupChatList(Long userCd)
     {
         UserEntity user = userService.findEntity(userCd);
@@ -108,20 +136,31 @@ public class ChatRoomService {
             if(chatRoomRepository.existsByGroupFK(group))
             {
                 ChatRoomEntity entity = chatRoomRepository.findByGroupFK(group);
-                ChatEntity chatEntity = entity.getChatList().get(entity.getChatList().size() - 1);
-                ChatRoomResponseDto  chatRoomResponseDto = new ChatRoomResponseDto(entity, group, chatEntity.getContent(), chatEntity.getCreatedDate());
-                result.add( chatRoomResponseDto);
+                if(entity.getChatList().size() == 0)
+                {
+                    ChatRoomResponseDto  chatRoomResponseDto = new ChatRoomResponseDto(entity, group, "", entity.getCreatedDate());
+                    result.add( chatRoomResponseDto);
+                }else{
+                    ChatEntity chatEntity = entity.getChatList().get(entity.getChatList().size() - 1);
+                    ChatRoomResponseDto  chatRoomResponseDto = new ChatRoomResponseDto(entity, group, chatEntity.getContent(), chatEntity.getCreatedDate());
+                    result.add( chatRoomResponseDto);
+                }
+
             }
         }
         return result;
     }
 
-    public Boolean delete(Long roomCd)
+    private int check(UserEntity user, UserEntity target)
     {
-        ChatRoomEntity room = chatRoomRepository.findById(roomCd)
-                .orElseThrow(() -> new IllegalArgumentException("해당 채팅방이 없습니다. id=" + roomCd));
-          chatRoomRepository.delete(room);
-          return true;
+        if(chatRoomRepository.existsByUserFKAndTargetFK(user,target))
+        {
+            return 2;
+        }else if(chatRoomRepository.existsByUserFKAndTargetFK(target, user))
+        {
+            return 1;
+        }
+        else return 0;
     }
 
     public ChatRoomEntity findEntity(Long roomCd){
