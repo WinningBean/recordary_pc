@@ -134,7 +134,7 @@ class UserEditor extends React.Component {
                     return;
                   }
 
-                  const userId = (await axios.delete(`user/${this.props.data.userCd}`)).data;
+                  const userId = (await axios.delete(`/user/${this.props.data.userCd}`)).data;
                   if (userId === this.state.user_id) {
                     this.setState({
                       alertDialog: () => {
@@ -179,82 +179,82 @@ class UserEditor extends React.Component {
             </EditorButton>
             <EditorButton
               onClick={async () => {
-                // const nameRules = /^[가-힣]{2,4}|[a-zA-Z]{2,10}\s[a-zA-Z]{2,10}$/;
-                // if (!nameRules.test(this.state.user_nm)) {
-                //   this.setState({
-                //     alertDialog: () => {
-                //       return (
-                //         <AlertDialog
-                //           severity='error'
-                //           content='이름이 옳바르지않습니다 다시 작성해주세요.'
-                //           onAlertClose={() => {
-                //             this.setState({
-                //               alertDialog: () => {},
-                //             });
-                //           }}
-                //         />
-                //       );
-                //     },
-                //   });
-                //   return;
-                // }
-                // if (this.state.user_pw === '') {
-                //   this.setState({
-                //     alertDialog: () => {
-                //       return (
-                //         <AlertDialog
-                //           severity='error'
-                //           content='패스워드를 입력하세요.'
-                //           onAlertClose={() => {
-                //             this.setState({
-                //               alertDialog: () => {},
-                //             });
-                //           }}
-                //         />
-                //       );
-                //     },
-                //   });
-                //   return;
-                // }
-                // if (this.state.user_change_pw !== '' || this.state.user_change_pw_check !== '') {
-                //   if (!this.state.isSamePw) {
-                //     this.setState({
-                //       alertDialog: () => {
-                //         return (
-                //           <AlertDialog
-                //             severity='error'
-                //             content='바꿀 패스워드가 같지않습니다.'
-                //             onAlertClose={() => {
-                //               this.setState({
-                //                 alertDialog: () => {},
-                //               });
-                //             }}
-                //           />
-                //         );
-                //       },
-                //     });
-                //     return;
-                //   }
-                //   const passwordRules = /^[a-zA-Z0-9]{10,15}$/;
-                //   if (!passwordRules.test(this.state.user_change_pw)) {
-                //     this.setState({
-                //       alertDialog: () => {
-                //         return (
-                //           <AlertDialog
-                //             severity='error'
-                //             content='패스워드는 숫자와 영문자 조합으로 10~15자리를 사용해야 합니다.'
-                //             onAlertClose={() => {
-                //               this.setState({
-                //                 alertDialog: () => {},
-                //               });
-                //             }}
-                //           />
-                //         );
-                //       },
-                //     });
-                //     return;
-                //   }
-                // }
+                const nameRules = /^[가-힣]{2,4}|[a-zA-Z]{2,10}\s[a-zA-Z]{2,10}$/;
+                if (!nameRules.test(this.state.user_nm)) {
+                  this.setState({
+                    alertDialog: () => {
+                      return (
+                        <AlertDialog
+                          severity='error'
+                          content='이름이 옳바르지않습니다 다시 작성해주세요.'
+                          onAlertClose={() => {
+                            this.setState({
+                              alertDialog: () => {},
+                            });
+                          }}
+                        />
+                      );
+                    },
+                  });
+                  return;
+                }
+                if (this.state.user_pw === '') {
+                  this.setState({
+                    alertDialog: () => {
+                      return (
+                        <AlertDialog
+                          severity='error'
+                          content='패스워드를 입력하세요.'
+                          onAlertClose={() => {
+                            this.setState({
+                              alertDialog: () => {},
+                            });
+                          }}
+                        />
+                      );
+                    },
+                  });
+                  return;
+                }
+                if (this.state.user_change_pw !== '' || this.state.user_change_pw_check !== '') {
+                  if (!this.state.isSamePw) {
+                    this.setState({
+                      alertDialog: () => {
+                        return (
+                          <AlertDialog
+                            severity='error'
+                            content='바꿀 패스워드가 같지않습니다.'
+                            onAlertClose={() => {
+                              this.setState({
+                                alertDialog: () => {},
+                              });
+                            }}
+                          />
+                        );
+                      },
+                    });
+                    return;
+                  }
+                  const passwordRules = /^[a-zA-Z0-9]{10,15}$/;
+                  if (!passwordRules.test(this.state.user_change_pw)) {
+                    this.setState({
+                      alertDialog: () => {
+                        return (
+                          <AlertDialog
+                            severity='error'
+                            content='패스워드는 숫자와 영문자 조합으로 10~15자리를 사용해야 합니다.'
+                            onAlertClose={() => {
+                              this.setState({
+                                alertDialog: () => {},
+                              });
+                            }}
+                          />
+                        );
+                      },
+                    });
+                    return;
+                  }
+                }
                 try {
                   const checkPw = (
                     await axios.post('/user/checkPw', {
