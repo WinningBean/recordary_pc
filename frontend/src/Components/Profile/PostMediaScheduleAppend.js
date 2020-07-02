@@ -612,7 +612,6 @@ const PostMediaScheduleAppend = (props) => {
                           id='postAddMedia'
                           src={value}
                           controls
-                          autoplay
                         />
                       </div>
                     );

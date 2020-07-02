@@ -42,8 +42,6 @@ const filterTagType = (value) => {
     const extension = value.substr(lastDot + 1, len).toLowerCase();
     let filterType = null;
 
-    console.log(extension);
-
     extensionImage.map((value) => {
         if (extension === value) filterType = 'image';
     });
