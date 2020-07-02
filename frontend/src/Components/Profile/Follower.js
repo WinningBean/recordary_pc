@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import HowToRegIcon from '@material-ui/icons/HowToReg';
 import Dialog from '@material-ui/core/Dialog';
 import AddIcon from '@material-ui/icons/Add';
+import { Link } from 'react-router-dom';
 
 import axios from 'axios';
 
@@ -77,41 +78,45 @@ class Follower extends React.Component {
         return (
           <li key={value.follower_cd}>
             <div className='follower_list'>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-              >
-                <img
-                  alt='friend-img'
+              <Link to={`/${value.userId}`}>
+                <div
                   style={{
-                    marginRight: '10px',
-                    borderRadius: '50%',
-                    height: '40px',
-                    width: '40px',
+                    display: 'flex',
+                    alignItems: 'center',
                   }}
-                  src={value.userPic}
-                />
-                {`${value.userId}(${value.userNm})`}
-              </div>
-              <div>
-                {(() => {
-                  if (value.follower_click) {
-                    return (
-                      <FollowButton onClick={() => this.followerChange(index, !value.follower_click)}>
-                        <AddIcon style={{ fontSize: '20px;' }} />
-                      </FollowButton>
-                    );
-                  } else {
-                    return (
-                      <FollowButton onClick={() => this.followerChange(index, !value.follower_click)}>
-                        <HowToRegIcon style={{ fontSize: '20px;' }} />
-                      </FollowButton>
-                    );
-                  }
-                })()}
-              </div>
+                >
+                  <img
+                    alt='friend-img'
+                    style={{
+                      marginRight: '10px',
+                      borderRadius: '50%',
+                      height: '40px',
+                      width: '40px',
+                    }}
+                    src={value.userPic}
+                  />
+                  {`${value.userId}(${value.userNm})`}
+                </div>
+              </Link>
+              {this.props.type === 0 ? (
+                <div>
+                  {(() => {
+                    if (value.follower_click) {
+                      return (
+                        <FollowButton onClick={() => this.followerChange(index, !value.follower_click)}>
+                          <AddIcon style={{ fontSize: '20px;' }} />
+                        </FollowButton>
+                      );
+                    } else {
+                      return (
+                        <FollowButton onClick={() => this.followerChange(index, !value.follower_click)}>
+                          <HowToRegIcon style={{ fontSize: '20px;' }} />
+                        </FollowButton>
+                      );
+                    }
+                  })()}
+                </div>
+              ) : null}
             </div>
           </li>
         );

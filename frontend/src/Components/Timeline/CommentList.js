@@ -105,9 +105,11 @@ export default ({ postCd, tData, user, onSuccess }) => {
                           fontSize: '13px',
                           height: '13px',
                           color: 'black',
+                          width: '90%',
+                          maxWidth: '150px',
                           // backgroundColor: 'rgba(161, 159, 159, 0.3)',
                         }
-                      : { fontSize: '13px', height: '13px', color: 'black' }
+                      : { fontSize: '13px', height: '13px', color: 'black', width: '90%', maxWidth: '150px' }
                   }
                   defaultValue={value.commentContent}
                   inputProps={{ 'aria-label': 'naked' }}

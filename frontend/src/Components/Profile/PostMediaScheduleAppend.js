@@ -336,7 +336,7 @@ const PostMediaScheduleAppend = (props) => {
                   setScheduleInfo({ ...scheduleInfo, schedulePublicState: index === 0 ? 0 : 3 });
                   setPost({ ...post, postPublicState: index === 0 ? 0 : 3 });
                 }}
-                selectedIndex={scheduleInfo.schedulePublicState}
+                selectedIndex={scheduleInfo.schedulePublicState === 0 ? 0 : 1}
               />
             ) : (
               <PublicRange

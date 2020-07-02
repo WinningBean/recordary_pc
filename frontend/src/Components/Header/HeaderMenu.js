@@ -256,10 +256,9 @@ const HeaderMenu = (props) => {
               </li>
             );
           })}
-          <div>
-            <CustomIconButton onClick={showGroupAdd}>
-              <AddCircleOutlineIcon />
-            </CustomIconButton>
+          <div className='GroupAdd' onClick={showGroupAdd}>
+            <AddCircleOutlineIcon />
+            <div style={{ fontSize: '15px', marginLeft: '5px' }}>그룹 추가</div>
           </div>
         </>
       );

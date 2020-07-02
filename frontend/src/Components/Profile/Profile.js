@@ -55,56 +55,48 @@ const extensionVideo = ['mp4', 'webm', 'ogg'];
 const extensionAudio = ['m4a', 'mp3', 'ogg', 'wav'];
 
 const filterTagType = (value) => {
-    const len = value.length;
-    const lastDot = value.lastIndexOf('.');
-    const extension = value.substr(lastDot + 1, len).toLowerCase();
-    let filterType = null;
+  const len = value.length;
+  const lastDot = value.lastIndexOf('.');
+  const extension = value.substr(lastDot + 1, len).toLowerCase();
+  let filterType = null;
 
-    console.log(extension);
+  console.log(extension);
 
-    extensionImage.map((value) => {
-        if (extension === value) filterType = 'image';
-    });
-    extensionVideo.map((value) =>{
-        if (extension === value) filterType = 'video';
-    });
-    extensionAudio.map((value) => {
-        if (extension === value) filterType = 'audio';
-    });
-    return filterType;
+  extensionImage.map((value) => {
+    if (extension === value) filterType = 'image';
+  });
+  extensionVideo.map((value) => {
+    if (extension === value) filterType = 'video';
+  });
+  extensionAudio.map((value) => {
+    if (extension === value) filterType = 'audio';
+  });
+  return filterType;
 };
 
 const timelineMediaType = (value, index) => {
   if (filterTagType(value) === 'image') {
-    return (
-      <img
-        alt={`${index}-media`}
-        src={value}
-        className='media-box'
-        style={{height: '100%'}}
-      />
-    )
+    return <img alt={`${index}-media`} src={value} className='media-box' style={{ height: '100%' }} />;
   } else if (filterTagType(value) === 'video') {
     return (
-      <video controls title={`${index}-media`} 
-        src={value}
-        className='media-box'
-        style={{height: '100%'}}>
+      <video controls title={`${index}-media`} src={value} className='media-box' style={{ height: '100%' }}>
         지원되지 않는 형식입니다.
       </video>
-    )
+    );
   } else if (filterTagType(value) === 'audio') {
     return (
       <audio controls src={value} className='media-box'>
-      지원되지 않는 형식입니다.
+        지원되지 않는 형식입니다.
       </audio>
-    )
+    );
   } else {
     return (
-      <span className='media-box' style={{height: '100%'}}>지원되지 않는 형식입니다.</span>
-    )
+      <span className='media-box' style={{ height: '100%' }}>
+        지원되지 않는 형식입니다.
+      </span>
+    );
   }
-}
+};
 
 class Profile extends React.Component {
   // this.state.type
@@ -232,12 +224,46 @@ class Profile extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.match.params.userId !== undefined) {
       if (this.props.match.params.userId !== prevProps.match.params.userId) {
-        this.setState({ isLoading: true });
+        this.setState({
+          addScheduleClick: false,
+          showProfileList: false,
+          followerNumClick: false,
+          followingNumClick: false,
+          isLoading: true,
+          type: undefined,
+          info: undefined,
+          redirect: false,
+          alert: null,
+          clickTab: undefined,
+          isRemoveAllScheduleInTab: false,
+          contextMenu: undefined,
+          post: [],
+          groupPost: [],
+          isOpenAddTab: false,
+          searchedSchedule: null,
+        });
         this.getUserInfo();
       }
     } else if (this.props.match.params.groupCd !== undefined) {
       if (this.props.match.params.groupCd !== prevProps.match.params.groupCd) {
-        this.setState({ isLoading: true });
+        this.setState({
+          addScheduleClick: false,
+          showProfileList: false,
+          followerNumClick: false,
+          followingNumClick: false,
+          isLoading: true,
+          type: undefined,
+          info: undefined,
+          redirect: false,
+          alert: null,
+          clickTab: undefined,
+          isRemoveAllScheduleInTab: false,
+          contextMenu: undefined,
+          post: [],
+          groupPost: [],
+          isOpenAddTab: false,
+          searchedSchedule: null,
+        });
         this.getGroupInfo();
       }
     }
@@ -252,6 +278,7 @@ class Profile extends React.Component {
       if (this.state.followerNumClick) {
         return (
           <Follower
+            type={this.state.type}
             userCd={this.state.info.userInfo.userCd}
             isFollower={true}
             onCancel={() => this.setState({ followerNumClick: false })}
@@ -260,6 +287,7 @@ class Profile extends React.Component {
       } else if (this.state.followingNumClick) {
         return (
           <Follower
+            type={this.state.type}
             userCd={this.state.info.userInfo.userCd}
             isFollower={false}
             onCancel={() => this.setState({ followingNumClick: false })}
@@ -658,39 +686,45 @@ class Profile extends React.Component {
                                       maxHeight: '600px',
                                     }}
                                   >
-                                    {this.state.info.member.map((value, index) => {
-                                      return (
-                                        <div
-                                          style={{
-                                            height: '60px',
-                                            padding: '0px 2px',
-                                            display: 'flex',
-                                            borderBottom: '1px solid #eee',
-                                            padding: '5px 0',
-                                          }}
-                                        >
-                                          <img
-                                            style={{
-                                              boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)',
-                                              height: '50px',
-                                              width: '50px',
-                                              objectFit: 'cover',
-                                              borderRadius: '50%',
-                                            }}
-                                            src={value.userPic}
-                                            alt='user img'
-                                          />
-                                          <div
-                                            style={{
-                                              flex: 1,
-                                              paddingLeft: '18px',
-                                              lineHeight: '50px',
-                                              fontWeight: 'bold',
-                                            }}
-                                          >{`${value.userId}(${value.userNm})`}</div>
-                                        </div>
-                                      );
-                                    })}
+                                    {this.state.info.member.length < 1 ? (
+                                      <div style={{ padding: '20px', fontSize: '15px' }}>그룹 멤버가 없습니다.</div>
+                                    ) : (
+                                      this.state.info.member.map((value, index) => {
+                                        return (
+                                          <Link to={`/${value.userId}`}>
+                                            <div
+                                              style={{
+                                                height: '60px',
+                                                padding: '0px 2px',
+                                                display: 'flex',
+                                                borderBottom: '1px solid #eee',
+                                                padding: '5px 0',
+                                              }}
+                                            >
+                                              <img
+                                                style={{
+                                                  boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)',
+                                                  height: '50px',
+                                                  width: '50px',
+                                                  objectFit: 'cover',
+                                                  borderRadius: '50%',
+                                                }}
+                                                src={value.userPic}
+                                                alt='user img'
+                                              />
+                                              <div
+                                                style={{
+                                                  flex: 1,
+                                                  paddingLeft: '18px',
+                                                  lineHeight: '50px',
+                                                  fontWeight: 'bold',
+                                                }}
+                                              >{`${value.userId}(${value.userNm})`}</div>
+                                            </div>
+                                          </Link>
+                                        );
+                                      })
+                                    )}
                                   </div>
                                 </Dialog>
                               ) : null}
@@ -830,7 +864,7 @@ class Profile extends React.Component {
                                 width: '272px',
                                 overflow: 'hidden',
                                 margin: '10px',
-                                lineHeight: '272px'
+                                lineHeight: '272px',
                               }}
                               key={`${index}- img`}
                             >
@@ -948,7 +982,7 @@ class Profile extends React.Component {
                               width: '272px',
                               overflow: 'hidden',
                               margin: '10px',
-                              lineHeight: '272px'
+                              lineHeight: '272px',
                             }}
                             key={`${index}- img`}
                           >

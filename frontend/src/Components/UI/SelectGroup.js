@@ -19,10 +19,6 @@ export default function SelectGroup({ options, onSetSelectedGroup, selectedIndex
   const classes = useStyles();
   const [group, setGroup] = React.useState(groupList);
 
-  useEffect(() => {
-    console.log(options);
-  }, []);
-
   const handleChange = (event) => {
     setGroup(event.target.value);
     // onSetSelectedGroup(event.target.value);
@@ -43,6 +39,9 @@ export default function SelectGroup({ options, onSetSelectedGroup, selectedIndex
           value={currentGroup !== null ? currentGroup.groupNm : group}
           onChange={handleChange}
         >
+          <MenuItem value=''>
+            <em>그룹미선택</em>
+          </MenuItem>
           {currentGroup !== null ? (
             <MenuItem value={currentGroup.groupNm} selected={true} disabled={false}>
               {currentGroup.groupNm}

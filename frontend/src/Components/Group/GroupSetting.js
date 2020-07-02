@@ -134,7 +134,7 @@ const GroupSetting = (props) => {
               <ListItemIcon>
                 <SearchIcon />
               </ListItemIcon>
-              <ListItemText primary='그룹 초대' />
+              <ListItemText primary='그룹원 관리' />
             </ListItem>
             <ListItem
               button
