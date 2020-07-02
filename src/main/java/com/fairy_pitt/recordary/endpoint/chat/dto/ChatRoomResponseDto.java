@@ -35,7 +35,7 @@ public class ChatRoomResponseDto {
         this.roomCd = entity.getRoomCd();
         this.targetCd = target.getUserCd();
         this.targetNm = target.getUserNm();
-        this.targetPic = target.getUserPic();
+        this.targetPic = target.getProfilePath();
         this.lastChat = last;
         this.lastTime = time;
         this.isGroup = false;
@@ -46,7 +46,7 @@ public class ChatRoomResponseDto {
         this.roomCd = entity.getRoomCd();
         this.targetCd = group.getGroupCd();
         this.targetNm = group.getGroupNm();
-        this.targetPic = group.getGroupPic();
+        this.targetPic = group.getProfilePath();
         this.lastChat = last;
         this.lastTime = time;
         this.isGroup = true;
