@@ -73,7 +73,8 @@ const GroupApply = (props) => {
                                   }
                                   console.log(info, value, info.groupCd, value.userCd);
                                   try {
-                                    await axios.post(`/group/changeMaster/${info.groupCd}`, {
+                                    await axios.post('/group/changeMaster', {
+                                      groupCd: info.groupCd,
                                       userCd: value.userCd,
                                     });
                                     window.location.href = '/main';

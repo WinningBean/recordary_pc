@@ -94,22 +94,31 @@ class Header extends React.Component {
               type={1}
               data={this.props.noticeList}
               onAccept={async (index, isGroupApply) => {
-                //type 0 : 그룹초대, 1 : 스케줄 멤버초대
+                console.log(this.props.noticeList, index, isGroupApply);
                 try {
                   if (isGroupApply) {
-                    const { data } = await axios.post('/groupApply/create', {
-                      groupCd: this.state.nofity[index].groupCd,
+                    console.log({
+                      groupCd: this.props.noticeList[index].groupCd,
                       userCd: this.props.userCd,
                     });
+                    const { data } = await axios.post('/groupMember/create', {
+                      groupCd: this.props.noticeList[index].groupCd,
+                      userCd: this.props.userCd,
+                    });
+                    console.log(data);
                     this.props.onSaveNotice({
                       type: 'SAVE_NOTICE',
                       notice: {
                         noticeType: 'GROUP_MEMBER_NEW', // 이벤트 타입
                         activeCd: this.props.userCd, // 이벤트 주체
-                        targetCd: this.state.nofity[index].groupCd, // 이벤트 대상
+                        targetCd: this.props.noticeList[index].groupCd, // 이벤트 대상
                       },
                     });
                   } else {
+                    await axios.post('/scheduleMember/update', {
+                      scheduleCd: this.props.noticeList[index].scheduleCd,
+                      userCd: this.props.userCd,
+                    });
                   }
 
                   const copyList = this.props.noticeList.slice();
@@ -122,11 +131,15 @@ class Header extends React.Component {
               onDenial={async (index, isGroupApply) => {
                 try {
                   if (isGroupApply) {
-                    const { data } = await axios.post('/groupApply/delete', {
-                      groupCd: this.state.nofity[index].groupCd,
+                    await axios.post('/groupApply/delete', {
+                      groupCd: this.props.noticeList[index].groupCd,
                       userCd: this.props.userCd,
                     });
                   } else {
+                    await axios.post('/scheduleMember/delete', {
+                      scheduleCd: this.props.noticeList[index].scheduleCd,
+                      userCd: this.props.userCd,
+                    });
                   }
 
                   const copyList = this.props.noticeList.slice();

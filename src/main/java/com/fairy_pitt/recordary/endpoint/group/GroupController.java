@@ -50,8 +50,8 @@ public class GroupController {
         return groupService.updateGroupProfile(groupCd, multipartFile);
     }
 
-    @PostMapping("changeMaster/{groupCd}")
-    public Long updateMaster(@PathVariable Long groupCd,
+    @PostMapping("changeMaster")
+    public Long updateMaster(@RequestBody Long groupCd,
                              @RequestBody Long userCd) {
         userService.checkSessionLogout();
         return groupService.changGroupMaster(userCd, groupCd);
