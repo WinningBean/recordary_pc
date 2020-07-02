@@ -108,8 +108,13 @@ public class ChatRoomService {
                     response.add(chatRoom);
                 }
             }else {
-                ChatRoomResponseDto chatRoom = new ChatRoomResponseDto(temp, "", temp.getUserFK(),temp.getCreatedDate() );
-                response.add(chatRoom);
+                if (user.getUserCd().equals(temp.getUserFK().getUserCd())) {
+                    ChatRoomResponseDto chatRoom = new ChatRoomResponseDto(temp, "", temp.getUserFK(),temp.getCreatedDate() );
+                    response.add(chatRoom);
+                } else {
+                    ChatRoomResponseDto chatRoom = new ChatRoomResponseDto(temp, "", temp.getUserFK(),temp.getCreatedDate() );
+                    response.add(chatRoom);
+                }
             }
         }
         return response;

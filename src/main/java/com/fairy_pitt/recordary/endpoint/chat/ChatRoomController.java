@@ -57,8 +57,8 @@ public class ChatRoomController {
         return  chatRoomService.chatSort(result);
     }
 
-    @GetMapping("check/groupChat")
-    public  List<GroupResponseDto> findCreateGroupChat(Long userCd)
+    @GetMapping("check/groupChat/{userCd}")
+    public  List<GroupResponseDto> findCreateGroupChat(@PathVariable Long userCd)
     {
         return chatRoomService.findCreateGroupChat(userCd);
     }
