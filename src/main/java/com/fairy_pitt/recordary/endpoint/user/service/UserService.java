@@ -70,7 +70,7 @@ public class UserService {
 
         if (userPic.isEmpty()) imgPath = null;
         else {
-            if (userEntity.getUserPic() != "user/basic.png") {
+            if (userEntity.getUserPic().equals("user/basic.png")) {
                 s3UploadComponent.delete(userEntity.getUserPic());
             }
             imgPath = s3UploadComponent.profileUpload(userPic, "user", userCd);

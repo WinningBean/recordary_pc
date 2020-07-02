@@ -58,7 +58,7 @@ public class GroupService {
 
         if (groupPic.isEmpty()) imgPath = null;
         else {
-            if (groupEntity.getGroupPic() != "group/basic.png"){
+            if (groupEntity.getGroupPic().equals("group/basic.png")){
                 s3UploadComponent.delete(groupEntity.getGroupPic());
             }
             imgPath = s3UploadComponent.profileUpload(groupPic, "group", id);
