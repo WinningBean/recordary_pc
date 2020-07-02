@@ -173,16 +173,17 @@ class Login extends React.Component {
         <div className='page_info'>
           <div>
             <Link to='/main'>
-              {/* <video
+              <video autoplay='autoplay'
+                muted='muted'
+                width='675px'
+                height='200px'
+                src="https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.webm"
+                poster="https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.png"/>
+              {/* <img
                   className='title-image'
                   alt='Recordary icon'
-                  src='https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.mp4'
+                  src='https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.png'
                 /> */}
-              <img
-                className='title-image'
-                alt='Recordary icon'
-                src='https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.png'
-              />
             </Link>
             <div className='Recordary-infoMsg'>Record + Diary = 일정을 기록하며 일기처럼 기억하다.</div>
             <div className='search-user'>
