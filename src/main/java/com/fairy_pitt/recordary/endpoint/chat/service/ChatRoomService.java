@@ -136,9 +136,16 @@ public class ChatRoomService {
             if(chatRoomRepository.existsByGroupFK(group))
             {
                 ChatRoomEntity entity = chatRoomRepository.findByGroupFK(group);
-                ChatEntity chatEntity = entity.getChatList().get(entity.getChatList().size() - 1);
-                ChatRoomResponseDto  chatRoomResponseDto = new ChatRoomResponseDto(entity, group, chatEntity.getContent(), chatEntity.getCreatedDate());
-                result.add( chatRoomResponseDto);
+                if(entity.getChatList().size() == 0)
+                {
+                    ChatRoomResponseDto  chatRoomResponseDto = new ChatRoomResponseDto(entity, group, "", entity.getCreatedDate());
+                    result.add( chatRoomResponseDto);
+                }else{
+                    ChatEntity chatEntity = entity.getChatList().get(entity.getChatList().size() - 1);
+                    ChatRoomResponseDto  chatRoomResponseDto = new ChatRoomResponseDto(entity, group, chatEntity.getContent(), chatEntity.getCreatedDate());
+                    result.add( chatRoomResponseDto);
+                }
+
             }
         }
         return result;
