@@ -184,13 +184,13 @@ const Chatting = ({ isOpen, user }) => {
           <div
             style={{
               flex: '6',
-              paddingLeft: '5px',
+              paddingLeft: '10px',
             }}
           >
-            <div style={{ paddingTop: '10px', fontWeight: 'bold' }}>{value.targetNm}</div>
+            <div style={{ paddingTop: '12px', fontWeight: 'bold' }}>{value.targetNm}</div>
             <div
               style={{
-                paddingTop: '5px',
+                paddingTop: '6px',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
@@ -279,14 +279,14 @@ const Chatting = ({ isOpen, user }) => {
                   setSelectedRoomIndex(undefined);
                 }}
               >
-                <ArrowBackIcon fontSize='large' style={{ marginLeft: '10px' }} />
+                <ArrowBackIcon style={{ marginLeft: '10px' }} />
               </div>
               <div
                 style={{
                   flex: '6',
                   display: 'flex',
                   alignItems: 'center',
-                  paddingLeft: '10px',
+                  paddingLeft: '5px',
                 }}
               >
                 <img
@@ -299,7 +299,7 @@ const Chatting = ({ isOpen, user }) => {
               </div>
               <div
                 className='flex-center'
-                style={{ flex: '1', color: 'white', cursor: 'pointer' }}
+                style={{ flex: '1', color: 'white', cursor: 'pointer', marginRight: '5px' }}
                 onClick={() => {
                   deleteRoom(info[selectedRoomIndex].roomCd);
                 }}
@@ -507,7 +507,7 @@ const Chatting = ({ isOpen, user }) => {
           justifyContent: 'center',
           alignItems: 'center',
           fontWeight: 'bold',
-          height: '10%',
+          height: '55px',
           borderBottom: '1px solid lightgray',
           fontSize: '20px',
           backgroundColor: '#40739e',
@@ -529,8 +529,8 @@ const Chatting = ({ isOpen, user }) => {
           position: 'absolute',
           right: 0,
           top: 0,
-          height: '64.72px',
-          width: '64.72px',
+          height: '55px',
+          width: '55px',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -539,10 +539,10 @@ const Chatting = ({ isOpen, user }) => {
         }}
         onClick={() => setIsAddChatRoom(true)}
       >
-        <AddIcon fontSize='large' />
+        <AddIcon/>
       </div>
       <div style={{ height: '7%', backgroundColor: '#fff', display: 'flex', borderBottom: '1px solid #eee' }}>
-        <div style={{ display: 'flex', alignItems: 'center', margin: '0px 3px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', margin: '0px 5px 0px 10px' }}>
           <SearchIcon />
         </div>
         <input
@@ -592,7 +592,7 @@ const Chatting = ({ isOpen, user }) => {
       {alert}
       {client === null || client.connected === false ? (
         <div className='flex-center loading' style={{ width: '100%', height: '100%', position: 'absolute' }}>
-          <span style={{ fontSize: '34px', fontWeight: 'bold', color: 'black' }}>연결중입니다...</span>
+          <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#333' }}>연결중입니다...</span>
         </div>
       ) : null}
     </div>

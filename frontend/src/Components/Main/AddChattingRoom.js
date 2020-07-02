@@ -55,11 +55,11 @@ const AddChattingRoom = ({ info, userCd, onClose, onCreate, onFull }) => {
     <div className='transition-all chatting-list' style={{ transform: 'translateX(0)', opacity: '100%' }}>
       <div
         style={{
-          height: '20%',
+          height: '40%',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          fontSize: '32px',
+          fontSize: '18px',
           fontWeight: 'bold',
         }}
       >
@@ -67,9 +67,8 @@ const AddChattingRoom = ({ info, userCd, onClose, onCreate, onFull }) => {
       </div>
       <div
         style={{
-          height: '60%',
+          height: '20%',
           margin: '0px 14px',
-          border: '1px solid #eee',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -100,6 +99,7 @@ const AddChattingRoom = ({ info, userCd, onClose, onCreate, onFull }) => {
                 setIsClickUserButton(true);
               }}
               variant='outlined'
+              style={{marginRight: '10px'}}
             >
               유저 추가
             </Button>
@@ -115,7 +115,7 @@ const AddChattingRoom = ({ info, userCd, onClose, onCreate, onFull }) => {
           </>
         )}
       </div>
-      <div className='flex-center' style={{ height: '20%', justifyContent: 'space-evenly' }}>
+      <div className='flex-center' style={{ height: '40%', justifyContent: 'space-evenly' }}>
         <Button
           disabled={selectedUser === null && selectedGroup === null}
           color='primary'
