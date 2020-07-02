@@ -329,7 +329,7 @@ const PostMediaScheduleAppend = (props) => {
             )}
           </div>
           <div className='schedule-media-button '>
-            {scheduleInfo.scheduleMembers.length > 0 ? (
+            {scheduleInfo.scheduleMembers.length > 0 || post.groupCd !== null ? (
               <PublicRange
                 options={['전체공개', '비공개']}
                 onSetSelectedIndex={(index) => {

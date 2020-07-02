@@ -186,7 +186,7 @@ class Login extends React.Component {
             </Link>
             <div className='Recordary-infoMsg'>Record + Diary = 일정을 기록하며 일기처럼 기억하다.</div>
             <div className='search-user'>
-              <SearchAppBar userCd={this.props.userCd}></SearchAppBar>
+              <SearchAppBar userCd={this.props.userCd} isLogin={false} />
             </div>
           </div>
           <form action='go_to_main' onSubmit={this.loginHandel}>

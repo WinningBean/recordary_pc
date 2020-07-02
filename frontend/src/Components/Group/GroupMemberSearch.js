@@ -70,7 +70,7 @@ const GroupMemberSearch = (props) => {
       <div className='searchField-result'>
         <div className='searchField-title'>
           <InputBase
-            placeholder='이름를 입력하세요'
+            placeholder='이름을 입력하세요'
             onChange={(e) => setInput(e.target.value)}
             style={{ color: '#ffffff' }}
             onKeyDown={(e) => {

@@ -19,9 +19,9 @@ export default function SelectGroup({ options, onSetSelectedGroup, selectedIndex
   const classes = useStyles();
   const [group, setGroup] = React.useState(groupList);
 
-  // useEffect(() => {
-  //   console.log(options);
-  // }, []);
+  useEffect(() => {
+    console.log(options);
+  }, []);
 
   const handleChange = (event) => {
     setGroup(event.target.value);

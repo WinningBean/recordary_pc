@@ -60,6 +60,7 @@ export default function SearchAppBar(props) {
           data={data}
           searchText={userSearch}
           onCancel={() => setsearchState(false)}
+          isLogin={props.isLogin}
         ></SearchFieldResult>
       );
     }

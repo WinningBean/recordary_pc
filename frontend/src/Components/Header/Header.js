@@ -58,7 +58,7 @@ class Header extends React.Component {
           </div>
           <div id='header-right'>
             <div className='search-user'>
-              <SearchAppBar userCd={this.props.userCd}></SearchAppBar>
+              <SearchAppBar userCd={this.props.userCd} isLogin={false} />
             </div>
             <Link to='/'>
               <Button style={{ color: '#ffffff' }}>로그인</Button>
@@ -87,7 +87,7 @@ class Header extends React.Component {
         </div>
         <div id='header-right'>
           <div className='search-user' style={{ marginRight: '10px' }}>
-            <SearchAppBar userCd={this.props.userCd} />
+            <SearchAppBar userCd={this.props.userCd} isLogin={true} />
           </div>
           <div>
             <NotifyPopup
