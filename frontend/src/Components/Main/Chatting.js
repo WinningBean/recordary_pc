@@ -160,7 +160,7 @@ const Chatting = ({ isOpen, user }) => {
             style={{ flex: '1', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative' }}
           >
             <img
-              src={'https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/user/15'}
+              src={value.targetPic}
               style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover' }}
             />
             {value.noticeCount === 0 ? null : (
@@ -248,19 +248,7 @@ const Chatting = ({ isOpen, user }) => {
 
   // ), []);
 
-  const ffffffff = () => {
-    setTimeout(() => {
-      if (client === null || client.connected === false) {
-        ffffffff();
-      }
-      setReload(!reload);
-    }, 5000);
-  };
-
   const chatListView = () => {
-    if (client === null || client.connected === false) {
-      ffffffff();
-    }
     return (
       <div
         className='transition-all chatting-list'
@@ -270,11 +258,6 @@ const Chatting = ({ isOpen, user }) => {
             : { transform: 'translateX(0)', opacity: '100%' }
         }
       >
-        {client === null || client.connected === false ? (
-          <div className='flex-center loading' style={{ width: '100%', height: '100%', position: 'absolute' }}>
-            <span style={{ fontSize: '34px', fontWeight: 'bold', color: 'black' }}>연결중입니다...</span>
-          </div>
-        ) : null}
         {selectedRoomIndex === undefined ? null : (
           <>
             <div
@@ -307,7 +290,7 @@ const Chatting = ({ isOpen, user }) => {
                 }}
               >
                 <img
-                  src={'https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/group/basic.png'}
+                  src={info[selectedRoomIndex].targetPic}
                   style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover', padding: '5px' }}
                 />
                 <span style={{ color: 'white', fontWeight: 'bold', fontSize: '16px', paddingLeft: '6px' }}>
@@ -485,6 +468,18 @@ const Chatting = ({ isOpen, user }) => {
       </div>
     );
   };
+
+  const ffffffff = () => {
+    setTimeout(() => {
+      if (client === null || client.connected === false) {
+        ffffffff();
+      }
+      setReload(!reload);
+    }, 5000);
+  };
+  if (client === null || client.connected === false) {
+    ffffffff();
+  }
   return (
     <div
       className='transition-all chatting-wrap'
@@ -574,6 +569,7 @@ const Chatting = ({ isOpen, user }) => {
                 setIsAddChatRoom(false);
               });
             } else {
+              client.abort();
               getInfo();
               setIsAddChatRoom(false);
             }
@@ -594,6 +590,11 @@ const Chatting = ({ isOpen, user }) => {
         />
       ) : null}
       {alert}
+      {client === null || client.connected === false ? (
+        <div className='flex-center loading' style={{ width: '100%', height: '100%', position: 'absolute' }}>
+          <span style={{ fontSize: '34px', fontWeight: 'bold', color: 'black' }}>연결중입니다...</span>
+        </div>
+      ) : null}
     </div>
   );
 };
