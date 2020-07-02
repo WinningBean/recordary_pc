@@ -202,8 +202,6 @@ const EditPostMediaSchedule = (props) => {
     const extension = value.substr(lastDot + 1, len).toLowerCase();
     let filterType = null;
 
-    console.log(extension);
-
     extensionImage.map((value) => {
       if (extension === value) filterType = 'image';
     });
@@ -293,7 +291,6 @@ const EditPostMediaSchedule = (props) => {
         ).data;
         console.log(getScheduleCd);
       }
-      console.log('33333');
 
       var getMediaCd = null;
       if (updatePostAddMediaListSrc.length > 0) {
@@ -312,7 +309,6 @@ const EditPostMediaSchedule = (props) => {
         ).data;
         console.log(getMediaCd);
       }
-      console.log('4444');
 
       const postData = (
         await axios.put(`/post/${post.postCd}`, {
@@ -323,8 +319,6 @@ const EditPostMediaSchedule = (props) => {
           postPublicState: post.postPublicState,
         })
       ).data;
-
-      console.log(postData);
 
       if (postData === post.postCd) {
         setAlert(
@@ -715,13 +709,13 @@ const EditPostMediaSchedule = (props) => {
             (postAddMediaListSrc.length < 1 && updatePostAddMediaListSrc.length > 0)
               ? updatePostAddMediaListSrc.map((value, index) => (
                   <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
-                    {timelineMediaType(value)}
+                    {timelineMediaType(postAddMediaListSrc[index])}
                   </div>
                 ))
               : postAddMediaListSrc.length > 0 && updatePostAddMediaListSrc.length < 1
               ? postAddMediaListSrc.map((value, index) => (
                   <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
-                    {timelineMediaType(value)}
+                    {timelineMediaType(postAddMediaListSrc[index])}
                   </div>
                 ))
               : null}
