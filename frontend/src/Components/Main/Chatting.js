@@ -1,51 +1,73 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useImmer } from 'use-immer';
 import { format, isSameDay } from 'date-fns';
+
+import AddChattingRoom from './AddChattingRoom';
 import SearchIcon from '@material-ui/icons/Search';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import SubdirectoryArrowLeftIcon from '@material-ui/icons/SubdirectoryArrowLeft';
 import AddIcon from '@material-ui/icons/Add';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Button from '@material-ui/core/Button';
 
 import Stomp from 'stompjs';
 import SockJs from 'sockjs-client';
 
 import axios from 'axios';
 
+function isEmptyObject(param) {
+  return Object.keys(param).length === 0;
+}
+
 const Chatting = ({ isOpen, user }) => {
   const [searchText, setSearchText] = useState('');
   const [writedMessage, setWritedMessage] = useState('');
   const [selectedRoomIndex, setSelectedRoomIndex] = useState(undefined);
   const [isAddChatRoom, setIsAddChatRoom] = useState(false);
-  const textareaRef = React.createRef();
   const chatListRef = React.createRef();
+  const [reload, setReload] = useState(false);
 
   const [info, setInfo] = useImmer(undefined);
+  const [client, setClient] = useState(null);
 
   console.log(writedMessage);
 
-  const getInfo = async () => {
-    const { data } = await axios.get(`/room/list/${user.userCd}`);
-    console.log(data, 'real data');
-    setInfo((draft) => (draft = data));
+  const setWebSock = (data) => {
+    var sock = new SockJs('/ws-stomp');
+    var client = Stomp.over(sock);
+    client.connect({}, function () {
+      data.forEach((value) => {
+        if (value.isGroup) {
+          client.subscribe(`/queue/chat/${value.roomCd}`, function (response) {
+            console.log(JSON.parse(response.body));
+          });
+        } else {
+          client.subscribe(`/topic/chat/${value.roomCd}`, function (response) {
+            console.log(value.roomCd);
+            setInfo((draft) => {
+              const json = JSON.parse(response.body);
+              const index = draft.findIndex((object) => object.roomCd === value.roomCd);
+              if (draft[index].chatList === null) {
+                console.log('draft');
+              } else {
+                draft[index].chatList.push(json);
+              }
+              ++draft[index].noticeCount;
+              draft[index].lastChat = json.content;
+            });
+          });
+        }
+      });
+    });
+    setClient(client);
+  };
 
-    // var sock = new SockJs('/ws-stomp');
-    // var client = Stomp.over(sock);
-    // client.connect({}, function () {
-    //   data.forEach((value) => {
-    //     if (value.isGroup) {
-    //       client.subscribe(`/queue/chat/${value.roomCd}`, function (response) {
-    //         console.log(JSON.parse(response.body));
-    //       });
-    //     } else {
-    //       client.subscribe(`/topic/chat/${value.roomCd}`, function (response) {
-    //         console.log(JSON.parse(response.body));
-    //       });
-    //     }
-    //   });
-    // });
+  const getInfo = () => {
+    axios.get(`/room/list/${user.userCd}`).then(({ data }) => {
+      console.log(data, 'real data');
+      setInfo((draft) => (draft = data.map((value) => ({ ...value, noticeCount: 0 }))));
+      setWebSock(data);
+    });
   };
 
   const getChatList = async (roomCd, index) => {
@@ -58,6 +80,9 @@ const Chatting = ({ isOpen, user }) => {
 
   useEffect(() => {
     getInfo();
+    setTimeout(() => {
+      setReload(!reload);
+    }, 20000);
   }, []);
 
   useEffect(() => {
@@ -70,7 +95,7 @@ const Chatting = ({ isOpen, user }) => {
   const listView = () => {
     const copyChatList =
       searchText === '' ? [...info] : info.filter((value) => new RegExp(searchText, 'i').exec(value.targetNm));
-    return copyChatList.map((value, index) => {
+    return info.map((value, index) => {
       return (
         <div
           key={value.roomCd}
@@ -84,14 +109,36 @@ const Chatting = ({ isOpen, user }) => {
             if (info[index].chatList === null) {
               getChatList(value.roomCd, index);
             }
+            setInfo((draft) => {
+              draft[index].noticeCount = 0;
+            });
             setSelectedRoomIndex(index);
           }}
         >
-          <div style={{ flex: '1', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div
+            style={{ flex: '1', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative' }}
+          >
             <img
               src={'https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/user/15'}
               style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover' }}
             />
+            {value.noticeCount === 0 ? null : (
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '3px',
+                  right: '3px',
+                  backgroundColor: 'red',
+                  color: 'white',
+                  width: '14px',
+                  height: '14px',
+                  borderRadius: '50%',
+                  textAlign: 'center',
+                }}
+              >
+                {value.noticeCount}
+              </div>
+            )}
           </div>
           <div
             style={{
@@ -116,96 +163,73 @@ const Chatting = ({ isOpen, user }) => {
     });
   };
 
-  const sendMessage = async (e) => {
+  const sendMessage = (e) => {
     if (writedMessage === '') return null;
-    textareaRef.current.disabled = true;
+    const dom = document.getElementById('chat-input');
+    dom.disabled = true;
     console.log({
       roomCd: info[selectedRoomIndex].roomCd,
       userCd: user.userCd,
       userNm: user.userNm,
       content: writedMessage,
     });
-    try {
-      const data = await axios.post('/chat/sendMessage', {
+    axios
+      .post('/chat/sendMessage', {
         roomCd: info[selectedRoomIndex].roomCd,
         userCd: user.userCd,
         userNm: user.userNm,
         content: writedMessage,
+      })
+      .then(() => {
+        const dom = document.getElementById('chat-input');
+        dom.disabled = false;
+        dom.value = '';
+        dom.focus();
+        // setInfo((draft) => {
+        //   // var copyMessage = writedMessage.replace(/(?:\r\n|\r|\n)/g, '<br />');
+        //   draft[selectedRoomIndex].chatList.push({
+        //     sendUser: user,
+        //     content: writedMessage,
+        //     crateChat: new Date(),
+        //   });
+        // });
+      })
+      .catch(() => {
+        dom.disabled = false;
+      })
+
+      .finally(() => {
+        setWritedMessage('');
       });
-      console.log(data);
-      textareaRef.current.disabled = false;
-      textareaRef.current.focus();
-      textareaRef.current.value = '';
-      setInfo((draft) => {
-        // var copyMessage = writedMessage.replace(/(?:\r\n|\r|\n)/g, '<br />');
-        draft[selectedRoomIndex].chatList.push({
-          sendUser: user,
-          content: writedMessage,
-          crateChat: new Date(),
-        });
-      });
-      setWritedMessage('');
-    } catch (error) {
-      textareaRef.current.disabled = false;
-      textareaRef.current.focus();
-      console.error(error);
-    }
   };
 
-  const AddChatRoom = () => {
-    return (
-      <div
-        className='transition-all chatting-list'
-        style={
-          !isAddChatRoom
-            ? { transform: 'translateX(100%)', opacity: 0 }
-            : { transform: 'translateX(0)', opacity: '100%' }
-        }
-      >
-        <div
-          style={{
-            height: '20%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            fontSize: '32px',
-            fontWeight: 'bold',
-          }}
-        >
-          채팅방 생성
-        </div>
-        <div
-          style={{
-            height: '60%',
-            margin: '0px 14px',
-            border: '1px solid #eee',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <div style={{ display: 'relative', width: '50%', height: 'fit-content' }}>
-            <img
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              src='https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/group/basic.png'
-              alt='이미지'
-            />
-            <div style={{ display: 'absolute', bottom: '0', textAlign: 'center' }}>김길동</div>
-          </div>
-        </div>
-        <div className='flex-center' style={{ height: '20%', justifyContent: 'space-evenly' }}>
-          <Button color='primary' variant='contained' size='large'>
-            생성
-          </Button>
-          <Button color='secondary' variant='contained' size='large' onClick={() => setIsAddChatRoom(false)}>
-            취소
-          </Button>
-        </div>
-      </div>
-    );
-  };
+  // useMemo(() => (
+
+  // ), []);
 
   const chatListView = () => {
+    if (client === null) {
+      return (
+        <div className='chating-list flex-center'>
+          <span>{'소켓 생성중입니다...'}</span>
+        </div>
+      );
+    } else {
+      if (!client.connect || isEmptyObject(client.subscriptions)) {
+        if (reload) {
+          return (
+            <div className='chating-list flex-center'>
+              <span>{'채팅 연결이 지연되고있습니다. 새로고침하시길 바랍니다.'}</span>
+            </div>
+          );
+        }
+        return (
+          <div className='chating-list flex-center'>
+            <span>{'채팅 연결 중입니다..'}</span>
+          </div>
+        );
+      }
+    }
     return (
       <div
         className='transition-all chatting-list'
@@ -228,7 +252,13 @@ const Chatting = ({ isOpen, user }) => {
             >
               <div
                 style={{ flex: '1', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'white' }}
-                onClick={() => setSelectedRoomIndex(undefined)}
+                onClick={() => {
+                  const saveSelectedRoomIndex = selectedRoomIndex;
+                  setInfo((draft) => {
+                    draft[saveSelectedRoomIndex].noticeCount = 0;
+                  });
+                  setSelectedRoomIndex(undefined);
+                }}
               >
                 <ArrowBackIcon fontSize='large' style={{ marginLeft: '10px' }} />
               </div>
@@ -318,14 +348,7 @@ const Chatting = ({ isOpen, user }) => {
                               overflowWrap: 'break-word',
                             }}
                           >
-                            {val.content.split('\n').map((line, index) => {
-                              return (
-                                <span key={`content ${info[selectedRoomIndex].roomCd}-${line}-${index}`}>
-                                  {line}
-                                  <br />
-                                </span>
-                              );
-                            })}
+                            {val.content}
                           </div>
                         </div>
                       ) : (
@@ -346,14 +369,7 @@ const Chatting = ({ isOpen, user }) => {
                               overflowWrap: 'break-word',
                             }}
                           >
-                            {val.content.split('\n').map((line) => {
-                              return (
-                                <span key={`content ${info[selectedRoomIndex].roomCd}-${line}-${index}`}>
-                                  {line}
-                                  <br />
-                                </span>
-                              );
-                            })}
+                            {val.content}
                           </div>
                           <div
                             style={{
@@ -390,8 +406,8 @@ const Chatting = ({ isOpen, user }) => {
                 }}
               >
                 <textarea
+                  id='chat-input'
                   autoFocus={true}
-                  ref={textareaRef}
                   onChange={(e) => setWritedMessage(e.target.value)}
                   style={{
                     resize: 'none',
@@ -461,6 +477,10 @@ const Chatting = ({ isOpen, user }) => {
           color: 'white',
           position: 'relative',
         }}
+        onClick={() => {
+          console.log(client);
+          console.log(client.subscriptions);
+        }}
       >
         Chatting
       </div>
@@ -491,9 +511,13 @@ const Chatting = ({ isOpen, user }) => {
           onChange={(e) => setSearchText(e.target.value)}
         />
       </div>
-      <div style={{ display: 'flex', height: '85%', flexDirection: 'column' }}>{listView()}</div>
-      {info === undefined ? <div>채팅 리스트가 없습니다</div> : chatListView()}
-      {AddChatRoom()}
+      {info === undefined ? (
+        <div>채팅 리스트가 없습니다</div>
+      ) : (
+        <div style={{ display: 'flex', height: '85%', flexDirection: 'column' }}>{listView()}</div>
+      )}
+      {chatListView()}
+      {isAddChatRoom ? <AddChattingRoom userCd={user.userCd} /> : null}
     </div>
   );
 };
