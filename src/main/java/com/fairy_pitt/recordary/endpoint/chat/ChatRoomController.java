@@ -5,6 +5,7 @@ import com.fairy_pitt.recordary.endpoint.chat.dto.ChatRoomDto;
 import com.fairy_pitt.recordary.endpoint.chat.dto.ChatRoomResponseDto;
 import com.fairy_pitt.recordary.endpoint.chat.service.ChatRoomService;
 import com.fairy_pitt.recordary.endpoint.chat.service.ChatService;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
 import com.fairy_pitt.recordary.endpoint.notice.dto.NoticePageDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -54,5 +55,11 @@ public class ChatRoomController {
         result.addAll(chatRoomService.chatRoomList(userCd));
         result.addAll(chatRoomService.groupChatList(userCd));
         return  chatRoomService.chatSort(result);
+    }
+
+    @GetMapping("check/groupChat")
+    public  List<GroupResponseDto> findCreateGroupChat(Long userCd)
+    {
+        return chatRoomService.findCreateGroupChat(userCd);
     }
 }
