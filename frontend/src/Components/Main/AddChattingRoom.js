@@ -99,7 +99,7 @@ const AddChattingRoom = ({ info, userCd, onClose, onCreate, onFull }) => {
                 setIsClickUserButton(true);
               }}
               variant='outlined'
-              style={{marginRight: '10px'}}
+              style={{ marginRight: '10px' }}
             >
               유저 추가
             </Button>
@@ -120,7 +120,6 @@ const AddChattingRoom = ({ info, userCd, onClose, onCreate, onFull }) => {
           disabled={selectedUser === null && selectedGroup === null}
           color='primary'
           variant='contained'
-          size='large'
           onClick={() => {
             if (selectedUser !== null) {
               createRoom(userCd, selectedUser.userCd);
@@ -131,7 +130,7 @@ const AddChattingRoom = ({ info, userCd, onClose, onCreate, onFull }) => {
         >
           생성
         </Button>
-        <Button color='secondary' variant='contained' size='large' onClick={() => onClose()}>
+        <Button color='secondary' variant='contained' onClick={() => onClose()}>
           취소
         </Button>
       </div>
@@ -190,10 +189,12 @@ const AddChattingRoom = ({ info, userCd, onClose, onCreate, onFull }) => {
                       fontWeight: 'bold',
                       display: 'flex',
                       flexDirection: 'column',
+                      width: '180px',
+                      justifyContent: 'center',
                     }}
                   >
                     <span>{value.groupNm}</span>
-                    <span style={{ fontWeight: 'normal', paddingLeft: '4px' }}>{value.groupEx}</span>
+                    <span style={{ fontWeight: 'normal' }}>{value.groupEx}</span>
                   </div>
                 </div>
               );

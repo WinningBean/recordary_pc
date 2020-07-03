@@ -650,7 +650,7 @@ class Profile extends React.Component {
                             <div style={{ textAlign: 'center' }}>
                               <span className='followerName'>그룹장</span>
                               <Link to={`/${this.state.info.admin.userId}`}>
-                                <LinkElement component='button'>
+                                <LinkElement component='button' style={{ marginBottom: '2px' }}>
                                   <span className='followerNum'>{this.state.info.admin.userNm}</span>
                                 </LinkElement>
                               </Link>
@@ -716,6 +716,7 @@ class Profile extends React.Component {
                                                   paddingLeft: '18px',
                                                   lineHeight: '50px',
                                                   fontWeight: 'bold',
+                                                  width: '180px',
                                                 }}
                                               >{`${value.userId}(${value.userNm})`}</div>
                                             </div>
