@@ -159,7 +159,13 @@ const Chatting = ({ isOpen, user }) => {
           >
             <img
               src={value.targetPic}
-              style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover' }}
+              style={{
+                width: '50px',
+                height: '50px',
+                borderRadius: '50%',
+                objectFit: 'cover',
+                boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)',
+              }}
             />
             {value.noticeCount === 0 ? null : (
               <div
@@ -289,7 +295,14 @@ const Chatting = ({ isOpen, user }) => {
               >
                 <img
                   src={info[selectedRoomIndex].targetPic}
-                  style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover', padding: '5px' }}
+                  style={{
+                    width: '50px',
+                    height: '50px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    padding: '5px',
+                    boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)',
+                  }}
                 />
                 <span style={{ color: 'white', fontWeight: 'bold', fontSize: '16px', paddingLeft: '6px' }}>
                   {info[selectedRoomIndex].targetNm}
@@ -556,7 +569,7 @@ const Chatting = ({ isOpen, user }) => {
         }}
         onClick={() => setIsAddChatRoom(true)}
       >
-        <AddIcon/>
+        <AddIcon />
       </div>
       <div style={{ height: '7%', backgroundColor: '#fff', display: 'flex', borderBottom: '1px solid #eee' }}>
         <div style={{ display: 'flex', alignItems: 'center', margin: '0px 5px 0px 10px' }}>

@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 
 import GroupMemberSearch from '../Group/GroupMemberSearch';
-
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import axios from 'axios';
 
 const AddChattingRoom = ({ info, userCd, onClose, onCreate, onFull }) => {
@@ -55,85 +55,110 @@ const AddChattingRoom = ({ info, userCd, onClose, onCreate, onFull }) => {
     <div className='transition-all chatting-list' style={{ transform: 'translateX(0)', opacity: '100%' }}>
       <div
         style={{
-          height: '40%',
+          height: '10%',
           display: 'flex',
-          justifyContent: 'center',
           alignItems: 'center',
           fontSize: '18px',
           fontWeight: 'bold',
+          backgroundColor: '#40739e',
         }}
       >
-        채팅방 생성
+        <div
+          className='ArrowBackButton'
+          style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'white' }}
+          onClick={() => onClose()}
+        >
+          <ArrowBackIcon style={{ marginLeft: '10px' }} />
+        </div>
+        <div style={{ color: 'white', position: 'absolute', left: '105px' }}>채팅방 생성</div>
       </div>
       <div
         style={{
-          height: '20%',
-          margin: '0px 14px',
           display: 'flex',
+          flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
+          height: '100%',
         }}
       >
-        {selectedUser !== null ? (
-          <div style={{ display: 'relative', width: '50%', height: 'fit-content' }}>
-            <img
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              src={selectedUser.userPic}
-              alt={`${selectedUser.userNm} img`}
-            />
-            <div style={{ display: 'absolute', bottom: '0', textAlign: 'center' }}>{selectedUser.userNm}</div>
-          </div>
-        ) : selectedGroup !== null ? (
-          <div style={{ display: 'relative', width: '50%', height: 'fit-content' }}>
-            <img
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              src={selectedGroup.groupPic}
-              alt={`${selectedGroup.groupNm} img`}
-            />
-            <div style={{ display: 'absolute', bottom: '0', textAlign: 'center' }}>{selectedGroup.groupNm}</div>
-          </div>
-        ) : (
-          <>
-            <Button
-              onClick={() => {
-                setIsClickUserButton(true);
-              }}
-              variant='outlined'
-              style={{ marginRight: '10px' }}
-            >
-              유저 추가
-            </Button>
-            <Button
-              onClick={() => {
-                getMyGroupList();
-                setIsClickGroupButton(true);
-              }}
-              variant='outlined'
-            >
-              그룹 추가
-            </Button>
-          </>
-        )}
-      </div>
-      <div className='flex-center' style={{ height: '40%', justifyContent: 'space-evenly' }}>
-        <Button
-          disabled={selectedUser === null && selectedGroup === null}
-          color='primary'
-          variant='contained'
-          onClick={() => {
-            if (selectedUser !== null) {
-              createRoom(userCd, selectedUser.userCd);
-            } else {
-              createRoom(undefined, undefined, selectedGroup.groupCd);
-            }
+        <div
+          style={{
+            margin: '0px 14px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
-          생성
-        </Button>
-        <Button color='secondary' variant='contained' onClick={() => onClose()}>
+          {selectedUser !== null ? (
+            <div style={{ display: 'relative', width: '50%', height: 'fit-content' }}>
+              <img
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                src={selectedUser.userPic}
+                alt={`${selectedUser.userNm} img`}
+              />
+              <div
+                style={{ display: 'absolute', bottom: '0', textAlign: 'center', fontWeight: 'bold', marginTop: '5px' }}
+              >
+                {selectedUser.userNm}
+              </div>
+            </div>
+          ) : selectedGroup !== null ? (
+            <div style={{ display: 'relative', width: '50%', height: 'fit-content' }}>
+              <img
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                src={selectedGroup.groupPic}
+                alt={`${selectedGroup.groupNm} img`}
+              />
+              <div
+                style={{ display: 'absolute', bottom: '0', textAlign: 'center', fontWeight: 'bold', marginTop: '5px' }}
+              >
+                {selectedGroup.groupNm}
+              </div>
+            </div>
+          ) : (
+            <>
+              <Button
+                onClick={() => {
+                  setIsClickUserButton(true);
+                }}
+                style={{ marginRight: '10px', boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)' }}
+              >
+                유저 추가
+              </Button>
+              <Button
+                onClick={() => {
+                  getMyGroupList();
+                  setIsClickGroupButton(true);
+                }}
+                style={{ boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)' }}
+              >
+                그룹 추가
+              </Button>
+            </>
+          )}
+        </div>
+        <div className='flex-center' style={{ justifyContent: 'space-evenly' }}>
+          <Button
+            disabled={selectedUser === null && selectedGroup === null}
+            color='primary'
+            variant='contained'
+            style={{ width: '250px', marginTop: '30px' }}
+            onClick={() => {
+              if (selectedUser !== null) {
+                createRoom(userCd, selectedUser.userCd);
+              } else {
+                createRoom(undefined, undefined, selectedGroup.groupCd);
+              }
+            }}
+          >
+            생성
+          </Button>
+          {/* <Button color='secondary' variant='contained' onClick={() => onClose()}>
           취소
-        </Button>
+        </Button> */}
+        </div>
       </div>
+
       {isClickUserButton ? (
         <GroupMemberSearch
           type={1}

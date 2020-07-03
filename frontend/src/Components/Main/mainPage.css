@@ -131,3 +131,8 @@ aside > .aside-profile {
   flex-direction: column;
   border-radius: 5px;
 }
+
+.ArrowBackButton{
+  cursor:pointer;
+  
+}
