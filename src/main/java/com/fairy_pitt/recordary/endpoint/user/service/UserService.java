@@ -77,7 +77,7 @@ public class UserService {
         }
 
         userEntity.updateProfile(imgPath);
-        return imgPath;
+        return userEntity.getProfilePath();
     }
 
     private void deleteOnlyUserPossession(UserEntity user){
