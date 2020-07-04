@@ -74,7 +74,7 @@ public class S3UploadComponent {
     private String upload(File uploadFile, String fileName) {
         String uploadImageUrl = putS3(uploadFile, fileName); // 전환된 File 을 S3에 public 읽기 권한으로 put
         //->외부에서 정적 파일을 읽을 수 있도록 하기 위함.
-        removeNewFile(uploadFile);
+//        removeNewFile(uploadFile);
         //  MultipartFile -> File 로 전환되면서 로컬에 파일 생성된것을 삭제함
         return uploadImageUrl;
     }
@@ -142,7 +142,6 @@ public class S3UploadComponent {
         if(convertFile.createNewFile()) {
             try (FileOutputStream fos = new FileOutputStream(convertFile)) {
                 fos.write(file.getBytes());
-                fos.close();
             }
             return Optional.of(convertFile);
         }
