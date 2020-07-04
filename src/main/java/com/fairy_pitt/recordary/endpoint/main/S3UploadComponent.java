@@ -52,7 +52,7 @@ public class S3UploadComponent {
     }
 
     public String profileUpload(MultipartFile multipartFile, String dirName, Long id) throws IOException {//MultipartFile 을 전달 받고
-        File uploadFile = multipartToFile(multipartFile)//S3에 전달할 수 있도록 MultiPartFile 을 File 로 전환
+        File uploadFile = convert(multipartFile)//S3에 전달할 수 있도록 MultiPartFile 을 File 로 전환
                 .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
         //S3에 MultipartFile 타입은 전송이 안됨
 
@@ -63,8 +63,8 @@ public class S3UploadComponent {
     }
 
     public String upload(MultipartFile multipartFile, String fileName) throws IOException {//MultipartFile 을 전달 받고
-        File uploadFile = multipartToFile(multipartFile)//S3에 전달할 수 있도록 MultiPartFile 을 File 로 전환
-               .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
+        File uploadFile = convert(multipartFile)//S3에 전달할 수 있도록 MultiPartFile 을 File 로 전환
+                .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
         //S3에 MultipartFile 타입은 전송이 안됨
 
         return upload(uploadFile, fileName);
@@ -74,7 +74,7 @@ public class S3UploadComponent {
     private String upload(File uploadFile, String fileName) {
         String uploadImageUrl = putS3(uploadFile, fileName); // 전환된 File 을 S3에 public 읽기 권한으로 put
         //->외부에서 정적 파일을 읽을 수 있도록 하기 위함.
-//        removeNewFile(uploadFile);
+        removeNewFile(uploadFile);
         //  MultipartFile -> File 로 전환되면서 로컬에 파일 생성된것을 삭제함
         return uploadImageUrl;
     }
@@ -143,16 +143,6 @@ public class S3UploadComponent {
             try (FileOutputStream fos = new FileOutputStream(convertFile)) {
                 fos.write(file.getBytes());
             }
-            return Optional.of(convertFile);
-        }
-        return Optional.empty();
-    }
-
-    public Optional<File> multipartToFile(MultipartFile multipart) throws IllegalStateException, IOException
-    {
-        File convertFile = new File(Objects.requireNonNull(multipart.getOriginalFilename()));
-        if(convertFile.createNewFile()) {
-            multipart.transferTo(convertFile);
             return Optional.of(convertFile);
         }
         return Optional.empty();
