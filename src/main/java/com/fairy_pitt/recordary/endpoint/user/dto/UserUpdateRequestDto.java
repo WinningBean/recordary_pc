@@ -13,14 +13,12 @@ public class UserUpdateRequestDto {
 
     private String userPw;
     private String userNm;
-    private String userPic;
     private String userEx;
 
     @Builder
-    public UserUpdateRequestDto(String userPw, String userNm, String userPic, String userEx){
+    public UserUpdateRequestDto(String userPw, String userNm, String userEx){
         this.userPw = userPw;
         this.userNm = userNm;
-        this.userPic = userPic;
         this.userEx = userEx;
     }
 }

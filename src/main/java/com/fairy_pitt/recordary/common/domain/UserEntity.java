@@ -111,10 +111,9 @@ public class UserEntity extends BaseTime {
         this.userPic = userPic;
     }
 
-    public void update(String userPw, String userNm, String userPic, String userEx){
+    public void update(String userPw, String userNm, String userEx){
         if (userPw != null) this.userPw = userPw;
         this.userNm = userNm;
-        this.userPic = userPic;
         this.userEx = userEx;
     }
 

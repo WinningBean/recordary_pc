@@ -3,10 +3,7 @@ package com.fairy_pitt.recordary.endpoint.user.service;
 import com.fairy_pitt.recordary.common.domain.PostEntity;
 import com.fairy_pitt.recordary.common.domain.ScheduleEntity;
 import com.fairy_pitt.recordary.common.domain.UserEntity;
-import com.fairy_pitt.recordary.common.repository.MediaRepository;
-import com.fairy_pitt.recordary.common.repository.PostRepository;
-import com.fairy_pitt.recordary.common.repository.ScheduleRepository;
-import com.fairy_pitt.recordary.common.repository.UserRepository;
+import com.fairy_pitt.recordary.common.repository.*;
 import com.fairy_pitt.recordary.endpoint.main.S3UploadComponent;
 import com.fairy_pitt.recordary.endpoint.user.dto.*;
 import com.fairy_pitt.recordary.handler.WebSocketHandler;
@@ -33,6 +30,7 @@ public class UserService {
     private final HttpSession httpSession;
     private final S3UploadComponent s3UploadComponent;
 
+    private final FollowerRepository followerRepository;
     private final PostRepository postRepository;
     private final MediaRepository mediaRepository;
     private final ScheduleRepository scheduleRepository;
@@ -58,7 +56,7 @@ public class UserService {
         if (requestDto.getUserPw() == null) hashedPassword = null;
         else hashedPassword = userPasswordHashService.getSHA256(requestDto.getUserPw());
 
-        userEntity.update(hashedPassword, requestDto.getUserNm(), requestDto.getUserPic(), requestDto.getUserEx());
+        userEntity.update(hashedPassword, requestDto.getUserNm(), requestDto.getUserEx());
         return userCd;
     }
 
@@ -113,7 +111,15 @@ public class UserService {
     public UserProfileResponseDto getProfile(String userId){
         UserEntity userEntity = userRepository.findByUserId(userId);
         if (userEntity == null) return null;
-        return new UserProfileResponseDto(userEntity);
+
+        UserProfileResponseDto userProfileResponseDto = new UserProfileResponseDto(userEntity);
+        if (followerRepository.findByUserFKAndTargetFK(currentUser(), userEntity) != null) {
+            userProfileResponseDto.setTrueUserFollowTarget(true);
+        }
+        if (followerRepository.findByUserFKAndTargetFK(userEntity, currentUser()) != null) {
+            userProfileResponseDto.setTrueTargetFollowUser(true);
+        }
+        return userProfileResponseDto;
     }
 
     @Transactional(readOnly = true)

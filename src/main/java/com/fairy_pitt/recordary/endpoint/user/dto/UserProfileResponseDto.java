@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class UserProfileResponseDto {
     private UserResponseDto userInfo;
+    private Boolean userFollowTarget = false;
+    private Boolean targetFollowUser = false;
     private int followerCount;
     private int followingCount;
     private List<ScheduleTabResponseDto> scheduleTabInfo;
@@ -24,4 +26,13 @@ public class UserProfileResponseDto {
                 .map(ScheduleTabResponseDto::new)
                 .collect(Collectors.toList());
     }
+
+    public void setTrueUserFollowTarget(Boolean userFollowTarget){
+        this.userFollowTarget = userFollowTarget;
+    }
+
+    public void setTrueTargetFollowUser(Boolean targetFollowUser){
+        this.targetFollowUser = targetFollowUser;
+    }
+
 }
