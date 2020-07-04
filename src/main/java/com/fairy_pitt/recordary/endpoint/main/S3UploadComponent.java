@@ -52,8 +52,8 @@ public class S3UploadComponent {
     }
 
     public String profileUpload(MultipartFile multipartFile, String dirName, Long id) throws IOException {//MultipartFile 을 전달 받고
-        File uploadFile = convert(multipartFile)//S3에 전달할 수 있도록 MultiPartFile 을 File 로 전환
-                .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
+        File uploadFile = multipartToFile(multipartFile);//S3에 전달할 수 있도록 MultiPartFile 을 File 로 전환
+            //    .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
         //S3에 MultipartFile 타입은 전송이 안됨
 
         String contentType = multipartFile.getContentType().split("/")[1];
@@ -63,8 +63,8 @@ public class S3UploadComponent {
     }
 
     public String upload(MultipartFile multipartFile, String fileName) throws IOException {//MultipartFile 을 전달 받고
-        File uploadFile = convert(multipartFile)//S3에 전달할 수 있도록 MultiPartFile 을 File 로 전환
-                .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
+        File uploadFile = multipartToFile(multipartFile);//S3에 전달할 수 있도록 MultiPartFile 을 File 로 전환
+              //  .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
         //S3에 MultipartFile 타입은 전송이 안됨
 
         return upload(uploadFile, fileName);
@@ -142,9 +142,17 @@ public class S3UploadComponent {
         if(convertFile.createNewFile()) {
             try (FileOutputStream fos = new FileOutputStream(convertFile)) {
                 fos.write(file.getBytes());
+                fos.close();
             }
             return Optional.of(convertFile);
         }
         return Optional.empty();
+    }
+
+    public File multipartToFile(MultipartFile multipart) throws IllegalStateException, IOException
+    {
+        File conFile = new File(Objects.requireNonNull(multipart.getOriginalFilename()));
+        multipart.transferTo(conFile);
+        return conFile;
     }
 }
