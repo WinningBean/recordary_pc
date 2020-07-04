@@ -30,6 +30,7 @@ class ProfileEditor extends React.Component {
       user_id: props.data.userId,
       user_ex: props.data.userEx,
       user_pic: props.data.userPic,
+      userPicExtension:'jpg'
     };
   }
 
@@ -68,14 +69,12 @@ class ProfileEditor extends React.Component {
   // }
 
   render() {
-    console.log(this.props.data);
     const dataURLToBlob = (dataURL) => {
       const BASE64_MARKER = ';base64,';
-
       // base64로 인코딩 되어있지 않을 경우
       if (dataURL.indexOf(BASE64_MARKER) === -1) {
         const parts = dataURL.split(',');
-        const contentType = parts[0].split(':')[1];
+        const contentType = 'image/' + this.state.userPicExtension;
         const raw = parts[1];
         return new Blob([raw], {
           type: contentType,
@@ -84,7 +83,7 @@ class ProfileEditor extends React.Component {
 
       // base64로 인코딩 된 이진데이터일 경우
       const parts = dataURL.split(BASE64_MARKER);
-      const contentType = parts[0].split(':')[1];
+      const contentType = 'image/' + this.state.userPicExtension;
       const raw = window.atob(parts[1]);
       // atob()는 Base64를 디코딩하는 메서드
       const rawLength = raw.length;
@@ -161,6 +160,9 @@ class ProfileEditor extends React.Component {
                       })
                     );
                     reader.readAsDataURL(e.target.files[0]);
+                    this.setState({
+                      userPicExtension :  e.target.files[0].name.split('.').pop().toLowerCase()
+                    });
                     e.target.value = null;
                   }
                 }}
@@ -195,6 +197,7 @@ class ProfileEditor extends React.Component {
               <EditorButton
                 color='secondary'
                 onClick={async () => {
+                  let userPicUrl = this.props.data.userPic;
                   if (this.props.data.userPic !== this.state.user_pic) {
                     var canvas = document.createElement('canvas');
                     var ctx = canvas.getContext('2d');
@@ -210,39 +213,51 @@ class ProfileEditor extends React.Component {
                     canvas.height = height;
                     // canvas에 변경된 크기의 이미지를 다시 그려줍니다.
                     ctx.drawImage(cut, 0, 0, width, height);
+
                     // canvas 에 있는 이미지를 img 태그로 넣어줍니다
                     var dataurl = canvas.toDataURL('image/*');
 
-                    this.setState({ user_pic: dataurl });
-                  } else {
-                    this.setState({ user_pic: this.props.data.userPic });
+                    try {
+                      const formData = new FormData();
+                      formData.append('userPic', dataURLToBlob(dataurl));
+                      console.log(formData.get('userPic'));
+                      userPicUrl = await axios.post(`user/${this.props.data.userCd}/profileUpload`, formData, {
+                        headers: {
+                          'Content-Type': 'multipart/form-data; boundary=------WebKitFormBoundary7MA4YWxkTrZu0gW',
+                        },
+                      });
+                      console.log(userPicUrl.data);
+                    } catch (error) {
+                      console.error(error);
+                      this.setState({
+                        alertDialog: () => {
+                          return (
+                              <AlertDialog
+                                  severity='error'
+                                  content='서버 오류로인해 프로필 수정 실패하였습니다.'
+                                  onAlertClose={() => {
+                                    this.setState({
+                                      alert: () => {
+                                      }
+                                    });
+                                  }}
+                              />
+                          );
+                        },
+                      });
+                    }
                   }
 
                   try {
-                    const formData = new FormData();
-                    formData.append('userPic', dataURLToBlob(this.state.user_pic));
-                    console.log(formData.get('userPic'));
-
-                    const userPicUrl = await axios.post(`user/${this.props.data.userCd}/profileUpload`, formData, {
-                      headers: {
-                        'Content-Type': 'multipart/form-data; boundary=------WebKitFormBoundary7MA4YWxkTrZu0gW',
-                      },
-                    });
-
-                    console.log(userPicUrl.data);
-                    // this.setState({ user_pic: userPicUrl.data });
-
-                    const { data } = await axios.put(`/user/${this.props.data.userCd}`, {
+                    const {data} = await axios.put(`/user/${this.props.data.userCd}`, {
                       userPw: null,
                       userNm: this.props.data.userNm,
-                      userPic: userPicUrl.data,
                       userEx: this.state.user_ex,
                     });
 
-                    console.log(data);
-
                     if (data === this.props.data.userCd) {
-                      this.props.updateUserData(userPicUrl.data, this.state.user_ex);
+                      // this.props.updateUserData(userPicUrl.data, this.state.user_ex); // 임시 주석
+                      // TypeError : this.props.updateUserData is not a function at onClick
                       this.setState({
                         alert: () => {
                           return (
@@ -278,6 +293,7 @@ class ProfileEditor extends React.Component {
                     });
                   }
                 }}
+
               >
                 수정
               </EditorButton>

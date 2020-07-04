@@ -286,7 +286,6 @@ class UserEditor extends React.Component {
                   const { data } = await axios.put(`user/${this.props.data.userCd}`, {
                     userPw: this.state.user_change_pw,
                     userNm: this.state.user_nm,
-                    userPic: this.state.user_pic,
                     userEx: this.state.user_ex,
                   });
 
