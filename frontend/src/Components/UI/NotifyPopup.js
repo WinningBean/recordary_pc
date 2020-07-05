@@ -23,7 +23,7 @@ const NotifyPopup = ({ data, onAccept, onDenial, type }) => {
       <div className='notifyIcon'>
         <IconButton {...bindTrigger(popupState)}>
           <StyledBadge badgeContent={data.length} color='secondary'>
-            <NotificationsIcon style={{ fontSize: 30, color: '#fff' }} />
+            <NotificationsIcon style={{ fontSize: 30, color: '#ddd' }} />
           </StyledBadge>
         </IconButton>
         <Menu
