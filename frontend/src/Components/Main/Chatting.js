@@ -198,6 +198,7 @@ const Chatting = ({ isOpen, user }) => {
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
+                maxWidth: '210px',
               }}
             >
               {value.lastChat}
@@ -296,11 +297,10 @@ const Chatting = ({ isOpen, user }) => {
                 <img
                   src={info[selectedRoomIndex].targetPic}
                   style={{
-                    width: '50px',
-                    height: '50px',
+                    width: '40px',
+                    height: '40px',
                     borderRadius: '50%',
                     objectFit: 'cover',
-                    padding: '5px',
                     boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)',
                   }}
                 />
@@ -364,8 +364,9 @@ const Chatting = ({ isOpen, user }) => {
                               display: 'flex',
                               alignItems: 'flex-end',
                               paddingTop: '13px',
-                              paddingRight: '2px',
+                              paddingRight: '5px',
                               color: '#40739e',
+                              fontSize: '8pt',
                             }}
                           >
                             {isSameDay(new Date(), createTime)
@@ -378,7 +379,7 @@ const Chatting = ({ isOpen, user }) => {
                           </div>
                           <div
                             style={{
-                              padding: '7px 15px',
+                              padding: '6px 12px',
                               maxWidth: '70%',
                               backgroundColor: 'rgba(64, 115, 158,0.2)',
                               borderRight: '4px solid rgba(64, 115, 158,1.0)',
@@ -395,7 +396,7 @@ const Chatting = ({ isOpen, user }) => {
                         <div
                           key={`${info[selectedRoomIndex].roomCd}-${index}`}
                           style={{
-                            margin: '5px 10px',
+                            margin: '15px 10px 0px 10px',
                             display: 'flex',
                             justifyContent: 'flex-start',
                             position: 'relative',
@@ -406,9 +407,9 @@ const Chatting = ({ isOpen, user }) => {
                               style={{
                                 position: 'absolute',
                                 left: '4px',
-                                top: '-10px',
+                                top: '-13px',
                                 left: '0px',
-                                fontSize: '10px',
+                                fontSize: '8pt',
                               }}
                             >
                               {val.sendUser.userNm}
@@ -417,7 +418,7 @@ const Chatting = ({ isOpen, user }) => {
                           <div
                             style={{
                               display: 'flex',
-                              padding: '7px 15px',
+                              padding: '6px 12px',
                               maxWidth: '70%',
                               backgroundColor: '#eee',
                               borderLeft: '4px solid #aaa',
@@ -433,8 +434,9 @@ const Chatting = ({ isOpen, user }) => {
                             style={{
                               alignItems: 'flex-end',
                               paddingTop: '13px',
-                              paddingLeft: '2px',
+                              paddingLeft: '5px',
                               color: '#938a8a',
+                              fontSize: '8pt',
                             }}
                           >
                             {isSameDay(new Date(), createTime)
@@ -461,6 +463,7 @@ const Chatting = ({ isOpen, user }) => {
                   alignItems: 'center',
                   borderBottomLeftRadius: '5px',
                   borderBottomRightRadius: '5px',
+                  marginTop: '10px',
                 }}
               >
                 <textarea

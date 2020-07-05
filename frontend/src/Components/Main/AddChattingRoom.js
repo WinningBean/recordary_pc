@@ -92,7 +92,12 @@ const AddChattingRoom = ({ info, userCd, onClose, onCreate, onFull }) => {
           {selectedUser !== null ? (
             <div style={{ display: 'relative', width: '50%', height: 'fit-content' }}>
               <img
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                style={{ 
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)',
+                }}
                 src={selectedUser.userPic}
                 alt={`${selectedUser.userNm} img`}
               />
@@ -105,7 +110,12 @@ const AddChattingRoom = ({ info, userCd, onClose, onCreate, onFull }) => {
           ) : selectedGroup !== null ? (
             <div style={{ display: 'relative', width: '50%', height: 'fit-content' }}>
               <img
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                style={{ 
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)',
+                }}
                 src={selectedGroup.groupPic}
                 alt={`${selectedGroup.groupNm} img`}
               />
