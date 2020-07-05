@@ -11,14 +11,13 @@
   line-height: 50px;
 }
 .searchField-result-list {
-  padding: 0px 10px;
+  padding: 10px 10px 0px 10px;
   height: 444px;
   overflow-y: scroll;
 }
 .likeTitle {
   font-size: 20px;
   color: white;
-  margin-top: 5px;
 }
 .group-follow_change {
   display: flex;

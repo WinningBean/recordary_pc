@@ -244,7 +244,7 @@ const WebSocket = ({ userCd, userId, notice, onSaveNoticeList }) => {
           message = {
             text: `${activeComment.userFK.userId}(${activeComment.userFK.userNm})님이 회원님의 게시물에 댓글을 남겼습니다.`,
             type: 'info',
-            action: `/userId/${data.targetCd}`,
+            action: `/${userId}/${data.targetCd}`,
           };
         } catch (error) {
           console.error(error);
@@ -257,7 +257,7 @@ const WebSocket = ({ userCd, userId, notice, onSaveNoticeList }) => {
           message = {
             text: `${activeComment.userFK.userId}(${activeComment.userFK.userNm})님이 회원님의 댓글에 답글을 남겼습니다.`,
             type: 'info',
-            action: `/userId/${data.targetCd}`,
+            action: `/${userId}/${activeComment.postCd}`,
           };
         } catch (error) {
           console.error(error);
