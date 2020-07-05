@@ -17,6 +17,7 @@ public class ChatRoomResponseDto {
     private Long roomCd;
     private Long targetCd;
     private String targetNm;
+    private String targetId;
     private String targetPic;
     private String lastChat;
     private Boolean isGroup;
@@ -36,6 +37,7 @@ public class ChatRoomResponseDto {
         this.targetCd = target.getUserCd();
         this.targetNm = target.getUserNm();
         this.targetPic = target.getProfilePath();
+        this.targetId = target.getUserId();
         this.lastChat = last;
         this.lastTime = time;
         this.isGroup = false;
