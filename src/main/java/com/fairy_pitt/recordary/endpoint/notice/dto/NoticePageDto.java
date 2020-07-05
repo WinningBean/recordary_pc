@@ -25,7 +25,7 @@ public class NoticePageDto {
     {
         this.groupCd = groupApply.getGroupFK().getGroupCd();
         this.groupNm = groupApply.getGroupFK().getGroupNm();
-        this.groupPic = groupApply.getGroupFK().getGroupPic();
+        this.groupPic = groupApply.getGroupFK().getProfilePath();
         this.createTime = groupApply.getCreatedDate();
     }
 
@@ -35,7 +35,7 @@ public class NoticePageDto {
         this.scheduleNm = scheduleMember.getScheduleFK().getScheduleNm();
         this.userCd = scheduleMember.getScheduleFK().getUserFk().getUserCd();
         this.userNm = scheduleMember.getScheduleFK().getUserFk().getUserNm();
-        this.userPic = scheduleMember.getScheduleFK().getUserFk().getUserPic();
+        this.userPic = scheduleMember.getScheduleFK().getUserFk().getProfilePath();
         this.createTime = scheduleMember.getCreatedDate();
     }
 }
