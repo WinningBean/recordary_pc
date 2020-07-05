@@ -21,6 +21,7 @@ import axios from 'axios';
 const SearchFieldResult = (props) => {
   const [userList, setUserList] = useState(props.data);
   const [groupList, setGroupList] = useState(undefined);
+  const [userGroupCdList, setUserGroupCdList] = useState([]);
   const [followerIconClick, setFollowerIconClick] = useState(false);
   const [clickTab, setClickTab] = useState(0);
   const [alertDialog, setAlertDialog] = useState(null);
@@ -43,8 +44,19 @@ const SearchFieldResult = (props) => {
     setGroupList(groupData);
   };
 
+  const getUserGroupCdList = async () => {
+    const { data } = await axios.get(`/group/group/${props.userCd}`);
+    let groupCdData = [];
+    data.map((value) => {
+      groupCdData.push(value.groupCd);
+    });
+    console.log(groupCdData);
+    setUserGroupCdList(groupCdData);
+  };
+
   useEffect(() => {
     if (clickTab === 1 && groupList === undefined) {
+      getUserGroupCdList();
       getGroupList();
     }
   }, [clickTab]);
@@ -59,7 +71,6 @@ const SearchFieldResult = (props) => {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  marginBottom: '10px',
                 }}
               >
                 <img
@@ -77,121 +88,123 @@ const SearchFieldResult = (props) => {
               </div>
             </Link>
             {props.isLogin ? (
-              <div>
-                {(() => {
-                  if (!value.userFollowTarget) {
-                    return (
-                      <FollowButton
-                        key={`button-${value.userInfo.userId}`}
-                        onClick={async (e) => {
-                          try {
-                            const isSuccess = await axios.post(`/follow/${props.userCd}`, value.userInfo.userCd, {
-                              headers: { 'Content-Type': 'application/json' },
-                            });
-                            if (isSuccess) {
-                              setAlertDialog(
-                                <Snackbar
-                                  severity='success'
-                                  content='팔로우 하였습니다.'
-                                  onClose={() => {
-                                    setAlertDialog(null);
-                                  }}
-                                />
-                              );
-                              const copyList = userList.slice();
-                              copyList[index] = { ...value, userFollowTarget: true };
-                              setUserList(copyList);
-                              props.onSaveNotice({
-                                noticeType: 'FOLLOW_NEW', // 이벤트 타입
-                                activeCd: props.userCd, // 이벤트 주체
-                                targetCd: value.userInfo.userCd, // 이벤트 대상
+              props.userCd == value.userInfo.userCd ? null : (
+                <div>
+                  {(() => {
+                    if (!value.userFollowTarget) {
+                      return (
+                        <FollowButton
+                          key={`button-${value.userInfo.userId}`}
+                          onClick={async (e) => {
+                            try {
+                              const isSuccess = await axios.post(`/follow/${props.userCd}`, value.userInfo.userCd, {
+                                headers: { 'Content-Type': 'application/json' },
                               });
-                              // props.onSaveFriend(value);
-                              return;
-                            } else {
+                              if (isSuccess) {
+                                setAlertDialog(
+                                  <Snackbar
+                                    severity='success'
+                                    content='팔로우 하였습니다.'
+                                    onClose={() => {
+                                      setAlertDialog(null);
+                                    }}
+                                  />
+                                );
+                                const copyList = userList.slice();
+                                copyList[index] = { ...value, userFollowTarget: true };
+                                setUserList(copyList);
+                                props.onSaveNotice({
+                                  noticeType: 'FOLLOW_NEW', // 이벤트 타입
+                                  activeCd: props.userCd, // 이벤트 주체
+                                  targetCd: value.userInfo.userCd, // 이벤트 대상
+                                });
+                                // props.onSaveFriend(value);
+                                return;
+                              } else {
+                                setAlertDialog(
+                                  <Snackbar
+                                    severity='error'
+                                    content='팔로우에 실패하였습니다.'
+                                    onClose={() => {
+                                      setAlertDialog(null);
+                                    }}
+                                  />
+                                );
+                              }
+                            } catch (error) {
+                              console.error(error);
                               setAlertDialog(
                                 <Snackbar
                                   severity='error'
-                                  content='팔로우에 실패하였습니다.'
+                                  content='서버에러로 팔로우에 실패하였습니다.'
                                   onClose={() => {
                                     setAlertDialog(null);
                                   }}
                                 />
                               );
                             }
-                          } catch (error) {
-                            console.error(error);
-                            setAlertDialog(
-                              <Snackbar
-                                severity='error'
-                                content='서버에러로 팔로우에 실패하였습니다.'
-                                onClose={() => {
-                                  setAlertDialog(null);
-                                }}
-                              />
-                            );
-                          }
-                        }}
-                      >
-                        <AddIcon style={{ fontSize: '20px' }} />
-                      </FollowButton>
-                    );
-                  } else {
-                    return (
-                      <FollowButton
-                        onClick={async (e) => {
-                          try {
-                            const isSuccess = (
-                              await axios.delete(`/unFollow/${props.userCd}`, {
-                                params: { targetCd: value.userInfo.userCd },
-                              })
-                            ).data;
-                            if (isSuccess) {
-                              setAlertDialog(
-                                <Snackbar
-                                  severity='success'
-                                  content='팔로우를 취소하였습니다.'
-                                  onClose={() => {
-                                    setAlertDialog(null);
-                                  }}
-                                />
-                              );
-                              const copyList = userList.slice();
-                              copyList[index] = { ...value, userFollowTarget: false };
-                              setUserList(copyList);
-                              return;
-                            } else {
+                          }}
+                        >
+                          <AddIcon style={{ fontSize: '20px' }} />
+                        </FollowButton>
+                      );
+                    } else {
+                      return (
+                        <FollowButton
+                          onClick={async (e) => {
+                            try {
+                              const isSuccess = (
+                                await axios.delete(`/unFollow/${props.userCd}`, {
+                                  params: { targetCd: value.userInfo.userCd },
+                                })
+                              ).data;
+                              if (isSuccess) {
+                                setAlertDialog(
+                                  <Snackbar
+                                    severity='success'
+                                    content='팔로우를 취소하였습니다.'
+                                    onClose={() => {
+                                      setAlertDialog(null);
+                                    }}
+                                  />
+                                );
+                                const copyList = userList.slice();
+                                copyList[index] = { ...value, userFollowTarget: false };
+                                setUserList(copyList);
+                                return;
+                              } else {
+                                setAlertDialog(
+                                  <Snackbar
+                                    severity='error'
+                                    content='팔로우 취소에 실패하였습니다.'
+                                    onClose={() => {
+                                      setAlertDialog(null);
+                                    }}
+                                  />
+                                );
+                                return;
+                              }
+                            } catch (error) {
+                              console.log(error);
                               setAlertDialog(
                                 <Snackbar
                                   severity='error'
-                                  content='팔로우 취소에 실패하였습니다.'
+                                  content='서버에러로 팔로우 취소에 실패하였습니다.'
                                   onClose={() => {
                                     setAlertDialog(null);
                                   }}
                                 />
                               );
-                              return;
                             }
-                          } catch (error) {
-                            console.log(error);
-                            setAlertDialog(
-                              <Snackbar
-                                severity='error'
-                                content='서버에러로 팔로우 취소에 실패하였습니다.'
-                                onClose={() => {
-                                  setAlertDialog(null);
-                                }}
-                              />
-                            );
-                          }
-                        }}
-                      >
-                        <HowToRegIcon style={{ fontSize: '20px' }} />
-                      </FollowButton>
-                    );
-                  }
-                })()}
-              </div>
+                          }}
+                        >
+                          <HowToRegIcon style={{ fontSize: '20px' }} />
+                        </FollowButton>
+                      );
+                    }
+                  })()}
+                </div>
+              )
             ) : null}
           </div>
         </li>
@@ -211,137 +224,140 @@ const SearchFieldResult = (props) => {
         return (
           <li key={value.groupCd}>
             <div className='follower_list'>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  marginBottom: '10px',
-                }}
-              >
-                <img
-                  alt={`${value.groupNm} img`}
+              <Link to={`/group/${value.groupCd}`}>
+                <div
                   style={{
-                    marginRight: '10px',
-                    borderRadius: '50%',
-                    width: '40px',
-                    height: '40px',
-                    objectFit: 'cover',
+                    display: 'flex',
+                    alignItems: 'center',
                   }}
-                  src={value.groupPic}
-                />
-                {value.groupNm}
-              </div>
+                >
+                  <img
+                    alt={`${value.groupNm} img`}
+                    style={{
+                      marginRight: '10px',
+                      borderRadius: '50%',
+                      width: '40px',
+                      height: '40px',
+                      objectFit: 'cover',
+                    }}
+                    src={value.groupPic}
+                  />
+                  {value.groupNm}
+                </div>
+              </Link>
               {props.isLogin ? (
-                <div>
-                  {(() => {
-                    if (!value.isClick) {
-                      return (
-                        <FollowButton
-                          onClick={async (e) => {
-                            try {
-                              const { data } = await axios.post('/groupApply/create', {
-                                groupCd: value.groupCd,
-                                userCd: props.userCd,
-                                applyState: 2,
-                              });
-                              console.log(data);
-                              if (data) {
-                                props.onSaveNotice({
-                                  noticeType: 'GROUP_APPLY_COME', // 이벤트 타입
-                                  activeCd: props.userCd, // 이벤트 주체
-                                  targetCd: value.groupCd, // 이벤트 대상
+                userGroupCdList.indexOf(value.groupCd) != -1 ? null : (
+                  <div>
+                    {(() => {
+                      if (!value.isClick) {
+                        return (
+                          <FollowButton
+                            onClick={async (e) => {
+                              try {
+                                const { data } = await axios.post('/groupApply/create', {
+                                  groupCd: value.groupCd,
+                                  userCd: props.userCd,
+                                  applyState: 2,
                                 });
-                                setAlertDialog(
-                                  <Snackbar
-                                    severity='success'
-                                    content='그룹 신청을 보냈습니다.'
-                                    onClose={() => {
-                                      setAlertDialog(null);
-                                    }}
-                                  />
-                                );
-                              } else {
+                                console.log(data);
+                                if (data) {
+                                  props.onSaveNotice({
+                                    noticeType: 'GROUP_APPLY_COME', // 이벤트 타입
+                                    activeCd: props.userCd, // 이벤트 주체
+                                    targetCd: value.groupCd, // 이벤트 대상
+                                  });
+                                  setAlertDialog(
+                                    <Snackbar
+                                      severity='success'
+                                      content='그룹 신청을 보냈습니다.'
+                                      onClose={() => {
+                                        setAlertDialog(null);
+                                      }}
+                                    />
+                                  );
+                                } else {
+                                  setAlertDialog(
+                                    <Snackbar
+                                      severity='error'
+                                      content='이미 신청을 보냈거나 초대를 받았습니다.'
+                                      onClose={() => {
+                                        setAlertDialog(null);
+                                      }}
+                                    />
+                                  );
+                                }
+                                groupChange(index, !value.isClick);
+                              } catch (error) {
                                 setAlertDialog(
                                   <Snackbar
                                     severity='error'
-                                    content='이미 신청을 보냈거나 초대를 받았습니다.'
+                                    content={`${error}`}
                                     onClose={() => {
                                       setAlertDialog(null);
                                     }}
                                   />
                                 );
                               }
-                              groupChange(index, !value.isClick);
-                            } catch (error) {
-                              setAlertDialog(
-                                <Snackbar
-                                  severity='error'
-                                  content={`${error}`}
-                                  onClose={() => {
-                                    setAlertDialog(null);
-                                  }}
-                                />
-                              );
-                            }
-                            return;
-                          }}
-                        >
-                          <AddIcon style={{ fontSize: '20px' }} />
-                        </FollowButton>
-                      );
-                    } else {
-                      return (
-                        <FollowButton
-                          onClick={async (e) => {
-                            try {
-                              console.log({ groupCd: value.groupCd, userCd: props.userCd });
-                              const { data } = await axios.post('/groupApply/delete', {
-                                groupCd: value.groupCd,
-                                userCd: props.userCd,
-                              });
-                              console.log(data);
+                              return;
+                            }}
+                          >
+                            <AddIcon style={{ fontSize: '20px' }} />
+                          </FollowButton>
+                        );
+                      } else {
+                        return (
+                          <FollowButton
+                            onClick={async (e) => {
+                              try {
+                                console.log({ groupCd: value.groupCd, userCd: props.userCd });
+                                const { data } = await axios.post('/groupApply/delete', {
+                                  groupCd: value.groupCd,
+                                  userCd: props.userCd,
+                                });
+                                console.log(data);
 
-                              if (data) {
+                                if (data) {
+                                  setAlertDialog(
+                                    <Snackbar
+                                      severity='success'
+                                      content='그룹 신청을 취소하였습니다.'
+                                      onClose={() => {
+                                        setAlertDialog(null);
+                                      }}
+                                    />
+                                  );
+                                  groupChange(index, !value.isClick);
+                                  return;
+                                }
                                 setAlertDialog(
                                   <Snackbar
-                                    severity='success'
-                                    content='그룹 신청을 취소하였습니다.'
+                                    severity='error'
+                                    content='그룹 신청에 실패하였습니다.'
                                     onClose={() => {
                                       setAlertDialog(null);
                                     }}
                                   />
                                 );
-                                groupChange(index, !value.isClick);
-                                return;
+                              } catch (error) {
+                                setAlertDialog(
+                                  <Snackbar
+                                    severity='error'
+                                    content={`${error}`}
+                                    onClose={() => {
+                                      setAlertDialog(null);
+                                    }}
+                                  />
+                                );
                               }
-                              setAlertDialog(
-                                <Snackbar
-                                  severity='error'
-                                  content='그룹 신청에 실패하였습니다.'
-                                  onClose={() => {
-                                    setAlertDialog(null);
-                                  }}
-                                />
-                              );
-                            } catch (error) {
-                              setAlertDialog(
-                                <Snackbar
-                                  severity='error'
-                                  content={`${error}`}
-                                  onClose={() => {
-                                    setAlertDialog(null);
-                                  }}
-                                />
-                              );
-                            }
-                          }}
-                        >
-                          <HowToRegIcon style={{ fontSize: '20px' }} />
-                        </FollowButton>
-                      );
-                    }
-                  })()}
-                </div>
+                            }}
+                          >
+                            <HowToRegIcon style={{ fontSize: '20px' }} />
+                          </FollowButton>
+                        );
+                      }
+                    })()}
+                  </div>
+                )
               ) : null}
             </div>
           </li>
@@ -367,7 +383,7 @@ const SearchFieldResult = (props) => {
         <hr />
         <div className='group-follow_change'>
           <div>
-            <Paper square style={{ marginBottom: '10px' }}>
+            <Paper square>
               <Tabs
                 value={clickTab}
                 indicatorColor='primary'

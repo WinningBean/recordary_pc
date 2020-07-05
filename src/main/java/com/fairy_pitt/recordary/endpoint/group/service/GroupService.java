@@ -64,7 +64,7 @@ public class GroupService {
             imgPath = s3UploadComponent.profileUpload(groupPic, "group", id);
         }
         groupEntity.updateGroupProfile(imgPath);
-        return imgPath;
+        return groupEntity.getProfilePath();
     }
 
     @Transactional

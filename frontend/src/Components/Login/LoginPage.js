@@ -62,7 +62,7 @@ class Login extends React.Component {
       return;
     }
 
-    this.setState({ isLoading: true });
+    // this.setState({ isLoading: true });
 
     try {
       const isExistId = (await axios.get(`/user/existId/${this.state.user_id}`)).data;
@@ -96,7 +96,7 @@ class Login extends React.Component {
             return (
               <AlertDialog
                 severity='error'
-                content={`로그인에 실패하였습니다.아이디/비밀번호를 확인해주세요.`}
+                content={`로그인에 실패하였습니다. 아이디/비밀번호를 확인해주세요.`}
                 onAlertClose={() => {
                   this.setState({ failedLogin: () => {} });
                 }}

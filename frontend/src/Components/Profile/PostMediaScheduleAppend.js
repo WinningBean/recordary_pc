@@ -245,7 +245,6 @@ const PostMediaScheduleAppend = (props) => {
       if (postAddMediaListSrc.length > 0) {
         const formData = new FormData();
 
-        console.log(postAddMediaListSrc);
         postAddMediaListSrc.map((value, index) => {
           formData.append('mediaFiles', dataURLToBlob(value));
         });
@@ -559,7 +558,6 @@ const PostMediaScheduleAppend = (props) => {
                   postAddMediaExtensionList.push(e.target.files[i].name.split('.').pop().toLowerCase());
                   reader.addEventListener('load', (e) => {
                     postAddMediaListSrc.push(e.target.result);
-                    console.log(postAddMediaListSrc);
                   });
                   reader.readAsDataURL(e.target.files[i]);
                 }

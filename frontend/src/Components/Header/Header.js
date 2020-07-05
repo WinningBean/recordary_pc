@@ -72,7 +72,7 @@ class Header extends React.Component {
         <div id='header-left'>
           <div className='title-menu'>
             <IconButton onClick={() => this.setState({ openMenu: true })}>
-              <MenuIcon style={{ fontSize: '30px', color: 'white' }} />
+              <MenuIcon style={{ fontSize: '35px', color: 'white' }} />
             </IconButton>
             <HeaderMenu open={this.state.openMenu} onClose={() => this.setState({ openMenu: false })} />
           </div>
@@ -151,9 +151,9 @@ class Header extends React.Component {
               }}
             />
           </div>
-          <div style={{ position: 'relative' }}>
+          <div style={{ maxWidth: '50px', display: 'flex', justifyContent: 'center' }}>
             <IconButton onClick={() => this.setState({ isOpenToDo: !this.state.isOpenToDo })}>
-              <AssignmentIcon style={{ fontSize: '30px', color: 'white' }} />
+              <AssignmentIcon style={{ fontSize: '35px', color: 'white' }} />
             </IconButton>
             {this.state.isOpenToDo ? <ToDo userCd={this.props.userCd} /> : null}
           </div>
@@ -170,7 +170,7 @@ class Header extends React.Component {
 }
 
 const IconButton = styled(Button)({
-  minWidth: '40px',
+  width: '40px',
   height: '40px',
 });
 

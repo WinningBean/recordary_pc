@@ -198,6 +198,7 @@ const Chatting = ({ isOpen, user }) => {
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
+                maxWidth: '210px',
               }}
             >
               {value.lastChat}
@@ -296,11 +297,10 @@ const Chatting = ({ isOpen, user }) => {
                 <img
                   src={info[selectedRoomIndex].targetPic}
                   style={{
-                    width: '50px',
-                    height: '50px',
+                    width: '40px',
+                    height: '40px',
                     borderRadius: '50%',
                     objectFit: 'cover',
-                    padding: '5px',
                     boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)',
                   }}
                 />
@@ -362,23 +362,23 @@ const Chatting = ({ isOpen, user }) => {
                           <div
                             style={{
                               display: 'flex',
-                              alignItems: 'flex-end',
-                              paddingTop: '13px',
-                              paddingRight: '2px',
+                              alignSelf: 'flex-end',
+                              paddingRight: '5px',
                               color: '#40739e',
+                              fontSize: '8pt',
                             }}
                           >
                             {isSameDay(new Date(), createTime)
                               ? format(createTime, 'a') === 'AM'
-                                ? '오전'
+                                ? '오전' + format(createTime, 'h:mm')
                                 : '오후' + format(createTime, 'h:mm')
-                              : `${format(createTime, 'yyyy-MM-dd')} ${
-                                  format(createTime, 'a') === 'AM' ? '오전' : '오후'
-                                } ${format(createTime, 'h:mm')}`}
+                              : `${format(createTime, 'M' + ' / ' + 'd')} ${
+                                  format(createTime, 'a') === 'AM' ? '(오전' : '(오후'
+                                } ${format(createTime, 'h:mm)')}`}
                           </div>
                           <div
                             style={{
-                              padding: '7px 15px',
+                              padding: '6px 12px',
                               maxWidth: '70%',
                               backgroundColor: 'rgba(64, 115, 158,0.2)',
                               borderRight: '4px solid rgba(64, 115, 158,1.0)',
@@ -395,29 +395,16 @@ const Chatting = ({ isOpen, user }) => {
                         <div
                           key={`${info[selectedRoomIndex].roomCd}-${index}`}
                           style={{
-                            margin: '5px 10px',
+                            margin: '10px 10px 0px 10px',
                             display: 'flex',
                             justifyContent: 'flex-start',
                             position: 'relative',
                           }}
                         >
-                          {info[selectedRoomIndex].isGroup ? (
-                            <span
-                              style={{
-                                position: 'absolute',
-                                left: '4px',
-                                top: '-10px',
-                                left: '0px',
-                                fontSize: '10px',
-                              }}
-                            >
-                              {val.sendUser.userNm}
-                            </span>
-                          ) : null}
                           <div
                             style={{
                               display: 'flex',
-                              padding: '7px 15px',
+                              padding: '6px 12px',
                               maxWidth: '70%',
                               backgroundColor: '#eee',
                               borderLeft: '4px solid #aaa',
@@ -429,22 +416,52 @@ const Chatting = ({ isOpen, user }) => {
                           >
                             {val.content}
                           </div>
-                          <div
-                            style={{
-                              alignItems: 'flex-end',
-                              paddingTop: '13px',
-                              paddingLeft: '2px',
-                              color: '#938a8a',
-                            }}
-                          >
-                            {isSameDay(new Date(), createTime)
-                              ? format(createTime, 'a') === 'AM'
-                                ? '오전'
-                                : '오후' + format(createTime, 'h:mm')
-                              : `${format(createTime, 'yyyy-MM-dd')} ${
-                                  format(createTime, 'a') === 'AM' ? '오전' : '오후'
-                                } ${format(createTime, 'h:mm')}`}
-                          </div>
+
+                          {info[selectedRoomIndex].isGroup ? (
+                            <div
+                              style={{
+                                alignSelf: 'flex-end',
+                                paddingLeft: '5px',
+                                color: '#938a8a',
+                                fontSize: '8pt',
+                              }}
+                            >
+                              <span
+                                style={{
+                                  fontSize: '8pt',
+                                  color: '#333',
+                                  fontWeight: 'bold',
+                                }}
+                              >
+                                {val.sendUser.userNm}
+                              </span>
+                              <br />
+                              {isSameDay(new Date(), createTime)
+                                ? format(createTime, 'a') === 'AM'
+                                  ? '오전' + format(createTime, 'h:mm')
+                                  : '오후' + format(createTime, 'h:mm')
+                                : `${format(createTime, 'M' + ' / ' + 'd')} ${
+                                    format(createTime, 'a') === 'AM' ? '(오전' : '(오후'
+                                  } ${format(createTime, 'h:mm)')}`}
+                            </div>
+                          ) : (
+                            <div
+                              style={{
+                                alignSelf: 'flex-end',
+                                paddingLeft: '5px',
+                                color: '#938a8a',
+                                fontSize: '8pt',
+                              }}
+                            >
+                              {isSameDay(new Date(), createTime)
+                                ? format(createTime, 'a') === 'AM'
+                                  ? '오전' + format(createTime, 'h:mm')
+                                  : '오후' + format(createTime, 'h:mm')
+                                : `${format(createTime, 'M' + ' / ' + 'd')} ${
+                                    format(createTime, 'a') === 'AM' ? '(오전' : '(오후'
+                                  } ${format(createTime, 'h:mm)')}`}
+                            </div>
+                          )}
                         </div>
                       );
                     })
@@ -461,6 +478,7 @@ const Chatting = ({ isOpen, user }) => {
                   alignItems: 'center',
                   borderBottomLeftRadius: '5px',
                   borderBottomRightRadius: '5px',
+                  marginTop: '10px',
                 }}
               >
                 <textarea
