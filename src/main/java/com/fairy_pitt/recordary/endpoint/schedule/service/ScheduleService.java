@@ -45,8 +45,7 @@ public class ScheduleService implements Comparator< ScheduleResponseDto > {
     public Long update(Long id, ScheduleUpdateRequestDto updateRequestDto) {
         ScheduleEntity scheduleEntity = scheduleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 스케줄이 없습니다. id=" + id));
-
-        ScheduleTabEntity scheduleTabEntity = scheduleTabRepository.findByTabCd(updateRequestDto.getTabCodeFK());
+        ScheduleTabEntity scheduleTabEntity = scheduleTabRepository.findByTabCd(updateRequestDto.getTabCd());
         scheduleEntity.updateSchedule(scheduleTabEntity,
                 updateRequestDto.getScheduleNm(),
                 updateRequestDto.getScheduleEx(),

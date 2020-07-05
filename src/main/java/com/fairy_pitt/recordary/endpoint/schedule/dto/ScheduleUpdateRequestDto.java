@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 public class ScheduleUpdateRequestDto {
 
-    private Long TabCodeFK;
+    private Long tabCd;
     private String scheduleNm;
     private String scheduleEx;
     private Date scheduleStr;
@@ -23,7 +23,7 @@ public class ScheduleUpdateRequestDto {
     private List<Long> deleteMember;
 
     @Builder(builderClassName = "updateScheduleBuilder", builderMethodName = "updateScheduleBuilder")
-    public ScheduleUpdateRequestDto(Long TabCodeFK,
+    public ScheduleUpdateRequestDto(Long tabCd,
                                   String scheduleNm,
                                   String scheduleEx,
                                   Date scheduleStr,
@@ -33,7 +33,7 @@ public class ScheduleUpdateRequestDto {
                                     List<Long> createMember,
                                     List<Long> deleteMember)
     {
-        this.TabCodeFK = TabCodeFK;
+        this.tabCd = tabCd;
         this.scheduleNm = scheduleNm;
         this.scheduleEx = scheduleEx;
         this.scheduleStr = scheduleStr;
