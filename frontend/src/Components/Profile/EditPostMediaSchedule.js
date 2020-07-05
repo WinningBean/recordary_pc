@@ -184,6 +184,21 @@ const EditPostMediaSchedule = (props) => {
     });
   };
 
+  const tagTypeChange = (value) => {
+    if (value.indexOf(';base64,') === -1) {
+      const parts = value.split(',');
+      const contentType = parts[0].split(':')[1];
+      const tagType = contentType.split('/')[0];
+      return tagType;
+    } else {
+      // base64로 인코딩 된 이진데이터일 경우
+      const parts = value.split(';base64,');
+      const contentType = parts[0].split(':')[1];
+      const tagType = contentType.split('/')[0];
+      return tagType;
+    }
+  };
+
   const handleClickOpen = async () => {
     setOpen(true);
   };
@@ -637,7 +652,9 @@ const EditPostMediaSchedule = (props) => {
                             severity='success'
                             content='수정되었습니다.'
                             duration={1000}
-                            onClose={() => setDialog(null)}
+                            onAlertClose={
+                              (() => setAlert(null), () => props.onCancel(), () => setTimeout(() => window.location.reload(), 1000))
+                            }
                           />
                         );
                       }}
@@ -707,17 +724,113 @@ const EditPostMediaSchedule = (props) => {
             />
             {(postAddMediaListSrc.length > 0 && updatePostAddMediaListSrc.length > 0) ||
             (postAddMediaListSrc.length < 1 && updatePostAddMediaListSrc.length > 0)
-              ? updatePostAddMediaListSrc.map((value, index) => (
-                  <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
-                    {timelineMediaType(postAddMediaListSrc[index])}
-                  </div>
-                ))
+              ? updatePostAddMediaListSrc.map((value, index) => {
+                if (tagTypeChange(value) === 'image') {
+                  return (
+                    <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
+                      <img
+                        style={{
+                          boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
+                          width: '60px',
+                          height: '60px',
+                          objectFit: 'cover',
+                        }}
+                        id='postAddMedia'
+                        src={value}
+                      />
+                    </div>
+                  );
+                } else if (tagTypeChange(value) === 'video') {
+                  return (
+                    <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
+                      <video
+                        style={{
+                          boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
+                          height: '60px',
+                          objectFit: 'cover',
+                        }}
+                        id='postAddMedia'
+                        controls
+                        src={value}
+                      >
+                        지원되지 않는 형식입니다.
+                      </video>
+                    </div>
+                  );
+                } else if (tagTypeChange(value) === 'audio') {
+                  return (
+                    <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
+                      <audio
+                        style={{
+                          width: '60px',
+                          height: '60px',
+                          objectFit: 'cover',
+                        }}
+                        id='postAddMedia'
+                        src={value}
+                        controls
+                      />
+                    </div>
+                  );
+                }
+                  // <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
+                  //   {timelineMediaType(postAddMediaListSrc[index])}
+                  // </div>
+              })
               : postAddMediaListSrc.length > 0 && updatePostAddMediaListSrc.length < 1
-              ? postAddMediaListSrc.map((value, index) => (
-                  <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
-                    {timelineMediaType(postAddMediaListSrc[index])}
-                  </div>
-                ))
+              ? postAddMediaListSrc.map((value, index) => {
+                if (tagTypeChange(value) === 'image') {
+                  return (
+                    <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
+                      <img
+                        style={{
+                          boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
+                          width: '60px',
+                          height: '60px',
+                          objectFit: 'cover',
+                        }}
+                        id='postAddMedia'
+                        src={value}
+                      />
+                    </div>
+                  );
+                } else if (tagTypeChange(value) === 'video') {
+                  return (
+                    <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
+                      <video
+                        style={{
+                          boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
+                          height: '60px',
+                          objectFit: 'cover',
+                        }}
+                        id='postAddMedia'
+                        controls
+                        src={value}
+                      >
+                        지원되지 않는 형식입니다.
+                      </video>
+                    </div>
+                  );
+                } else if (tagTypeChange(value) === 'audio') {
+                  return (
+                    <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
+                      <audio
+                        style={{
+                          width: '60px',
+                          height: '60px',
+                          objectFit: 'cover',
+                        }}
+                        id='postAddMedia'
+                        src={value}
+                        controls
+                      />
+                    </div>
+                  );
+                }
+                  // <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
+                  //   {timelineMediaType(postAddMediaListSrc[index])}
+                  // </div>
+              })
               : null}
           </div>
         ) : null}
