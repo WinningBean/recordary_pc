@@ -47,13 +47,17 @@ public class ScheduleResponseDto {
 
     public ScheduleResponseDto(ScheduleMemberEntity entity)
     {
-        //this.userCd = entity.getScheduleFK().getUserFk().getUserCd();
+        this.scheduleCd = entity.getScheduleFK().getScheduleCd();
+        this.user = new UserResponseDto(entity.getScheduleFK().getUserFk());
         this.scheduleNm = entity.getScheduleFK().getScheduleNm();
         this.scheduleEx = entity.getScheduleFK().getScheduleEx();
         this.scheduleStr = entity.getScheduleFK().getScheduleStr();
         this.scheduleEnd = entity.getScheduleFK().getScheduleEnd();
         this.scheduleCol = entity.getScheduleFK().getScheduleCol();
         this.schedulePublicState = entity.getScheduleFK().getSchedulePublicState();
+        this.scheduleMemberList = entity.getScheduleFK().getScheduleMembers().stream()
+                .map(ScheduleMemberResponseDto :: new)
+                .collect(Collectors.toList());
     }
 
     public ScheduleResponseDto(ScheduleEntity scheduleEntity, int scheduleInWhere){
