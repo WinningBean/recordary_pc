@@ -2,6 +2,7 @@ package com.fairy_pitt.recordary.endpoint.schedule;
 
 import com.fairy_pitt.recordary.common.domain.*;
 import com.fairy_pitt.recordary.common.repository.*;
+import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleSaveRequestDto;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleUpdateRequestDto;
 import org.junit.After;
@@ -434,5 +435,45 @@ public class ScheduleControllerTest {
 //
 //        assertThat(responseEntity.getBody().size()).isEqualTo(4);
 
+    }
+
+    @Test
+    public void schedule_post_가져오기()  throws Exception {
+
+        String scheduleEx = "테스트 게시글";
+        Date scheduleStr = Timestamp.valueOf("2020-03-25 12:13:24");
+        Date scheduleEnd = Timestamp.valueOf("2020-03-26 12:13:24");
+
+        UserEntity user = userRepository.save(UserEntity.builder()
+                .userId("testUser1")
+                .userPw("testPassword")
+                .userNm("테스트 유저1")
+                .build());
+
+        ScheduleEntity saveSchedule = scheduleRepository.save(ScheduleEntity.builder()
+                .tabFK(null)
+                .userFK(user)
+                .scheduleNm("Test")
+                .scheduleEx(scheduleEx)
+                .scheduleStr(scheduleStr)
+                .scheduleEnd(scheduleEnd)
+                .scheduleCol(null)
+                .schedulePublicState(1)
+                .build());
+
+        PostEntity post = postRepository.save(PostEntity.builder()
+                .userFK(user)
+                .scheduleFK(saveSchedule)
+                .postEx("테스트 게시글")
+                .postPublicState(1)
+                .postScheduleShareState(false)
+                .build());
+
+        String url = "http://localhost:" + port + "schedule/findPost/" + saveSchedule.getScheduleCd() ;
+
+        ResponseEntity<PostResponseDto> responseEntity = restTemplate.getForEntity(url, PostResponseDto.class);
+
+        assertThat(responseEntity.getBody().getPostCd()).isEqualTo(post.getPostCd());
+        assertThat(responseEntity.getBody().getPostEx()).isEqualTo(post.getPostEx());
     }
 }
