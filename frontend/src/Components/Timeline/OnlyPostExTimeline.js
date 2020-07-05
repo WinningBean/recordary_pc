@@ -202,7 +202,8 @@ const OnlyPostExTimeline = (props) => {
                             currentUserLikePost: false,
                             postLikeCount: data.postLikeCount - 1,
                             postLikeFirstUser:
-                              data.postLikeFirstUser.userCd === props.user.userCd ? null : data.postLikeForstUser,
+                              (await axios.get(`/post/${data.postCd}`)).data.postLikeFirstUser,
+                              // data.postLikeFirstUser.userCd === props.user.userCd ? null : data.postLikeForstUser,
                             // data.postLikeFirstUser.userCd === props.user.userCd ? 다음 사람의 데이터...ㅠ : data.postLikeForstUser,
                           });
                         }
@@ -216,12 +217,14 @@ const OnlyPostExTimeline = (props) => {
                   />
                 </div>
                 {data.postLikeCount < 1 ? (
-                  <div className='comment-title-none'>첫번째 좋아요를 눌러주세욤</div>
+                  <div className='comment-title-none'>첫번째 좋아요를 눌러주세요</div>
                 ) : data.postLikeCount === 1 ? (
                   <div
                     className='comment-title'
                     onClick={() => setLikePersonList(true)}
-                  >{`${data.postLikeFirstUser.userId}(${data.postLikeFirstUser.userNm}) 님이 좋아합니다`}</div>
+                  >
+                    {`${data.postLikeFirstUser.userId}(${data.postLikeFirstUser.userNm}) 님이 좋아합니다`}
+                  </div>
                 ) : (
                   <div className='comment-title' onClick={() => setLikePersonList(true)}>{`${
                     data.postLikeFirstUser.userId

@@ -264,7 +264,8 @@ const TimelineWeekSchedule = (props) => {
                           currentUserLikePost: false,
                           postLikeCount: data.postLikeCount - 1,
                           postLikeFirstUser:
-                            data.postLikeFirstUser.userCd === props.user.userCd ? null : data.postLikeForstUser,
+                            (await axios.get(`/post/${data.postCd}`)).data.postLikeFirstUser,
+                          // data.postLikeFirstUser.userCd === props.user.userCd ? null : data.postLikeForstUser,
                           // data.postLikeFirstUser.userCd === props.user.userCd ? 다음 사람의 데이터...ㅠ : data.postLikeForstUser,
                         });
                       }
@@ -278,7 +279,7 @@ const TimelineWeekSchedule = (props) => {
                 />
               </div>
               {data.postLikeCount < 1 ? (
-                <div className='comment-title-none'>첫번째 좋아요를 눌러주세욤</div>
+                <div className='comment-title-none'>첫번째 좋아요를 눌러주세요</div>
               ) : data.postLikeCount === 1 ? (
                 <div
                   className='comment-title'
