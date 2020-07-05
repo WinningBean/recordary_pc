@@ -250,8 +250,8 @@ const ToDo = ({ open, userCd }) => {
       className='todo-animation'
       style={{
         position: 'absolute',
-        top: '50px',
-        right: '-26px',
+        top: '60px',
+        right: '15px',
         height: '550px',
         width: '300px',
         boxShadow: 'rgba(161, 159, 159, 0.8) 0px 1px 3px',

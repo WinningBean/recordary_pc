@@ -93,7 +93,7 @@ const NotifyPopup = ({ data, onAccept, onDenial, type }) => {
       <div>
         <IconButton {...bindTrigger(popupState)}>
           <StyledBadge badgeContent={data.length} color='secondary'>
-            <NotificationsIcon style={{ fontSize: 30, color: '#fff' }} />
+            <NotificationsIcon style={{ fontSize: 35, color: '#fff' }} />
           </StyledBadge>
         </IconButton>
         <Menu
@@ -245,7 +245,7 @@ const StyledBadge = withStyles((theme) => ({
 
 const IconButton = styled(Button)({
   minWidth: '40px',
-  height: '50px',
+  height: '40px',
 });
 
 export default NotifyPopup;

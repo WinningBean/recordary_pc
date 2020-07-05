@@ -86,7 +86,7 @@ export default function ScheduleSearch(props) {
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div
             style={{
-              backgroundColor: '#16a085',
+              backgroundColor: value.scheduleCol,
               borderRadius: '50%',
               height: '10px',
               width: '10px',

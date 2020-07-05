@@ -49,7 +49,7 @@ const SearchFieldResult = (props) => {
     let groupCdData = [];
     data.map((value) => {
       groupCdData.push(value.groupCd);
-    })
+    });
     console.log(groupCdData);
     setUserGroupCdList(groupCdData);
   };
@@ -71,7 +71,6 @@ const SearchFieldResult = (props) => {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  marginBottom: '10px',
                 }}
               >
                 <img
@@ -225,12 +224,11 @@ const SearchFieldResult = (props) => {
         return (
           <li key={value.groupCd}>
             <div className='follower_list'>
-            <Link to={`/group/${value.groupCd}`}>
+              <Link to={`/group/${value.groupCd}`}>
                 <div
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    marginBottom: '10px',
                   }}
                 >
                   <img
@@ -249,118 +247,118 @@ const SearchFieldResult = (props) => {
               </Link>
               {props.isLogin ? (
                 userGroupCdList.indexOf(value.groupCd) != -1 ? null : (
-                <div>
-                  {(() => {
-                    if (!value.isClick) {
-                      return (
-                        <FollowButton
-                          onClick={async (e) => {
-                            try {
-                              const { data } = await axios.post('/groupApply/create', {
-                                groupCd: value.groupCd,
-                                userCd: props.userCd,
-                                applyState: 2,
-                              });
-                              console.log(data);
-                              if (data) {
-                                props.onSaveNotice({
-                                  noticeType: 'GROUP_APPLY_COME', // 이벤트 타입
-                                  activeCd: props.userCd, // 이벤트 주체
-                                  targetCd: value.groupCd, // 이벤트 대상
+                  <div>
+                    {(() => {
+                      if (!value.isClick) {
+                        return (
+                          <FollowButton
+                            onClick={async (e) => {
+                              try {
+                                const { data } = await axios.post('/groupApply/create', {
+                                  groupCd: value.groupCd,
+                                  userCd: props.userCd,
+                                  applyState: 2,
                                 });
-                                setAlertDialog(
-                                  <Snackbar
-                                    severity='success'
-                                    content='그룹 신청을 보냈습니다.'
-                                    onClose={() => {
-                                      setAlertDialog(null);
-                                    }}
-                                  />
-                                );
-                              } else {
+                                console.log(data);
+                                if (data) {
+                                  props.onSaveNotice({
+                                    noticeType: 'GROUP_APPLY_COME', // 이벤트 타입
+                                    activeCd: props.userCd, // 이벤트 주체
+                                    targetCd: value.groupCd, // 이벤트 대상
+                                  });
+                                  setAlertDialog(
+                                    <Snackbar
+                                      severity='success'
+                                      content='그룹 신청을 보냈습니다.'
+                                      onClose={() => {
+                                        setAlertDialog(null);
+                                      }}
+                                    />
+                                  );
+                                } else {
+                                  setAlertDialog(
+                                    <Snackbar
+                                      severity='error'
+                                      content='이미 신청을 보냈거나 초대를 받았습니다.'
+                                      onClose={() => {
+                                        setAlertDialog(null);
+                                      }}
+                                    />
+                                  );
+                                }
+                                groupChange(index, !value.isClick);
+                              } catch (error) {
                                 setAlertDialog(
                                   <Snackbar
                                     severity='error'
-                                    content='이미 신청을 보냈거나 초대를 받았습니다.'
+                                    content={`${error}`}
                                     onClose={() => {
                                       setAlertDialog(null);
                                     }}
                                   />
                                 );
                               }
-                              groupChange(index, !value.isClick);
-                            } catch (error) {
-                              setAlertDialog(
-                                <Snackbar
-                                  severity='error'
-                                  content={`${error}`}
-                                  onClose={() => {
-                                    setAlertDialog(null);
-                                  }}
-                                />
-                              );
-                            }
-                            return;
-                          }}
-                        >
-                          <AddIcon style={{ fontSize: '20px' }} />
-                        </FollowButton>
-                      );
-                    } else {
-                      return (
-                        <FollowButton
-                          onClick={async (e) => {
-                            try {
-                              console.log({ groupCd: value.groupCd, userCd: props.userCd });
-                              const { data } = await axios.post('/groupApply/delete', {
-                                groupCd: value.groupCd,
-                                userCd: props.userCd,
-                              });
-                              console.log(data);
+                              return;
+                            }}
+                          >
+                            <AddIcon style={{ fontSize: '20px' }} />
+                          </FollowButton>
+                        );
+                      } else {
+                        return (
+                          <FollowButton
+                            onClick={async (e) => {
+                              try {
+                                console.log({ groupCd: value.groupCd, userCd: props.userCd });
+                                const { data } = await axios.post('/groupApply/delete', {
+                                  groupCd: value.groupCd,
+                                  userCd: props.userCd,
+                                });
+                                console.log(data);
 
-                              if (data) {
+                                if (data) {
+                                  setAlertDialog(
+                                    <Snackbar
+                                      severity='success'
+                                      content='그룹 신청을 취소하였습니다.'
+                                      onClose={() => {
+                                        setAlertDialog(null);
+                                      }}
+                                    />
+                                  );
+                                  groupChange(index, !value.isClick);
+                                  return;
+                                }
                                 setAlertDialog(
                                   <Snackbar
-                                    severity='success'
-                                    content='그룹 신청을 취소하였습니다.'
+                                    severity='error'
+                                    content='그룹 신청에 실패하였습니다.'
                                     onClose={() => {
                                       setAlertDialog(null);
                                     }}
                                   />
                                 );
-                                groupChange(index, !value.isClick);
-                                return;
+                              } catch (error) {
+                                setAlertDialog(
+                                  <Snackbar
+                                    severity='error'
+                                    content={`${error}`}
+                                    onClose={() => {
+                                      setAlertDialog(null);
+                                    }}
+                                  />
+                                );
                               }
-                              setAlertDialog(
-                                <Snackbar
-                                  severity='error'
-                                  content='그룹 신청에 실패하였습니다.'
-                                  onClose={() => {
-                                    setAlertDialog(null);
-                                  }}
-                                />
-                              );
-                            } catch (error) {
-                              setAlertDialog(
-                                <Snackbar
-                                  severity='error'
-                                  content={`${error}`}
-                                  onClose={() => {
-                                    setAlertDialog(null);
-                                  }}
-                                />
-                              );
-                            }
-                          }}
-                        >
-                          <HowToRegIcon style={{ fontSize: '20px' }} />
-                        </FollowButton>
-                      );
-                    }
-                  })()}
-                </div>
+                            }}
+                          >
+                            <HowToRegIcon style={{ fontSize: '20px' }} />
+                          </FollowButton>
+                        );
+                      }
+                    })()}
+                  </div>
                 )
-              ) : null }
+              ) : null}
             </div>
           </li>
         );
