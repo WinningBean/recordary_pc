@@ -27,6 +27,8 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
+import AddIcon from '@material-ui/icons/Add';
+import HowToRegIcon from '@material-ui/icons/HowToReg';
 
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/core/styles';
@@ -276,7 +278,8 @@ class Profile extends React.Component {
       if (this.state.followerNumClick) {
         return (
           <Follower
-            type={this.state.type}
+            // type={this.state.type}
+            type={1} // 임시
             userCd={this.state.info.userInfo.userCd}
             isFollower={true}
             onCancel={() => this.setState({ followerNumClick: false })}
@@ -285,7 +288,8 @@ class Profile extends React.Component {
       } else if (this.state.followingNumClick) {
         return (
           <Follower
-            type={this.state.type}
+            // type={this.state.type}
+            type={1} // 임시
             userCd={this.state.info.userInfo.userCd}
             isFollower={false}
             onCancel={() => this.setState({ followingNumClick: false })}
@@ -626,7 +630,112 @@ class Profile extends React.Component {
                           ) : (
                             <>
                               {`${this.state.info.userInfo.userId}(${this.state.info.userInfo.userNm})`}
-                              {this.state.type !== 0 ? null : (
+                              {this.state.type !== 0 ? (
+                                this.props.isLogin == false ? null : (
+                                  this.state.info.userFollowTarget == false ? (
+                                    <FollowButton
+                                      key={`button-${this.state.info.userInfo.userId}`}
+                                      onClick={async (e) => {
+                                        try {
+                                          const isSuccess = await axios.post(`/follow/${this.props.user.userCd}`, this.state.info.userInfo.userCd, {
+                                            headers: { 'Content-Type': 'application/json' },
+                                          });
+                                          if (isSuccess) {
+                                            this.state.info.userFollowTarget = true;
+                                            this.setState({
+                                              alert: (
+                                                <Snackbar
+                                                  severity='success'
+                                                  content='팔로우 하였습니다.'
+                                                  onClose={() => this.setState({ alert: null })}
+                                                />
+                                              )
+                                            });
+                                            this.props.onSaveNotice({
+                                              noticeType: 'FOLLOW_NEW', // 이벤트 타입
+                                              activeCd: this.props.user.userCd, // 이벤트 주체
+                                              targetCd: this.state.info.userInfo.userCd, // 이벤트 대상
+                                            });
+                                            return;
+                                          } else {
+                                            this.setState({
+                                              alert: (
+                                              <Snackbar
+                                                severity='error'
+                                                content='팔로우에 실패하였습니다.'
+                                                onClose={() => this.setState({ alert: null })}
+                                              />
+                                              )
+                                            });
+                                          }
+                                        } catch (error) {
+                                          console.error(error);
+                                          this.setState({
+                                            alert: (
+                                            <Snackbar
+                                              severity='error'
+                                              content='서버에러로 팔로우에 실패하였습니다.'
+                                              onClose={() => this.setState({ alert: null })}
+                                            />
+                                            )
+                                          });
+                                        }
+                                      }}
+                                    >
+                                      <AddIcon style={{ fontSize: '20px' }} />
+                                    </FollowButton>
+                                  ) : (
+                                    <FollowButton
+                                      onClick={async (e) => {
+                                        try {
+                                          const isSuccess = (
+                                            await axios.delete(`/unFollow/${this.props.user.userCd}`, {
+                                              params: { targetCd: this.state.info.userInfo.userCd },
+                                            })
+                                          ).data;
+                                          if (isSuccess) {
+                                            this.state.info.userFollowTarget = false;
+                                            this.setState({
+                                              alert: (
+                                              <Snackbar
+                                                severity='success'
+                                                content='팔로우를 취소하였습니다.'
+                                                onClose={() => this.setState({ alert: null })}
+                                              />
+                                              )
+                                            });
+                                            return;
+                                          } else {
+                                            this.setState({
+                                              alert: (
+                                              <Snackbar
+                                                severity='error'
+                                                content='팔로우 취소에 실패하였습니다.'
+                                                onClose={() => this.setState({ alert: null })}
+                                              />
+                                              )
+                                            });
+                                            return;
+                                          }
+                                        } catch (error) {
+                                          console.log(error);
+                                          this.setState({
+                                            alert: (
+                                            <Snackbar
+                                              severity='error'
+                                              content='서버에러로 팔로우 취소에 실패하였습니다.'
+                                              onClose={() => this.setState({ alert: null })}
+                                            />
+                                            )
+                                          });
+                                        }
+                                      }}
+                                    >
+                                      <HowToRegIcon style={{ fontSize: '20px' }} />
+                                    </FollowButton>
+                                  )
+                                )
+                              ) : (
                                 <IconButton
                                   onClick={() =>
                                     this.setState({
@@ -1116,6 +1225,11 @@ const NavButton = styled(Button)({
   height: '60px',
   fontSize: '18px',
   fontStyle: 'bold',
+});
+
+const FollowButton = styled(Button)({
+  minWidth: '30px',
+  height: '40px',
 });
 
 export default Profile;
