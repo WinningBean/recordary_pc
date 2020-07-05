@@ -4,6 +4,7 @@ import com.fairy_pitt.recordary.common.domain.*;
 import com.fairy_pitt.recordary.common.repository.*;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleSaveRequestDto;
+import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleTabRequestDto;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.ScheduleUpdateRequestDto;
 import org.junit.After;
 import org.junit.Test;
@@ -52,8 +53,8 @@ public class ScheduleControllerTest {
     public void tearDown(){
         scheduleMemberRepository.deleteAll();
         postRepository.deleteAll();
-//        scheduleTabRepository.deleteAll();
         scheduleRepository.deleteAll();
+        scheduleTabRepository.deleteAll();
         userRepository.deleteAll();
     }
 
@@ -145,15 +146,21 @@ public class ScheduleControllerTest {
                 .schedulePublicState(1)
                 .build());
 
-        Long scheduleCd = saveSchedule.getScheduleCd();
+        ScheduleTabEntity tab = scheduleTabRepository.save(ScheduleTabEntity.builder()
+                        .tabNm("test")
+                        .tabCol(null)
+                        .userFk(user)
+                        .build());
 
+        Long scheduleCd = saveSchedule.getScheduleCd();
+        Long tabCd = tab.getTabCd();
         String scheduleNmChange = "테스트 게시글2";
         String scheduleExChange = "테스트 게시글2";
         Date scheduleStr2 = Timestamp.valueOf("2020-04-25 23:59:59");
         Date scheduleEnd2 = Timestamp.valueOf("2020-04-26 12:13:24");
 
         ScheduleUpdateRequestDto requestDto = ScheduleUpdateRequestDto.updateScheduleBuilder()
-                .TabCodeFK(null)
+                .tabCd(tabCd)
                 .scheduleNm(scheduleNmChange)
                 .scheduleEx(scheduleExChange)
                 .scheduleStr(scheduleStr2)
@@ -176,6 +183,7 @@ public class ScheduleControllerTest {
         assertThat(all.get(0).getScheduleEx()).isEqualTo(scheduleExChange);
         assertThat(all.get(0).getScheduleNm()).isEqualTo(scheduleNmChange);
         assertThat(all.get(0).getScheduleStr()).isEqualTo(scheduleStr2);
+        assertThat(all.get(0).getTabFK().getTabCd()).isEqualTo(tab.getTabCd());
 
     }
 
