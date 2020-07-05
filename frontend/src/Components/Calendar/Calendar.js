@@ -1171,8 +1171,8 @@ const Calendar = (props) => {
                             height: '40px',
                             marginRight: '4px',
                             objectFit: 'cover',
-                            borderRadius: '20%',
-                            border: value.scheduleState ? `3px solid ${selectedDetailedSC.color}` : null,
+                            borderRadius: '60%',
+                            boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)',
                           }}
                           src={value.userPic}
                         />

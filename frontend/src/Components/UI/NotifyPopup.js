@@ -9,7 +9,7 @@ import Badge from '@material-ui/core/Badge';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { usePopupState, bindTrigger, bindMenu } from 'material-ui-popup-state/hooks';
 
-import { format, differenceInCalendarDays } from 'date-fns';
+import { format, differenceInCalendarDays, isSameDay } from 'date-fns';
 
 // type === 0 : 그룹
 // type === 1 : 일반
@@ -20,7 +20,7 @@ const NotifyPopup = ({ data, onAccept, onDenial, type }) => {
   });
   if (type === 0) {
     return (
-      <div>
+      <div className='notifyIcon'>
         <IconButton {...bindTrigger(popupState)}>
           <StyledBadge badgeContent={data.length} color='secondary'>
             <NotificationsIcon style={{ fontSize: 30, color: '#fff' }} />
@@ -50,7 +50,7 @@ const NotifyPopup = ({ data, onAccept, onDenial, type }) => {
                   margin: '5px 10px',
                   paddingBottom: '5px',
                   borderBottom: '1px solid lightgray',
-                  width: '280px',
+                  width: '290px',
                 }}
               >
                 <MenuItem>
@@ -59,7 +59,7 @@ const NotifyPopup = ({ data, onAccept, onDenial, type }) => {
                       {`${differenceInCalendarDays(new Date(), Date.parse(value.date))}일전`}
                     </div>
                     <div
-                      style={{ fontSize: '14px' }}
+                      style={{ fontSize: '14px', paddingTop: '5px' }}
                     >{`${value.userId}(${value.userNm}) 님이 그룹신청을 하였습니다.`}</div>
                   </div>
                 </MenuItem>
@@ -120,7 +120,7 @@ const NotifyPopup = ({ data, onAccept, onDenial, type }) => {
                   margin: '5px 10px',
                   paddingBottom: '5px',
                   borderBottom: '1px solid lightgray',
-                  width: '280px',
+                  width: '290px',
                 }}
               >
                 {value.scheduleCd === null ? (
@@ -128,9 +128,17 @@ const NotifyPopup = ({ data, onAccept, onDenial, type }) => {
                     <MenuItem>
                       <div className='notify-list'>
                         <div className='notify-list-time' style={{ fontSize: '14px' }}>
-                          {value.createTime}
+                          {isSameDay(new Date(), Date.parse(value.createTime))
+                            ? format(Date.parse(value.createTime), 'a') === 'AM'
+                              ? '오전' + format(Date.parse(value.createTime), 'h:mm')
+                              : '오후' + format(Date.parse(value.createTime), 'h:mm')
+                            : `${format(Date.parse(value.createTime), 'YYY' + ' / ' + 'MM' + ' / ' + 'dd')} ${
+                                format(Date.parse(value.createTime), 'a') === 'AM' ? '(오전' : '(오후'
+                              } ${format(Date.parse(value.createTime), 'h:mm)')}`}
                         </div>
-                        <div style={{ fontSize: '14px' }}>{`'${value.groupNm}'그룹이 그룹초대하였습니다.`}</div>
+                        <div
+                          style={{ fontSize: '14px', paddingTop: '5px' }}
+                        >{`'${value.groupNm}'그룹이 그룹초대하였습니다.`}</div>
                       </div>
                     </MenuItem>
                     <div style={{ display: 'flex' }}>
@@ -158,10 +166,16 @@ const NotifyPopup = ({ data, onAccept, onDenial, type }) => {
                     <MenuItem>
                       <div className='notify-list'>
                         <div className='notify-list-time' style={{ fontSize: '14px' }}>
-                          {value.createTime}
+                          {isSameDay(new Date(), Date.parse(value.createTime))
+                            ? format(Date.parse(value.createTime), 'a') === 'AM'
+                              ? '오전' + format(Date.parse(value.createTime), 'h:mm')
+                              : '오후' + format(Date.parse(value.createTime), 'h:mm')
+                            : `${format(Date.parse(value.createTime), 'YYY' + ' / ' + 'MM' + ' / ' + 'dd')} ${
+                                format(Date.parse(value.createTime), 'a') === 'AM' ? '(오전' : '(오후'
+                              } ${format(Date.parse(value.createTime), 'h:mm)')}`}
                         </div>
                         <div
-                          style={{ fontSize: '14px' }}
+                          style={{ fontSize: '14px', whiteSpace: 'pre-wrap', paddingTop: '5px' }}
                         >{`${value.userNm}님이 ${value.scheduleNm}스케줄에 함께하는 멤버로 초대하였습니다.`}</div>
                       </div>
                     </MenuItem>
