@@ -29,7 +29,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import AddIcon from '@material-ui/icons/Add';
 import HowToRegIcon from '@material-ui/icons/HowToReg';
-
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/core/styles';
 import LinkElement from '@material-ui/core/Link';
@@ -148,9 +148,13 @@ class Profile extends React.Component {
     //     toDate: dateFns.endOfMonth(new Date()).getTime(),
     //   })
     // );
+    console.log('isLogin', this.props.isLogin);
     this.setState({
       ...this.state,
-      info: data,
+      info: {
+        ...data,
+        userInfo: { ...data.userInfo, currentUserCd: this.props.isLogin ? this.props.user.userCd : undefined },
+      },
       isLoading: false,
       type: type,
     });
@@ -172,16 +176,18 @@ class Profile extends React.Component {
       var groupApply = null;
       var type = 5;
 
-      console.log(this.props.user);
-      if (this.props.isLogin && groupInfo.admin.userCd === this.props.user.userCd) {
-        type = 2;
-        groupApply = (await axios.get(`/groupApply/findUserApply/${this.props.match.params.groupCd}`)).data;
-        console.log(groupApply, 'groupApply');
-      }
-      for (let i = 0; i < groupInfo.memberList.length; i++) {
-        if (groupInfo.memberList[i].userCd === this.props.user.userCd) {
-          type = 3;
-          break;
+      console.log(this.props.user, this.props.isLogin);
+      if (this.props.isLogin) {
+        if (groupInfo.admin.userCd === this.props.user.userCd) {
+          type = 2;
+          groupApply = (await axios.get(`/groupApply/findUserApply/${this.props.match.params.groupCd}`)).data;
+          console.log(groupApply, 'groupApply');
+        }
+        for (let i = 0; i < groupInfo.memberList.length; i++) {
+          if (groupInfo.memberList[i].userCd === this.props.user.userCd) {
+            type = 3;
+            break;
+          }
         }
       }
       console.log('type = ', type);
@@ -189,7 +195,7 @@ class Profile extends React.Component {
         ...this.state,
         info: {
           ...groupInfo,
-          currentUserCd: this.props.user.userCd,
+          currentUserCd: this.props.isLogin ? this.props.user.userCd : undefined,
           member: groupInfo.memberList,
           groupApply: groupApply,
         },
@@ -322,7 +328,7 @@ class Profile extends React.Component {
                       <>
                         <li
                           style={{
-                            transform: this.state.clickTab === undefined ? 'translateX(-23px)' : 'translateX(10px)',
+                            transform: this.state.clickTab === undefined ? 'translateX(-23px)' : 'translateX(1px)',
                           }}
                           className='transition-all'
                         >
@@ -346,7 +352,7 @@ class Profile extends React.Component {
                           <li
                             key={`tab-${index}`}
                             style={{
-                              transform: this.state.clickTab === index ? 'translateX(-23px)' : 'translateX(10px)',
+                              transform: this.state.clickTab === index ? 'translateX(-23px)' : 'translateX(1px)',
                             }}
                             className='transition-all'
                           >
@@ -373,11 +379,11 @@ class Profile extends React.Component {
                         ))}
                         <li
                           style={{
-                            transform: 'translateX(0px)',
+                            transform: 'translateX(1px)',
                           }}
                         >
                           <TabButton
-                            style={{ justifyContent: 'flex-start', backgroundColor: 'rgba(0, 0, 0, 0.04)' }}
+                            style={{ justifyContent: 'flex-start', backgroundColor: '#ddd' }}
                             onClick={() => {
                               if (this.state.info.scheduleTabInfo.length > 8) {
                                 this.setState({
@@ -394,7 +400,7 @@ class Profile extends React.Component {
                               this.setState({ isOpenAddTab: true });
                             }}
                           >
-                            <PlaylistAddIcon />
+                            <AddCircleOutlineIcon style={{ color: '#333' }} />
                           </TabButton>
                         </li>
                       </>
@@ -631,109 +637,111 @@ class Profile extends React.Component {
                             <>
                               {`${this.state.info.userInfo.userId}(${this.state.info.userInfo.userNm})`}
                               {this.state.type !== 0 ? (
-                                this.props.isLogin == false ? null : (
-                                  this.state.info.userFollowTarget == false ? (
-                                    <FollowButton
-                                      key={`button-${this.state.info.userInfo.userId}`}
-                                      onClick={async (e) => {
-                                        try {
-                                          const isSuccess = await axios.post(`/follow/${this.props.user.userCd}`, this.state.info.userInfo.userCd, {
+                                this.props.isLogin == false ? null : this.state.info.userFollowTarget == false ? (
+                                  <FollowButton
+                                    key={`button-${this.state.info.userInfo.userId}`}
+                                    onClick={async (e) => {
+                                      try {
+                                        const isSuccess = await axios.post(
+                                          `/follow/${this.props.user.userCd}`,
+                                          this.state.info.userInfo.userCd,
+                                          {
                                             headers: { 'Content-Type': 'application/json' },
+                                          }
+                                        );
+                                        if (isSuccess) {
+                                          this.state.info.userFollowTarget = true;
+                                          this.setState({
+                                            alert: (
+                                              <Snackbar
+                                                severity='success'
+                                                content='팔로우 하였습니다.'
+                                                onClose={() => this.setState({ alert: null })}
+                                              />
+                                            ),
                                           });
-                                          if (isSuccess) {
-                                            this.state.info.userFollowTarget = true;
-                                            this.setState({
-                                              alert: (
-                                                <Snackbar
-                                                  severity='success'
-                                                  content='팔로우 하였습니다.'
-                                                  onClose={() => this.setState({ alert: null })}
-                                                />
-                                              )
-                                            });
-                                            this.props.onSaveNotice({
-                                              noticeType: 'FOLLOW_NEW', // 이벤트 타입
-                                              activeCd: this.props.user.userCd, // 이벤트 주체
-                                              targetCd: this.state.info.userInfo.userCd, // 이벤트 대상
-                                            });
-                                            return;
-                                          } else {
-                                            this.setState({
-                                              alert: (
+                                          this.props.onSaveNotice({
+                                            noticeType: 'FOLLOW_NEW', // 이벤트 타입
+                                            activeCd: this.props.user.userCd, // 이벤트 주체
+                                            targetCd: this.state.info.userInfo.userCd, // 이벤트 대상
+                                          });
+                                          return;
+                                        } else {
+                                          this.setState({
+                                            alert: (
                                               <Snackbar
                                                 severity='error'
                                                 content='팔로우에 실패하였습니다.'
                                                 onClose={() => this.setState({ alert: null })}
                                               />
-                                              )
-                                            });
-                                          }
-                                        } catch (error) {
-                                          console.error(error);
-                                          this.setState({
-                                            alert: (
+                                            ),
+                                          });
+                                        }
+                                      } catch (error) {
+                                        console.error(error);
+                                        this.setState({
+                                          alert: (
                                             <Snackbar
                                               severity='error'
                                               content='서버에러로 팔로우에 실패하였습니다.'
                                               onClose={() => this.setState({ alert: null })}
                                             />
-                                            )
-                                          });
-                                        }
-                                      }}
-                                    >
-                                      <AddIcon style={{ fontSize: '20px' }} />
-                                    </FollowButton>
-                                  ) : (
-                                    <FollowButton
-                                      onClick={async (e) => {
-                                        try {
-                                          const isSuccess = (
-                                            await axios.delete(`/unFollow/${this.props.user.userCd}`, {
-                                              params: { targetCd: this.state.info.userInfo.userCd },
-                                            })
-                                          ).data;
-                                          if (isSuccess) {
-                                            this.state.info.userFollowTarget = false;
-                                            this.setState({
-                                              alert: (
+                                          ),
+                                        });
+                                      }
+                                    }}
+                                  >
+                                    <AddIcon style={{ fontSize: '20px' }} />
+                                  </FollowButton>
+                                ) : (
+                                  <FollowButton
+                                    onClick={async (e) => {
+                                      try {
+                                        const isSuccess = (
+                                          await axios.delete(`/unFollow/${this.props.user.userCd}`, {
+                                            params: { targetCd: this.state.info.userInfo.userCd },
+                                          })
+                                        ).data;
+                                        if (isSuccess) {
+                                          this.state.info.userFollowTarget = false;
+                                          this.setState({
+                                            alert: (
                                               <Snackbar
                                                 severity='success'
                                                 content='팔로우를 취소하였습니다.'
                                                 onClose={() => this.setState({ alert: null })}
                                               />
-                                              )
-                                            });
-                                            return;
-                                          } else {
-                                            this.setState({
-                                              alert: (
+                                            ),
+                                          });
+                                          return;
+                                        } else {
+                                          this.setState({
+                                            alert: (
                                               <Snackbar
                                                 severity='error'
                                                 content='팔로우 취소에 실패하였습니다.'
                                                 onClose={() => this.setState({ alert: null })}
                                               />
-                                              )
-                                            });
-                                            return;
-                                          }
-                                        } catch (error) {
-                                          console.log(error);
-                                          this.setState({
-                                            alert: (
+                                            ),
+                                          });
+                                          return;
+                                        }
+                                      } catch (error) {
+                                        console.log(error);
+                                        this.setState({
+                                          alert: (
                                             <Snackbar
                                               severity='error'
                                               content='서버에러로 팔로우 취소에 실패하였습니다.'
                                               onClose={() => this.setState({ alert: null })}
                                             />
-                                            )
-                                          });
-                                        }
-                                      }}
-                                    >
-                                      <HowToRegIcon style={{ fontSize: '20px' }} />
-                                    </FollowButton>
-                                  )
+                                          ),
+                                        });
+                                      }
+                                    }}
+                                  >
+                                    <HowToRegIcon style={{ fontSize: '20px' }} />
+                                  </FollowButton>
                                 )
                               ) : (
                                 <IconButton
