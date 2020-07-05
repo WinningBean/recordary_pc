@@ -12,10 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -35,6 +33,15 @@ public class NoticeService {
     private SimpMessagingTemplate messagingTemplate;
 
     public void sendNotice(NoticeDto noticeDto){
+        messagingTemplate.convertAndSend(checkNoticeDestination(noticeDto), noticeDto);
+    }
+
+    public void sendNotice(NoticeType noticeType, Long activeCd, Long targetCd){
+        NoticeDto noticeDto = NoticeDto.builder()
+                .noticeType(noticeType)
+                .activeCd(activeCd)
+                .targetCd(targetCd)
+                .build();
         messagingTemplate.convertAndSend(checkNoticeDestination(noticeDto), noticeDto);
     }
 

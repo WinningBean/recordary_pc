@@ -1,14 +1,17 @@
 package com.fairy_pitt.recordary.endpoint.comment.service;
 
 import com.fairy_pitt.recordary.common.domain.CommentEntity;
+import com.fairy_pitt.recordary.common.domain.NoticeType;
 import com.fairy_pitt.recordary.common.domain.PostEntity;
 import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.common.repository.CommentRepository;
 import com.fairy_pitt.recordary.endpoint.comment.dto.CommentRequestDto;
 import com.fairy_pitt.recordary.endpoint.comment.dto.CommentResponseDto;
+import com.fairy_pitt.recordary.endpoint.notice.service.NoticeService;
 import com.fairy_pitt.recordary.endpoint.post.service.PostService;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,17 +27,22 @@ public class CommentService {
     private final UserService userService;
     private final PostService postService;
 
+    @Autowired
+    private NoticeService noticeService;
 
     @Transactional
     public Long save(CommentRequestDto requestDto){
         UserEntity user = userService.findEntity(requestDto.getUserCd());
         PostEntity post = postService.findEntity(requestDto.getPostCd());
         CommentEntity comment = null;
-        if(requestDto.getCommentOriginCd() != null )
+        if(requestDto.getCommentOriginCd() != null)
         {
             comment = commentRepository.findByCommentCd(requestDto.getCommentOriginCd());
         }
-        return  commentRepository.save(requestDto.toEntity(user, post,comment)).getCommentCd();
+        Long commentCd = commentRepository.save(requestDto.toEntity(user, post,comment)).getCommentCd();
+        if (requestDto.getCommentOriginCd() != null) noticeService.sendNotice(NoticeType.COMMENT_SUB_NEW, commentCd, requestDto.getCommentOriginCd());
+        else noticeService.sendNotice(NoticeType.COMMENT_NEW, commentCd, requestDto.getPostCd());
+        return commentCd;
     }
 
     @Transactional

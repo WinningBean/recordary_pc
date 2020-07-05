@@ -1,12 +1,15 @@
 package com.fairy_pitt.recordary.endpoint.follower.service;
 
 import com.fairy_pitt.recordary.common.domain.FollowerEntity;
+import com.fairy_pitt.recordary.common.domain.NoticeType;
 import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.common.repository.FollowerRepository;
 import com.fairy_pitt.recordary.endpoint.follower.dto.FollowerStateResponseDto;
+import com.fairy_pitt.recordary.endpoint.notice.service.NoticeService;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +26,9 @@ public class FollowerService {
     private final UserService userService;
     private final FollowerRepository followerRepository;
 
+    @Autowired
+    private NoticeService noticeService;
+
     @Transactional
     public Boolean save(Long userCd, Long targetCd) {
         FollowerEntity followerEntity = FollowerEntity.builder()
@@ -30,7 +36,10 @@ public class FollowerService {
                 .targetFK(userService.findEntity(targetCd))
                 .build();
 
-        return Optional.ofNullable(followerRepository.save(followerEntity)).isPresent();
+        if (Optional.ofNullable(followerRepository.save(followerEntity)).isPresent()){
+            noticeService.sendNotice(NoticeType.FOLLOW_NEW, userCd, targetCd);
+            return true;
+        } else return false;
     }
 
     @Transactional

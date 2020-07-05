@@ -1,13 +1,16 @@
 package com.fairy_pitt.recordary.endpoint.post.service;
 
+import com.fairy_pitt.recordary.common.domain.NoticeType;
 import com.fairy_pitt.recordary.common.domain.PostEntity;
 import com.fairy_pitt.recordary.common.domain.PostLikeEntity;
 import com.fairy_pitt.recordary.common.domain.UserEntity;
 import com.fairy_pitt.recordary.common.repository.PostLikeRepository;
+import com.fairy_pitt.recordary.endpoint.notice.service.NoticeService;
 import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.dto.UserResponseDto;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +28,9 @@ public class PostLikeService {
     private final PostService postService;
     private final UserService userService;
 
+    @Autowired
+    private NoticeService noticeService;
+
     @Transactional
     public Boolean save(Long postCd, Long userCd){
         PostLikeEntity postLikeEntity = PostLikeEntity.builder()
@@ -32,7 +38,10 @@ public class PostLikeService {
                 .userFK(userService.findEntity(userCd))
                 .build();
 
-        return Optional.ofNullable(postLikeRepository.save(postLikeEntity)).isPresent();
+        if (Optional.ofNullable(postLikeRepository.save(postLikeEntity)).isPresent()){
+            noticeService.sendNotice(NoticeType.POST_LIKE_NEW, userCd, postCd);
+            return true;
+        } else return false;
     }
 
     @Transactional
