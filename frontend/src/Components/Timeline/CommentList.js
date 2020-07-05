@@ -296,14 +296,14 @@ export default ({ postCd, tData, user, onSuccess }) => {
                               commentOriginCd: value.commentCd,
                             })
                           ).data;
-                          store.dispatch({
-                            type: 'SAVE_NOTICE',
-                            notice: {
-                              noticeType: 'COMMENT_SUB_NEW', // 이벤트 타입
-                              activeCd: recommentCd, // 이벤트 주체
-                              targetCd: value.commentCd, // 이벤트 대상
-                            },
-                          });
+                          // store.dispatch({
+                          //   type: 'SAVE_NOTICE',
+                          //   notice: {
+                          //     noticeType: 'COMMENT_SUB_NEW', // 이벤트 타입
+                          //     activeCd: recommentCd, // 이벤트 주체
+                          //     targetCd: value.commentCd, // 이벤트 대상
+                          //   },
+                          // });
                           getRecommentList(value, index, false);
                           console.log(recommentCd);
                         } catch (e) {

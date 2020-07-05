@@ -178,14 +178,14 @@ const OnlyPostExTimeline = (props) => {
                             })
                           ).data;
                           if (like) {
-                            store.dispatch({
-                              type: 'SAVE_NOTICE',
-                              notice: {
-                                noticeType: 'POST_LIKE_NEW', // 이벤트 타입
-                                activeCd: props.user.userCd, // 이벤트 주체
-                                targetCd: data.postCd, // 이벤트 대상
-                              },
-                            });
+                            // store.dispatch({
+                            //   type: 'SAVE_NOTICE',
+                            //   notice: {
+                            //     noticeType: 'POST_LIKE_NEW', // 이벤트 타입
+                            //     activeCd: props.user.userCd, // 이벤트 주체
+                            //     targetCd: data.postCd, // 이벤트 대상
+                            //   },
+                            // });
                             setData({
                               ...data,
                               currentUserLikePost: true,

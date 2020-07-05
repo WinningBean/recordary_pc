@@ -88,14 +88,14 @@ const OnlyPostExComment = ({ user, postCd, onSuccess }) => {
                         })
                       ).data;
 
-                      store.dispatch({
-                        type: 'SAVE_NOTICE',
-                        notice: {
-                          noticeType: 'COMMENT_NEW', // 이벤트 타입
-                          activeCd: commentCdData, // 이벤트 주체
-                          targetCd: postCd, // 이벤트 대상
-                        },
-                      });
+                      // store.dispatch({
+                      //   type: 'SAVE_NOTICE',
+                      //   notice: {
+                      //     noticeType: 'COMMENT_NEW', // 이벤트 타입
+                      //     activeCd: commentCdData, // 이벤트 주체
+                      //     targetCd: postCd, // 이벤트 대상
+                      //   },
+                      // });
 
                       onSuccess({
                         commentCd: commentCdData,

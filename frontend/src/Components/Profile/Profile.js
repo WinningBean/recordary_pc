@@ -660,11 +660,11 @@ class Profile extends React.Component {
                                               />
                                             ),
                                           });
-                                          this.props.onSaveNotice({
-                                            noticeType: 'FOLLOW_NEW', // 이벤트 타입
-                                            activeCd: this.props.user.userCd, // 이벤트 주체
-                                            targetCd: this.state.info.userInfo.userCd, // 이벤트 대상
-                                          });
+                                          // this.props.onSaveNotice({
+                                          //   noticeType: 'FOLLOW_NEW', // 이벤트 타입
+                                          //   activeCd: this.props.user.userCd, // 이벤트 주체
+                                          //   targetCd: this.state.info.userInfo.userCd, // 이벤트 대상
+                                          // });
                                           return;
                                         } else {
                                           this.setState({
