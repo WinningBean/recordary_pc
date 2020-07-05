@@ -72,7 +72,7 @@ const EditPostMediaSchedule = (props) => {
   const [data, setData] = useState(props.data);
   const [change, setChange] = useState(false);
   const [updatePostAddMediaListSrc, setUpdatePostAddMediaListSrc] = useState([]);
-  const [postAddMediaListSrc, setPostAddMediaListSrc] = useState(props.mediaList.length < 0 ? [] : props.mediaList);
+  const [postAddMediaListSrc, setPostAddMediaListSrc] = useState(props.mediaList.length > 0 ? props.mediaList : []);
   const [postAddMediaExtensionList, setPostAddMediaExtensionList] = useState([]);
   const [mediaOpen, setMediaOpen] = useState(props.data.mediaFK !== null ? true : false);
   const [scheduleOpen, setScheduleOpen] = useState(props.data.scheduleFK !== null ? true : false);
@@ -185,6 +185,7 @@ const EditPostMediaSchedule = (props) => {
   };
 
   const tagTypeChange = (value) => {
+    console.log(value);
     if (value.indexOf(';base64,') === -1) {
       const parts = value.split(',');
       const contentType = parts[0].split(':')[1];
@@ -229,42 +230,42 @@ const EditPostMediaSchedule = (props) => {
     return filterType;
   };
 
-  const timelineMediaType = (value) => {
-    if (filterTagType(value) === 'image') {
-      return (
-        <img
-          id='postAddMedia'
-          alt='postAddMedia'
-          src={value}
-          style={{
-            boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
-            width: '60px',
-            height: '60px',
-            objectFit: 'cover',
-          }}
-        />
-      );
-    } else if (filterTagType(value) === 'video') {
-      return (
-        <video
-          controls
-          title='postAddMedia'
-          src={value}
-          style={{ boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)', height: '60px', objectFit: 'cover' }}
-        >
-          지원되지 않는 형식입니다.
-        </video>
-      );
-    } else if (filterTagType(value) === 'audio') {
-      return (
-        <audio controls src={value} style={{ width: '60px' }}>
-          지원되지 않는 형식입니다.
-        </audio>
-      );
-    } else {
-      return <span style={{ display: 'block', height: '100%', textAlign: 'center' }}>지원되지 않는 형식입니다.</span>;
-    }
-  };
+  // const timelineMediaType = (value) => {
+  //   if (filterTagType(value) === 'image') {
+  //     return (
+  //       <img
+  //         id='postAddMedia'
+  //         alt='postAddMedia'
+  //         src={value}
+  //         style={{
+  //           boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
+  //           width: '60px',
+  //           height: '60px',
+  //           objectFit: 'cover',
+  //         }}
+  //       />
+  //     );
+  //   } else if (filterTagType(value) === 'video') {
+  //     return (
+  //       <video
+  //         controls
+  //         title='postAddMedia'
+  //         src={value}
+  //         style={{ boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)', height: '60px', objectFit: 'cover' }}
+  //       >
+  //         지원되지 않는 형식입니다.
+  //       </video>
+  //     );
+  //   } else if (filterTagType(value) === 'audio') {
+  //     return (
+  //       <audio controls src={value} style={{ width: '60px' }}>
+  //         지원되지 않는 형식입니다.
+  //       </audio>
+  //     );
+  //   } else {
+  //     return <span style={{ display: 'block', height: '100%', textAlign: 'center' }}>지원되지 않는 형식입니다.</span>;
+  //   }
+  // };
 
   const onSubmit = async () => {
     try {
@@ -653,7 +654,9 @@ const EditPostMediaSchedule = (props) => {
                             content='수정되었습니다.'
                             duration={1000}
                             onAlertClose={
-                              (() => setAlert(null), () => props.onCancel(), () => setTimeout(() => window.location.reload(), 1000))
+                              (() => setAlert(null),
+                              () => props.onCancel(),
+                              () => setTimeout(() => window.location.reload(), 1000))
                             }
                           />
                         );
@@ -722,115 +725,114 @@ const EditPostMediaSchedule = (props) => {
                 }
               }}
             />
-            {(postAddMediaListSrc.length > 0 && updatePostAddMediaListSrc.length > 0) ||
-            (postAddMediaListSrc.length < 1 && updatePostAddMediaListSrc.length > 0)
+            {updatePostAddMediaListSrc.length > 0
               ? updatePostAddMediaListSrc.map((value, index) => {
-                if (tagTypeChange(value) === 'image') {
-                  return (
-                    <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
-                      <img
-                        style={{
-                          boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
-                          width: '60px',
-                          height: '60px',
-                          objectFit: 'cover',
-                        }}
-                        id='postAddMedia'
-                        src={value}
-                      />
-                    </div>
-                  );
-                } else if (tagTypeChange(value) === 'video') {
-                  return (
-                    <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
-                      <video
-                        style={{
-                          boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
-                          height: '60px',
-                          objectFit: 'cover',
-                        }}
-                        id='postAddMedia'
-                        controls
-                        src={value}
-                      >
-                        지원되지 않는 형식입니다.
-                      </video>
-                    </div>
-                  );
-                } else if (tagTypeChange(value) === 'audio') {
-                  return (
-                    <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
-                      <audio
-                        style={{
-                          width: '60px',
-                          height: '60px',
-                          objectFit: 'cover',
-                        }}
-                        id='postAddMedia'
-                        src={value}
-                        controls
-                      />
-                    </div>
-                  );
-                }
+                  if (tagTypeChange(value) === 'image') {
+                    return (
+                      <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
+                        <img
+                          style={{
+                            boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
+                            width: '60px',
+                            height: '60px',
+                            objectFit: 'cover',
+                          }}
+                          id='postAddMedia'
+                          src={value}
+                        />
+                      </div>
+                    );
+                  } else if (tagTypeChange(value) === 'video') {
+                    return (
+                      <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
+                        <video
+                          style={{
+                            boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
+                            height: '60px',
+                            objectFit: 'cover',
+                          }}
+                          id='postAddMedia'
+                          controls
+                          src={value}
+                        >
+                          지원되지 않는 형식입니다.
+                        </video>
+                      </div>
+                    );
+                  } else if (tagTypeChange(value) === 'audio') {
+                    return (
+                      <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
+                        <audio
+                          style={{
+                            width: '60px',
+                            height: '60px',
+                            objectFit: 'cover',
+                          }}
+                          id='postAddMedia'
+                          src={value}
+                          controls
+                        />
+                      </div>
+                    );
+                  }
                   // <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
                   //   {timelineMediaType(postAddMediaListSrc[index])}
                   // </div>
-              })
+                })
               : postAddMediaListSrc.length > 0 && updatePostAddMediaListSrc.length < 1
               ? postAddMediaListSrc.map((value, index) => {
-                if (tagTypeChange(value) === 'image') {
-                  return (
-                    <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
-                      <img
-                        style={{
-                          boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
-                          width: '60px',
-                          height: '60px',
-                          objectFit: 'cover',
-                        }}
-                        id='postAddMedia'
-                        src={value}
-                      />
-                    </div>
-                  );
-                } else if (tagTypeChange(value) === 'video') {
-                  return (
-                    <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
-                      <video
-                        style={{
-                          boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
-                          height: '60px',
-                          objectFit: 'cover',
-                        }}
-                        id='postAddMedia'
-                        controls
-                        src={value}
-                      >
-                        지원되지 않는 형식입니다.
-                      </video>
-                    </div>
-                  );
-                } else if (tagTypeChange(value) === 'audio') {
-                  return (
-                    <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
-                      <audio
-                        style={{
-                          width: '60px',
-                          height: '60px',
-                          objectFit: 'cover',
-                        }}
-                        id='postAddMedia'
-                        src={value}
-                        controls
-                      />
-                    </div>
-                  );
-                }
+                  if (filterTagType(value) === 'image') {
+                    return (
+                      <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
+                        <img
+                          style={{
+                            boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
+                            width: '60px',
+                            height: '60px',
+                            objectFit: 'cover',
+                          }}
+                          id='postAddMedia'
+                          src={value}
+                        />
+                      </div>
+                    );
+                  } else if (filterTagType(value) === 'video') {
+                    return (
+                      <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
+                        <video
+                          style={{
+                            boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)',
+                            height: '60px',
+                            objectFit: 'cover',
+                          }}
+                          id='postAddMedia'
+                          controls
+                          src={value}
+                        >
+                          지원되지 않는 형식입니다.
+                        </video>
+                      </div>
+                    );
+                  } else if (filterTagType(value) === 'audio') {
+                    return (
+                      <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
+                        <audio
+                          style={{
+                            width: '60px',
+                            height: '60px',
+                            objectFit: 'cover',
+                          }}
+                          id='postAddMedia'
+                          src={value}
+                          controls
+                        />
+                      </div>
+                    );
+                  }
                   // <div style={{ marginLeft: '10px' }} key={`${index}-postAddMedia`}>
                   //   {timelineMediaType(postAddMediaListSrc[index])}
                   // </div>
-              })
+                })
               : null}
           </div>
         ) : null}

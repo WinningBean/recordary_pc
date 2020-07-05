@@ -37,21 +37,21 @@ const extensionVideo = ['mp4', 'webm', 'ogg'];
 const extensionAudio = ['m4a', 'mp3', 'ogg', 'wav'];
 
 const filterTagType = (value) => {
-    const len = value.length;
-    const lastDot = value.lastIndexOf('.');
-    const extension = value.substr(lastDot + 1, len).toLowerCase();
-    let filterType = null;
+  const len = value.length;
+  const lastDot = value.lastIndexOf('.');
+  const extension = value.substr(lastDot + 1, len).toLowerCase();
+  let filterType = null;
 
-    extensionImage.map((value) => {
-        if (extension === value) filterType = 'image';
-    });
-    extensionVideo.map((value) =>{
-        if (extension === value) filterType = 'video';
-    });
-    extensionAudio.map((value) => {
-        if (extension === value) filterType = 'audio';
-    });
-    return filterType;
+  extensionImage.map((value) => {
+    if (extension === value) filterType = 'image';
+  });
+  extensionVideo.map((value) => {
+    if (extension === value) filterType = 'video';
+  });
+  extensionAudio.map((value) => {
+    if (extension === value) filterType = 'audio';
+  });
+  return filterType;
 };
 
 const timelineMediaType = (value, index) => {
@@ -68,29 +68,28 @@ const timelineMediaType = (value, index) => {
           objectFit: 'cover',
         }}
       />
-    )
+    );
   } else if (filterTagType(value) === 'video') {
     return (
-      <video controls title={`postshareMedia-${index}`}
+      <video
+        controls
+        title={`postshareMedia-${index}`}
         src={value}
-        style={{boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)', height: '60px', objectFit: 'cover'}}>
+        style={{ boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.6)', height: '60px', objectFit: 'cover' }}
+      >
         지원되지 않는 형식입니다.
       </video>
-    )
+    );
   } else if (filterTagType(value) === 'audio') {
     return (
-        <audio controls src={value} style={{width: '60px'}}>
+      <audio controls src={value} style={{ width: '60px' }}>
         지원되지 않는 형식입니다.
-        </audio>
-    )
+      </audio>
+    );
   } else {
-    return (
-      <span style={{display: 'block', height: '100%', textAlign: 'center'}}>
-        지원되지 않는 형식입니다.
-      </span>
-    )
+    return <span style={{ display: 'block', height: '100%', textAlign: 'center' }}>지원되지 않는 형식입니다.</span>;
   }
-}
+};
 
 const PostShareTimeline = (props) => {
   const classes = useStyles();
@@ -300,7 +299,11 @@ const PostShareTimeline = (props) => {
                     ))
                   : null}
               </div>
+              <div style={{ paddingTop: '8px', color: '#999' }}>
+                {postOriginData.postEx === null ? null : <span>{postOriginData.postEx}</span>}
+              </div>
             </div>
+
             {postOriginData.scheduleFK === null ? null : (
               <div style={{ flex: 2 }}>
                 <div

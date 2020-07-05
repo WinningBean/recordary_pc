@@ -370,8 +370,8 @@ const Chatting = ({ isOpen, user }) => {
                           >
                             {isSameDay(new Date(), createTime)
                               ? format(createTime, 'a') === 'AM'
-                                ? '오전' + format(createTime, 'h:mm')
-                                : '오후' + format(createTime, 'h:mm')
+                                ? '오전 ' + format(createTime, 'h:mm')
+                                : '오후 ' + format(createTime, 'h:mm')
                               : `${format(createTime, 'M' + ' / ' + 'd')} ${
                                   format(createTime, 'a') === 'AM' ? '(오전' : '(오후'
                                 } ${format(createTime, 'h:mm)')}`}
@@ -438,8 +438,8 @@ const Chatting = ({ isOpen, user }) => {
                               <br />
                               {isSameDay(new Date(), createTime)
                                 ? format(createTime, 'a') === 'AM'
-                                  ? '오전' + format(createTime, 'h:mm')
-                                  : '오후' + format(createTime, 'h:mm')
+                                  ? '오전 ' + format(createTime, 'h:mm')
+                                  : '오후 ' + format(createTime, 'h:mm')
                                 : `${format(createTime, 'M' + ' / ' + 'd')} ${
                                     format(createTime, 'a') === 'AM' ? '(오전' : '(오후'
                                   } ${format(createTime, 'h:mm)')}`}
@@ -455,8 +455,8 @@ const Chatting = ({ isOpen, user }) => {
                             >
                               {isSameDay(new Date(), createTime)
                                 ? format(createTime, 'a') === 'AM'
-                                  ? '오전' + format(createTime, 'h:mm')
-                                  : '오후' + format(createTime, 'h:mm')
+                                  ? '오전 ' + format(createTime, 'h:mm')
+                                  : '오후 ' + format(createTime, 'h:mm')
                                 : `${format(createTime, 'M' + ' / ' + 'd')} ${
                                     format(createTime, 'a') === 'AM' ? '(오전' : '(오후'
                                   } ${format(createTime, 'h:mm)')}`}

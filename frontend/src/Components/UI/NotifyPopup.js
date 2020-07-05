@@ -130,8 +130,8 @@ const NotifyPopup = ({ data, onAccept, onDenial, type }) => {
                         <div className='notify-list-time' style={{ fontSize: '14px' }}>
                           {isSameDay(new Date(), Date.parse(value.createTime))
                             ? format(Date.parse(value.createTime), 'a') === 'AM'
-                              ? '오전' + format(Date.parse(value.createTime), 'h:mm')
-                              : '오후' + format(Date.parse(value.createTime), 'h:mm')
+                              ? '오전 ' + format(Date.parse(value.createTime), 'h:mm')
+                              : '오후 ' + format(Date.parse(value.createTime), 'h:mm')
                             : `${format(Date.parse(value.createTime), 'YYY' + ' / ' + 'MM' + ' / ' + 'dd')} ${
                                 format(Date.parse(value.createTime), 'a') === 'AM' ? '(오전' : '(오후'
                               } ${format(Date.parse(value.createTime), 'h:mm)')}`}
@@ -168,8 +168,8 @@ const NotifyPopup = ({ data, onAccept, onDenial, type }) => {
                         <div className='notify-list-time' style={{ fontSize: '14px' }}>
                           {isSameDay(new Date(), Date.parse(value.createTime))
                             ? format(Date.parse(value.createTime), 'a') === 'AM'
-                              ? '오전' + format(Date.parse(value.createTime), 'h:mm')
-                              : '오후' + format(Date.parse(value.createTime), 'h:mm')
+                              ? '오전 ' + format(Date.parse(value.createTime), 'h:mm')
+                              : '오후 ' + format(Date.parse(value.createTime), 'h:mm')
                             : `${format(Date.parse(value.createTime), 'YYY' + ' / ' + 'MM' + ' / ' + 'dd')} ${
                                 format(Date.parse(value.createTime), 'a') === 'AM' ? '(오전' : '(오후'
                               } ${format(Date.parse(value.createTime), 'h:mm)')}`}
