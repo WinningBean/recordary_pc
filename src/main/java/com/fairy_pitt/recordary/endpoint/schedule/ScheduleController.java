@@ -2,6 +2,7 @@ package com.fairy_pitt.recordary.endpoint.schedule;
 
 import com.fairy_pitt.recordary.endpoint.follower.service.FollowerService;
 import com.fairy_pitt.recordary.endpoint.media.service.MediaService;
+import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
 import com.fairy_pitt.recordary.endpoint.post.service.PostService;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.*;
 import com.fairy_pitt.recordary.endpoint.schedule.service.ScheduleMemberService;
@@ -87,5 +88,11 @@ public class ScheduleController {
     public List<ScheduleTodayResponseDto> todaySchedule(@RequestParam Long userCd){
         userService.checkSessionLogout();
         return scheduleService.getTodayUserSchedule(userCd);
+    }
+
+    @GetMapping("findPost/{scheduleCd}")
+    public PostResponseDto findPost(@PathVariable Long scheduleCd)
+    {
+        return scheduleService.findPost(scheduleCd);
     }
 }

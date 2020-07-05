@@ -1,10 +1,12 @@
 package com.fairy_pitt.recordary.endpoint.schedule.service;
 
 import com.fairy_pitt.recordary.common.domain.*;
+import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.common.repository.ScheduleRepository;
 import com.fairy_pitt.recordary.common.repository.ScheduleTabRepository;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupService;
+import com.fairy_pitt.recordary.endpoint.post.dto.PostResponseDto;
 import com.fairy_pitt.recordary.endpoint.schedule.dto.*;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ public class ScheduleService implements Comparator< ScheduleResponseDto > {
     private final ScheduleTabRepository scheduleTabRepository;
     private final GroupService groupService;
     private final UserService userService;
+    private final PostRepository postRepository;
 
     @Transactional
     public Long save(ScheduleSaveRequestDto requestDto)
@@ -227,6 +230,12 @@ public class ScheduleService implements Comparator< ScheduleResponseDto > {
         }
 
         return todayScheduleList;
+    }
+
+    @Transactional(readOnly = true)
+    public PostResponseDto findPost(Long scheduleCd)
+    {
+        return new PostResponseDto(postRepository.findByScheduleFK(this.findEntity(scheduleCd)));
     }
 
     @Transactional(readOnly = true)
