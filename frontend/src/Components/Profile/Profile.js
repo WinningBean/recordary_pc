@@ -146,9 +146,13 @@ class Profile extends React.Component {
     //     toDate: dateFns.endOfMonth(new Date()).getTime(),
     //   })
     // );
+    console.log('isLogin', this.props.isLogin);
     this.setState({
       ...this.state,
-      info: data,
+      info: {
+        ...data,
+        userInfo: { ...data.userInfo, currentUserCd: this.props.isLogin ? this.props.user.userCd : undefined },
+      },
       isLoading: false,
       type: type,
     });
@@ -170,16 +174,18 @@ class Profile extends React.Component {
       var groupApply = null;
       var type = 5;
 
-      console.log(this.props.user);
-      if (this.props.isLogin && groupInfo.admin.userCd === this.props.user.userCd) {
-        type = 2;
-        groupApply = (await axios.get(`/groupApply/findUserApply/${this.props.match.params.groupCd}`)).data;
-        console.log(groupApply, 'groupApply');
-      }
-      for (let i = 0; i < groupInfo.memberList.length; i++) {
-        if (groupInfo.memberList[i].userCd === this.props.user.userCd) {
-          type = 3;
-          break;
+      console.log(this.props.user, this.props.isLogin);
+      if (this.props.isLogin) {
+        if (groupInfo.admin.userCd === this.props.user.userCd) {
+          type = 2;
+          groupApply = (await axios.get(`/groupApply/findUserApply/${this.props.match.params.groupCd}`)).data;
+          console.log(groupApply, 'groupApply');
+        }
+        for (let i = 0; i < groupInfo.memberList.length; i++) {
+          if (groupInfo.memberList[i].userCd === this.props.user.userCd) {
+            type = 3;
+            break;
+          }
         }
       }
       console.log('type = ', type);
@@ -187,7 +193,7 @@ class Profile extends React.Component {
         ...this.state,
         info: {
           ...groupInfo,
-          currentUserCd: this.props.user.userCd,
+          currentUserCd: this.props.isLogin ? this.props.user.userCd : undefined,
           member: groupInfo.memberList,
           groupApply: groupApply,
         },
