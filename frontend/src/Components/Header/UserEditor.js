@@ -284,14 +284,14 @@ class UserEditor extends React.Component {
                   }
 
                   const { data } = await axios.put(`user/${this.props.data.userCd}`, {
-                    userPw: this.state.user_change_pw,
+                    userPw: this.state.user_change_pw === '' ? null : this.state.user_change_pw,
                     userNm: this.state.user_nm,
                     userEx: this.state.user_ex,
                   });
 
                   console.log(data);
 
-                  if (data === this.state.user_id) {
+                  if (data === this.props.data.userCd) {
                     this.setState({
                       alertDialog: () => {
                         return (
@@ -299,9 +299,10 @@ class UserEditor extends React.Component {
                             severity='success'
                             content='회원정보가 수정되었습니다.'
                             onAlertClose={() => {
-                              this.setState({
-                                alertDialog: () => {},
-                              });
+                              window.location.reload(); // 임시로 리로드
+                              // this.setState({
+                              //   alertDialog: () => {},
+                              // });
                             }}
                           />
                         );

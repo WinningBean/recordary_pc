@@ -104,6 +104,7 @@ const EditPostMediaSchedule = (props) => {
     scheduleEnd: data.scheduleFK === null ? addHours(new Date(), 1) : data.scheduleFK.scheduleEnd,
     schedulePublicState: data.scheduleFK === null ? 0 : data.scheduleFK.schedulePublicState,
     scheduleMemberList: data.scheduleFK === null ? [] : data.scheduleFK.scheduleMemberList,
+    isExistSchedule: data.scheduleFK === null ? false : true,
   });
   const [subtractedSchedule, setSubtractedSchedule] = useState([]);
   const [addedSchedule, setAddedSchedule] = useState([]);
@@ -290,10 +291,10 @@ const EditPostMediaSchedule = (props) => {
         return;
       }
       var getScheduleCd = null;
-      if (scheduleInfo.scheduleNm !== '') {
+      if (scheduleInfo.isExistSchedule) {
         getScheduleCd = (
           await axios.post(`/schedule/update/${post.scheduleCd}`, {
-            tabCd: clickTabState === undefined ? null : clickTabState,
+            tabCd: clickTabState,
             userCd: user.userCd,
             scheduleNm: scheduleInfo.scheduleNm,
             scheduleEx: scheduleInfo.scheduleEx,
