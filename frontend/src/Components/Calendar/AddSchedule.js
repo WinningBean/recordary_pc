@@ -217,7 +217,7 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, type, tabInfo }
                   scheduleCd: scCd,
                   mediaCd: null,
                   postEx: info.scheduleEx,
-                  postPublicState: 0,
+                  postPublicState: info.schedulePublicState,
                   postScheduleShareState: false,
                 })
               ).data;

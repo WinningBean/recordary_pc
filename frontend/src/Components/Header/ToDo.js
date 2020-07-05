@@ -128,6 +128,9 @@ const ToDo = ({ open, userCd }) => {
     case '6':
       koreanWeek = '토요일';
       break;
+    case '7':
+      koreanWeek = '일요일';
+      break;
     default:
       koreanWeek = '에러';
   }

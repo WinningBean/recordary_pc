@@ -54,7 +54,7 @@ const CalendarScheduleEdit = ({
   const [clickTabState, setClickTabState] = useState(info.tab === null ? undefined : info.tab);
   const [tabPopover, setTabPopover] = useState(null);
 
-  console.log(schedule);
+  console.log(schedule, clickTabState);
 
   var clickTabInfo = undefined;
 
@@ -296,10 +296,22 @@ const CalendarScheduleEdit = ({
                 const end = switchInfo ? dateFns.startOfSecond(dateFns.endOfDay(schedule.end)) : schedule.end;
                 console.log(groupCd, userCd, schedule.tab);
 
+                console.log({
+                  groupCd: groupCd === undefined ? null : groupCd,
+                  tabCd: clickTabState,
+                  scheduleNm: schedule.nm,
+                  scheduleEx: schedule.ex,
+                  scheduleStr: str.getTime(),
+                  scheduleEnd: end.getTime(),
+                  scheduleCol: schedule.color,
+                  schedulePublicState: schedule.state,
+                  createMember: addedSchedule,
+                  deleteMember: subtractedSchedule,
+                });
                 try {
                   await axios.post(`/schedule/update/${schedule.cd}`, {
                     groupCd: groupCd === undefined ? null : groupCd,
-                    TabCodeFK: clickTabState === undefined ? null : clickTabState,
+                    tabCd: clickTabState,
                     scheduleNm: schedule.nm,
                     scheduleEx: schedule.ex,
                     scheduleStr: str.getTime(),
@@ -309,7 +321,7 @@ const CalendarScheduleEdit = ({
                     createMember: addedSchedule,
                     deleteMember: subtractedSchedule,
                   });
-                  onModify(schedule);
+                  onModify({ ...schedule, tab: clickTabState });
                 } catch (error) {
                   console.error(error);
                 }
