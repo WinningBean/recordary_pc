@@ -16,6 +16,8 @@ import AlertDialog from '../Other/AlertDialog';
 import './Calendar.css';
 import produce from 'immer';
 
+import { Link } from 'react-router-dom';
+
 import axios from 'axios';
 
 // 600x475, 85x74
@@ -127,6 +129,7 @@ const Calendar = (props) => {
           color: value.scheduleCol,
           state: value.schedulePublicState,
           members: value.scheduleMemberList,
+          user: value.user,
         }));
 
         const copyDraft = produce(abcd, (draft) => {
@@ -1134,6 +1137,20 @@ const Calendar = (props) => {
             >
               <strong>{selectedDetailedSC !== null ? selectedDetailedSC.nm : null}</strong>
             </div>
+            {selectedDetailedSC !== null && props.info.currentUserCd !== selectedDetailedSC.user.userCd ? (
+              <Link to={`/${selectedDetailedSC.user.userId}`}>
+                <div style={{ display: 'flex', fontSize: '13px', alignItems: 'center' }}>
+                  <div style={{ paddingRight: '5px' }}>from.</div>
+
+                  <div className='group-post-user' style={{ marginLeft: '1px' }}>
+                    <img alt={`${selectedDetailedSC.user.userId}`} src={selectedDetailedSC.user.userPic} />
+                  </div>
+                  <div style={{ fontWeight: 'bold', marginLeft: '5px' }}>
+                    {selectedDetailedSC.user.userId}({selectedDetailedSC.user.userNm})
+                  </div>
+                </div>
+              </Link>
+            ) : null}
             <div style={{ marginTop: '5px', fontSize: '12px', color: 'gray' }}>
               {selectedDetailedSC !== null
                 ? dateFns.format(selectedDetailedSC.start, 'yyyy.MM.dd hh:mm') +
@@ -1176,14 +1193,16 @@ const Calendar = (props) => {
                           }}
                           src={value.userPic}
                         />
-                        <div>{value.userNm}</div>
+                        <div>{detailedSC === null ? null : value.userNm}</div>
                       </div>
                     ))
                   : null}
               </div>
             </div>
           </div>
-          {type === 0 || type === 2 || type === 3 ? (
+          {selectedDetailedSC !== null &&
+          (type === 0 || type === 2 || type === 3) &&
+          props.info.currentUserCd === selectedDetailedSC.user.userCd ? (
             <div className='calendar-detailedsc-buttons'>
               <div className='calendar-detailedsc-buttons-button' onClick={() => setScheduleEditOpen(true)}>
                 <CreateIcon fontSize='small' />
