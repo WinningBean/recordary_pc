@@ -191,7 +191,15 @@ const Chatting = ({ isOpen, user }) => {
               paddingLeft: '10px',
             }}
           >
-            <div style={{ paddingTop: '12px', fontWeight: 'bold' }}>{value.targetNm}</div>
+            {value.targetId == null ? (
+              <div style={{ paddingTop: '12px', fontWeight: 'bold' }}>
+                {value.targetNm}
+              </div>
+            ) : (
+              <div style={{ paddingTop: '12px', fontWeight: 'bold' }}>
+                {value.targetId}({value.targetNm})
+              </div>
+            )}
             <div
               style={{
                 paddingTop: '6px',
@@ -304,9 +312,15 @@ const Chatting = ({ isOpen, user }) => {
                     boxShadow: '0px 1px 3px rgba(161, 159, 159, 0.8)',
                   }}
                 />
-                <span style={{ color: 'white', fontWeight: 'bold', fontSize: '16px', paddingLeft: '6px' }}>
-                  {info[selectedRoomIndex].targetNm}
-                </span>
+                {info[selectedRoomIndex].targetId == null ? (
+                  <span style={{ color: 'white', fontWeight: 'bold', fontSize: '16px', paddingLeft: '6px' }}>
+                    {info[selectedRoomIndex].targetNm}
+                  </span>
+                ) : (
+                  <span style={{ color: 'white', fontWeight: 'bold', fontSize: '16px', paddingLeft: '6px' }}>
+                    {info[selectedRoomIndex].targetId}({info[selectedRoomIndex].targetNm})
+                  </span>
+                )}
               </div>
               <div
                 className='flex-center'
