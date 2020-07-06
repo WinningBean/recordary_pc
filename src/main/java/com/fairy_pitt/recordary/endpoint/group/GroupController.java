@@ -1,6 +1,6 @@
 package com.fairy_pitt.recordary.endpoint.group;
 
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupMemberRequestDto;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupMemberDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupPageResponseDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupResponseDto;
@@ -52,9 +52,10 @@ public class GroupController {
     }
 
     @PostMapping("changeMaster")
-    public Long updateMaster(@RequestBody GroupMemberRequestDto requestDto) {
+    public Long updateMaster(@RequestBody GroupMemberDto requestDto) {
         userService.checkSessionLogout();
-        return groupService.changeGroupMaster(requestDto.getUserCd(), requestDto.getGroupCd());
+        groupMemberService.delete(requestDto);
+        return  groupService.changeGroupMaster(requestDto.getUserCd(), requestDto.getGroupCd());
     }
 
     @DeleteMapping("{groupCd}")

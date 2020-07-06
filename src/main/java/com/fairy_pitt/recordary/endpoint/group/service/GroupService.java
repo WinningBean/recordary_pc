@@ -76,6 +76,10 @@ public class GroupService {
         UserEntity user = userService.findEntity(userCd);
         groupEntity.updateGroupMaster(user);
 
+        GroupMemberDto groupMemberDto = new GroupMemberDto();
+        GroupMemberEntity groupMemberEntity = groupMemberDto.toEntity(groupEntity,user);
+        groupMemberRepository.save(groupMemberEntity);
+
         return groupCd;
     }
 
@@ -147,6 +151,12 @@ public class GroupService {
     @Transactional(readOnly = true)
     public GroupEntity findEntity(Long groupCd){
         return groupRepository.findByGroupCd(groupCd);
+    }
+
+    @Transactional(readOnly = true)
+    public Boolean checkUserIsMaster(Long groupCd, Long userCd){
+        UserEntity user = userService.findEntity(userCd);
+        return  groupRepository.existsBygMstUserFKAndGroupCd(user, groupCd);
     }
 
 }
