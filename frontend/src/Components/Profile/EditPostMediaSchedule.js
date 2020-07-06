@@ -325,6 +325,10 @@ const EditPostMediaSchedule = (props) => {
           })
         ).data;
         console.log(getMediaCd);
+      } else {
+        console.log(post.mediaCd);
+        getMediaCd = post.mediaCd;
+        console.log(getMediaCd);
       }
 
       const postData = (
