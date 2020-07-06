@@ -73,7 +73,7 @@ public class GroupService {
         GroupEntity groupEntity = groupRepository.findById(groupCd)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + groupCd));
 
-        UserEntity user = userService.findEntity(userCd);
+        UserEntity user = groupEntity.getGMstUserFK();
         groupEntity.updateGroupMaster(user);
 
         GroupMemberDto groupMemberDto = new GroupMemberDto();
