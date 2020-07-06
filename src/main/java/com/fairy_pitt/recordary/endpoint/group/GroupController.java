@@ -51,10 +51,10 @@ public class GroupController {
     }
 
     @PostMapping("changeMaster")
-    public Long updateMaster(@RequestBody Long groupCd,
-                             @RequestBody Long userCd) {
+    public Long updateMaster(@RequestBody String groupCd,
+                             @RequestBody String userCd) {
         userService.checkSessionLogout();
-        return groupService.changGroupMaster(userCd, groupCd);
+        return groupService.changeGroupMaster(userCd, groupCd);
     }
 
     @DeleteMapping("{groupCd}")
