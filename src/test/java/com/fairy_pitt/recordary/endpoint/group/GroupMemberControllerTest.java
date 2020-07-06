@@ -8,7 +8,7 @@ import com.fairy_pitt.recordary.common.repository.GroupApplyRepository;
 import com.fairy_pitt.recordary.common.repository.GroupMemberRepository;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupMemberRequestDto;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupMemberDto;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -87,7 +87,7 @@ public class GroupMemberControllerTest {
             Long group = groupEntity.getGroupCd();
             Long user = saveUser.getUserCd();
 
-            GroupMemberRequestDto requestDto = GroupMemberRequestDto.builder()
+            GroupMemberDto requestDto = GroupMemberDto.builder()
                     .userCd(user)
                     .groupCd(group)
                     .build();

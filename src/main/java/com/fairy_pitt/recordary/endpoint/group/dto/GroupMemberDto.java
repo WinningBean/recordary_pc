@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class GroupMemberRequestDto {
+public class GroupMemberDto {
 
     private Long groupCd;
     private Long userCd;
 
     @Builder
-    public GroupMemberRequestDto(Long groupCd, Long userCd){
+    public GroupMemberDto(Long groupCd, Long userCd){
 
         this.groupCd = groupCd;
         this.userCd = userCd;

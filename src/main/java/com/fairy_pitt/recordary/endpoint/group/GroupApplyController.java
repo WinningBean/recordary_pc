@@ -2,10 +2,9 @@ package com.fairy_pitt.recordary.endpoint.group;
 
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupApplyRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupApplyResponseDto;
-import com.fairy_pitt.recordary.endpoint.group.dto.GroupMemberRequestDto;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupMemberDto;
 import com.fairy_pitt.recordary.endpoint.group.service.GroupApplyService;
 import com.fairy_pitt.recordary.endpoint.user.service.UserService;
-import com.fairy_pitt.recordary.endpoint.notice.dto.NoticePageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +26,7 @@ public class GroupApplyController {
     }
 
     @PostMapping("delete")
-    public Boolean applyDelete(@RequestBody GroupMemberRequestDto id){
+    public Boolean applyDelete(@RequestBody GroupMemberDto id){
         userService.checkSessionLogout();
         groupApplyService.delete(id);
         return true;
