@@ -160,6 +160,7 @@ public class PostService {
         List<PostEntity> postEntityList = new ArrayList<>(postRepository.findAllByGroupFKOrderByCreatedDateDesc(groupService.findEntity(groupCd)));
 
         int publicState = 0;
+        if (groupService.checkUserIsMaster(groupCd, userService.currentUserCd())) publicState = 3;
         if (groupMemberService.findEntity(groupCd, userService.currentUserCd()) != null) publicState = 3;
 
         return checkCurrentUserForPost(postEntityList, publicState);

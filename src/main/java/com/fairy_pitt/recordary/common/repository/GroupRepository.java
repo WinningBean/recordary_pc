@@ -13,4 +13,5 @@ public interface GroupRepository extends JpaRepository<GroupEntity, Long> {
      List<GroupEntity> findByGroupNmLike(String groupNm);//findByContentLike
      List<GroupEntity> findAllByGroupState(boolean state);
      List<GroupEntity> findBygMstUserFK(UserEntity user);
+     Boolean existsBygMstUserFKAndGroupCd(UserEntity user, Long groupCd);
 }
