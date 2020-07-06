@@ -82,7 +82,7 @@ public class NoticeService {
         }
         else if (noticeType == NoticeType.POST_LIKE_NEW){
             ownerCd = postRepository.findByPostCd(noticeDto.getTargetCd()).getUserFK().getUserCd();
-            if (ownerCd == noticeDto.getActiveCd()) return null;
+            if (ownerCd == noticeDto.getActiveCd()) return "";
             return getNoticeDestination(ownerCd);
         }
         else if (noticeType == NoticeType.SCHEDULE_MEMBER_INVITE){
@@ -98,16 +98,16 @@ public class NoticeService {
         }
         else if (noticeType == NoticeType.COMMENT_NEW){
             ownerCd = postRepository.findByPostCd(noticeDto.getTargetCd()).getUserFK().getUserCd();
-            if (ownerCd == commentRepository.findByCommentCd(noticeDto.getActiveCd()).getCommentUserFK().getUserCd()) return null;
+            if (ownerCd == commentRepository.findByCommentCd(noticeDto.getActiveCd()).getCommentUserFK().getUserCd()) return "";
             return getNoticeDestination(ownerCd);
         }
         else if (noticeType == NoticeType.COMMENT_SUB_NEW){
             ownerCd = commentRepository.findByCommentCd(noticeDto.getTargetCd()).getCommentUserFK().getUserCd();
-            if (ownerCd == commentRepository.findByCommentCd(noticeDto.getActiveCd()).getCommentUserFK().getUserCd()) return null;
+            if (ownerCd == commentRepository.findByCommentCd(noticeDto.getActiveCd()).getCommentUserFK().getUserCd()) return "";
             return getNoticeDestination(ownerCd);
         }
 
-        return null;
+        return "";
     }
 
     private String getNoticeDestination(Long userCd) {
