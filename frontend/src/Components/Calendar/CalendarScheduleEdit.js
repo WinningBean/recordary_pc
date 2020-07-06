@@ -321,7 +321,12 @@ const CalendarScheduleEdit = ({
                     createMember: addedSchedule,
                     deleteMember: subtractedSchedule,
                   });
-                  onModify({ ...schedule, tab: clickTabState });
+                  onModify({
+                    ...schedule,
+                    tab: clickTabState === undefined ? null : clickTabState,
+                    start: str,
+                    end: end,
+                  });
                 } catch (error) {
                   console.error(error);
                 }

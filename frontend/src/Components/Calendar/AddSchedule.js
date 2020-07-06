@@ -236,7 +236,8 @@ export default ({ data, clickTab, clickDate, onClose, onSuccess, type, tabInfo }
               console.log(postData);
               console.log(scCd);
               onSuccess({
-                tab: clickTab === undefined ? null : clickTab,
+                user: { userCd: data.currentUserCd, userNm: data.userNm, userPic: data.userPic },
+                tab: clickTabState,
                 cd: scCd,
                 nm: info.scheduleNm,
                 ex: info.scheduleEx,
