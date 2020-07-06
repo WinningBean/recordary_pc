@@ -7,6 +7,7 @@ import com.fairy_pitt.recordary.common.repository.GroupMemberRepository;
 import com.fairy_pitt.recordary.common.repository.GroupRepository;
 import com.fairy_pitt.recordary.common.repository.PostRepository;
 import com.fairy_pitt.recordary.common.repository.UserRepository;
+import com.fairy_pitt.recordary.endpoint.group.dto.GroupMemberRequestDto;
 import com.fairy_pitt.recordary.endpoint.group.dto.GroupRequestDto;
 
 import org.junit.After;
@@ -140,7 +141,7 @@ public class GroupControllerTest {
         assertThat(all.get(0).getGroupNm()).isEqualTo(groupName);
     }
 
-/*    @Test
+    @Test
     public void Group_방장위임() throws  Exception{
         //given
         UserEntity saveUser = userRepository.save(UserEntity.builder()
@@ -162,19 +163,21 @@ public class GroupControllerTest {
                 .groupEx(groupEx)
                 .build());
 
-        Long groupCd = groupEntity.getGroupCd();
-
-
         UserEntity changeUser = userRepository.save(UserEntity.builder()
                 .userId("test222222222")
                 .userPw("test2222")
                 .userNm("테스트 유저222222")
                 .build());
 
-        String url = "http://localhost:" + port + "group/changeMaster/" + groupCd;
+        Long groupCd = groupEntity.getGroupCd();
         Long userCd  = changeUser.getUserCd();
+
+        GroupMemberRequestDto requestDto = new GroupMemberRequestDto(groupCd,userCd);
+
+        String url = "http://localhost:" + port + "group/changeMaster" ;
+
         //when
-        ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url,userCd,Long.class);
+        ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url,requestDto,Long.class);
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -183,7 +186,7 @@ public class GroupControllerTest {
         List<GroupEntity> all = groupRepository.findAll();
         assertThat(all.get(0).getGMstUserFK().getUserCd()).isEqualTo(changeUser.getUserCd());
         assertThat(all.get(0).getGroupNm()).isEqualTo(groupName);
-        }*/
+        }
 
 
     @Test

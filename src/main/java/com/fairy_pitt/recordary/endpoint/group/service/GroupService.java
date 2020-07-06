@@ -68,16 +68,15 @@ public class GroupService {
     }
 
     @Transactional
-    public Long changeGroupMaster(String userCd, String groupCd) {
-        Long userCode = Long.parseLong(userCd);
-        Long groupCode = Long.parseLong(groupCd);
-        GroupEntity groupEntity = groupRepository.findById(groupCode)
+    public Long changeGroupMaster(Long userCd, Long groupCd) {
+
+        GroupEntity groupEntity = groupRepository.findById(groupCd)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + groupCd));
 
-        UserEntity user = userService.findEntity(userCode);
+        UserEntity user = userService.findEntity(userCd);
         groupEntity.updateGroupMaster(user);
 
-        return groupCode;
+        return groupCd;
     }
 
     @Transactional
