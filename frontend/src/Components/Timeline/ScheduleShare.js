@@ -156,7 +156,22 @@ const ScheduleShare = (props) => {
                 </div>
               )}
             </div>
-            <PublicRange selectedIndex={post.postPublicState} />
+            {post.groupCd !== null ? (
+              <PublicRange
+                options={['전체공개', '비공개']}
+                onSetSelectedIndex={(index) => {
+                  setPost({ ...post, postPublicState: index === 0 ? 0 : 3 });
+                }}
+                selectedIndex={post.postPublicState === 0 ? 0 : 1}
+              />
+            ) : (
+              <PublicRange
+                onSetSelectedIndex={(index) => {
+                  setPost({ ...post, postPublicState: index });
+                }}
+                selectedIndex={post.postPublicState}
+              />
+            )}
           </div>
         </div>
         <div className='Post-Append-text post-Append'>
