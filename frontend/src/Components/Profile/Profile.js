@@ -946,7 +946,7 @@ class Profile extends React.Component {
                   }}
                   onClick={() => this.setState({ showProfileList: !this.state.showProfileList })}
                 >
-                  <span>일정</span>
+                  <span>게시물</span>
                 </NavButton>
               </div>
               <div>

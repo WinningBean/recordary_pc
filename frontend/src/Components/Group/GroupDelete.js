@@ -59,7 +59,7 @@ ${error}`}
       <DialogContent className={classes.content}>
         <TextField className={classes.marginBottom} label='그룹명' defaultValue={info.groupNm} disabled />
         <TextField className={classes.marginBottom} label='그룹 상태메세지' defaultValue={info.groupEx} disabled />
-        <TextField label='그룹장' defaultValue={info.userNm} disabled />
+        <TextField label='그룹장' defaultValue={info.admin.userNm} disabled />
       </DialogContent>
       <DialogActions>
         <FormControlLabel
