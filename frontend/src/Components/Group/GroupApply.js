@@ -147,12 +147,12 @@ const GroupApply = (props) => {
                       setDialog(
                         <AlertDialog
                           severity='success'
-                          content='정말로 삭제하시겠습니까'
+                          content='정말로 강퇴하시겠습니까'
                           onAlertClose={() => setDialog(null)}
                           onAlertSubmit={async () => {
                             try {
                               const { data } = await axios.post('/groupMember/delete', {
-                                userCd: value.admin.userCd,
+                                userCd: value.userCd, 
                                 groupCd: info.groupCd,
                               });
                               console.log(data);

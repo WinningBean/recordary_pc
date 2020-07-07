@@ -146,7 +146,7 @@ const GroupInfo = ({ data, onClose }) => {
               <TextField
                 label='그룹장'
                 name='group_ex'
-                defaultValue={info.userNm}
+                defaultValue={info.admin.userNm}
                 InputProps={{
                   readOnly: true,
                 }}

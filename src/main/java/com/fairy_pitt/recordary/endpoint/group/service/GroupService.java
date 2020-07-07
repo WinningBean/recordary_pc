@@ -68,12 +68,17 @@ public class GroupService {
     }
 
     @Transactional
-    public Long changGroupMaster(Long userCd, Long groupCd) {
+    public Long changeGroupMaster(Long userCd, Long groupCd) {
+
         GroupEntity groupEntity = groupRepository.findById(groupCd)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + groupCd));
 
-        UserEntity User = userService.findEntity(userCd);
-        groupEntity.updateGroupMaster(User);
+        UserEntity user = groupEntity.getGMstUserFK();
+        groupEntity.updateGroupMaster(userService.findEntity(userCd));
+
+        GroupMemberDto groupMemberDto = new GroupMemberDto();
+        GroupMemberEntity groupMemberEntity = groupMemberDto.toEntity(groupEntity,user);
+        groupMemberRepository.save(groupMemberEntity);
 
         return groupCd;
     }
@@ -146,6 +151,12 @@ public class GroupService {
     @Transactional(readOnly = true)
     public GroupEntity findEntity(Long groupCd){
         return groupRepository.findByGroupCd(groupCd);
+    }
+
+    @Transactional(readOnly = true)
+    public Boolean checkUserIsMaster(Long groupCd, Long userCd){
+        UserEntity user = userService.findEntity(userCd);
+        return  groupRepository.existsBygMstUserFKAndGroupCd(user, groupCd);
     }
 
 }
