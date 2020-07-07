@@ -452,14 +452,14 @@ const TimelineMultiDay = ({ ex, sharedSchedule, sharedStartDay, sharedEndDay }) 
                 }}
               >
                 <div style={{ paddingLeft: '8px' }}>
-                  <h2>Title</h2>
+                  <h2>{sharedSchedule[clickSc].scheduleNm}</h2>
                 </div>
                 <div style={{ paddingRight: '8px', display: 'flex' }}>
                   <CloseIcon onClick={() => setClickSc(undefined)} />
                 </div>
               </div>
               <div style={{ flex: 3, height: '150px', display: 'flex', paddingTop: '8px' }}>
-                {sharedSchedule[clickSc].scheduleNm}
+                {sharedSchedule[clickSc].scheduleEx}
               </div>
               <div style={{ flex: 2 }}>
                 <div

@@ -43,7 +43,8 @@ const MainPage = (props) => {
     (async () => {
       try {
         const timeLineDataList = (await axios.get(`post/pagingTimeLine/${data.userCd}`)).data;
-        if (timeLineDataList.length < 0) {
+        if (timeLineDataList.length <= 0) {
+          setIsLastPage(true);
           return;
         } else {
           console.log(timeLineDataList);
@@ -154,7 +155,9 @@ const MainPage = (props) => {
               setTimeline(copyTimeLine);
             }}
           />
-          {isLastPage ? null : (
+          {isLastPage ? (
+            <div>마지막 페이지입니다.</div>
+          ) : (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <CircularProgress />
             </div>
