@@ -711,7 +711,7 @@ const Calendar = (props) => {
 
     var copyDayLocation = dayLocation.map((value) => ({ ...value }));
     copyDraft.forEach((value) => {
-      if (publicState !== 0 && value.state > publicState) {
+      if (publicState !== 0 && value.state !== publicState) {
         return;
       }
       console.log(props.tabInfo, props.clickTabIndex);

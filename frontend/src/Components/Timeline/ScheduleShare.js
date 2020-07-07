@@ -6,6 +6,8 @@ import Backdrop from '../UI/Backdrop';
 import AlertDialog from '../Other/AlertDialog';
 import Snackbar from '../UI/Snackbar';
 import Calendar from '../Calendar/Calendar';
+import './Timeline.css';
+import PublicIcon from '@material-ui/icons/Public';
 
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -156,7 +158,7 @@ const ScheduleShare = (props) => {
                 </div>
               )}
             </div>
-            {post.groupCd !== null ? (
+            {/* {post.groupCd !== null ? (
               <PublicRange
                 options={['전체공개', '비공개']}
                 onSetSelectedIndex={(index) => {
@@ -171,6 +173,33 @@ const ScheduleShare = (props) => {
                 }}
                 selectedIndex={post.postPublicState}
               />
+            )} */}
+            {/* <div className='share-schedule-style'>
+              <PublicIcon style={{ fontSize: '30px' }} />
+              <span style={{ fontSize: '15px', marginLeft: '5px' }}>
+                {post.postPublicState === 0 ? `전체공개` : '비공개'}
+              </span>
+            </div> */}
+            {post.groupCd !== null ? (
+              <div className='share-schedule-style'>
+                <PublicIcon style={{ fontSize: '30px' }} />
+                <span style={{ fontSize: '15px', marginLeft: '5px' }}>
+                  {post.postPublicState === 0 ? `전체공개` : post.postPublicState === 3 ? '비공개' : null}
+                </span>
+              </div>
+            ) : (
+              <div className='share-schedule-style'>
+                <PublicIcon style={{ fontSize: '30px' }} />
+                <span style={{ fontSize: '15px', marginLeft: '5px' }}>
+                  {post.postPublicState === 0
+                    ? `전체공개`
+                    : post.postPublicState === 1
+                    ? '팔로워만'
+                    : post.postPublicState === 2
+                    ? '친구만'
+                    : '나만보기'}
+                </span>
+              </div>
             )}
           </div>
         </div>

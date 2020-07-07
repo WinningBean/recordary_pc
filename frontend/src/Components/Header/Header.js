@@ -47,14 +47,14 @@ class Header extends React.Component {
                 onClose={() => this.setState({ openMenu: false })}
               />
             </div>
-            <a href='http://localhost:3000/main'>
+            <Link to='/'>
               <img
                 className='title-image'
                 alt='Recordary icon'
                 src='https://recordary-springboot-upload.s3.ap-northeast-2.amazonaws.com/static/logo.png'
                 style={{ height: '30px', marginTop: '8px' }}
               />
-            </a>
+            </Link>
           </div>
           <div id='header-right'>
             <div className='search-user'>
