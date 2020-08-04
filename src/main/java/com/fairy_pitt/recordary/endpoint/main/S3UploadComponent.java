@@ -121,12 +121,7 @@ public class S3UploadComponent {
 
     // 파일 삭제
     public void delete(String objectName) {
-        amazonS3Client.deleteObject(bucket, objectName);
-    }
-
-    public void profileDelete(String dirName, String fileName) throws AmazonClientException {
-        String objectName = dirName + "/" + fileName;
-        if (isValidObject(objectName)) delete(objectName);
+        if (isValidObject(objectName)) amazonS3Client.deleteObject(bucket, objectName);
     }
 
     public void mediaDelete(String preFix){
