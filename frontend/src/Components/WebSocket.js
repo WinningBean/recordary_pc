@@ -51,7 +51,7 @@ const WebSocket = ({ userCd, userId, notice, onSaveNoticeList }) => {
 
   const disconnectSession = async () => {
     try {
-      window.alert('다른 컴퓨터로 로그인되었습니다.');
+      window.alert('다른 기기로 로그인되었습니다.');
       await axios.post('/user/logout', userCd, {
         headers: { 'Content-Type': 'application/json' },
       });
