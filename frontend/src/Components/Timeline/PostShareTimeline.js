@@ -235,8 +235,13 @@ const PostShareTimeline = (props) => {
         </div>
         <div className='profile-moreIcon'>
           {props.user !== undefined ? (
-            props.user.userCd !== data.userFK.userCd ? (
+            props.user.userCd !== data.userFK.userCd ?
+            postOriginData.shareScheduleList.length > 0 ? (
+              <LongMenu options={['본문 클릭']} returnValue={userPostMoreButtonClick}/>
+            ) : (
               <LongMenu options={['공유 게시물']} returnValue={userPostMoreButtonClick} />
+            ) : postOriginData.shareScheduleList.length > 0 ? (
+              <LongMenu options={[' 수정 ', ' 삭제 ']} returnValue={userPostMoreButtonClick} />
             ) : (
               <LongMenu options={['공유 게시물', ' 수정 ', ' 삭제 ']} returnValue={userPostMoreButtonClick} />
             )
@@ -295,7 +300,24 @@ const PostShareTimeline = (props) => {
                 overflowY: 'auto',
               }}
             >
-              {postOriginData.scheduleFK === null ? null : (
+              {postOriginData.scheduleFK === null ?
+              postOriginData.shareScheduleList.length <= 0 ? null :
+              (
+                <div
+                  style={{
+                    textAlign : 'center',
+                    height : '100%',
+                    display : 'flex',
+                    justifyContent : 'center',
+                    alignItems : 'center',
+                    fontSize : '11pt',
+                    cursor : 'pointer',
+                  }}>
+                    <span style={{fontWeight : 'bold', display : 'contents'}}>{dateFns.format(Date.parse(postOriginData.shareScheduleStartDate), 'yyyy.M.d')}</span>부터&nbsp;
+                    <span style={{fontWeight : 'bold', display : 'contents'}}>{dateFns.format(Date.parse(postOriginData.shareScheduleEndDate), 'yyyy.M.d')}</span>까지<br/>
+                    <span style={{fontWeight : 'bold', display : 'contents'}}>{postOriginData.shareScheduleList.length}</span>개의 일정을 확인하려면 클릭하세요.
+                </div>
+              ) : (
                 <span style={{ paddingBottom: '8px' }}>{postOriginData.scheduleFK.scheduleEx}</span>
               )}
               <div style={{ display: 'flex', overflowX: 'auto' }}>
