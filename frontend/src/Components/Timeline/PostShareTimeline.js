@@ -123,13 +123,13 @@ const PostShareTimeline = (props) => {
 
   const userPostMoreButtonClick = (selectedValue, value) => {
     switch (selectedValue) {
-      case '공유 게시물':
-        setMenuDialog(
-          <Dialog open onClose={() => setMenuDialog(null)}>
-            <Timeline data={postOriginData} user={props.user} />
-          </Dialog>
-        );
-        break;
+      // case '공유 게시물':
+      //   setMenuDialog(
+      //     <Dialog open onClose={() => setMenuDialog(null)}>
+      //       <Timeline data={postOriginData} user={props.user} />
+      //     </Dialog>
+      //   );
+      //   break;
       case '수정':
         // 게시물 EX만 수정할 수 있도록 만들기
         // 따로 ex 디자인 추가하여 수정하기
@@ -210,16 +210,14 @@ const PostShareTimeline = (props) => {
           </div>
         ) : (
           <div className='profile-name'>
-            <Link to={`group/${data.groupFK.groupCd}`}>
-              {data.groupFK.groupNm}
-            </Link>
+            <Link to={`group/${data.groupFK.groupCd}`}>{data.groupFK.groupNm}</Link>
             <div style={{ display: 'flex', alignItems: 'center', marginLeft: '10px', color: 'gray', fontSize: '12px' }}>
               <div>from.</div>
               <div className='group-post-user' style={{ marginLeft: '10px', marginTop: '2px' }}>
                 <img alt={`${data.userFK.userId}`} src={data.userFK.userPic} />
               </div>
               <div style={{ fontWeight: 'bold', marginLeft: '5px' }}>
-                <Link to={`/${data.userFK.userId}`} style={{color: 'gray'}}>
+                <Link to={`/${data.userFK.userId}`} style={{ color: 'gray' }}>
                   {data.userFK.userId}({data.userFK.userNm})
                 </Link>
               </div>
@@ -234,16 +232,14 @@ const PostShareTimeline = (props) => {
           </div>
         </div>
         <div className='profile-moreIcon'>
+          {console.log('!!!!!!!!!!!!!!!!', postOriginData)}
           {props.user !== undefined ? (
-            props.user.userCd !== data.userFK.userCd ?
-            postOriginData.shareScheduleList.length > 0 ? (
-              <LongMenu options={['본문 클릭']} returnValue={userPostMoreButtonClick}/>
+            props.user.userCd !== data.userFK.userCd ? (
+              <LongMenu options={['본문 클릭']} returnValue={userPostMoreButtonClick} />
+            ) : props.data.postOriginFK !== null ? (
+              <LongMenu options={['본문 클릭', ' 수정 ', ' 삭제 ']} returnValue={userPostMoreButtonClick} />
             ) : (
-              <LongMenu options={['공유 게시물']} returnValue={userPostMoreButtonClick} />
-            ) : postOriginData.shareScheduleList.length > 0 ? (
               <LongMenu options={[' 수정 ', ' 삭제 ']} returnValue={userPostMoreButtonClick} />
-            ) : (
-              <LongMenu options={['공유 게시물', ' 수정 ', ' 삭제 ']} returnValue={userPostMoreButtonClick} />
             )
           ) : null}
         </div>
@@ -300,23 +296,34 @@ const PostShareTimeline = (props) => {
                 overflowY: 'auto',
               }}
             >
-              {postOriginData.scheduleFK === null ?
-              postOriginData.shareScheduleList.length <= 0 ? null :
-              (
-                <div
-                  style={{
-                    textAlign : 'center',
-                    height : '100%',
-                    display : 'flex',
-                    justifyContent : 'center',
-                    alignItems : 'center',
-                    fontSize : '11pt',
-                    cursor : 'pointer',
-                  }}>
-                    <span style={{fontWeight : 'bold', display : 'contents'}}>{dateFns.format(Date.parse(postOriginData.shareScheduleStartDate), 'yyyy.M.d')}</span>부터&nbsp;
-                    <span style={{fontWeight : 'bold', display : 'contents'}}>{dateFns.format(Date.parse(postOriginData.shareScheduleEndDate), 'yyyy.M.d')}</span>까지<br/>
-                    <span style={{fontWeight : 'bold', display : 'contents'}}>{postOriginData.shareScheduleList.length}</span>개의 일정을 확인하려면 클릭하세요.
-                </div>
+              {postOriginData.scheduleFK === null ? (
+                postOriginData.shareScheduleList.length <= 0 ? null : (
+                  <div
+                    style={{
+                      textAlign: 'center',
+                      height: '100%',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      fontSize: '11pt',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <span style={{ fontWeight: 'bold', display: 'contents' }}>
+                      {dateFns.format(Date.parse(postOriginData.shareScheduleStartDate), 'yyyy.M.d')}
+                    </span>
+                    부터&nbsp;
+                    <span style={{ fontWeight: 'bold', display: 'contents' }}>
+                      {dateFns.format(Date.parse(postOriginData.shareScheduleEndDate), 'yyyy.M.d')}
+                    </span>
+                    까지
+                    <br />
+                    <span style={{ fontWeight: 'bold', display: 'contents' }}>
+                      {postOriginData.shareScheduleList.length}
+                    </span>
+                    개의 일정을 확인하려면 클릭하세요.
+                  </div>
+                )
               ) : (
                 <span style={{ paddingBottom: '8px' }}>{postOriginData.scheduleFK.scheduleEx}</span>
               )}
@@ -457,10 +464,9 @@ const PostShareTimeline = (props) => {
                           ...data,
                           currentUserLikePost: false,
                           postLikeCount: data.postLikeCount - 1,
-                          postLikeFirstUser:
-                            (await axios.get(`/post/${data.postCd}`)).data.postLikeFirstUser,
-                            // data.postLikeFirstUser.userCd === props.user.userCd ? null : data.postLikeForstUser,
-                            // data.postLikeFirstUser.userCd === props.user.userCd ? 다음 사람의 데이터...ㅠ : data.postLikeForstUser,
+                          postLikeFirstUser: (await axios.get(`/post/${data.postCd}`)).data.postLikeFirstUser,
+                          // data.postLikeFirstUser.userCd === props.user.userCd ? null : data.postLikeForstUser,
+                          // data.postLikeFirstUser.userCd === props.user.userCd ? 다음 사람의 데이터...ㅠ : data.postLikeForstUser,
                         });
                       }
                     } catch (e) {
