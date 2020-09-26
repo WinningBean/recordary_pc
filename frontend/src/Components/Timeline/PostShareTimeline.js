@@ -231,18 +231,13 @@ const PostShareTimeline = (props) => {
               : `${Math.abs(dateFns.differenceInDays(Date.parse(data.modifiedDate), new Date()))}일 전`}
           </div>
         </div>
-        <div className='profile-moreIcon'>
-          {console.log('!!!!!!!!!!!!!!!!', postOriginData)}
-          {props.user !== undefined ? (
-            props.user.userCd !== data.userFK.userCd ? (
-              <LongMenu options={['본문 클릭']} returnValue={userPostMoreButtonClick} />
-            ) : props.data.postOriginFK !== null ? (
-              <LongMenu options={['본문 클릭', ' 수정 ', ' 삭제 ']} returnValue={userPostMoreButtonClick} />
-            ) : (
+        {props.user !== undefined ? (
+          props.user.userCd !== data.userFK.userCd ? null : (
+            <div className='profile-moreIcon'>
               <LongMenu options={[' 수정 ', ' 삭제 ']} returnValue={userPostMoreButtonClick} />
-            )
-          ) : null}
-        </div>
+            </div>
+          )
+        ) : null}
       </div>
       <div className='timeline-info'>
         <div className='time-line-picture-info'>
