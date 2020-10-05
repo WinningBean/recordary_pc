@@ -88,7 +88,7 @@ public class GroupService {
         GroupEntity groupEntity = groupRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 그룹이 없습니다. id=" + id));
 
-        s3UploadComponent.profileDelete("group", groupEntity.getGroupPic());
+        s3UploadComponent.delete(groupEntity.getGroupPic());
         groupRepository.delete(groupEntity);
     }
 

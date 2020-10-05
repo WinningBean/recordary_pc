@@ -120,7 +120,7 @@ const PostShare = (props) => {
             multiline
             rowsMax='5'
             rows='3'
-            name='post_ex'
+            name='postEx'
             onChange={changeHandle}
           />
         </div>

@@ -21,6 +21,8 @@ import CommentTimeline from './CommentTimeline';
 import AlertDialog from '../Other/AlertDialog';
 import axios from 'axios';
 
+import { Link } from 'react-router-dom';
+
 import store from '../../store';
 
 const useStyles = makeStyles((theme) => ({
@@ -156,18 +158,24 @@ const TimelineWeekSchedule = (props) => {
         </div>
         {data.groupFK === null ? (
           <div className='profile-name'>
-            {data.userFK.userId}({data.userFK.userNm}){' '}
+            <Link to={`/${data.userFK.userId}`}>
+              {data.userFK.userId}({data.userFK.userNm}){' '}
+            </Link>
           </div>
         ) : (
           <div className='profile-name'>
-            {data.groupFK.groupNm}
+            <Link to={`group/${data.groupFK.groupCd}`}>
+              {data.groupFK.groupNm}
+            </Link>
             <div style={{ display: 'flex', alignItems: 'center', marginLeft: '10px', color: 'gray', fontSize: '12px' }}>
               <div>from.</div>
               <div className='group-post-user' style={{ marginLeft: '10px', marginTop:'2px' }}>
                 <img alt={`${data.userFK.userId}`} src={data.userFK.userPic} />
               </div>
               <div style={{ fontWeight: 'bold', marginLeft: '5px' }}>
-                {data.userFK.userId}({data.userFK.userNm})
+                <Link to={`/${data.userFK.userId}`} style={{color: 'gray'}}>
+                  {data.userFK.userId}({data.userFK.userNm})
+                </Link>
               </div>
             </div>
           </div>

@@ -23,6 +23,8 @@ import axios from 'axios';
 import Button from '@material-ui/core/Button';
 import SubdirectoryArrowLeftIcon from '@material-ui/icons/SubdirectoryArrowLeft';
 
+import { Link } from 'react-router-dom';
+
 import store from '../../store';
 
 const useStyles = makeStyles((theme) => ({
@@ -121,13 +123,13 @@ const PostShareTimeline = (props) => {
 
   const userPostMoreButtonClick = (selectedValue, value) => {
     switch (selectedValue) {
-      case '공유 게시물':
-        setMenuDialog(
-          <Dialog open onClose={() => setMenuDialog(null)}>
-            <Timeline data={postOriginData} user={props.user} />
-          </Dialog>
-        );
-        break;
+      // case '공유 게시물':
+      //   setMenuDialog(
+      //     <Dialog open onClose={() => setMenuDialog(null)}>
+      //       <Timeline data={postOriginData} user={props.user} />
+      //     </Dialog>
+      //   );
+      //   break;
       case '수정':
         // 게시물 EX만 수정할 수 있도록 만들기
         // 따로 ex 디자인 추가하여 수정하기
@@ -202,18 +204,22 @@ const PostShareTimeline = (props) => {
         </div>
         {data.groupFK === null ? (
           <div className='profile-name'>
-            {data.userFK.userId}({data.userFK.userNm}){' '}
+            <Link to={`/${data.userFK.userId}`}>
+              {data.userFK.userId}({data.userFK.userNm}){' '}
+            </Link>
           </div>
         ) : (
           <div className='profile-name'>
-            {data.groupFK.groupNm}
+            <Link to={`group/${data.groupFK.groupCd}`}>{data.groupFK.groupNm}</Link>
             <div style={{ display: 'flex', alignItems: 'center', marginLeft: '10px', color: 'gray', fontSize: '12px' }}>
               <div>from.</div>
               <div className='group-post-user' style={{ marginLeft: '10px', marginTop: '2px' }}>
                 <img alt={`${data.userFK.userId}`} src={data.userFK.userPic} />
               </div>
               <div style={{ fontWeight: 'bold', marginLeft: '5px' }}>
-                {data.userFK.userId}({data.userFK.userNm})
+                <Link to={`/${data.userFK.userId}`} style={{ color: 'gray' }}>
+                  {data.userFK.userId}({data.userFK.userNm})
+                </Link>
               </div>
             </div>
           </div>
@@ -225,15 +231,13 @@ const PostShareTimeline = (props) => {
               : `${Math.abs(dateFns.differenceInDays(Date.parse(data.modifiedDate), new Date()))}일 전`}
           </div>
         </div>
-        <div className='profile-moreIcon'>
-          {props.user !== undefined ? (
-            props.user.userCd !== data.userFK.userCd ? (
-              <LongMenu options={['공유 게시물']} returnValue={userPostMoreButtonClick} />
-            ) : (
-              <LongMenu options={['공유 게시물', ' 수정 ', ' 삭제 ']} returnValue={userPostMoreButtonClick} />
-            )
-          ) : null}
-        </div>
+        {props.user !== undefined ? (
+          props.user.userCd !== data.userFK.userCd ? null : (
+            <div className='profile-moreIcon'>
+              <LongMenu options={[' 수정 ', ' 삭제 ']} returnValue={userPostMoreButtonClick} />
+            </div>
+          )
+        ) : null}
       </div>
       <div className='timeline-info'>
         <div className='time-line-picture-info'>
@@ -287,7 +291,35 @@ const PostShareTimeline = (props) => {
                 overflowY: 'auto',
               }}
             >
-              {postOriginData.scheduleFK === null ? null : (
+              {postOriginData.scheduleFK === null ? (
+                postOriginData.shareScheduleList.length <= 0 ? null : (
+                  <div
+                    style={{
+                      textAlign: 'center',
+                      height: '100%',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      fontSize: '11pt',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <span style={{ fontWeight: 'bold', display: 'contents' }}>
+                      {dateFns.format(Date.parse(postOriginData.shareScheduleStartDate), 'yyyy.M.d')}
+                    </span>
+                    부터&nbsp;
+                    <span style={{ fontWeight: 'bold', display: 'contents' }}>
+                      {dateFns.format(Date.parse(postOriginData.shareScheduleEndDate), 'yyyy.M.d')}
+                    </span>
+                    까지
+                    <br />
+                    <span style={{ fontWeight: 'bold', display: 'contents' }}>
+                      {postOriginData.shareScheduleList.length}
+                    </span>
+                    개의 일정을 확인하려면 클릭하세요.
+                  </div>
+                )
+              ) : (
                 <span style={{ paddingBottom: '8px' }}>{postOriginData.scheduleFK.scheduleEx}</span>
               )}
               <div style={{ display: 'flex', overflowX: 'auto' }}>
@@ -427,10 +459,9 @@ const PostShareTimeline = (props) => {
                           ...data,
                           currentUserLikePost: false,
                           postLikeCount: data.postLikeCount - 1,
-                          postLikeFirstUser:
-                            (await axios.get(`/post/${data.postCd}`)).data.postLikeFirstUser,
-                            // data.postLikeFirstUser.userCd === props.user.userCd ? null : data.postLikeForstUser,
-                            // data.postLikeFirstUser.userCd === props.user.userCd ? 다음 사람의 데이터...ㅠ : data.postLikeForstUser,
+                          postLikeFirstUser: (await axios.get(`/post/${data.postCd}`)).data.postLikeFirstUser,
+                          // data.postLikeFirstUser.userCd === props.user.userCd ? null : data.postLikeForstUser,
+                          // data.postLikeFirstUser.userCd === props.user.userCd ? 다음 사람의 데이터...ㅠ : data.postLikeForstUser,
                         });
                       }
                     } catch (e) {

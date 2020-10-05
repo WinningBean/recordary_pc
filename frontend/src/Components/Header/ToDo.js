@@ -88,13 +88,13 @@ const ToDo = ({ open, userCd }) => {
     setColor(colorList[Math.floor(Math.random() * colorList.length)]);
   };
 
-  const deleteToDo = async (value, index) => {
+  const deleteToDo = async (value, index, isBefore) => {
     setAlert(<Snackbar severity='info' content={`수정중.....`} duration={999999} />);
     try {
       await axios.delete(`/toDo/${value.toDoCd}`);
-      const copyList = toDoList.slice();
+      const copyList = isBefore ? beforeToDoList.slice() : toDoList.slice();
       copyList.splice(index, 1);
-      setToDoList(copyList);
+      isBefore ? setBeforeToDoList(copyList) : setToDoList(copyList);
       setAlert(<Snackbar severity='success' content={`'${value.toDoContent}' 삭제`} onClose={() => setAlert(null)} />);
     } catch (error) {
       setAlert(<Snackbar severity='error' content={error} onClose={() => setAlert(null)} />);
@@ -138,6 +138,7 @@ const ToDo = ({ open, userCd }) => {
   const makeToDo = (value, index, isBefore) => {
     const isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(value.toDoContent);
     var fontSize = undefined;
+    console.log(value);
     if (isKorean) {
       const textLength = value.toDoContent.length;
       if (textLength > 16) fontSize = 10;
@@ -200,7 +201,7 @@ const ToDo = ({ open, userCd }) => {
                 setAlert(<Snackbar severity='info' content={`수정중.....`} duration={999999} />);
                 await axios.post(`/toDo/update/${value.toDoCd}`);
                 var array = isBefore ? beforeToDoList.slice() : toDoList.slice();
-                array[index] = { ...toDoList[index], toDoCompleteState: !value.toDoCompleteState };
+                array[index] = { ...array[index], toDoCompleteState: !value.toDoCompleteState };
                 isBefore ? setBeforeToDoList(array) : setToDoList(array);
                 setAlert(
                   <Snackbar severity='success' content={`수정 완료`} duration={800} onClose={() => setAlert(null)} />
@@ -232,7 +233,7 @@ const ToDo = ({ open, userCd }) => {
           id={`todo-delete-${index}`}
           style={{ opacity: 0, width: '32px', cursor: 'pointer' }}
           onClick={() => {
-            deleteToDo(value, index);
+            deleteToDo(value, index, isBefore);
           }}
         >
           <DeleteIcon fontSize='small' />

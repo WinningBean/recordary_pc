@@ -27,6 +27,16 @@ body {
   min-width: 100%;
   min-height: 100%;
 }
+
+::-moz-selection {
+  background: rgba(20,81,51,.8);
+  color: #fff;
+}
+::selection {
+  background: rgba(20,81,51,.8);
+  color: #fff;
+}
+
 /* #root,
 #wrapper */
 html {

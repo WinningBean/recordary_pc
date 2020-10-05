@@ -79,7 +79,7 @@ public class UserService {
     }
 
     private void deleteOnlyUserPossession(UserEntity user){
-        s3UploadComponent.profileDelete("user", user.getUserPic()); // 사용자 프로필
+        s3UploadComponent.delete(user.getUserPic()); // 사용자 프로필
 
         List<PostEntity> onlyUserPostList = user.getPostList().stream()
                 .filter(p -> p.getGroupFK() == null)
