@@ -269,7 +269,7 @@ const WebSocket = ({ userCd, userId, notice, onSaveNoticeList }) => {
     }
     enqueueSnackbar(message.text, {
       variant: message.type,
-      autoHideDuration: message.action === undefined ? 6000 : 12000,
+      autoHideDuration: message.action === undefined ? 3000 : 6000,
       action:
         message.action === undefined ? null : (
           <div
