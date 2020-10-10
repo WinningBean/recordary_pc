@@ -142,7 +142,8 @@ const Chatting = ({ isOpen, user }) => {
           style={{
             height: '60px',
             display: 'flex',
-            paddingLeft: '10px',
+            paddingLeft: value.isGroup ? '6px' : '10px',
+            borderLeft: value.isGroup ? '4px solid tomato' : null,
           }}
           onClick={() => {
             if (info[index].chatList === null) {
@@ -192,9 +193,7 @@ const Chatting = ({ isOpen, user }) => {
             }}
           >
             {value.targetId == null ? (
-              <div style={{ paddingTop: '12px', fontWeight: 'bold' }}>
-                {value.targetNm}
-              </div>
+              <div style={{ paddingTop: '12px', fontWeight: 'bold' }}>{value.targetNm}</div>
             ) : (
               <div style={{ paddingTop: '12px', fontWeight: 'bold' }}>
                 {value.targetId}({value.targetNm})
@@ -277,7 +276,7 @@ const Chatting = ({ isOpen, user }) => {
               style={{
                 height: '10%',
                 display: 'flex',
-                backgroundColor: '#40739e',
+                backgroundColor: info[selectedRoomIndex].isGroup ? 'tomato' : '#40739e',
                 borderTopLeftRadius: '5px',
                 borderTopRightRadius: '5px',
               }}
