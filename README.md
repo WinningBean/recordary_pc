@@ -1,4 +1,4 @@
-# recordary_pc
+# recordary_pc ([mobile](https://github.com/wsb0722/recordary_mobile))
 
 ## Recordary : Schedule based Social Networking Service
 :school: 졸업작품전 프로젝트로 진행
@@ -17,16 +17,16 @@
 - Spring Boot - version 2.1.9.RELEASE
 - JPA
 - JUnit - version 4.12
+- MySQL
+- AWS
+
+- Gradle - version 4.10.2
 
 - Node.js
 - React - version 16.12.0
 - Redux
 - Babel
 - webpack
-
-- Gradle - version 4.10.2
-- MySQL
-- AWS
 
 ## Offer service
 - 일정을 주제별, 그룹별로 관리하여 체계적인 일정관리 가능
