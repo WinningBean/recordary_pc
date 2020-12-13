@@ -3,6 +3,8 @@
 ## Recordary : Schedule based Social Networking Service
 :school: 졸업작품전 프로젝트로 진행
 ![image](https://user-images.githubusercontent.com/53260922/102009393-7a2ce880-3d7a-11eb-958f-2f01a17159cc.png)
+### Screenshot
+![image](https://user-images.githubusercontent.com/53260922/102015450-018c5300-3d9f-11eb-94c9-77ca75cda48c.png)
 
 ## Contributor :man_technologist: :woman_technologist:
 - 위성호 [Sungho-Wi](https://github.com/Sungho-Wi)
