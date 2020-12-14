@@ -17,10 +17,9 @@
 - Spring Boot - version 2.1.9.RELEASE
 - JPA
 - JUnit - version 4.12
+- Gradle - version 4.10.2
 - MySQL
 - AWS
-
-- Gradle - version 4.10.2
 
 - Node.js
 - React - version 16.12.0
