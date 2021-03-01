@@ -8,7 +8,7 @@
 
 ## Contributor :man_technologist: :woman_technologist:
 - 위성호 [Sungho-Wi](https://github.com/Sungho-Wi)
-- 위승빈 [wsb0722](https://github.com/Winning-Bean) (leader)
+- 위승빈 [Winning-Bean](https://github.com/Winning-Bean) (leader)
 - 최주은 [jueun275](https://github.com/jueun275)
 - 황수경 [sukyeongh](https://github.com/sukyeongh)
 
